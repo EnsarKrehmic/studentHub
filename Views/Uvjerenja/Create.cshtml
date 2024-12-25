@@ -1,0 +1,46 @@
+﻿@model StudentHub.Models.Uvjerenje
+
+@{
+    ViewData["Title"] = "Kreiranje novog uvjerenja";
+}
+
+    <h2>@ViewData["Title"]</h2>
+
+    <form asp-action="Create">
+        <div class="form-group">
+            <label asp-for="Namjena" class="control-label"></label>
+            <input asp-for="Namjena" class="form-control" />
+            <span asp-validation-for="Namjena" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="datumIzdavanja" class="control-label"></label>
+            <input asp-for="datumIzdavanja" class="form-control" />
+            <span asp-validation-for="datumIzdavanja" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="brojIndeksa" class="control-label"></label>
+            <select asp-for="brojIndeksa" class="form-control" asp-items="ViewBag.brojIndeksa"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="StudentskaSluzbaId" class="control-label"></label>
+            <select asp-for="StudentskaSluzbaId" class="form-control" asp-items="ViewBag.StudentskaSluzbaId"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Vrsta" class="control-label"></label>
+            <select asp-for="Vrsta" class="form-control"></select>
+            <span asp-validation-for="Vrsta" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Kreiraj</button>
+        </div>
+    </form>
+
+    <div>
+        <a asp-action="Index">Nazad</a>
+    </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

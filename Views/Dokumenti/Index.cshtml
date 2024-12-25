@@ -1,0 +1,35 @@
+﻿@model IEnumerable<StudentHub.Models.Dokument>
+
+@{
+    ViewData["Title"] = "Lista dokumenata";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Naziv)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Putanja)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().StudentskaSluzba)</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Naziv)</td>
+                <td>@Html.DisplayFor(modelItem => item.Putanja)</td>
+                <td>@Html.DisplayFor(modelItem => item.Student)</td>
+                <td>@Html.DisplayFor(modelItem => item.StudentskaSluzba)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Izmjena</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Brisanje</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

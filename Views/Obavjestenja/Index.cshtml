@@ -1,0 +1,59 @@
+﻿@model IEnumerable<StudentHub.Models.Obavjestenje>
+
+@{
+    ViewData["Title"] = "Lista obavještenja";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Dodaj novo obavještenje</a>
+</p>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Naslov)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Sadrzaj)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().datumObjave)</th>
+                <th>Objavio/la</th>
+                <th>Akcije</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Naslov)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Sadrzaj)</td>
+                    <td>@Html.DisplayFor(modelItem => item.datumObjave)</td>
+                    <td>
+                        @if (item.Korisnik is StudentskaSluzba)
+                        {
+                            @Html.DisplayFor(modelItem => ((StudentskaSluzba)item.Korisnik).Ime)
+                        }
+                        else if (item.Korisnik is Profesor)
+                        {
+                            @Html.DisplayFor(modelItem => ((Profesor)item.Korisnik).Ime)
+                        }
+                        else if (item.Korisnik is Asistent)
+                        {
+                            @Html.DisplayFor(modelItem => ((Asistent)item.Korisnik).Ime)
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Nema obavještenja za prikaz.</p>
+}

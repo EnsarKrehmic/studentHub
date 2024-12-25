@@ -1,0 +1,33 @@
+﻿@model StudentHub.Models.Uvjerenje
+
+@{
+    ViewData["Title"] = "Detalji o uvjerenju";
+}
+
+    <h2>@ViewData["Title"]</h2>
+
+    <div>
+        <h4>Podaci o asistentu</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Namjena)</dt>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.Namjena)</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.datumIzdavanja)</dt>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.datumIzdavanja)</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student)</dt>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.JMBG)</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.StudentskaSluzba)</dt>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.StudentskaSluzba.JMBG)</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Vrsta)</dt>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.Vrsta)</dd>
+        </dl>
+    </div>
+
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Izmjena</a> |
+        <a asp-action="Index">Nazad</a>
+    </div>

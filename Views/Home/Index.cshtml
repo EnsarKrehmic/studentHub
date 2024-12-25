@@ -1,0 +1,39 @@
+﻿@model StudentHub.ViewModels.HomeViewModel
+
+@{
+    ViewData["Title"] = "Dobrodošli u StudentHub";
+}
+
+<div class="container">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Dobrodošli u StudentHub!</h1>
+        <p class="lead">Vaš centralizovani sistem za upravljanje fakultetom.</p>
+        <hr class="my-4" />
+        <p>Pratite najnovije objave, podatke o korisnicima i još mnogo toga.</p>
+    </div>
+
+    <div class="row text-center mt-5">
+        <div class="col-md-4">
+            <h3>Broj studenata</h3>
+            <p class="display-6">@Model.BrojStudenata</p>
+        </div>
+        <div class="col-md-4">
+            <h3>Broj profesora</h3>
+            <p class="display-6">@Model.BrojProfesora</p>
+        </div>
+        <div class="col-md-4">
+            <h3>Broj asistenata</h3>
+            <p class="display-6">@Model.BrojAsistenata</p>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <h2>Najnovije obavijesti</h2>
+        <ul>
+            @foreach (var obavijest in Model.NajnovijeObavijesti)
+            {
+                <li>@obavijest.Naslov - @obavijest.datumObjave.ToShortDateString()</li>
+            }
+        </ul>
+    </div>
+</div>

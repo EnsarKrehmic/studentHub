@@ -1,0 +1,49 @@
+﻿@model StudentHub.Models.Asistent
+
+@{
+    ViewData["Title"] = "Izmjena podataka asistenta";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="JMBG" />
+
+    <div class="form-group">
+        <label asp-for="Ime" class="control-label"></label>
+        <input asp-for="Ime" class="form-control" />
+        <span asp-validation-for="Ime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Prezime" class="control-label"></label>
+        <input asp-for="Prezime" class="form-control" />
+        <span asp-validation-for="Prezime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Titula" class="control-label"></label>
+        <input asp-for="Titula" class="form-control" />
+        <span asp-validation-for="Titula" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Sačuvaj promjene</button>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Nazad</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

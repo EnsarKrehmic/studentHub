@@ -1,0 +1,32 @@
+﻿@model StudentHub.Models.NastavniPlan
+
+@{
+    ViewData["Title"] = "Kreiranje novog nastavnog plana";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="godinaStudija" class="control-label"></label>
+        <input asp-for="godinaStudija" class="form-control" />
+        <span asp-validation-for="godinaStudija" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="StudijskiProgramId" class="control-label"></label>
+        <input asp-for="StudijskiProgramId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Kreiraj</button>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Nazad</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<StudentHub.Models.NastavniPlan>
+
+@{
+    ViewData["Title"] = "Lista nastavnih planova";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().godinaStudija)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().StudijskiProgram)</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.godinaStudija)</td>
+                <td>@Html.DisplayFor(modelItem => item.StudijskiProgram.Id)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Izmjena</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Brisanje</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

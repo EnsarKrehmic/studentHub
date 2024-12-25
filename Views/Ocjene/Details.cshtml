@@ -1,0 +1,30 @@
+﻿@model StudentHub.Models.Ocjena
+
+@{
+    ViewData["Title"] = "Detalji ocjene";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h4>Podaci o ocjeni</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Vrijednost)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Vrijednost)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Predmet)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Predmet.Id)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.JMBG)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Profesor)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Profesor.JMBG)</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Izmjena</a> |
+    <a asp-action="Index">Nazad</a>
+</div>

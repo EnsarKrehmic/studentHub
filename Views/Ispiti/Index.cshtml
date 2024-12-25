@@ -1,0 +1,39 @@
+﻿@model IEnumerable<StudentHub.Models.Ispit>
+
+@{
+    ViewData["Title"] = "Lista ispita";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().datumOdrzavanja)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Lokacija)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().brojBodova)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Predmet)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Profesor)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Asistent)</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.datumOdrzavanja)</td>
+                <td>@Html.DisplayFor(modelItem => item.Lokacija)</td>
+                <td>@Html.DisplayFor(modelItem => item.brojBodova)</td>
+                <td>@Html.DisplayFor(modelItem => item.Predmet.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Profesor.JMBG)</td>
+                <td>@Html.DisplayFor(modelItem => item.Asistent.JMBG)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Izmjena</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Brisanje</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

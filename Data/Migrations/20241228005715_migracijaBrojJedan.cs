@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace StudentHub.Data.Migrations
+namespace WebApplication1.Data.Migrations
 {
     /// <inheritdoc />
     public partial class migracijaBrojJedan : Migration
@@ -33,52 +33,6 @@ namespace StudentHub.Data.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.CreateTable(
-                name: "Korisnik",
-                columns: table => new
-                {
-                    JMBG = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ime = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Prezime = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Lozinka = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Uloga = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Korisnik", x => x.JMBG);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NastavnoOsoblje",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Titula = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NastavnoOsoblje", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StudentskaSluzba",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ime = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Prezime = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Lozinka = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudentskaSluzba", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "StudijskiProgram",
                 columns: table => new
                 {
@@ -86,85 +40,11 @@ namespace StudentHub.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Naziv = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Opis = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    TrajanjeUGodinama = table.Column<int>(type: "int", nullable: false)
+                    trajanjeUGodinama = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StudijskiProgram", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Student",
-                columns: table => new
-                {
-                    BrojIndeksa = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    KorisnikId = table.Column<long>(type: "bigint", nullable: false),
-                    PredhodnoObrazovanje = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StudijskiProgram = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GodinaStudija = table.Column<int>(type: "int", nullable: false),
-                    PodaciUplata = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Student", x => x.BrojIndeksa);
-                    table.ForeignKey(
-                        name: "FK_Student_Korisnik_KorisnikId",
-                        column: x => x.KorisnikId,
-                        principalTable: "Korisnik",
-                        principalColumn: "JMBG",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Predmet",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Naziv = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Opis = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    ECTS = table.Column<int>(type: "int", nullable: false),
-                    SifraProfesora = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Predmet", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Predmet_NastavnoOsoblje_SifraProfesora",
-                        column: x => x.SifraProfesora,
-                        principalTable: "NastavnoOsoblje",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Obavjestenje",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Naslov = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Sadrzaj = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    DatumObjave = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StudentskaSluzbaId = table.Column<long>(type: "bigint", nullable: false),
-                    NastavnoOsobljeId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Obavjestenje", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Obavjestenje_NastavnoOsoblje_NastavnoOsobljeId",
-                        column: x => x.NastavnoOsobljeId,
-                        principalTable: "NastavnoOsoblje",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Obavjestenje_StudentskaSluzba_StudentskaSluzbaId",
-                        column: x => x.StudentskaSluzbaId,
-                        principalTable: "StudentskaSluzba",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,7 +53,7 @@ namespace StudentHub.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GodinaStudija = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    godinaStudija = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     StudijskiProgramId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -188,33 +68,19 @@ namespace StudentHub.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Zahtjev",
+                name: "Dokument",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TipZahtjeva = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatumPodnosenja = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DatumRjesavanja = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Naziv = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Putanja = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     StudentId = table.Column<long>(type: "bigint", nullable: false),
                     StudentskaSluzbaId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Zahtjev", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Zahtjev_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
-                        principalColumn: "BrojIndeksa",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Zahtjev_StudentskaSluzba_StudentskaSluzbaId",
-                        column: x => x.StudentskaSluzbaId,
-                        principalTable: "StudentskaSluzba",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Dokument", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,24 +90,198 @@ namespace StudentHub.Data.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     datumOdrzavanja = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Lokacija = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    datumObjave = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Lokacija = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     brojBodova = table.Column<int>(type: "int", nullable: false),
                     PredmetId = table.Column<long>(type: "bigint", nullable: false),
-                    NastavnoOsobljeId = table.Column<long>(type: "bigint", nullable: false)
+                    KorisnikId = table.Column<long>(type: "bigint", nullable: true),
+                    ProfesorId = table.Column<long>(type: "bigint", nullable: true),
+                    AsistentId = table.Column<long>(type: "bigint", nullable: true),
+                    StudentId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ispit", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Korisnik",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    JMBG = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    Ime = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Prezime = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Lozinka = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Uloga = table.Column<int>(type: "int", nullable: false),
+                    Titula = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Profesor_Titula = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    brojIndeksa = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    predhodnoObrazovanje = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    godinaStudija = table.Column<int>(type: "int", nullable: true),
+                    podaciUplata = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudijskiProgramId = table.Column<long>(type: "bigint", nullable: true),
+                    ZahtjevId = table.Column<long>(type: "bigint", nullable: true),
+                    PredmetId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Korisnik", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ispit_NastavnoOsoblje_NastavnoOsobljeId",
-                        column: x => x.NastavnoOsobljeId,
-                        principalTable: "NastavnoOsoblje",
+                        name: "FK_Korisnik_StudijskiProgram_StudijskiProgramId",
+                        column: x => x.StudijskiProgramId,
+                        principalTable: "StudijskiProgram",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Obavjestenje",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naslov = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Sadrzaj = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    datumObjave = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    KorisnikId = table.Column<long>(type: "bigint", nullable: true),
+                    StudentskaSluzbaId = table.Column<long>(type: "bigint", nullable: true),
+                    ProfesorId = table.Column<long>(type: "bigint", nullable: true),
+                    AsistentId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Obavjestenje", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ispit_Predmet_PredmetId",
-                        column: x => x.PredmetId,
-                        principalTable: "Predmet",
+                        name: "FK_Obavjestenje_Korisnik_AsistentId",
+                        column: x => x.AsistentId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Obavjestenje_Korisnik_KorisnikId",
+                        column: x => x.KorisnikId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Obavjestenje_Korisnik_ProfesorId",
+                        column: x => x.ProfesorId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Obavjestenje_Korisnik_StudentskaSluzbaId",
+                        column: x => x.StudentskaSluzbaId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Predmet",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naziv = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Opis = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    ECTS = table.Column<int>(type: "int", nullable: false),
+                    ProfesorId = table.Column<long>(type: "bigint", nullable: true),
+                    AsistentId = table.Column<long>(type: "bigint", nullable: true),
+                    NastavniPlanId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Predmet", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Predmet_Korisnik_AsistentId",
+                        column: x => x.AsistentId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Predmet_Korisnik_ProfesorId",
+                        column: x => x.ProfesorId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Predmet_NastavniPlan_NastavniPlanId",
+                        column: x => x.NastavniPlanId,
+                        principalTable: "NastavniPlan",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Prijava",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    datumPrijave = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IspitId = table.Column<long>(type: "bigint", nullable: false),
+                    StudentId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Prijava", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Prijava_Ispit_IspitId",
+                        column: x => x.IspitId,
+                        principalTable: "Ispit",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prijava_Korisnik_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Uvjerenje",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Namjena = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    datumIzdavanja = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StudentId = table.Column<long>(type: "bigint", nullable: false),
+                    StudentskaSluzbaId = table.Column<long>(type: "bigint", nullable: false),
+                    Vrsta = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Uvjerenje", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Uvjerenje_Korisnik_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Uvjerenje_Korisnik_StudentskaSluzbaId",
+                        column: x => x.StudentskaSluzbaId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Zahtjev",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    tipZahtjeva = table.Column<int>(type: "int", nullable: false),
+                    statusZahtjeva = table.Column<int>(type: "int", nullable: false),
+                    datumPodnosenja = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    datumRjesavanja = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StudentId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Zahtjev", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Zahtjev_Korisnik_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Korisnik",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -255,15 +295,21 @@ namespace StudentHub.Data.Migrations
                     Vrijednost = table.Column<float>(type: "real", nullable: false),
                     PredmetId = table.Column<long>(type: "bigint", nullable: false),
                     StudentId = table.Column<long>(type: "bigint", nullable: false),
-                    NastavnoOsobljeId = table.Column<long>(type: "bigint", nullable: false)
+                    ProfesorId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ocjena", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ocjena_NastavnoOsoblje_NastavnoOsobljeId",
-                        column: x => x.NastavnoOsobljeId,
-                        principalTable: "NastavnoOsoblje",
+                        name: "FK_Ocjena_Korisnik_ProfesorId",
+                        column: x => x.ProfesorId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ocjena_Korisnik_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Korisnik",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -272,12 +318,58 @@ namespace StudentHub.Data.Migrations
                         principalTable: "Predmet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PredmetAsistent",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PredmetId = table.Column<long>(type: "bigint", nullable: false),
+                    AsistentId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PredmetAsistent", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ocjena_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
-                        principalColumn: "BrojIndeksa",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_PredmetAsistent_Korisnik_AsistentId",
+                        column: x => x.AsistentId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PredmetAsistent_Predmet_PredmetId",
+                        column: x => x.PredmetId,
+                        principalTable: "Predmet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PredmetProfesor",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PredmetId = table.Column<long>(type: "bigint", nullable: false),
+                    ProfesorId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PredmetProfesor", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PredmetProfesor_Korisnik_ProfesorId",
+                        column: x => x.ProfesorId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PredmetProfesor_Predmet_PredmetId",
+                        column: x => x.PredmetId,
+                        principalTable: "Predmet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -286,7 +378,7 @@ namespace StudentHub.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AkademskaGodina = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    akademskaGodina = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     StudentId = table.Column<long>(type: "bigint", nullable: false),
                     PredmetId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -294,126 +386,23 @@ namespace StudentHub.Data.Migrations
                 {
                     table.PrimaryKey("PK_StudentNaPredmetu", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_StudentNaPredmetu_Korisnik_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_StudentNaPredmetu_Predmet_PredmetId",
                         column: x => x.PredmetId,
                         principalTable: "Predmet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StudentNaPredmetu_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
-                        principalColumn: "BrojIndeksa",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Dokument",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Putanja = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ZahtjevId = table.Column<long>(type: "bigint", nullable: true),
-                    KorisnikId = table.Column<long>(type: "bigint", nullable: true),
-                    StudentskaSluzbaId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Dokument", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Dokument_Korisnik_KorisnikId",
-                        column: x => x.KorisnikId,
-                        principalTable: "Korisnik",
-                        principalColumn: "JMBG");
-                    table.ForeignKey(
-                        name: "FK_Dokument_StudentskaSluzba_StudentskaSluzbaId",
-                        column: x => x.StudentskaSluzbaId,
-                        principalTable: "StudentskaSluzba",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Dokument_Zahtjev_ZahtjevId",
-                        column: x => x.ZahtjevId,
-                        principalTable: "Zahtjev",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Uvjerenje",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Namjena = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatumIzdavanja = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ZahtjevId = table.Column<long>(type: "bigint", nullable: false),
-                    StudentId = table.Column<long>(type: "bigint", nullable: false),
-                    StudentskaSluzbaId = table.Column<long>(type: "bigint", nullable: false),
-                    Vrsta = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Uvjerenje", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Uvjerenje_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
-                        principalColumn: "BrojIndeksa",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Uvjerenje_StudentskaSluzba_StudentskaSluzbaId",
-                        column: x => x.StudentskaSluzbaId,
-                        principalTable: "StudentskaSluzba",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Uvjerenje_Zahtjev_ZahtjevId",
-                        column: x => x.ZahtjevId,
-                        principalTable: "Zahtjev",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Prijava",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DatumPrijave = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IspitId = table.Column<long>(type: "bigint", nullable: false),
-                    StudentId = table.Column<long>(type: "bigint", nullable: false),
-                    PredmetId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prijava", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Prijava_Ispit_IspitId",
-                        column: x => x.IspitId,
-                        principalTable: "Ispit",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prijava_Predmet_PredmetId",
-                        column: x => x.PredmetId,
-                        principalTable: "Predmet",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prijava_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
-                        principalColumn: "BrojIndeksa",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Dokument_KorisnikId",
+                name: "IX_Dokument_StudentId",
                 table: "Dokument",
-                column: "KorisnikId");
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dokument_StudentskaSluzbaId",
@@ -421,14 +410,14 @@ namespace StudentHub.Data.Migrations
                 column: "StudentskaSluzbaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Dokument_ZahtjevId",
-                table: "Dokument",
-                column: "ZahtjevId");
+                name: "IX_Ispit_AsistentId",
+                table: "Ispit",
+                column: "AsistentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ispit_NastavnoOsobljeId",
+                name: "IX_Ispit_KorisnikId",
                 table: "Ispit",
-                column: "NastavnoOsobljeId");
+                column: "KorisnikId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ispit_PredmetId",
@@ -436,14 +425,49 @@ namespace StudentHub.Data.Migrations
                 column: "PredmetId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Ispit_ProfesorId",
+                table: "Ispit",
+                column: "ProfesorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ispit_StudentId",
+                table: "Ispit",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Korisnik_PredmetId",
+                table: "Korisnik",
+                column: "PredmetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Korisnik_StudijskiProgramId",
+                table: "Korisnik",
+                column: "StudijskiProgramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Korisnik_ZahtjevId",
+                table: "Korisnik",
+                column: "ZahtjevId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NastavniPlan_StudijskiProgramId",
                 table: "NastavniPlan",
                 column: "StudijskiProgramId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Obavjestenje_NastavnoOsobljeId",
+                name: "IX_Obavjestenje_AsistentId",
                 table: "Obavjestenje",
-                column: "NastavnoOsobljeId");
+                column: "AsistentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Obavjestenje_KorisnikId",
+                table: "Obavjestenje",
+                column: "KorisnikId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Obavjestenje_ProfesorId",
+                table: "Obavjestenje",
+                column: "ProfesorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Obavjestenje_StudentskaSluzbaId",
@@ -451,14 +475,14 @@ namespace StudentHub.Data.Migrations
                 column: "StudentskaSluzbaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ocjena_NastavnoOsobljeId",
-                table: "Ocjena",
-                column: "NastavnoOsobljeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Ocjena_PredmetId",
                 table: "Ocjena",
                 column: "PredmetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ocjena_ProfesorId",
+                table: "Ocjena",
+                column: "ProfesorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ocjena_StudentId",
@@ -466,9 +490,39 @@ namespace StudentHub.Data.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Predmet_SifraProfesora",
+                name: "IX_Predmet_AsistentId",
                 table: "Predmet",
-                column: "SifraProfesora");
+                column: "AsistentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Predmet_NastavniPlanId",
+                table: "Predmet",
+                column: "NastavniPlanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Predmet_ProfesorId",
+                table: "Predmet",
+                column: "ProfesorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PredmetAsistent_AsistentId",
+                table: "PredmetAsistent",
+                column: "AsistentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PredmetAsistent_PredmetId",
+                table: "PredmetAsistent",
+                column: "PredmetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PredmetProfesor_PredmetId",
+                table: "PredmetProfesor",
+                column: "PredmetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PredmetProfesor_ProfesorId",
+                table: "PredmetProfesor",
+                column: "ProfesorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Prijava_IspitId",
@@ -476,19 +530,9 @@ namespace StudentHub.Data.Migrations
                 column: "IspitId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prijava_PredmetId",
-                table: "Prijava",
-                column: "PredmetId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Prijava_StudentId",
                 table: "Prijava",
                 column: "StudentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Student_KorisnikId",
-                table: "Student",
-                column: "KorisnikId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentNaPredmetu_PredmetId",
@@ -511,35 +555,104 @@ namespace StudentHub.Data.Migrations
                 column: "StudentskaSluzbaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Uvjerenje_ZahtjevId",
-                table: "Uvjerenje",
-                column: "ZahtjevId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Zahtjev_StudentId",
                 table: "Zahtjev",
                 column: "StudentId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Zahtjev_StudentskaSluzbaId",
-                table: "Zahtjev",
-                column: "StudentskaSluzbaId");
+            migrationBuilder.AddForeignKey(
+                name: "FK_Dokument_Korisnik_StudentId",
+                table: "Dokument",
+                column: "StudentId",
+                principalTable: "Korisnik",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Dokument_Korisnik_StudentskaSluzbaId",
+                table: "Dokument",
+                column: "StudentskaSluzbaId",
+                principalTable: "Korisnik",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Ispit_Korisnik_AsistentId",
+                table: "Ispit",
+                column: "AsistentId",
+                principalTable: "Korisnik",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Ispit_Korisnik_KorisnikId",
+                table: "Ispit",
+                column: "KorisnikId",
+                principalTable: "Korisnik",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Ispit_Korisnik_ProfesorId",
+                table: "Ispit",
+                column: "ProfesorId",
+                principalTable: "Korisnik",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Ispit_Korisnik_StudentId",
+                table: "Ispit",
+                column: "StudentId",
+                principalTable: "Korisnik",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Ispit_Predmet_PredmetId",
+                table: "Ispit",
+                column: "PredmetId",
+                principalTable: "Predmet",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Korisnik_Predmet_PredmetId",
+                table: "Korisnik",
+                column: "PredmetId",
+                principalTable: "Predmet",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Korisnik_Zahtjev_ZahtjevId",
+                table: "Korisnik",
+                column: "ZahtjevId",
+                principalTable: "Zahtjev",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Dokument");
+            migrationBuilder.DropForeignKey(
+                name: "FK_Predmet_Korisnik_AsistentId",
+                table: "Predmet");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Predmet_Korisnik_ProfesorId",
+                table: "Predmet");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Zahtjev_Korisnik_StudentId",
+                table: "Zahtjev");
 
             migrationBuilder.DropTable(
-                name: "NastavniPlan");
+                name: "Dokument");
 
             migrationBuilder.DropTable(
                 name: "Obavjestenje");
 
             migrationBuilder.DropTable(
                 name: "Ocjena");
+
+            migrationBuilder.DropTable(
+                name: "PredmetAsistent");
+
+            migrationBuilder.DropTable(
+                name: "PredmetProfesor");
 
             migrationBuilder.DropTable(
                 name: "Prijava");
@@ -551,28 +664,22 @@ namespace StudentHub.Data.Migrations
                 name: "Uvjerenje");
 
             migrationBuilder.DropTable(
-                name: "StudijskiProgram");
-
-            migrationBuilder.DropTable(
                 name: "Ispit");
 
             migrationBuilder.DropTable(
-                name: "Zahtjev");
+                name: "Korisnik");
 
             migrationBuilder.DropTable(
                 name: "Predmet");
 
             migrationBuilder.DropTable(
-                name: "Student");
+                name: "Zahtjev");
 
             migrationBuilder.DropTable(
-                name: "StudentskaSluzba");
+                name: "NastavniPlan");
 
             migrationBuilder.DropTable(
-                name: "NastavnoOsoblje");
-
-            migrationBuilder.DropTable(
-                name: "Korisnik");
+                name: "StudijskiProgram");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",

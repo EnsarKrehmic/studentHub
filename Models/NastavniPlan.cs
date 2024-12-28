@@ -8,11 +8,11 @@ namespace StudentHub.Models
         [Key]
         public long Id { get; set; }
 
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage = "Godina studija je obavezna.")]
+        [MaxLength(100, ErrorMessage = "Godina studija ne smije biti duža od 100 karaktera.")]
         public string godinaStudija { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Studijski program je obavezan.")]
         [ForeignKey("StudijskiProgram")]
         public long StudijskiProgramId { get; set; }
         public StudijskiProgram StudijskiProgram { get; set; }

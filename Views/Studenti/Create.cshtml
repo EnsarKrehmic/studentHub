@@ -5,48 +5,68 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="Ime" class="control-label"></label>
-        <input asp-for="Ime" class="form-control" />
-        <span asp-validation-for="Ime" class="text-danger"></span>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="JMBG" class="control-label"></label>
+                <input asp-for="JMBG" class="form-control" />
+                <span asp-validation-for="JMBG" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ime" class="control-label"></label>
+                <input asp-for="Ime" class="form-control" />
+                <span asp-validation-for="Ime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Prezime" class="control-label"></label>
+                <input asp-for="Prezime" class="form-control" />
+                <span asp-validation-for="Prezime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="brojIndeksa" class="control-label"></label>
+                <input asp-for="brojIndeksa" class="form-control" />
+                <span asp-validation-for="brojIndeksa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lozinka" class="control-label"></label>
+                <input asp-for="Lozinka" class="form-control" />
+                <span asp-validation-for="Lozinka" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="godinaStudija" class="control-label"></label>
+                <input asp-for="godinaStudija" class="form-control" />
+                <span asp-validation-for="godinaStudija" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="studijskiProgram" class="control-label"></label>
+                <input asp-for="studijskiProgram" class="form-control" />
+                <span asp-validation-for="studijskiProgram" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="predhodnoObrazovanje" class="control-label"></label>
+                <input asp-for="predhodnoObrazovanje" class="form-control" />
+                <span asp-validation-for="predhodnoObrazovanje" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="podaciUplata" class="control-label"></label>
+                <input asp-for="podaciUplata" class="form-control" />
+                <span asp-validation-for="podaciUplata" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Sačuvaj</button>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="Prezime" class="control-label"></label>
-        <input asp-for="Prezime" class="form-control" />
-        <span asp-validation-for="Prezime" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="JMBG" class="control-label"></label>
-        <select asp-for="JMBG" class="form-control" asp-items="ViewBag.JMBG"></select>
-        <span asp-validation-for="JMBG" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="predhodnoObrazovanje" class="control-label"></label>
-        <input asp-for="predhodnoObrazovanje" class="form-control" />
-        <span asp-validation-for="predhodnoObrazovanje" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="studijskiProgram" class="control-label"></label>
-        <input asp-for="studijskiProgram" class="form-control" />
-        <span asp-validation-for="studijskiProgram" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="godinaStudija" class="control-label"></label>
-        <input asp-for="godinaStudija" class="form-control" />
-        <span asp-validation-for="godinaStudija" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Kreiraj</button>
-    </div>
-</form>
-
-<div>
-    <a asp-action="Index">Nazad</a>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

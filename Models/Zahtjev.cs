@@ -44,8 +44,9 @@ namespace StudentHub.Models
 
         public DateTime? datumRjesavanja { get; set; }
 
+        [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]
-        public long brojIndeksa { get; set; }
+        public long StudentId { get; set; }
         public Student Student { get; set; }
 
         public Zahtjev() { }

@@ -8,12 +8,12 @@ namespace StudentHub.Models
         [Key]
         public long Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Predmet je obavezan.")]
         [ForeignKey("Predmet")]
         public long PredmetId { get; set; }
         public Predmet Predmet { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Asistent je obavezan.")]
         [ForeignKey("Asistent")]
         public long AsistentId { get; set; }
         public Asistent Asistent { get; set; }

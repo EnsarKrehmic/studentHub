@@ -25,14 +25,17 @@ namespace StudentHub.Models
         [Required(ErrorMessage = "Datum izdavanja je obavezan.")]
         public DateTime datumIzdavanja { get; set; }
 
+        [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]
-        public long brojIndeksa { get; set; }
+        public long StudentId { get; set; }
         public Student Student { get; set; }
 
+        [Required(ErrorMessage = "Studentska služba je obavezna.")]
         [ForeignKey("StudentskaSluzba")]
         public long StudentskaSluzbaId { get; set; }
         public StudentskaSluzba StudentskaSluzba { get; set; }
 
+        [Required(ErrorMessage = "Vrsta uvjerenja je obavezna.")]
         [EnumDataType(typeof(VrstaUvjerenja))]
         public VrstaUvjerenja Vrsta { get; set; }
 

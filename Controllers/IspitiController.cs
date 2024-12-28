@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +23,10 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Ispiti.Include(i => i.Asistent).Include(i => i.Predmet).Include(i => i.Profesor);
+            var applicationDbContext = _context.Ispiti
+                .Include(i => i.Asistent)
+                .Include(i => i.Predmet)
+                .Include(i => i.Profesor);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -45,10 +45,7 @@ namespace StudentHub.Controllers
                 .Include(i => i.Predmet)
                 .Include(i => i.Profesor)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (ispit == null)
-            {
-                return NotFound();
-            }
+            if (ispit == null) return NotFound();
 
             return View(ispit);
         }
@@ -58,9 +55,9 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Id");
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id");
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id");
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv");
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime");
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime");
             return View();
         }
 
@@ -68,17 +65,55 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,datumOdrzavanja,Lokacija,brojBodova,PredmetId,ProfesorId,AsistentId")] Ispit ispit)
+        public async Task<IActionResult> Create([Bind("datumOdrzavanja,Lokacija,brojBodova,PredmetId,ProfesorId,AsistentId")] Ispit ispit)
         {
             if (ModelState.IsValid)
             {
+                Console.WriteLine($"Predmet: {ispit.PredmetId}, Datum održavanja: {ispit.datumOdrzavanja}, Lokacija: {ispit.Lokacija}, Broj bodova: {ispit.brojBodova}");
+                ispit.datumObjave = DateTime.Now;
+
+                // Pronalaženje korisnika u bazi prema User.Identity.Name
+                if (User.Identity?.IsAuthenticated == true)
+                {
+                    if (long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long userId))
+                    {
+                        var korisnik = await _context.Korisnici
+                            .FirstOrDefaultAsync(k => k.Id == userId);
+
+                        if (korisnik != null)
+                        {
+                            ispit.KorisnikId = korisnik.Id; // Postavljanje povezanog entiteta
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Autentifikovani korisnik '{User.Identity.Name}' nije pronađen u bazi.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Korisnik nije autentifikovan. Obavještenje će biti kreirano bez korisnika.");
+                }
+
+                // Postavljanje dodatnih vrijednosti
+                SetUserRoleIds(ispit);
+
                 _context.Add(ispit);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("Ispit uspješno kreiran.");
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Id", ispit.AsistentId);
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", ispit.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", ispit.ProfesorId);
+            else
+            {
+                Console.WriteLine("ModelState nije validan. Greške:");
+                foreach (var error in ModelState)
+                {
+                    Console.WriteLine($"{error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
+            }
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ispit.PredmetId);
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ispit.ProfesorId);
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", ispit.AsistentId);
             return View(ispit);
         }
 
@@ -87,19 +122,14 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]/{id?}")]
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var ispit = await _context.Ispiti.FindAsync(id);
-            if (ispit == null)
-            {
-                return NotFound();
-            }
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Id", ispit.AsistentId);
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", ispit.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", ispit.ProfesorId);
+            if (ispit == null) return NotFound();
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ispit.PredmetId);
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ispit.ProfesorId);
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", ispit.AsistentId);
+
             return View(ispit);
         }
 
@@ -109,34 +139,28 @@ namespace StudentHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,datumOdrzavanja,Lokacija,brojBodova,PredmetId,ProfesorId,AsistentId")] Ispit ispit)
         {
-            if (id != ispit.Id)
-            {
-                return NotFound();
-            }
+            if (id != ispit.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    ispit.datumObjave = DateTime.Now;
+                    SetUserRoleIds(ispit);
+
                     _context.Update(ispit);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!IspitExists(ispit.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!IspitExists(ispit.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Id", ispit.AsistentId);
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", ispit.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", ispit.ProfesorId);
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ispit.PredmetId);
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ispit.ProfesorId);
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", ispit.AsistentId);
             return View(ispit);
         }
 
@@ -145,21 +169,14 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]/{id?}")]
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var ispit = await _context.Ispiti
                 .Include(i => i.Asistent)
                 .Include(i => i.Predmet)
                 .Include(i => i.Profesor)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (ispit == null)
-            {
-                return NotFound();
-            }
-
+            if (ispit == null) return NotFound();
             return View(ispit);
         }
 
@@ -179,39 +196,29 @@ namespace StudentHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        [HttpGet]
-        [Route("[Controller]/Pretraga")]
-        public async Task<IActionResult> Pretraga(string? predmetNaziv, string? profesorPrezime, DateTime? datum)
-        {
-            var query = _context.Ispiti
-                .Include(i => i.Asistent)
-                .Include(i => i.Predmet)
-                .Include(i => i.Profesor)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(predmetNaziv))
-            {
-                query = query.Where(i => i.Predmet.Naziv.Contains(predmetNaziv));
-            }
-
-            if (!string.IsNullOrEmpty(profesorPrezime))
-            {
-                query = query.Where(i => i.Profesor.Prezime.Contains(profesorPrezime));
-            }
-
-            if (datum.HasValue)
-            {
-                query = query.Where(i => i.datumOdrzavanja.Date == datum.Value.Date);
-            }
-
-            return View("Index", await query.ToListAsync());
-        }
-
-
         private bool IspitExists(long id)
         {
             return _context.Ispiti.Any(e => e.Id == id);
+        }
+
+        // Pomoćna metoda za postavljanje korisničkih ID-ova i uloga
+        private void SetUserRoleIds(Ispit ispit)
+        {
+            Console.WriteLine("Postavljanje korisnika za ispit...");
+            if (User.IsInRole("Profesor"))
+            {
+                ispit.ProfesorId = GetCurrentUserId();
+            }
+            else if (User.IsInRole("Asistent"))
+            {
+                ispit.AsistentId = GetCurrentUserId();
+            }
+        }
+
+        // Metoda za dohvaćanje trenutnog korisničkog ID-a
+        private long GetCurrentUserId()
+        {
+            return long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
     }
 }

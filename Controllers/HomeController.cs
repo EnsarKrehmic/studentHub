@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
-using StudentHub.Models;
 using StudentHub.ViewModels;
 using System.Diagnostics;
 
@@ -59,4 +58,3 @@ namespace StudentHub.Controllers
         }
     }
 }
-

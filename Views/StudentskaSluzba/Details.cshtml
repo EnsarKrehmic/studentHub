@@ -4,36 +4,30 @@
     ViewData["Title"] = "Detalji admina";
 }
 
-    <h2>@ViewData["Title"]</h2>
+<h2>@ViewData["Title"]</h2>
 
-    <div>
-        <h4>Podaci o adminu</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Ime)</dt>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.Ime)</dd>
+<div>
+    <h4>Podaci o adminu</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.JMBG)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.JMBG)</dd>
 
-            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Prezime)</dt>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.Prezime)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Ime)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Ime)</dd>
 
-            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.JMBG)</dt>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.JMBG)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Prezime)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Prezime)</dd>
 
-            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Email)</dt>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.Email)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Email)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Email)</dd>
 
-            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Lozinka)</dt>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.Lozinka)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Lozinka)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Lozinka)</dd>
+    </dl>
+</div>
 
-            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Zahtjev)</dt>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.Zahtjev.Id)</dd>
-
-            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Predmet)</dt>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.Predmet.Id)</dd>
-        </dl>
-    </div>
-
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.JMBG">Izmjena</a> |
-        <a asp-action="Index">Nazad</a>
-    </div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.JMBG">Izmjena</a> |
+    <a asp-action="Index">Nazad</a>
+</div>

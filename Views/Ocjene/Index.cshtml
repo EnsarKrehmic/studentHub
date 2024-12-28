@@ -22,8 +22,8 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Vrijednost)</td>
                 <td>@Html.DisplayFor(modelItem => item.Predmet.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.JMBG)</td>
-                <td>@Html.DisplayFor(modelItem => item.Profesor.JMBG)</td>
+                <td>@Html.DisplayFor(modelItem => item.Student.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Profesor.Id)</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |
                     <a asp-action="Edit" asp-route-id="@item.Id">Izmjena</a> |

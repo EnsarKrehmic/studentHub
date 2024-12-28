@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "FN10pb28tDOXnrvtjs4UuVfWBwK5lKJUIwqcAxRR2AQ=",
+  "Hash": "1V4LCLndmpIpjz3tbSQ/vAw9NqmYDGSJ4ryYOxMDh9s=",
   "Source": "StudentHub",
   "BasePath": "_content/StudentHub",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "StudentHub\\wwwroot",
       "Source": "StudentHub",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "Pattern": "**"
     }
@@ -1277,10 +1277,10 @@
       "OriginalItemSpec": "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\8.0.10\\staticwebassets\\V5\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\StudentHub.styles.css",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\StudentHub.styles.css",
       "SourceId": "StudentHub",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "StudentHub#[.{fingerprint}]?.styles.css",
       "AssetKind": "All",
@@ -1295,13 +1295,13 @@
       "Integrity": "lwtxZryIkVGW9Ix/XrcthAZZ61GAOXZ40r0QV68pMhQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\StudentHub.styles.css"
+      "OriginalItemSpec": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\StudentHub.styles.css"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudentHub.bundle.scp.css",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudentHub.bundle.scp.css",
       "SourceId": "StudentHub",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "StudentHub#[.{fingerprint}]!.bundle.scp.css",
       "AssetKind": "All",
@@ -1316,13 +1316,13 @@
       "Integrity": "lwtxZryIkVGW9Ix/XrcthAZZ61GAOXZ40r0QV68pMhQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudentHub.bundle.scp.css"
+      "OriginalItemSpec": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudentHub.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\css\\site.css",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\css\\site.css",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "css/site#[.{fingerprint}]?.css",
       "AssetKind": "All",
@@ -1340,10 +1340,10 @@
       "OriginalItemSpec": "wwwroot\\css\\site.css"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\favicon.ico",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\favicon.ico",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "favicon#[.{fingerprint}]?.ico",
       "AssetKind": "All",
@@ -1361,10 +1361,10 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\js\\site.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\js\\site.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "js/site#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1382,10 +1382,10 @@
       "OriginalItemSpec": "wwwroot\\js\\site.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap#[.{fingerprint}]?.css",
       "AssetKind": "All",
@@ -1396,17 +1396,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "92hzwiuqhu",
-      "Integrity": "37bTBpeOfCKYgYuqUr63EG8gRuUYzivCKUlqGLkns+k=",
+      "Fingerprint": "b8a6p1hsfl",
+      "Integrity": "S+ZBP/d+9kZfYPbIkWVWJ/yHc77d6xGEYkc9q+nOVlE=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.min#[.{fingerprint}]?.css",
       "AssetKind": "All",
@@ -1417,17 +1417,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "ugliu9qabv",
-      "Integrity": "Lv86Gp0v73Q0ZAfJcK9SCnJ1G2SfFw5CN6svixVNTuo=",
+      "Fingerprint": "zlk9qf51uk",
+      "Integrity": "l1Zo3ayIOxoWNXdPljWtGKt1Y9mlRxy8OTnQfW+CHqE=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1438,17 +1438,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "l2av4jpuoj",
-      "Integrity": "vQTf4d3WJi9vmWQNA4kJnjoedgEhMFXFDEMXqtHtgzk=",
+      "Fingerprint": "f6zq8v6eb3",
+      "Integrity": "l/hyCcHXdGwW6cO0xfobuAMZk3Nh8dsRdWwdaeSn9qo=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle.js#[.{fingerprint}]?.map",
       "AssetKind": "All",
@@ -1466,10 +1466,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle.min#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1480,17 +1480,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "25iw1kog22",
-      "Integrity": "KuvCVS19rfTjoLgMyDDCdOkRRlhNrY4psEM4uezts2M=",
+      "Fingerprint": "89qbw8ngem",
+      "Integrity": "rAnWnVnzChxAAi8NS+Ilr1mE7Sj+do+X/DqyilNsznM=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle.min.js#[.{fingerprint}]?.map",
       "AssetKind": "All",
@@ -1508,10 +1508,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.esm#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1522,17 +1522,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "m39kt2b5c9",
-      "Integrity": "EuDXUJYKnfZuO8dSLN0f5iVbVasz36AROuAU3NJ3JBo=",
+      "Fingerprint": "n5w6o92d9r",
+      "Integrity": "SySIctW5IQsq8JoYGrNJU4ZilHaieJru5P0+8vTcfDA=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.esm.js#[.{fingerprint}]?.map",
       "AssetKind": "All",
@@ -1550,10 +1550,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.esm.min#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1564,17 +1564,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "um2aeqy4ik",
-      "Integrity": "Kj4irQWPwfSb5NFeos/h0IroI5/nIg0HtAjQ+w4v6TE=",
+      "Fingerprint": "jqwzsa9uv6",
+      "Integrity": "hVv0IJy8sIv1uIlVQOHnZFNAGprmLfDV+x0anYPmxYU=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.esm.min.js#[.{fingerprint}]?.map",
       "AssetKind": "All",
@@ -1592,10 +1592,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1606,17 +1606,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "o4kw7cc6tf",
-      "Integrity": "6IStRQerBchYSw6J2GWTOWGOnDRrWXmaG0r6nCwN5s4=",
+      "Fingerprint": "1piudyfv7h",
+      "Integrity": "JV8zLOxqX3ENLwiQX8lCiDY3TvQzbeibDAsdYtalZ4w=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.js#[.{fingerprint}]?.map",
       "AssetKind": "All",
@@ -1634,10 +1634,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.min#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1648,17 +1648,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "zwph15dxgs",
-      "Integrity": "c4Ll6eSIg6Eothk8pCWAF8aE923EvtU11pqjBy+NjNM=",
+      "Fingerprint": "4908xmbfjr",
+      "Integrity": "uAMYHAQlaHq1buKLwrk7FF4qxvcLWntS2/DpdKucfmU=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.min.js#[.{fingerprint}]?.map",
       "AssetKind": "All",
@@ -1676,10 +1676,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\LICENSE",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/bootstrap/LICENSE#[.{fingerprint}]?",
       "AssetKind": "All",
@@ -1697,10 +1697,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\LICENSE"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery/dist/jquery#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1711,17 +1711,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "fwhahm2icz",
-      "Integrity": "H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=",
+      "Fingerprint": "7s2n0ol71w",
+      "Integrity": "KSI/3xxCrCexCupdzQJRP1B6Iqg+2NA+X2u38cQdqq8=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\dist\\jquery.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery/dist/jquery.min#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1732,17 +1732,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "dd6z7egasc",
-      "Integrity": "/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=",
+      "Fingerprint": "ehgnz7f14e",
+      "Integrity": "zp0HUArZHsK1JMJwdk7EyaM+eDINjTdOxADt5Ij2JRs=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\dist\\jquery.min.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery/dist/jquery.min#[.{fingerprint}]?.map",
       "AssetKind": "All",
@@ -1760,10 +1760,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\LICENSE.txt",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery/LICENSE#[.{fingerprint}]?.txt",
       "AssetKind": "All",
@@ -1781,10 +1781,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\LICENSE.txt"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery-validation/dist/additional-methods#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1802,10 +1802,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery-validation/dist/additional-methods.min#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1823,10 +1823,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery-validation/dist/jquery.validate#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1837,17 +1837,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "pzqfkb6aqo",
-      "Integrity": "m0l81WDPiG7CcG7CDsTuZzvcGvyFmrQY5DLIxx3aRGw=",
+      "Fingerprint": "6d0lkjaslc",
+      "Integrity": "5qqb5VxQ2t2a6Zx/neW5uppLLvaGn4nn0NdYp6g8Lyg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery-validation/dist/jquery.validate.min#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1858,17 +1858,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "b7iojwaux1",
-      "Integrity": "JwUksNJ6/R07ZiLRoXbGeNrtlFZMFDKX4hemPiHOmCA=",
+      "Fingerprint": "l1zq2mitth",
+      "Integrity": "6e0N+WJiVKBeTitK1GKSwPi3rbdPpLtuqaiitZjeD2w=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery-validation/LICENSE#[.{fingerprint}]?.md",
       "AssetKind": "All",
@@ -1886,10 +1886,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\LICENSE.md"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1900,17 +1900,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "47otxtyo56",
-      "Integrity": "wJQaJ0XynBE2fq6CexXXhxKu7fstVmQc7V2MHNTo+WQ=",
+      "Fingerprint": "03hjc8e09r",
+      "Integrity": "xJbBMLGhYbXlPrrrddrSVmduyF6KEtbxEsYxw7hYZV4=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -1921,17 +1921,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "4v8eqarkd7",
-      "Integrity": "YJa7W8EiQdQpkk93iGEjjnLSUWRpRJbSfzfURh1kxz4=",
+      "Fingerprint": "48y08845bh",
+      "Integrity": "RFWFWIIPsjB4DucR4jqwxTWw13ZmtI+s6tVR2LJmZXk=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "Identity": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
       "SourceId": "StudentHub",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\",
       "BasePath": "_content/StudentHub",
       "RelativePath": "lib/jquery-validation-unobtrusive/LICENSE#[.{fingerprint}]?.txt",
       "AssetKind": "All",
@@ -1952,7 +1952,7 @@
   "Endpoints": [
     {
       "Route": "css/site.c2tiyv64ts.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\css\\site.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\css\\site.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1973,7 +1973,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1997,7 +1997,7 @@
     },
     {
       "Route": "css/site.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\css\\site.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\css\\site.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -2018,7 +2018,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2034,7 +2034,7 @@
     },
     {
       "Route": "favicon.61n19gt1b8.ico",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\favicon.ico",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\favicon.ico",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -2055,7 +2055,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2079,7 +2079,7 @@
     },
     {
       "Route": "favicon.ico",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\favicon.ico",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\favicon.ico",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -2100,7 +2100,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4336,7 +4336,7 @@
     },
     {
       "Route": "js/site.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\js\\site.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\js\\site.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4357,7 +4357,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4373,7 +4373,7 @@
     },
     {
       "Route": "js/site.xtxxf3hu2r.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\js\\site.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\js\\site.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4394,7 +4394,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4417,8 +4417,8 @@
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/css/bootstrap.92hzwiuqhu.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "Route": "lib/bootstrap/dist/css/bootstrap.b8a6p1hsfl.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4427,7 +4427,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "287858"
+          "Value": "300297"
         },
         {
           "Name": "Content-Type",
@@ -4435,11 +4435,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"37bTBpeOfCKYgYuqUr63EG8gRuUYzivCKUlqGLkns+k=\""
+          "Value": "\"S+ZBP/d+9kZfYPbIkWVWJ/yHc77d6xGEYkc9q+nOVlE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 17 Dec 2024 17:53:24 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4449,7 +4449,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "92hzwiuqhu"
+          "Value": "b8a6p1hsfl"
         },
         {
           "Name": "label",
@@ -4457,13 +4457,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-37bTBpeOfCKYgYuqUr63EG8gRuUYzivCKUlqGLkns+k="
+          "Value": "sha256-S+ZBP/d+9kZfYPbIkWVWJ/yHc77d6xGEYkc9q+nOVlE="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/css/bootstrap.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4472,7 +4472,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "287858"
+          "Value": "300297"
         },
         {
           "Name": "Content-Type",
@@ -4480,11 +4480,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"37bTBpeOfCKYgYuqUr63EG8gRuUYzivCKUlqGLkns+k=\""
+          "Value": "\"S+ZBP/d+9kZfYPbIkWVWJ/yHc77d6xGEYkc9q+nOVlE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 17 Dec 2024 17:53:24 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4494,13 +4494,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-37bTBpeOfCKYgYuqUr63EG8gRuUYzivCKUlqGLkns+k="
+          "Value": "sha256-S+ZBP/d+9kZfYPbIkWVWJ/yHc77d6xGEYkc9q+nOVlE="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/css/bootstrap.min.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4509,7 +4509,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "238586"
+          "Value": "238597"
         },
         {
           "Name": "Content-Type",
@@ -4517,11 +4517,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Lv86Gp0v73Q0ZAfJcK9SCnJ1G2SfFw5CN6svixVNTuo=\""
+          "Value": "\"l1Zo3ayIOxoWNXdPljWtGKt1Y9mlRxy8OTnQfW+CHqE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 17 Dec 2024 17:52:52 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4531,13 +4531,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-Lv86Gp0v73Q0ZAfJcK9SCnJ1G2SfFw5CN6svixVNTuo="
+          "Value": "sha256-l1Zo3ayIOxoWNXdPljWtGKt1Y9mlRxy8OTnQfW+CHqE="
         }
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/css/bootstrap.min.ugliu9qabv.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "Route": "lib/bootstrap/dist/css/bootstrap.min.zlk9qf51uk.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4546,7 +4546,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "238586"
+          "Value": "238597"
         },
         {
           "Name": "Content-Type",
@@ -4554,11 +4554,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Lv86Gp0v73Q0ZAfJcK9SCnJ1G2SfFw5CN6svixVNTuo=\""
+          "Value": "\"l1Zo3ayIOxoWNXdPljWtGKt1Y9mlRxy8OTnQfW+CHqE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 17 Dec 2024 17:52:52 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4568,7 +4568,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "ugliu9qabv"
+          "Value": "zlk9qf51uk"
         },
         {
           "Name": "label",
@@ -4576,13 +4576,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-Lv86Gp0v73Q0ZAfJcK9SCnJ1G2SfFw5CN6svixVNTuo="
+          "Value": "sha256-l1Zo3ayIOxoWNXdPljWtGKt1Y9mlRxy8OTnQfW+CHqE="
         }
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Route": "lib/bootstrap/dist/js/bootstrap.1piudyfv7h.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4591,7 +4591,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "208492"
+          "Value": "153194"
         },
         {
           "Name": "Content-Type",
@@ -4599,11 +4599,101 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"vQTf4d3WJi9vmWQNA4kJnjoedgEhMFXFDEMXqtHtgzk=\""
+          "Value": "\"JV8zLOxqX3ENLwiQX8lCiDY3TvQzbeibDAsdYtalZ4w=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1piudyfv7h"
+        },
+        {
+          "Name": "label",
+          "Value": "lib/bootstrap/dist/js/bootstrap.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-JV8zLOxqX3ENLwiQX8lCiDY3TvQzbeibDAsdYtalZ4w="
+        }
+      ]
+    },
+    {
+      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.f6zq8v6eb3.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "215272"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"l/hyCcHXdGwW6cO0xfobuAMZk3Nh8dsRdWwdaeSn9qo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f6zq8v6eb3"
+        },
+        {
+          "Name": "label",
+          "Value": "lib/bootstrap/dist/js/bootstrap.bundle.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-l/hyCcHXdGwW6cO0xfobuAMZk3Nh8dsRdWwdaeSn9qo="
+        }
+      ]
+    },
+    {
+      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "215272"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"l/hyCcHXdGwW6cO0xfobuAMZk3Nh8dsRdWwdaeSn9qo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4613,13 +4703,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-vQTf4d3WJi9vmWQNA4kJnjoedgEhMFXFDEMXqtHtgzk="
+          "Value": "sha256-l/hyCcHXdGwW6cO0xfobuAMZk3Nh8dsRdWwdaeSn9qo="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.bundle.js.kbynt5jhd9.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4640,7 +4730,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4664,7 +4754,7 @@
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.bundle.js.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4685,7 +4775,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4700,8 +4790,8 @@
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.l2av4jpuoj.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.min.89qbw8ngem.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4710,7 +4800,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "208492"
+          "Value": "78474"
         },
         {
           "Name": "Content-Type",
@@ -4718,11 +4808,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"vQTf4d3WJi9vmWQNA4kJnjoedgEhMFXFDEMXqtHtgzk=\""
+          "Value": "\"rAnWnVnzChxAAi8NS+Ilr1mE7Sj+do+X/DqyilNsznM=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4732,52 +4822,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "l2av4jpuoj"
-        },
-        {
-          "Name": "label",
-          "Value": "lib/bootstrap/dist/js/bootstrap.bundle.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-vQTf4d3WJi9vmWQNA4kJnjoedgEhMFXFDEMXqtHtgzk="
-        }
-      ]
-    },
-    {
-      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.min.25iw1kog22.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "78468"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"KuvCVS19rfTjoLgMyDDCdOkRRlhNrY4psEM4uezts2M=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "25iw1kog22"
+          "Value": "89qbw8ngem"
         },
         {
           "Name": "label",
@@ -4785,13 +4830,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-KuvCVS19rfTjoLgMyDDCdOkRRlhNrY4psEM4uezts2M="
+          "Value": "sha256-rAnWnVnzChxAAi8NS+Ilr1mE7Sj+do+X/DqyilNsznM="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.bundle.min.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4800,7 +4845,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "78468"
+          "Value": "78474"
         },
         {
           "Name": "Content-Type",
@@ -4808,11 +4853,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"KuvCVS19rfTjoLgMyDDCdOkRRlhNrY4psEM4uezts2M=\""
+          "Value": "\"rAnWnVnzChxAAi8NS+Ilr1mE7Sj+do+X/DqyilNsznM=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4822,13 +4867,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-KuvCVS19rfTjoLgMyDDCdOkRRlhNrY4psEM4uezts2M="
+          "Value": "sha256-rAnWnVnzChxAAi8NS+Ilr1mE7Sj+do+X/DqyilNsznM="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.bundle.min.js.c2nslu3uf3.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4849,7 +4894,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4873,7 +4918,7 @@
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.bundle.min.js.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4894,7 +4939,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4910,7 +4955,7 @@
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.esm.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4919,7 +4964,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "139019"
+          "Value": "143996"
         },
         {
           "Name": "Content-Type",
@@ -4927,11 +4972,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"EuDXUJYKnfZuO8dSLN0f5iVbVasz36AROuAU3NJ3JBo=\""
+          "Value": "\"SySIctW5IQsq8JoYGrNJU4ZilHaieJru5P0+8vTcfDA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4941,13 +4986,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-EuDXUJYKnfZuO8dSLN0f5iVbVasz36AROuAU3NJ3JBo="
+          "Value": "sha256-SySIctW5IQsq8JoYGrNJU4ZilHaieJru5P0+8vTcfDA="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.esm.js.2lgwfvgpvi.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4968,7 +5013,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4992,7 +5037,7 @@
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.esm.js.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5013,7 +5058,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5028,8 +5073,8 @@
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/js/bootstrap.esm.m39kt2b5c9.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "Route": "lib/bootstrap/dist/js/bootstrap.esm.min.jqwzsa9uv6.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5038,7 +5083,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "139019"
+          "Value": "72022"
         },
         {
           "Name": "Content-Type",
@@ -5046,11 +5091,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"EuDXUJYKnfZuO8dSLN0f5iVbVasz36AROuAU3NJ3JBo=\""
+          "Value": "\"hVv0IJy8sIv1uIlVQOHnZFNAGprmLfDV+x0anYPmxYU=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5060,21 +5105,21 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "m39kt2b5c9"
+          "Value": "jqwzsa9uv6"
         },
         {
           "Name": "label",
-          "Value": "lib/bootstrap/dist/js/bootstrap.esm.js"
+          "Value": "lib/bootstrap/dist/js/bootstrap.esm.min.js"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-EuDXUJYKnfZuO8dSLN0f5iVbVasz36AROuAU3NJ3JBo="
+          "Value": "sha256-hVv0IJy8sIv1uIlVQOHnZFNAGprmLfDV+x0anYPmxYU="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.esm.min.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5083,7 +5128,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "72016"
+          "Value": "72022"
         },
         {
           "Name": "Content-Type",
@@ -5091,11 +5136,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Kj4irQWPwfSb5NFeos/h0IroI5/nIg0HtAjQ+w4v6TE=\""
+          "Value": "\"hVv0IJy8sIv1uIlVQOHnZFNAGprmLfDV+x0anYPmxYU=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5105,13 +5150,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-Kj4irQWPwfSb5NFeos/h0IroI5/nIg0HtAjQ+w4v6TE="
+          "Value": "sha256-hVv0IJy8sIv1uIlVQOHnZFNAGprmLfDV+x0anYPmxYU="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.esm.min.js.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5132,7 +5177,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5148,7 +5193,7 @@
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.esm.min.js.wsezl0heh6.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5169,7 +5214,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5192,8 +5237,8 @@
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/js/bootstrap.esm.min.um2aeqy4ik.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "Route": "lib/bootstrap/dist/js/bootstrap.esm.n5w6o92d9r.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5202,7 +5247,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "72016"
+          "Value": "143996"
         },
         {
           "Name": "Content-Type",
@@ -5210,11 +5255,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Kj4irQWPwfSb5NFeos/h0IroI5/nIg0HtAjQ+w4v6TE=\""
+          "Value": "\"SySIctW5IQsq8JoYGrNJU4ZilHaieJru5P0+8vTcfDA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5224,21 +5269,21 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "um2aeqy4ik"
+          "Value": "n5w6o92d9r"
         },
         {
           "Name": "label",
-          "Value": "lib/bootstrap/dist/js/bootstrap.esm.min.js"
+          "Value": "lib/bootstrap/dist/js/bootstrap.esm.js"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-Kj4irQWPwfSb5NFeos/h0IroI5/nIg0HtAjQ+w4v6TE="
+          "Value": "sha256-SySIctW5IQsq8JoYGrNJU4ZilHaieJru5P0+8vTcfDA="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5247,7 +5292,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "148168"
+          "Value": "153194"
         },
         {
           "Name": "Content-Type",
@@ -5255,11 +5300,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"6IStRQerBchYSw6J2GWTOWGOnDRrWXmaG0r6nCwN5s4=\""
+          "Value": "\"JV8zLOxqX3ENLwiQX8lCiDY3TvQzbeibDAsdYtalZ4w=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5269,13 +5314,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-6IStRQerBchYSw6J2GWTOWGOnDRrWXmaG0r6nCwN5s4="
+          "Value": "sha256-JV8zLOxqX3ENLwiQX8lCiDY3TvQzbeibDAsdYtalZ4w="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.js.6ukhryfubh.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5296,7 +5341,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5320,7 +5365,7 @@
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.js.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5341,7 +5386,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5356,8 +5401,8 @@
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/js/bootstrap.min.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "Route": "lib/bootstrap/dist/js/bootstrap.min.4908xmbfjr.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5366,7 +5411,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "59511"
+          "Value": "59517"
         },
         {
           "Name": "Content-Type",
@@ -5374,11 +5419,56 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"c4Ll6eSIg6Eothk8pCWAF8aE923EvtU11pqjBy+NjNM=\""
+          "Value": "\"uAMYHAQlaHq1buKLwrk7FF4qxvcLWntS2/DpdKucfmU=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "4908xmbfjr"
+        },
+        {
+          "Name": "label",
+          "Value": "lib/bootstrap/dist/js/bootstrap.min.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-uAMYHAQlaHq1buKLwrk7FF4qxvcLWntS2/DpdKucfmU="
+        }
+      ]
+    },
+    {
+      "Route": "lib/bootstrap/dist/js/bootstrap.min.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "59517"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"uAMYHAQlaHq1buKLwrk7FF4qxvcLWntS2/DpdKucfmU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5388,13 +5478,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-c4Ll6eSIg6Eothk8pCWAF8aE923EvtU11pqjBy+NjNM="
+          "Value": "sha256-uAMYHAQlaHq1buKLwrk7FF4qxvcLWntS2/DpdKucfmU="
         }
       ]
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.min.js.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5415,7 +5505,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5431,7 +5521,7 @@
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.min.js.u33ctipx7g.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5452,7 +5542,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5475,98 +5565,8 @@
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/js/bootstrap.min.zwph15dxgs.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "59511"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"c4Ll6eSIg6Eothk8pCWAF8aE923EvtU11pqjBy+NjNM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "zwph15dxgs"
-        },
-        {
-          "Name": "label",
-          "Value": "lib/bootstrap/dist/js/bootstrap.min.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-c4Ll6eSIg6Eothk8pCWAF8aE923EvtU11pqjBy+NjNM="
-        }
-      ]
-    },
-    {
-      "Route": "lib/bootstrap/dist/js/bootstrap.o4kw7cc6tf.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "148168"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"6IStRQerBchYSw6J2GWTOWGOnDRrWXmaG0r6nCwN5s4=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "o4kw7cc6tf"
-        },
-        {
-          "Name": "label",
-          "Value": "lib/bootstrap/dist/js/bootstrap.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-6IStRQerBchYSw6J2GWTOWGOnDRrWXmaG0r6nCwN5s4="
-        }
-      ]
-    },
-    {
       "Route": "lib/bootstrap/LICENSE",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\LICENSE",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5587,7 +5587,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5603,7 +5603,7 @@
     },
     {
       "Route": "lib/bootstrap/LICENSE.81b7ukuj9c",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\bootstrap\\LICENSE",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5624,7 +5624,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5647,8 +5647,8 @@
       ]
     },
     {
-      "Route": "lib/jquery/dist/jquery.fwhahm2icz.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "Route": "lib/jquery/dist/jquery.7s2n0ol71w.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5657,7 +5657,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "288580"
+          "Value": "299461"
         },
         {
           "Name": "Content-Type",
@@ -5665,11 +5665,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=\""
+          "Value": "\"KSI/3xxCrCexCupdzQJRP1B6Iqg+2NA+X2u38cQdqq8=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5679,7 +5679,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "fwhahm2icz"
+          "Value": "7s2n0ol71w"
         },
         {
           "Name": "label",
@@ -5687,13 +5687,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+          "Value": "sha256-KSI/3xxCrCexCupdzQJRP1B6Iqg+2NA+X2u38cQdqq8="
         }
       ]
     },
     {
       "Route": "lib/jquery/dist/jquery.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5702,7 +5702,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "288580"
+          "Value": "299461"
         },
         {
           "Name": "Content-Type",
@@ -5710,11 +5710,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=\""
+          "Value": "\"KSI/3xxCrCexCupdzQJRP1B6Iqg+2NA+X2u38cQdqq8=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5724,13 +5724,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+          "Value": "sha256-KSI/3xxCrCexCupdzQJRP1B6Iqg+2NA+X2u38cQdqq8="
         }
       ]
     },
     {
       "Route": "lib/jquery/dist/jquery.min.5pze98is44.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5751,7 +5751,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5774,8 +5774,8 @@
       ]
     },
     {
-      "Route": "lib/jquery/dist/jquery.min.dd6z7egasc.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "Route": "lib/jquery/dist/jquery.min.ehgnz7f14e.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5784,7 +5784,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "89501"
+          "Value": "89503"
         },
         {
           "Name": "Content-Type",
@@ -5792,11 +5792,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=\""
+          "Value": "\"zp0HUArZHsK1JMJwdk7EyaM+eDINjTdOxADt5Ij2JRs=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5806,7 +5806,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "dd6z7egasc"
+          "Value": "ehgnz7f14e"
         },
         {
           "Name": "label",
@@ -5814,13 +5814,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+          "Value": "sha256-zp0HUArZHsK1JMJwdk7EyaM+eDINjTdOxADt5Ij2JRs="
         }
       ]
     },
     {
       "Route": "lib/jquery/dist/jquery.min.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5829,7 +5829,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "89501"
+          "Value": "89503"
         },
         {
           "Name": "Content-Type",
@@ -5837,11 +5837,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=\""
+          "Value": "\"zp0HUArZHsK1JMJwdk7EyaM+eDINjTdOxADt5Ij2JRs=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5851,13 +5851,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+          "Value": "sha256-zp0HUArZHsK1JMJwdk7EyaM+eDINjTdOxADt5Ij2JRs="
         }
       ]
     },
     {
       "Route": "lib/jquery/dist/jquery.min.map",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5878,7 +5878,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5894,7 +5894,7 @@
     },
     {
       "Route": "lib/jquery/LICENSE.mlv21k5csn.txt",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\LICENSE.txt",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5915,7 +5915,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5939,7 +5939,7 @@
     },
     {
       "Route": "lib/jquery/LICENSE.txt",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery\\LICENSE.txt",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5960,7 +5960,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5976,7 +5976,7 @@
     },
     {
       "Route": "lib/jquery-validation/dist/additional-methods.ay5nd8zt9x.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5997,7 +5997,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6021,7 +6021,7 @@
     },
     {
       "Route": "lib/jquery-validation/dist/additional-methods.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6042,7 +6042,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6058,7 +6058,7 @@
     },
     {
       "Route": "lib/jquery-validation/dist/additional-methods.min.9oaff4kq20.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6079,7 +6079,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6103,7 +6103,7 @@
     },
     {
       "Route": "lib/jquery-validation/dist/additional-methods.min.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6124,7 +6124,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6139,8 +6139,8 @@
       ]
     },
     {
-      "Route": "lib/jquery-validation/dist/jquery.validate.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "Route": "lib/jquery-validation/dist/jquery.validate.6d0lkjaslc.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6149,7 +6149,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "51171"
+          "Value": "52831"
         },
         {
           "Name": "Content-Type",
@@ -6157,48 +6157,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"m0l81WDPiG7CcG7CDsTuZzvcGvyFmrQY5DLIxx3aRGw=\""
+          "Value": "\"5qqb5VxQ2t2a6Zx/neW5uppLLvaGn4nn0NdYp6g8Lyg=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-m0l81WDPiG7CcG7CDsTuZzvcGvyFmrQY5DLIxx3aRGw="
-        }
-      ]
-    },
-    {
-      "Route": "lib/jquery-validation/dist/jquery.validate.min.b7iojwaux1.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "24601"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"JwUksNJ6/R07ZiLRoXbGeNrtlFZMFDKX4hemPiHOmCA=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6208,89 +6171,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "b7iojwaux1"
-        },
-        {
-          "Name": "label",
-          "Value": "lib/jquery-validation/dist/jquery.validate.min.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-JwUksNJ6/R07ZiLRoXbGeNrtlFZMFDKX4hemPiHOmCA="
-        }
-      ]
-    },
-    {
-      "Route": "lib/jquery-validation/dist/jquery.validate.min.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "24601"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"JwUksNJ6/R07ZiLRoXbGeNrtlFZMFDKX4hemPiHOmCA=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-JwUksNJ6/R07ZiLRoXbGeNrtlFZMFDKX4hemPiHOmCA="
-        }
-      ]
-    },
-    {
-      "Route": "lib/jquery-validation/dist/jquery.validate.pzqfkb6aqo.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "51171"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"m0l81WDPiG7CcG7CDsTuZzvcGvyFmrQY5DLIxx3aRGw=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:14 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "pzqfkb6aqo"
+          "Value": "6d0lkjaslc"
         },
         {
           "Name": "label",
@@ -6298,13 +6179,132 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-m0l81WDPiG7CcG7CDsTuZzvcGvyFmrQY5DLIxx3aRGw="
+          "Value": "sha256-5qqb5VxQ2t2a6Zx/neW5uppLLvaGn4nn0NdYp6g8Lyg="
+        }
+      ]
+    },
+    {
+      "Route": "lib/jquery-validation/dist/jquery.validate.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "52831"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5qqb5VxQ2t2a6Zx/neW5uppLLvaGn4nn0NdYp6g8Lyg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-5qqb5VxQ2t2a6Zx/neW5uppLLvaGn4nn0NdYp6g8Lyg="
+        }
+      ]
+    },
+    {
+      "Route": "lib/jquery-validation/dist/jquery.validate.min.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "24604"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6e0N+WJiVKBeTitK1GKSwPi3rbdPpLtuqaiitZjeD2w=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-6e0N+WJiVKBeTitK1GKSwPi3rbdPpLtuqaiitZjeD2w="
+        }
+      ]
+    },
+    {
+      "Route": "lib/jquery-validation/dist/jquery.validate.min.l1zq2mitth.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "24604"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6e0N+WJiVKBeTitK1GKSwPi3rbdPpLtuqaiitZjeD2w=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "l1zq2mitth"
+        },
+        {
+          "Name": "label",
+          "Value": "lib/jquery-validation/dist/jquery.validate.min.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-6e0N+WJiVKBeTitK1GKSwPi3rbdPpLtuqaiitZjeD2w="
         }
       ]
     },
     {
       "Route": "lib/jquery-validation/LICENSE.md",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6325,7 +6325,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6341,7 +6341,7 @@
     },
     {
       "Route": "lib/jquery-validation/LICENSE.x0q3zqp4vz.md",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6362,7 +6362,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6385,8 +6385,8 @@
       ]
     },
     {
-      "Route": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.47otxtyo56.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "Route": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.03hjc8e09r.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6395,7 +6395,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "19385"
+          "Value": "19820"
         },
         {
           "Name": "Content-Type",
@@ -6403,11 +6403,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"wJQaJ0XynBE2fq6CexXXhxKu7fstVmQc7V2MHNTo+WQ=\""
+          "Value": "\"xJbBMLGhYbXlPrrrddrSVmduyF6KEtbxEsYxw7hYZV4=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6417,7 +6417,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "47otxtyo56"
+          "Value": "03hjc8e09r"
         },
         {
           "Name": "label",
@@ -6425,13 +6425,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-wJQaJ0XynBE2fq6CexXXhxKu7fstVmQc7V2MHNTo+WQ="
+          "Value": "sha256-xJbBMLGhYbXlPrrrddrSVmduyF6KEtbxEsYxw7hYZV4="
         }
       ]
     },
     {
       "Route": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6440,7 +6440,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "19385"
+          "Value": "19820"
         },
         {
           "Name": "Content-Type",
@@ -6448,11 +6448,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"wJQaJ0XynBE2fq6CexXXhxKu7fstVmQc7V2MHNTo+WQ=\""
+          "Value": "\"xJbBMLGhYbXlPrrrddrSVmduyF6KEtbxEsYxw7hYZV4=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6462,13 +6462,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-wJQaJ0XynBE2fq6CexXXhxKu7fstVmQc7V2MHNTo+WQ="
+          "Value": "sha256-xJbBMLGhYbXlPrrrddrSVmduyF6KEtbxEsYxw7hYZV4="
         }
       ]
     },
     {
-      "Route": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.4v8eqarkd7.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "Route": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.48y08845bh.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6477,7 +6477,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "5824"
+          "Value": "5831"
         },
         {
           "Name": "Content-Type",
@@ -6485,11 +6485,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"YJa7W8EiQdQpkk93iGEjjnLSUWRpRJbSfzfURh1kxz4=\""
+          "Value": "\"RFWFWIIPsjB4DucR4jqwxTWw13ZmtI+s6tVR2LJmZXk=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6499,7 +6499,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "4v8eqarkd7"
+          "Value": "48y08845bh"
         },
         {
           "Name": "label",
@@ -6507,13 +6507,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-YJa7W8EiQdQpkk93iGEjjnLSUWRpRJbSfzfURh1kxz4="
+          "Value": "sha256-RFWFWIIPsjB4DucR4jqwxTWw13ZmtI+s6tVR2LJmZXk="
         }
       ]
     },
     {
       "Route": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6522,7 +6522,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "5824"
+          "Value": "5831"
         },
         {
           "Name": "Content-Type",
@@ -6530,11 +6530,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"YJa7W8EiQdQpkk93iGEjjnLSUWRpRJbSfzfURh1kxz4=\""
+          "Value": "\"RFWFWIIPsjB4DucR4jqwxTWw13ZmtI+s6tVR2LJmZXk=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6544,13 +6544,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-YJa7W8EiQdQpkk93iGEjjnLSUWRpRJbSfzfURh1kxz4="
+          "Value": "sha256-RFWFWIIPsjB4DucR4jqwxTWw13ZmtI+s6tVR2LJmZXk="
         }
       ]
     },
     {
       "Route": "lib/jquery-validation-unobtrusive/LICENSE.356vix0kms.txt",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6571,7 +6571,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6595,7 +6595,7 @@
     },
     {
       "Route": "lib/jquery-validation-unobtrusive/LICENSE.txt",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6616,7 +6616,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 16 Nov 2024 11:00:15 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6632,7 +6632,7 @@
     },
     {
       "Route": "StudentHub.1mp7n4vejp.bundle.scp.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudentHub.bundle.scp.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudentHub.bundle.scp.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6653,7 +6653,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 22 Dec 2024 23:09:48 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6677,7 +6677,7 @@
     },
     {
       "Route": "StudentHub.1mp7n4vejp.styles.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\StudentHub.styles.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\StudentHub.styles.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6698,7 +6698,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 22 Dec 2024 23:09:48 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6722,7 +6722,7 @@
     },
     {
       "Route": "StudentHub.bundle.scp.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudentHub.bundle.scp.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudentHub.bundle.scp.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6743,7 +6743,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 22 Dec 2024 23:09:48 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6759,7 +6759,7 @@
     },
     {
       "Route": "StudentHub.styles.css",
-      "AssetFile": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\StudentHub.styles.css",
+      "AssetFile": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\Debug\\net8.0\\scopedcss\\bundle\\StudentHub.styles.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6780,7 +6780,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 22 Dec 2024 23:09:48 GMT"
+          "Value": "Wed, 25 Dec 2024 07:46:21 GMT"
         },
         {
           "Name": "Cache-Control",

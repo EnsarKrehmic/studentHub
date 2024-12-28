@@ -56,6 +56,7 @@ namespace StudentHub.Controllers
             return View();
         }
 
+        // POST: Obavjestenja/Create
         [HttpPost]
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Create([Bind("Naslov,Sadrzaj")] Obavjestenje obavjestenje)
@@ -68,12 +69,15 @@ namespace StudentHub.Controllers
                 // Pronalaženje korisnika u bazi prema User.Identity.Name
                 if (User.Identity?.IsAuthenticated == true)
                 {
-                    var korisnik = await _context.Korisnici
-                        .FirstOrDefaultAsync(k => k.JMBG == User.Identity.Name);
-
-                    if (korisnik != null)
+                    if (long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long userId))
                     {
-                        obavjestenje.Korisnik = korisnik; // Postavljanje povezanog entiteta
+                        var korisnik = await _context.Korisnici
+                            .FirstOrDefaultAsync(k => k.Id == userId);
+
+                        if (korisnik != null)
+                        {
+                            obavjestenje.KorisnikId = korisnik.Id; // Postavljanje povezanog entiteta
+                        }
                     }
                     else
                     {
@@ -158,7 +162,6 @@ namespace StudentHub.Controllers
                 .Include(o => o.StudentskaSluzba)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (obavjestenje == null) return NotFound();
-
             return View(obavjestenje);
         }
 

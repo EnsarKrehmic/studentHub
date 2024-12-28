@@ -8,21 +8,21 @@ namespace StudentHub.Models
         [Key]
         public long Id { get; set; }
 
-        [Required]
-        [Range(5, 10)]
+        [Required(ErrorMessage = "Vrijednost ocjene je obavezna.")]
+        [Range(5, 10, ErrorMessage = "Vrijednost ocjene mora biti između 5 i 10.")]
         public float Vrijednost { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "ID predmeta je obavezan.")]
         [ForeignKey("Predmet")]
         public long PredmetId { get; set; }
         public Predmet Predmet { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]
-        public long brojIndeksa { get; set; }
+        public long StudentId { get; set; }
         public Student Student { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Profesor je obavezan.")]
         [ForeignKey("Profesor")]
         public long ProfesorId { get; set; }
         public Profesor Profesor { get; set; }

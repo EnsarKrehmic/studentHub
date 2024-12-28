@@ -26,7 +26,8 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.NastavniPlanovi.Include(n => n.StudijskiProgram);
+            var applicationDbContext = _context.NastavniPlanovi
+                .Include(n => n.StudijskiProgram);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -85,7 +86,7 @@ namespace StudentHub.Controllers
             if (nastavniPlan == null)
                 return NotFound();
 
-            ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Id", nastavniPlan.StudijskiProgramId);
+            ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", nastavniPlan.StudijskiProgramId);
             return View(nastavniPlan);
         }
 
@@ -114,7 +115,7 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Id", nastavniPlan.StudijskiProgramId);
+            ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", nastavniPlan.StudijskiProgramId);
             return View(nastavniPlan);
         }
 

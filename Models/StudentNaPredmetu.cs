@@ -8,16 +8,16 @@ namespace StudentHub.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(20)]
+        [Required(ErrorMessage = "Akademska godina je obavezna.")]
+        [MaxLength(50, ErrorMessage = "Akademska godina ne može biti duža od 50 karaktera.")]
         public string akademskaGodina { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]
         public long StudentId { get; set; }
         public Student Student { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Predmet je obavezan.")]
         [ForeignKey("Predmet")]
         public long PredmetId { get; set; }
         public Predmet Predmet { get; set; }

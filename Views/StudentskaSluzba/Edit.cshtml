@@ -30,12 +30,9 @@
         <span asp-validation-for="Lozinka" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ZahtjevId" class="control-label"></label>
-        <select asp-for="ZahtjevId" class="form-control" asp-items="ViewBag.ZahtjevId"></select>
-    </div>
-    <div class="form-group">
-        <label asp-for="PredmetId" class="control-label"></label>
-        <select asp-for="PredmetId" class="form-control" asp-items="ViewBag.PredmetId"></select>
+        <label asp-for="Uloga" class="control-label"></label>
+        <select asp-for="Uloga" class="form-control" asp-items="Html.GetEnumSelectList<StudentHub.Models.Uloga>()"></select>
+        <span asp-validation-for="Uloga" class="text-danger"></span>
     </div>
 
     <div class="form-group">

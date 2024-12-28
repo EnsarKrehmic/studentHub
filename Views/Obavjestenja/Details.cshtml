@@ -21,7 +21,6 @@
 
         <dt class="col-sm-2">Objavio/la</dt>
         <dd class="col-sm-10">
-        <dd class="col-sm-10">
             @if (Model.Korisnik is StudentskaSluzba)
             {
                 @Html.DisplayFor(modelItem => ((StudentskaSluzba)Model.Korisnik).Ime)
@@ -34,7 +33,6 @@
             {
                 @Html.DisplayFor(modelItem => ((Asistent)Model.Korisnik).Ime)
             }
-        </dd>
         </dd>
     </dl>
 </div>

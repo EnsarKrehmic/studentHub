@@ -8,28 +8,32 @@ namespace StudentHub.Models
         [Key]
         public long Id { get; set; }
 
-        [Required]
-        [MaxLength(200)]
+        [Required(ErrorMessage = "Naslov obavještenja je obavezan.")]
+        [MaxLength(200, ErrorMessage = "Naslov ne smije biti duži od 200 karaktera.")]
         public string Naslov { get; set; }
 
-        [Required]
-        [MaxLength(1000)]
+        [Required(ErrorMessage = "Sadržaj obavještenja je obavezan.")]
+        [MaxLength(1000, ErrorMessage = "Sadržaj ne smije biti duži od 1000 karaktera.")]
         public string Sadrzaj { get; set; }
 
         [Required]
         public DateTime datumObjave { get; set; } = DateTime.Now;
 
+        [ForeignKey("Korisnik")]
         public long? KorisnikId { get; set; }
-        public Korisnik Korisnik { get; set; }
+        public Korisnik? Korisnik { get; set; }
 
+        [ForeignKey("StudentskaSluzba")]
         public long? StudentskaSluzbaId { get; set; }
-        public StudentskaSluzba StudentskaSluzba { get; set; }
+        public StudentskaSluzba? StudentskaSluzba { get; set; }
 
+        [ForeignKey("Profesor")]
         public long? ProfesorId { get; set; }
-        public Profesor Profesor { get; set; }
+        public Profesor? Profesor { get; set; }
 
+        [ForeignKey("Asistent")]
         public long? AsistentId { get; set; }
-        public Asistent Asistent { get; set; }
+        public Asistent? Asistent { get; set; }
 
         public Obavjestenje() { }
     }

@@ -41,7 +41,6 @@ namespace StudentHub.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (dokument == null) return NotFound();
-
             return View(dokument);
         }
 
@@ -50,8 +49,8 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa");
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Id");
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime");
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime");
             return View();
         }
 
@@ -59,7 +58,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Naziv,Putanja,brojIndeksa,StudentskaSluzbaId")] Dokument dokument)
+        public async Task<IActionResult> Create([Bind("Id,Naziv,Putanja,brojIndeksa,StudentId,StudentskaSluzbaId")] Dokument dokument)
         {
             if (ModelState.IsValid)
             {
@@ -68,8 +67,8 @@ namespace StudentHub.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", dokument.brojIndeksa);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Id", dokument.StudentskaSluzbaId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", dokument.StudentId);
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", dokument.StudentskaSluzbaId);
             return View(dokument);
         }
 
@@ -83,8 +82,8 @@ namespace StudentHub.Controllers
             var dokument = await _context.Dokumenti.FindAsync(id);
             if (dokument == null) return NotFound();
 
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", dokument.brojIndeksa);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Id", dokument.StudentskaSluzbaId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", dokument.StudentId);
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", dokument.StudentskaSluzbaId);
             return View(dokument);
         }
 
@@ -92,7 +91,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Putanja,brojIndeksa,StudentskaSluzbaId")] Dokument dokument)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Putanja,brojIndeksa,StudentId,StudentskaSluzbaId")] Dokument dokument)
         {
             if (id != dokument.Id) return NotFound();
 

@@ -29,21 +29,15 @@ namespace StudentHub.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            // Mapiranje klasa na tabele (opciono: prilagoditi nazive tabela ako je potrebno)
-            modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<Predmet>().ToTable("Predmet");
             modelBuilder.Entity<NastavniPlan>().ToTable("NastavniPlan");
             modelBuilder.Entity<StudijskiProgram>().ToTable("StudijskiProgram");
             modelBuilder.Entity<Zahtjev>().ToTable("Zahtjev");
-            modelBuilder.Entity<Profesor>().ToTable("Profesor");
-            modelBuilder.Entity<Asistent>().ToTable("Asistent");
             modelBuilder.Entity<PredmetProfesor>().ToTable("PredmetProfesor");
             modelBuilder.Entity<PredmetAsistent>().ToTable("PredmetAsistent");
             modelBuilder.Entity<Uvjerenje>().ToTable("Uvjerenje");
             modelBuilder.Entity<Dokument>().ToTable("Dokument");
             modelBuilder.Entity<Obavjestenje>().ToTable("Obavjestenje");
-            modelBuilder.Entity<StudentskaSluzba>().ToTable("StudentskaSluzba");
             modelBuilder.Entity<Ispit>().ToTable("Ispit");
             modelBuilder.Entity<Korisnik>().ToTable("Korisnik");
             modelBuilder.Entity<Ocjena>().ToTable("Ocjena");
@@ -51,16 +45,15 @@ namespace StudentHub.Data
             modelBuilder.Entity<StudentNaPredmetu>().ToTable("StudentNaPredmetu");
 
             modelBuilder.Entity<Korisnik>()
-                .HasKey(k => k.JMBG);
+                .HasKey(k => k.Id);
 
-            modelBuilder.Entity<StudentskaSluzba>()
-                .HasBaseType<Korisnik>();
-
-            modelBuilder.Entity<Asistent>()
-                .HasBaseType<Korisnik>();
-
-            modelBuilder.Entity<Profesor>()
-                .HasBaseType<Korisnik>();
+            modelBuilder.Entity<Korisnik>()
+                .HasDiscriminator<Uloga>("Uloga")
+                .HasValue<Korisnik>(Uloga.Osnovni)
+                .HasValue<StudentskaSluzba>(Uloga.StudentskaSluzba)
+                .HasValue<Student>(Uloga.Student)
+                .HasValue<Profesor>(Uloga.Profesor)
+                .HasValue<Asistent>(Uloga.Asistent);
 
             // Konfiguracija za Predmet -> Profesor
             modelBuilder.Entity<PredmetProfesor>()
@@ -84,7 +77,6 @@ namespace StudentHub.Data
                 .WithMany()
                 .HasForeignKey(pp => pp.PredmetId);
 
-
             // DeleteBehavior.Cascade -> brisanje entiteta koji ima referencu na drugi entitet
 
             // Konfiguracija za Uvjerenje -> Zahtjev
@@ -102,27 +94,6 @@ namespace StudentHub.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             // DeleteBehavior.Restrict -> ne dozvoljava brisanje entiteta ako postoji referenca na njega
-
-            // Konfiguracija za Ispit -> Asistent
-            modelBuilder.Entity<Ispit>()
-            .HasOne(i => i.Asistent)
-            .WithMany()
-            .HasForeignKey(i => i.AsistentId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-            // Konfiguracija za Ispit -> Predmet
-            modelBuilder.Entity<Ispit>()
-            .HasOne(i => i.Predmet)
-            .WithMany()
-            .HasForeignKey(i => i.PredmetId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-            // Konfiguracija za Ispit -> Profesor
-            modelBuilder.Entity<Ispit>()
-            .HasOne(i => i.Profesor)
-            .WithMany()
-            .HasForeignKey(i => i.ProfesorId)
-            .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za Predmet -> NastavniPlan
             modelBuilder.Entity<Predmet>()
@@ -142,7 +113,7 @@ namespace StudentHub.Data
             modelBuilder.Entity<Ocjena>()
                 .HasOne(o => o.Student)
                 .WithMany()
-                .HasForeignKey(o => o.brojIndeksa)
+                .HasForeignKey(o => o.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za Ocjena -> NastavnoOsoblje
@@ -156,42 +127,42 @@ namespace StudentHub.Data
             modelBuilder.Entity<Zahtjev>()
                 .HasOne(z => z.Student)
                 .WithMany()
-                .HasForeignKey(z => z.brojIndeksa)
+                .HasForeignKey(z => z.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za Zahtjev -> StudentskaSluzba
             modelBuilder.Entity<Zahtjev>()
                 .HasOne(z => z.Student)
                 .WithMany()
-                .HasForeignKey(z => z.brojIndeksa)
+                .HasForeignKey(z => z.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za StudentskaSluzba -> Korisnik
             modelBuilder.Entity<StudentskaSluzba>()
                 .HasOne<Korisnik>()
                 .WithOne()
-                .HasForeignKey<StudentskaSluzba>(s => s.JMBG)  
+                .HasForeignKey<StudentskaSluzba>(s => s.Id)  
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za Profesor -> Korisnik
             modelBuilder.Entity<Profesor>()
                 .HasOne<Korisnik>()
                 .WithOne()
-                .HasForeignKey<Profesor>(p => p.JMBG)
+                .HasForeignKey<Profesor>(p => p.Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za Asistent -> Korisnik
             modelBuilder.Entity<Asistent>()
                 .HasOne<Korisnik>()
                 .WithOne()
-                .HasForeignKey<Asistent>(a => a.JMBG)
+                .HasForeignKey<Asistent>(a => a.Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za Student -> Korisnik
             modelBuilder.Entity<Student>()
                 .HasOne<Korisnik>()
                 .WithOne()
-                .HasForeignKey<Student>(s => s.JMBG)
+                .HasForeignKey<Student>(s => s.Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // DeleteBehavior.NoAction -> ne dozvoljava brisanje entiteta ako postoji referenca na njega
@@ -237,7 +208,56 @@ namespace StudentHub.Data
                 .WithMany()
                 .HasForeignKey(o => o.AsistentId)
                 .OnDelete(DeleteBehavior.NoAction);
-                base.OnModelCreating(modelBuilder);
+
+            // Konfiguracija za Ispit -> Predmet
+            modelBuilder.Entity<Ispit>()
+            .HasOne(i => i.Predmet)
+            .WithMany()
+            .HasForeignKey(i => i.PredmetId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            // Konfiguracija za Ispit -> Profesor
+            modelBuilder.Entity<Ispit>()
+            .HasOne(i => i.Profesor)
+            .WithMany()
+            .HasForeignKey(i => i.ProfesorId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            // Konfiguracija za Ispit -> Asistent
+            modelBuilder.Entity<Ispit>()
+            .HasOne(i => i.Asistent)
+            .WithMany()
+            .HasForeignKey(i => i.AsistentId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            // Konfiguracija za Dokument -> Student
+            modelBuilder.Entity<Dokument>()
+                .HasOne(d => d.Student)
+                .WithMany()
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Konfiguracija za Dokument -> StudentskaSluzba
+            modelBuilder.Entity<Dokument>()
+                .HasOne(d => d.StudentskaSluzba)
+                .WithMany()
+                .HasForeignKey(d => d.StudentskaSluzbaId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Konfiguracija za Uvjerenje -> Student
+            modelBuilder.Entity<Uvjerenje>()
+                .HasOne(d => d.Student)
+                .WithMany()
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Konfiguracija za Uvjerenje -> StudentskaSluzba
+            modelBuilder.Entity<Uvjerenje>()
+                .HasOne(d => d.StudentskaSluzba)
+                .WithMany()
+                .HasForeignKey(d => d.StudentskaSluzbaId)
+                .OnDelete(DeleteBehavior.NoAction);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

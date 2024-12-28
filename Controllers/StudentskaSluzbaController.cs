@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -26,7 +22,9 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.StudentskeSluzbe.Include(s => s.Predmet).Include(s => s.Zahtjev);
+            var applicationDbContext = _context.StudentskeSluzbe
+                .Include(s => s.Predmet)
+                .Include(s => s.Zahtjev);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -43,7 +41,7 @@ namespace StudentHub.Controllers
             var studentskaSluzba = await _context.StudentskeSluzbe
                 .Include(s => s.Predmet)
                 .Include(s => s.Zahtjev)
-                .FirstOrDefaultAsync(m => m.JMBG == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (studentskaSluzba == null)
             {
                 return NotFound();
@@ -57,7 +55,7 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG");
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.Korisnici, "Id", "Ime");
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id");
             ViewData["ZahtjevId"] = new SelectList(_context.Zahtjevi, "Id", "Id");
             return View();
@@ -69,7 +67,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Ime,Prezime,Email,Lozinka,JMBG,ZahtjevId,PredmetId")] StudentskaSluzba studentskaSluzba)
+        public async Task<IActionResult> Create([Bind("Ime,Prezime,Email,Lozinka,JMBG,ZahtjevId,PredmetId")] StudentskaSluzba studentskaSluzba)
         {
             if (ModelState.IsValid)
             {
@@ -77,7 +75,7 @@ namespace StudentHub.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", studentskaSluzba.JMBG);
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.Korisnici, "Id", "Ime", studentskaSluzba.Id);
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", studentskaSluzba.PredmetId);
             ViewData["ZahtjevId"] = new SelectList(_context.Zahtjevi, "Id", "Id", studentskaSluzba.ZahtjevId);
             return View(studentskaSluzba);
@@ -98,7 +96,7 @@ namespace StudentHub.Controllers
             {
                 return NotFound();
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", studentskaSluzba.JMBG);
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.Korisnici, "Id", "Ime", studentskaSluzba.Id);
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", studentskaSluzba.PredmetId);
             ViewData["ZahtjevId"] = new SelectList(_context.Zahtjevi, "Id", "Id", studentskaSluzba.ZahtjevId);
             return View(studentskaSluzba);
@@ -110,9 +108,9 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Ime,Prezime,Email,Lozinka,JMBG,ZahtjevId,PredmetId")] StudentskaSluzba studentskaSluzba)
+        public async Task<IActionResult> Edit(long id, [Bind("Ime,Prezime,Email,Lozinka,JMBG,ZahtjevId,PredmetId")] StudentskaSluzba studentskaSluzba)
         {
-            if (id != studentskaSluzba.JMBG)
+            if (id != studentskaSluzba.Id)
             {
                 return NotFound();
             }
@@ -126,7 +124,7 @@ namespace StudentHub.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StudentskaSluzbaExists(studentskaSluzba.JMBG))
+                    if (!StudentskaSluzbaExists(studentskaSluzba.Id))
                     {
                         return NotFound();
                     }
@@ -137,7 +135,7 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", studentskaSluzba.JMBG);
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.Korisnici, "Id", "Ime", studentskaSluzba.Id);
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", studentskaSluzba.PredmetId);
             ViewData["ZahtjevId"] = new SelectList(_context.Zahtjevi, "Id", "Id", studentskaSluzba.ZahtjevId);
             return View(studentskaSluzba);
@@ -156,7 +154,7 @@ namespace StudentHub.Controllers
             var studentskaSluzba = await _context.StudentskeSluzbe
                 .Include(s => s.Predmet)
                 .Include(s => s.Zahtjev)
-                .FirstOrDefaultAsync(m => m.JMBG == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (studentskaSluzba == null)
             {
                 return NotFound();
@@ -183,7 +181,7 @@ namespace StudentHub.Controllers
 
         private bool StudentskaSluzbaExists(long id)
         {
-            return _context.StudentskeSluzbe.Any(e => e.JMBG == id);
+            return _context.StudentskeSluzbe.Any(e => e.Id == id);
         }
     }
 }

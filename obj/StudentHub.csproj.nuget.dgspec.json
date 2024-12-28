@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\source\\repos\\StudentHub\\StudentHub.csproj": {}
+    "C:\\Users\\User\\source\\repos\\studentHub\\StudentHub.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\source\\repos\\StudentHub\\StudentHub.csproj": {
+    "C:\\Users\\User\\source\\repos\\studentHub\\StudentHub.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\StudentHub\\StudentHub.csproj",
+        "projectUniqueName": "C:\\Users\\User\\source\\repos\\studentHub\\StudentHub.csproj",
         "projectName": "StudentHub",
-        "projectPath": "C:\\Users\\User\\source\\repos\\StudentHub\\StudentHub.csproj",
+        "projectPath": "C:\\Users\\User\\source\\repos\\studentHub\\StudentHub.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\",
+        "outputPath": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

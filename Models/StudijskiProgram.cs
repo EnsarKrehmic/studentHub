@@ -7,15 +7,15 @@ namespace StudentHub.Models
         [Key]
         public long Id { get; set; }
 
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage = "Naziv studijskog programa je obavezan.")]
+        [MaxLength(100, ErrorMessage = "Naziv ne može biti duži od 100 karaktera.")]
         public string Naziv { get; set; }
 
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Opis ne može biti duži od 500 karaktera.")]
         public string Opis { get; set; }
 
-        [Required]
-        [Range(1, 6)]
+        [Required(ErrorMessage = "Trajanje studijskog programa je obavezno.")]
+        [Range(1, 6, ErrorMessage = "Trajanje mora biti između 1 i 6 godina.")]
         public int trajanjeUGodinama { get; set; }
 
         public StudijskiProgram() { }

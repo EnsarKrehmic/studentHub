@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -41,7 +37,7 @@ namespace StudentHub.Controllers
             }
 
             var asistent = await _context.Asistenti
-                .FirstOrDefaultAsync(m => m.JMBG == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (asistent == null)
             {
                 return NotFound();
@@ -55,7 +51,7 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG");
+            ViewData["AsistentId"] = new SelectList(_context.Korisnici, "Id", "Id");
             return View();
         }
 
@@ -63,15 +59,34 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Email,Titula,JMBG")] Asistent asistent)
+        public async Task<IActionResult> Create([Bind("Id,JMBG,Ime,Prezime,Email,Lozinka,Titula")] Asistent asistent)
         {
+            // Proveri da li već postoji korisnik sa datim JMBG
+            var postojiKorisnik = await _context.Korisnici
+                .AnyAsync(k => k.JMBG == asistent.JMBG);
+
+            if (postojiKorisnik)
+            {
+                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
+                return View(asistent);
+            }
+
             if (ModelState.IsValid)
             {
-                _context.Add(asistent);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Asistenti.Add(asistent);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
+                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja asistenta.");
+                }
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", asistent.JMBG);
+            ViewData["AsistentId"] = new SelectList(_context.Korisnici, "Id", "Id", asistent.Id);            
             return View(asistent);
         }
 
@@ -90,7 +105,7 @@ namespace StudentHub.Controllers
             {
                 return NotFound();
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", asistent.JMBG);
+            ViewData["AsistentId"] = new SelectList(_context.Korisnici, "Id", "Id", asistent.Id);
             return View(asistent);
         }
 
@@ -98,11 +113,18 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Email,Titula,JMBG")] Asistent asistent)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,JMBG,Ime,Prezime,Email,Lozinka,Titula")] Asistent asistent)
         {
-            if (id != asistent.JMBG)
+            if (id != asistent.Id)
             {
                 return NotFound();
+            }
+
+            // Provjera da li postoji drugi korisnik sa istim JMBG osim trenutnog
+            if (_context.Korisnici.Any(k => k.JMBG == asistent.JMBG && k.Id != id))
+            {
+                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
+                return View(asistent);
             }
 
             if (ModelState.IsValid)
@@ -111,10 +133,12 @@ namespace StudentHub.Controllers
                 {
                     _context.Update(asistent);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AsistentExists(asistent.JMBG))
+                    if (!AsistentExists(asistent.Id))
                     {
                         return NotFound();
                     }
@@ -123,9 +147,13 @@ namespace StudentHub.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
+                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom ažuriranja asistenta.");
+                }
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", asistent.JMBG);
+            ViewData["AsistentId"] = new SelectList(_context.Korisnici, "Id", "Id", asistent.Id);
             return View(asistent);
         }
 
@@ -140,7 +168,7 @@ namespace StudentHub.Controllers
             }
 
             var asistent = await _context.Asistenti
-                .FirstOrDefaultAsync(m => m.JMBG == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (asistent == null)
             {
                 return NotFound();
@@ -159,15 +187,19 @@ namespace StudentHub.Controllers
             if (asistent != null)
             {
                 _context.Asistenti.Remove(asistent);
+                var korisnik = await _context.Korisnici.FindAsync(id);
+                if (korisnik != null)
+                {
+                    _context.Korisnici.Remove(korisnik);
+                }
             }
-
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AsistentExists(long id)
         {
-            return _context.Asistenti.Any(e => e.JMBG == id);
+            return _context.Asistenti.Any(e => e.Id == id);
         }
     }
 }

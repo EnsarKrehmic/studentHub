@@ -23,8 +23,8 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Namjena)</td>
                 <td>@Html.DisplayFor(modelItem => item.datumIzdavanja)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.JMBG)</td>
-                <td>@Html.DisplayFor(modelItem => item.StudentskaSluzba.JMBG)</td>
+                <td>@Html.DisplayFor(modelItem => item.Student.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.StudentskaSluzba.Id)</td>
                 <td>@Html.DisplayFor(modelItem => item.Vrsta)</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |

@@ -8,20 +8,20 @@ namespace StudentHub.Models
         [Key]
         public long Id { get; set; }
 
-        [Required]
-        [MaxLength(200)]
+        [Required(ErrorMessage = "Naziv dokumenta je obavezan.")]
+        [MaxLength(200, ErrorMessage = "Naziv dokumenta ne smije biti duži od 200 karaktera.")]
         public string Naziv { get; set; }
 
-        [Required]
-        [MaxLength(500)]
+        [Required(ErrorMessage = "Putanja dokumenta je obavezna.")]
+        [MaxLength(500, ErrorMessage = "Putanja ne smije biti duža od 500 karaktera.")]
         public string Putanja { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]
-        public long brojIndeksa { get; set; }
+        public long StudentId { get; set; }
         public Student Student { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Studentska služba je obavezna.")]
         [ForeignKey("StudentskaSluzba")]
         public long StudentskaSluzbaId { get; set; }
         public StudentskaSluzba StudentskaSluzba { get; set; }

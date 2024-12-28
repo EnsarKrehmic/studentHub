@@ -8,7 +8,6 @@
 
 <form asp-action="Edit">
     <input type="hidden" asp-for="JMBG" />
-
     <div class="form-group">
         <label asp-for="Ime" class="control-label"></label>
         <input asp-for="Ime" class="form-control" />
@@ -25,9 +24,14 @@
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="predhodnoObrazovanje" class="control-label"></label>
-        <input asp-for="predhodnoObrazovanje" class="form-control" />
-        <span asp-validation-for="predhodnoObrazovanje" class="text-danger"></span>
+        <label asp-for="Lozinka" class="control-label"></label>
+        <input asp-for="Lozinka" class="form-control" />
+        <span asp-validation-for="Lozinka" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="godinaStudija" class="control-label"></label>
+        <input asp-for="godinaStudija" class="form-control" />
+        <span asp-validation-for="godinaStudija" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="studijskiProgram" class="control-label"></label>
@@ -35,9 +39,17 @@
         <span asp-validation-for="studijskiProgram" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="godinaStudija" class="control-label"></label>
-        <input asp-for="godinaStudija" class="form-control" />
-        <span asp-validation-for="godinaStudija" class="text-danger"></span>
+        <label asp-for="predhodnoObrazovanje" class="control-label"></label>
+        <input asp-for="predhodnoObrazovanje" class="form-control" />
+        <span asp-validation-for="predhodnoObrazovanje" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="podaciUplata" class="control-label"></label>
+        <input asp-for="podaciUplata" class="form-control" />
+        <span asp-validation-for="podaciUplata" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>
     </div>
 
     <div class="form-group">

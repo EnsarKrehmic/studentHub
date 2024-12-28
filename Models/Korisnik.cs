@@ -4,37 +4,44 @@ namespace StudentHub.Models
 {
     public enum Uloga
     {
+        [Display(Name = "Osnovni")]
+        Osnovni = 1,
         [Display(Name = "Studentska služba")]
-        StudentskaSluzba = 1,
+        StudentskaSluzba = 2,
         [Display(Name = "Student")]
-        Student = 2,
+        Student = 3,
         [Display(Name = "Profesor")]
-        Profesor = 3,
+        Profesor = 4,
         [Display(Name = "Asistent")]
-        Asistent = 4
+        Asistent = 5,
     }
     public class Korisnik
     {
         [Key]
-        public long JMBG { get; set; }
+        public long Id { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = "JMBG je obavezan.")]
+        [StringLength(13, MinimumLength = 13, ErrorMessage = "JMBG mora imati tačno 13 karaktera.")]
+        public string JMBG { get; set; }
+
+        [Required(ErrorMessage = "Ime je obavezno.")]
+        [MaxLength(50, ErrorMessage = "Ime ne može biti duže od 50 karaktera.")]
         public string Ime { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = "Prezime je obavezno.")]
+        [MaxLength(50, ErrorMessage = "Prezime ne može biti duže od 50 karaktera.")]
         public string Prezime { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email je obavezan.")]
+        [EmailAddress(ErrorMessage = "Unesite validnu email adresu.")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, MinimumLength = 6)]
+        [Required(ErrorMessage = "Lozinka je obavezna.")]
+        [DataType(DataType.Password)]
+        [MinLength(8, ErrorMessage = "Lozinka mora imati najmanje 8 karaktera.")]
         public string Lozinka { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Uloga je obavezna.")]
         [EnumDataType(typeof(Uloga))]
         public Uloga Uloga { get; set; }
 

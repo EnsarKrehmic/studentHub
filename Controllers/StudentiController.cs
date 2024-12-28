@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -41,7 +37,7 @@ namespace StudentHub.Controllers
             }
 
             var student = await _context.Studenti
-                .FirstOrDefaultAsync(m => m.JMBG == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (student == null)
             {
                 return NotFound();
@@ -55,26 +51,44 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG");
+            ViewData["Id"] = new SelectList(_context.Korisnici, "Id", "Id");
             return View();
         }
 
-        // POST: Studenti/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("brojIndeksa,Email,predhodnoObrazovanje,studijskiProgram,godinaStudija,podaciUplata,JMBG")] Student student)
+        public async Task<IActionResult> Create([Bind("JMBG,Ime,Prezime,Email,brojIndeksa,Lozinka,godinaStudija,studijskiProgram,predhodnoObrazovanje,podaciUplata")] Student student)
         {
-            if (ModelState.IsValid)
+            if (await _context.Korisnici.AnyAsync(k => k.JMBG == student.JMBG))
             {
-                _context.Add(student);
+                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
+                return View(student);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState)
+                {
+                    Console.WriteLine($"Key: {error.Key}, Error: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
+                return View(student);
+            }
+
+            try
+            {
+                student.Uloga = Uloga.Student;
+                _context.Studenti.Add(student);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", student.JMBG);
-            return View(student);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Došlo je do greške: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja studenta.");
+                return View(student);
+            }
         }
 
         // GET: Studenti/Edit/5
@@ -92,21 +106,26 @@ namespace StudentHub.Controllers
             {
                 return NotFound();
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", student.JMBG);
+            ViewData["Id"] = new SelectList(_context.Korisnici, "Id", "Id", student.Id);
             return View(student);
         }
 
         // POST: Studenti/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("brojIndeksa,Email,predhodnoObrazovanje,studijskiProgram,godinaStudija,podaciUplata,JMBG")] Student student)
+        public async Task<IActionResult> Edit(long id, [Bind("JMBG,Ime,Prezime,Email,brojIndeksa,Lozinka,GodinaStudija,StudijskiProgram,PredhodnoObrazovanje,PodaciUplata")] Student student)
         {
-            if (id != student.JMBG)
+            if (id != student.Id)
             {
                 return NotFound();
+            }
+
+            // Provjera da li postoji drugi korisnik sa istim JMBG osim trenutnog
+            if (_context.Korisnici.Any(k => k.JMBG == student.JMBG && k.Id != id))
+            {
+                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
+                return View(student);
             }
 
             if (ModelState.IsValid)
@@ -115,10 +134,12 @@ namespace StudentHub.Controllers
                 {
                     _context.Update(student);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StudentExists(student.JMBG))
+                    if (!StudentExists(student.Id))
                     {
                         return NotFound();
                     }
@@ -127,9 +148,13 @@ namespace StudentHub.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
+                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom ažuriranja studenta.");
+                }
             }
-            ViewData["JMBG"] = new SelectList(_context.Korisnici, "JMBG", "JMBG", student.JMBG);
+            ViewData["Id"] = new SelectList(_context.Korisnici, "Id", "Id", student.Id);
             return View(student);
         }
 
@@ -144,7 +169,7 @@ namespace StudentHub.Controllers
             }
 
             var student = await _context.Studenti
-                .FirstOrDefaultAsync(m => m.JMBG == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (student == null)
             {
                 return NotFound();
@@ -171,7 +196,7 @@ namespace StudentHub.Controllers
 
         private bool StudentExists(long id)
         {
-            return _context.Studenti.Any(e => e.JMBG == id);
+            return _context.Studenti.Any(e => e.Id == id);
         }
     }
 }

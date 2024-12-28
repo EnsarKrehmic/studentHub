@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -14,7 +10,6 @@ namespace StudentHub.Controllers
     public class OcjeneController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         public OcjeneController(ApplicationDbContext context)
         {
             _context = context;
@@ -26,7 +21,10 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Ocjene.Include(o => o.Predmet).Include(o => o.Profesor).Include(o => o.Student);
+            var applicationDbContext = _context.Ocjene
+                .Include(o => o.Predmet)
+                .Include(o => o.Profesor)
+                .Include(o => o.Student);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -58,19 +56,17 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id");
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id");
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa");
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv");
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime");
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa");
             return View();
         }
 
         // POST: Ocjene/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Vrijednost,PredmetId,brojIndeksa,ProfesorId")] Ocjena ocjena)
+        public async Task<IActionResult> Create([Bind("Id,Vrijednost,PredmetId,brojIndeksa,StudentId,ProfesorId")] Ocjena ocjena)
         {
             if (ModelState.IsValid)
             {
@@ -78,9 +74,9 @@ namespace StudentHub.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", ocjena.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", ocjena.ProfesorId);
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", ocjena.brojIndeksa);
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ocjena.PredmetId);
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ocjena.ProfesorId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", ocjena.StudentId);
             return View(ocjena);
         }
 
@@ -99,19 +95,17 @@ namespace StudentHub.Controllers
             {
                 return NotFound();
             }
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", ocjena.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", ocjena.ProfesorId);
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", ocjena.brojIndeksa);
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ocjena.PredmetId);
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ocjena.ProfesorId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", ocjena.StudentId);
             return View(ocjena);
         }
 
         // POST: Ocjene/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Vrijednost,PredmetId,brojIndeksa,ProfesorId")] Ocjena ocjena)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Vrijednost,PredmetId,brojIndeksa,StudentId,ProfesorId")] Ocjena ocjena)
         {
             if (id != ocjena.Id)
             {
@@ -138,9 +132,9 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", ocjena.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", ocjena.ProfesorId);
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", ocjena.brojIndeksa);
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ocjena.PredmetId);
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ocjena.ProfesorId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", ocjena.StudentId);
             return View(ocjena);
         }
 

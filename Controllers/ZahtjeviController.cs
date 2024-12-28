@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -26,7 +22,8 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Zahtjevi.Include(z => z.Student);
+            var applicationDbContext = _context.Zahtjevi
+                .Include(z => z.Student);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -56,17 +53,15 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa");
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa");
             return View();
         }
 
         // POST: Zahtjevi/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,tipZahtjeva,statusZahtjeva,datumPodnosenja,datumRjesavanja,brojIndeksa")] Zahtjev zahtjev)
+        public async Task<IActionResult> Create([Bind("tipZahtjeva,statusZahtjeva,datumPodnosenja,datumRjesavanja,brojIndeksa,StudentId")] Zahtjev zahtjev)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +69,7 @@ namespace StudentHub.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", zahtjev.brojIndeksa);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", zahtjev.StudentId);
             return View(zahtjev);
         }
 
@@ -93,7 +88,7 @@ namespace StudentHub.Controllers
             {
                 return NotFound();
             }
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", zahtjev.brojIndeksa);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", zahtjev.StudentId);
             return View(zahtjev);
         }
 
@@ -103,7 +98,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,tipZahtjeva,statusZahtjeva,datumPodnosenja,datumRjesavanja,brojIndeksa")] Zahtjev zahtjev)
+        public async Task<IActionResult> Edit(long id, [Bind("tipZahtjeva,statusZahtjeva,datumPodnosenja,datumRjesavanja,brojIndeksa,StudentId")] Zahtjev zahtjev)
         {
             if (id != zahtjev.Id)
             {
@@ -130,7 +125,7 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", zahtjev.brojIndeksa);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", zahtjev.StudentId);
             return View(zahtjev);
         }
 

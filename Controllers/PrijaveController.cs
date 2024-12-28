@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -26,7 +22,9 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Prijave.Include(p => p.Ispit).Include(p => p.Student);
+            var applicationDbContext = _context.Prijave
+                .Include(p => p.Ispit)
+                .Include(p => p.Student);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -58,7 +56,7 @@ namespace StudentHub.Controllers
         public IActionResult Create()
         {
             ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Id");
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa");
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa");
             return View();
         }
 
@@ -68,7 +66,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,datumPrijave,IspitId,StudentId")] Prijava prijava)
+        public async Task<IActionResult> Create([Bind("datumPrijave,IspitId,brojIndeksa,StudentId")] Prijava prijava)
         {
             if (ModelState.IsValid)
             {
@@ -77,7 +75,7 @@ namespace StudentHub.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Id", prijava.IspitId);
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", prijava.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", prijava.StudentId);
             return View(prijava);
         }
 
@@ -97,7 +95,7 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
             ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Id", prijava.IspitId);
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", prijava.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", prijava.StudentId);
             return View(prijava);
         }
 
@@ -107,7 +105,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,datumPrijave,IspitId,StudentId")] Prijava prijava)
+        public async Task<IActionResult> Edit(long id, [Bind("datumPrijave,IspitId,brojIndeksa,StudentId")] Prijava prijava)
         {
             if (id != prijava.Id)
             {
@@ -135,7 +133,7 @@ namespace StudentHub.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Id", prijava.IspitId);
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", prijava.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", prijava.StudentId);
             return View(prijava);
         }
 

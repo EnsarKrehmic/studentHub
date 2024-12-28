@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -26,7 +22,10 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Predmeti.Include(p => p.Asistent).Include(p => p.NastavniPlan).Include(p => p.Profesor);
+            var applicationDbContext = _context.Predmeti
+                .Include(p => p.Asistent)
+                .Include(p => p.NastavniPlan)
+                .Include(p => p.Profesor);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,20 +34,14 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]/{id?}")]
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var predmet = await _context.Predmeti
                 .Include(p => p.Asistent)
                 .Include(p => p.NastavniPlan)
                 .Include(p => p.Profesor)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (predmet == null)
-            {
-                return NotFound();
-            }
+            if (predmet == null) return NotFound();
 
             return View(predmet);
         }
@@ -58,19 +51,16 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Id");
-            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Id");
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id");
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime");
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime");
+            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Naziv");
             return View();
         }
 
         // POST: Predmeti/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("[Controller]/[Action]")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Naziv,Opis,ECTS,ProfesorId,AsistentId,NastavniPlanId")] Predmet predmet)
+        public async Task<IActionResult> Create([Bind("Naziv,Opis,ECTS,ProfesorId,AsistentId,NastavniPlanId")] Predmet predmet)
         {
             if (ModelState.IsValid)
             {
@@ -78,9 +68,9 @@ namespace StudentHub.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Id", predmet.AsistentId);
-            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Id", predmet.NastavniPlanId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", predmet.ProfesorId);
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", predmet.ProfesorId);
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", predmet.AsistentId);
+            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Naziv", predmet.NastavniPlanId);
             return View(predmet);
         }
 
@@ -89,34 +79,23 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]/{id?}")]
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var predmet = await _context.Predmeti.FindAsync(id);
-            if (predmet == null)
-            {
-                return NotFound();
-            }
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Id", predmet.AsistentId);
-            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Id", predmet.NastavniPlanId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", predmet.ProfesorId);
+            if (predmet == null) return NotFound();
+
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", predmet.ProfesorId);
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", predmet.AsistentId);
+            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Naziv", predmet.NastavniPlanId);
             return View(predmet);
         }
 
         // POST: Predmeti/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Opis,ECTS,ProfesorId,AsistentId,NastavniPlanId")] Predmet predmet)
         {
-            if (id != predmet.Id)
-            {
-                return NotFound();
-            }
+            if (id != predmet.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -127,20 +106,14 @@ namespace StudentHub.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PredmetExists(predmet.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!PredmetExists(predmet.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Id", predmet.AsistentId);
-            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Id", predmet.NastavniPlanId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Id", predmet.ProfesorId);
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", predmet.ProfesorId);
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", predmet.AsistentId);
+            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Naziv", predmet.NastavniPlanId);
             return View(predmet);
         }
 
@@ -171,7 +144,6 @@ namespace StudentHub.Controllers
         [HttpPost, ActionName("Delete")]
         [Route("[Controller]/[Action]/{id?}")]
 
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var predmet = await _context.Predmeti.FindAsync(id);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -26,7 +22,9 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Uvjerenja.Include(u => u.Student).Include(u => u.StudentskaSluzba);
+            var applicationDbContext = _context.Uvjerenja
+                .Include(u => u.Student)
+                .Include(u => u.StudentskaSluzba);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -57,8 +55,8 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa");
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Id");
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime");
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime");
             return View();
         }
 
@@ -68,7 +66,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Namjena,datumIzdavanja,brojIndeksa,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
+        public async Task<IActionResult> Create([Bind("Id,Namjena,datumIzdavanja,brojIndeksa,StudentId,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
         {
             if (ModelState.IsValid)
             {
@@ -76,8 +74,8 @@ namespace StudentHub.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", uvjerenje.brojIndeksa);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Id", uvjerenje.StudentskaSluzbaId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", uvjerenje.StudentId);
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", uvjerenje.StudentskaSluzbaId);
             return View(uvjerenje);
         }
 
@@ -96,8 +94,8 @@ namespace StudentHub.Controllers
             {
                 return NotFound();
             }
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", uvjerenje.brojIndeksa);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Id", uvjerenje.StudentskaSluzbaId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", uvjerenje.StudentId);
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", uvjerenje.StudentskaSluzbaId);
             return View(uvjerenje);
         }
 
@@ -107,7 +105,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Namjena,datumIzdavanja,brojIndeksa,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Namjena,datumIzdavanja,brojIndeksa,StudentId,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
         {
             if (id != uvjerenje.Id)
             {
@@ -134,8 +132,8 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["brojIndeksa"] = new SelectList(_context.Studenti, "brojIndeksa", "brojIndeksa", uvjerenje.brojIndeksa);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Id", uvjerenje.StudentskaSluzbaId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", uvjerenje.StudentId);
+            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", uvjerenje.StudentskaSluzbaId);
             return View(uvjerenje);
         }
 

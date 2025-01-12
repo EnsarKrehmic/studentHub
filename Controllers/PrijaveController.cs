@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
+using System.Security.Claims;
 
 namespace StudentHub.Controllers
 {
+    [Authorize]
     [Route("Prijave")]
     public class PrijaveController : Controller
     {
@@ -17,11 +20,21 @@ namespace StudentHub.Controllers
         }
 
         // GET: Prijave
+        [Authorize(Roles = "Studentska služba,Student")]
         [HttpGet]
         [Route("")]
-        [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Student"))
+            {
+                var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var prijave = _context.Prijave
+                    .Include(p => p.Ispit)
+                    .Include(p => p.Student)
+                    .Where(p => p.StudentId.ToString() == studentId);
+                return View(prijave);
+            }
+
             var applicationDbContext = _context.Prijave
                 .Include(p => p.Ispit)
                 .Include(p => p.Student);
@@ -29,147 +42,82 @@ namespace StudentHub.Controllers
         }
 
         // GET: Prijave/Details/5
+        [Authorize(Roles = "Studentska služba,Student")]
         [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        [Route("Details/{id}")]
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var prijava = await _context.Prijave
                 .Include(p => p.Ispit)
                 .Include(p => p.Student)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (prijava == null)
+
+            if (prijava == null ||
+                (User.IsInRole("Student") && prijava.StudentId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier)))
             {
-                return NotFound();
+                return Forbid();
             }
 
             return View(prijava);
         }
 
         // GET: Prijave/Create
+        [Authorize(Roles = "Student")]
         [HttpGet]
-        [Route("[Controller]/[Action]")]
+        [Route("Create")]
         public IActionResult Create()
         {
-            ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Id");
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa");
+            ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Naziv");
             return View();
         }
 
         // POST: Prijave/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Student")]
         [HttpPost]
-        [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("datumPrijave,IspitId,brojIndeksa,StudentId")] Prijava prijava)
+        [Route("Create")]
+        public async Task<IActionResult> Create([Bind("datumPrijave,IspitId")] Prijava prijava)
         {
+            prijava.StudentId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (ModelState.IsValid)
             {
                 _context.Add(prijava);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Id", prijava.IspitId);
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", prijava.StudentId);
-            return View(prijava);
-        }
-
-        // GET: Prijave/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var prijava = await _context.Prijave.FindAsync(id);
-            if (prijava == null)
-            {
-                return NotFound();
-            }
-            ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Id", prijava.IspitId);
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", prijava.StudentId);
-            return View(prijava);
-        }
-
-        // POST: Prijave/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("datumPrijave,IspitId,brojIndeksa,StudentId")] Prijava prijava)
-        {
-            if (id != prijava.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(prijava);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PrijavaExists(prijava.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Id", prijava.IspitId);
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", prijava.StudentId);
+            ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Naziv", prijava.IspitId);
             return View(prijava);
         }
 
         // GET: Prijave/Delete/5
+        [Authorize(Roles = "Studentska služba")]
         [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var prijava = await _context.Prijave
                 .Include(p => p.Ispit)
                 .Include(p => p.Student)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (prijava == null)
-            {
-                return NotFound();
-            }
+
+            if (prijava == null) return NotFound();
 
             return View(prijava);
         }
 
         // POST: Prijave/Delete/5
+        [Authorize(Roles = "Studentska služba")]
         [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var prijava = await _context.Prijave.FindAsync(id);
-            if (prijava != null)
-            {
-                _context.Prijave.Remove(prijava);
-            }
+            if (prijava != null) _context.Prijave.Remove(prijava);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

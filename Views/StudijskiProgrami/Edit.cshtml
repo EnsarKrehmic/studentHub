@@ -10,19 +10,19 @@
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
-        <label asp-for="Naziv" class="control-label"></label>
+        <label asp-for="Naziv" class="control-label">Naziv</label>
         <input asp-for="Naziv" class="form-control" />
         <span asp-validation-for="Naziv" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Opis" class="control-label"></label>
-        <input asp-for="Opis" class="form-control" />
+        <label asp-for="Opis" class="control-label">Opis</label>
+        <textarea asp-for="Opis" class="form-control"></textarea>
         <span asp-validation-for="Opis" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="trajanjeUGodinama" class="control-label"></label>
-        <input asp-for="trajanjeUGodinama" class="form-control" />
-        <span asp-validation-for="trajanjeUGodinama" class="text-danger"></span>
+        <label asp-for="TrajanjeUGodinama" class="control-label">Trajanje u godinama</label>
+        <input asp-for="TrajanjeUGodinama" class="form-control" />
+        <span asp-validation-for="TrajanjeUGodinama" class="text-danger"></span>
     </div>
 
     <div class="form-group">

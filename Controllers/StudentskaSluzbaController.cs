@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
+using StudentHub.ViewModels;
 
 namespace StudentHub.Controllers
 {
@@ -17,20 +18,15 @@ namespace StudentHub.Controllers
         }
 
         // GET: StudentskaSluzba
-        [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.StudentskeSluzbe
-                .Include(s => s.Predmet)
-                .Include(s => s.Zahtjev);
+            var applicationDbContext = _context.StudentskeSluzbe;
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: StudentskaSluzba/Details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: StudentskaSluzba/Details/{id}
+        [HttpGet("Details/{id:long}")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -38,10 +34,7 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var studentskaSluzba = await _context.StudentskeSluzbe
-                .Include(s => s.Predmet)
-                .Include(s => s.Zahtjev)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var studentskaSluzba = await _context.StudentskeSluzbe.FirstOrDefaultAsync(m => m.Id == id);
             if (studentskaSluzba == null)
             {
                 return NotFound();
@@ -51,99 +44,149 @@ namespace StudentHub.Controllers
         }
 
         // GET: StudentskaSluzba/Create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("Create")]
         public IActionResult Create()
         {
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.Korisnici, "Id", "Ime");
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id");
-            ViewData["ZahtjevId"] = new SelectList(_context.Zahtjevi, "Id", "Id");
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View();
         }
 
         // POST: StudentskaSluzba/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Ime,Prezime,Email,Lozinka,JMBG,ZahtjevId,PredmetId")] StudentskaSluzba studentskaSluzba)
+        public async Task<IActionResult> Create([Bind("Uloga,Ime,Prezime,JMBG,Email,Lozinka")] StudentskaSluzba studentskaSluzba)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(studentskaSluzba);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.Korisnici, "Id", "Ime", studentskaSluzba.Id);
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", studentskaSluzba.PredmetId);
-            ViewData["ZahtjevId"] = new SelectList(_context.Zahtjevi, "Id", "Id", studentskaSluzba.ZahtjevId);
-            return View(studentskaSluzba);
-        }
+            // Provjera da li već postoji korisnik sa datim JMBG
+            var postojiKorisnik = await _context.Korisnici
+                .AnyAsync(k => k.JMBG == studentskaSluzba.JMBG);
 
-        // GET: StudentskaSluzba/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long? id)
-        {
-            if (id == null)
+            if (postojiKorisnik)
             {
-                return NotFound();
-            }
-
-            var studentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
-            if (studentskaSluzba == null)
-            {
-                return NotFound();
-            }
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.Korisnici, "Id", "Ime", studentskaSluzba.Id);
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", studentskaSluzba.PredmetId);
-            ViewData["ZahtjevId"] = new SelectList(_context.Zahtjevi, "Id", "Id", studentskaSluzba.ZahtjevId);
-            return View(studentskaSluzba);
-        }
-
-        // POST: StudentskaSluzba/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Ime,Prezime,Email,Lozinka,JMBG,ZahtjevId,PredmetId")] StudentskaSluzba studentskaSluzba)
-        {
-            if (id != studentskaSluzba.Id)
-            {
-                return NotFound();
+                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
+                return View(studentskaSluzba);
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(studentskaSluzba);
+                    _context.StudentskeSluzbe.Add(studentskaSluzba);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!StudentskaSluzbaExists(studentskaSluzba.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
+                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja asistenta.");
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.Korisnici, "Id", "Ime", studentskaSluzba.Id);
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Id", studentskaSluzba.PredmetId);
-            ViewData["ZahtjevId"] = new SelectList(_context.Zahtjevi, "Id", "Id", studentskaSluzba.ZahtjevId);
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View(studentskaSluzba);
         }
 
-        // GET: StudentskaSluzba/Delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: StudentskaSluzba/Edit/{id}
+        [HttpGet("Edit/{id:long}")]
+        public async Task<IActionResult> Edit(long id)
+        {
+            var studentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
+            if (studentskaSluzba == null)
+            {
+                return NotFound();
+            }
+
+            var model = new StudentskaSluzbaEditViewModel
+            {
+                Id = studentskaSluzba.Id,
+                Ime = studentskaSluzba.Ime,
+                Prezime = studentskaSluzba.Prezime,
+                JMBG = studentskaSluzba.JMBG,
+                Email = studentskaSluzba.Email,
+                Lozinka = null,
+                Uloga = studentskaSluzba.Uloga
+            };
+
+            ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
+                .Cast<Uloga>()
+                .Select(u => new SelectListItem
+                {
+                    Value = ((int)u).ToString(),
+                    Text = u.ToString(),
+                    Selected = u == studentskaSluzba.Uloga
+                });
+
+            return View(model);
+        }
+
+        // POST: StudentskaSluzba/Edit/{id}
+        [HttpPost("Edit/{id:long}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(long id, StudentEditViewModel model)
+        {
+            if (id != model.Id)
+            {
+                return NotFound();
+            }
+
+            // Provjera validacije modela
+            if (!ModelState.IsValid)
+            {
+                // Generisanje dropdown liste za prikaz u slučaju greške
+                ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
+                    .Cast<Uloga>()
+                    .Select(u => new SelectListItem
+                    {
+                        Value = ((int)u).ToString(),
+                        Text = u.ToString(),
+                        Selected = u == model.Uloga
+                    });
+                Console.WriteLine($"Uloga iz forme: {model.Uloga}");
+                return View(model);
+            }
+
+            if (!Enum.IsDefined(typeof(Uloga), model.Uloga))
+            {
+                ModelState.AddModelError(nameof(model.Uloga), "Izabrana uloga nije validna.");
+                return View(model);
+            }
+
+            try
+            {
+                var existingStudentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
+                if (existingStudentskaSluzba == null)
+                {
+                    return NotFound();
+                }
+
+                // Ažurirajte lozinku samo ako je uneta nova
+                if (!string.IsNullOrEmpty(model.Lozinka))
+                {
+                    existingStudentskaSluzba.Lozinka = model.Lozinka;
+                }
+
+                // Ažurirajte ostale podatke
+                existingStudentskaSluzba.Ime = model.Ime;
+                existingStudentskaSluzba.Prezime = model.Prezime;
+                existingStudentskaSluzba.Email = model.Email;
+                existingStudentskaSluzba.JMBG = model.JMBG;
+                existingStudentskaSluzba.Uloga = model.Uloga;
+
+                // Sačuvajte promene u bazi
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!StudentskaSluzbaExists(model.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+        }
+
+        // GET: StudentskaSluzba/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -151,10 +194,7 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var studentskaSluzba = await _context.StudentskeSluzbe
-                .Include(s => s.Predmet)
-                .Include(s => s.Zahtjev)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var studentskaSluzba = await _context.StudentskeSluzbe.FirstOrDefaultAsync(m => m.Id == id);
             if (studentskaSluzba == null)
             {
                 return NotFound();
@@ -163,9 +203,8 @@ namespace StudentHub.Controllers
             return View(studentskaSluzba);
         }
 
-        // POST: StudentskaSluzba/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: StudentskaSluzba/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
@@ -173,8 +212,12 @@ namespace StudentHub.Controllers
             if (studentskaSluzba != null)
             {
                 _context.StudentskeSluzbe.Remove(studentskaSluzba);
+                var korisnik = await _context.Korisnici.FindAsync(id);
+                if (korisnik != null)
+                {
+                    _context.Korisnici.Remove(korisnik);
+                }
             }
-
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

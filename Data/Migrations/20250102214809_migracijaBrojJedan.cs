@@ -116,13 +116,14 @@ namespace WebApplication1.Data.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Lozinka = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Uloga = table.Column<int>(type: "int", nullable: false),
-                    Titula = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Profesor_Titula = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    StudijskiProgramId = table.Column<long>(type: "bigint", nullable: false),
+                    StudijskiProgramIds = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Titula = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    Profesor_Titula = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     brojIndeksa = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     predhodnoObrazovanje = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     godinaStudija = table.Column<int>(type: "int", nullable: true),
                     podaciUplata = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StudijskiProgramId = table.Column<long>(type: "bigint", nullable: true),
                     ZahtjevId = table.Column<long>(type: "bigint", nullable: true),
                     PredmetId = table.Column<long>(type: "bigint", nullable: true)
                 },
@@ -138,6 +139,28 @@ namespace WebApplication1.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "KorisnikStudijskiProgram",
+                columns: table => new
+                {
+                    KorisnikId = table.Column<long>(type: "bigint", nullable: false),
+                    StudijskiProgramId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KorisnikStudijskiProgram", x => new { x.KorisnikId, x.StudijskiProgramId });
+                    table.ForeignKey(
+                        name: "FK_KorisnikStudijskiProgram_Korisnik_KorisnikId",
+                        column: x => x.KorisnikId,
+                        principalTable: "Korisnik",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_KorisnikStudijskiProgram_StudijskiProgram_StudijskiProgramId",
+                        column: x => x.StudijskiProgramId,
+                        principalTable: "StudijskiProgram",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Obavjestenje",
                 columns: table => new
                 {
@@ -149,7 +172,8 @@ namespace WebApplication1.Data.Migrations
                     KorisnikId = table.Column<long>(type: "bigint", nullable: true),
                     StudentskaSluzbaId = table.Column<long>(type: "bigint", nullable: true),
                     ProfesorId = table.Column<long>(type: "bigint", nullable: true),
-                    AsistentId = table.Column<long>(type: "bigint", nullable: true)
+                    AsistentId = table.Column<long>(type: "bigint", nullable: true),
+                    StudijskiProgramId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -174,6 +198,12 @@ namespace WebApplication1.Data.Migrations
                         column: x => x.StudentskaSluzbaId,
                         principalTable: "Korisnik",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Obavjestenje_StudijskiProgram_StudijskiProgramId",
+                        column: x => x.StudijskiProgramId,
+                        principalTable: "StudijskiProgram",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -450,6 +480,11 @@ namespace WebApplication1.Data.Migrations
                 column: "ZahtjevId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_KorisnikStudijskiProgram_StudijskiProgramId",
+                table: "KorisnikStudijskiProgram",
+                column: "StudijskiProgramId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NastavniPlan_StudijskiProgramId",
                 table: "NastavniPlan",
                 column: "StudijskiProgramId");
@@ -473,6 +508,11 @@ namespace WebApplication1.Data.Migrations
                 name: "IX_Obavjestenje_StudentskaSluzbaId",
                 table: "Obavjestenje",
                 column: "StudentskaSluzbaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Obavjestenje_StudijskiProgramId",
+                table: "Obavjestenje",
+                column: "StudijskiProgramId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ocjena_PredmetId",
@@ -641,6 +681,9 @@ namespace WebApplication1.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Dokument");
+
+            migrationBuilder.DropTable(
+                name: "KorisnikStudijskiProgram");
 
             migrationBuilder.DropTable(
                 name: "Obavjestenje");

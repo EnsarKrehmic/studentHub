@@ -20,7 +20,6 @@
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().ECTS)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Profesor)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Asistent)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().NastavniPlan)</th>
                 <th>Akcije</th>
             </tr>
         </thead>
@@ -31,17 +30,35 @@
                     <td>@Html.DisplayFor(modelItem => item.Naziv)</td>
                     <td>@Html.DisplayFor(modelItem => item.Opis)</td>
                     <td>@Html.DisplayFor(modelItem => item.ECTS)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Profesor.Id)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Asistent.Id)</td>
-                    <td>@Html.DisplayFor(modelItem => item.NastavniPlan.Id)</td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |
-                        <a asp-action="Edit" asp-route-id="@item.Id">Izmjena</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Brisanje</a>
+                        @if (item.Profesor != null)
+                        {
+                            @item.Profesor.Ime @item.Profesor.Prezime
+                        }
+                        else
+                        {
+                            <span>Profesor nije dodijeljen.</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Asistent != null)
+                        {
+                            @item.Asistent.Ime @item.Asistent.Prezime
+                        }
+                        else
+                        {
+                            <span>Asistent nije dodijeljen.</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
                     </td>
                 </tr>
             }
         </tbody>
+
     </table>
 }
 else

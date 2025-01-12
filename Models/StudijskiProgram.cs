@@ -16,7 +16,7 @@ namespace StudentHub.Models
 
         [Required(ErrorMessage = "Trajanje studijskog programa je obavezno.")]
         [Range(1, 6, ErrorMessage = "Trajanje mora biti između 1 i 6 godina.")]
-        public int trajanjeUGodinama { get; set; }
+        public int TrajanjeUGodinama { get; set; }
 
         public StudijskiProgram() { }
     }

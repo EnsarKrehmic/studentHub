@@ -21,13 +21,13 @@
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Email)</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.Email)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Titula)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Titula)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.AsistentTitula)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.AsistentTitula)</dd>
     </dl>
 </div>
 
 <form asp-action="Delete">
-    <input type="hidden" asp-for="JMBG" />
+    <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-danger">Obriši</button> |
     <a asp-action="Index" class="btn btn-secondary">Odustani</a>
 </form>

@@ -66,6 +66,15 @@ namespace WebApplication1.Data.Migrations
                     b.Property<long?>("AsistentId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("BrojBodova")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DatumObjave")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DatumOdrzavanja")
+                        .HasColumnType("datetime2");
+
                     b.Property<long?>("KorisnikId")
                         .HasColumnType("bigint");
 
@@ -83,14 +92,8 @@ namespace WebApplication1.Data.Migrations
                     b.Property<long?>("StudentId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("brojBodova")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("datumObjave")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("datumOdrzavanja")
-                        .HasColumnType("datetime2");
+                    b.Property<long?>("StudentskaSluzbaId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -104,6 +107,8 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("StudentId");
 
+                    b.HasIndex("StudentskaSluzbaId");
+
                     b.ToTable("Ispit", (string)null);
                 });
 
@@ -116,7 +121,6 @@ namespace WebApplication1.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ime")
@@ -158,13 +162,13 @@ namespace WebApplication1.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("StudijskiProgramId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("godinaStudija")
+                    b.Property<string>("GodinaStudija")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<long>("StudijskiProgramId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -183,6 +187,9 @@ namespace WebApplication1.Data.Migrations
 
                     b.Property<long?>("AsistentId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("DatumObjave")
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("KorisnikId")
                         .HasColumnType("bigint");
@@ -203,8 +210,8 @@ namespace WebApplication1.Data.Migrations
                     b.Property<long?>("StudentskaSluzbaId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("datumObjave")
-                        .HasColumnType("datetime2");
+                    b.Property<long?>("StudijskiProgramId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -215,6 +222,8 @@ namespace WebApplication1.Data.Migrations
                     b.HasIndex("ProfesorId");
 
                     b.HasIndex("StudentskaSluzbaId");
+
+                    b.HasIndex("StudijskiProgramId");
 
                     b.ToTable("Obavjestenje", (string)null);
                 });
@@ -264,7 +273,8 @@ namespace WebApplication1.Data.Migrations
                     b.Property<int>("ECTS")
                         .HasColumnType("int");
 
-                    b.Property<long>("NastavniPlanId")
+                    b.Property<long?>("NastavniPlanId")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.Property<string>("Naziv")
@@ -371,16 +381,16 @@ namespace WebApplication1.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AkademskaGodina")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<long>("PredmetId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("StudentId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("akademskaGodina")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -409,7 +419,7 @@ namespace WebApplication1.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("trajanjeUGodinama")
+                    b.Property<int>("TrajanjeUGodinama")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -425,6 +435,9 @@ namespace WebApplication1.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("DatumIzdavanja")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Namjena")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -438,9 +451,6 @@ namespace WebApplication1.Data.Migrations
 
                     b.Property<int>("Vrsta")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("datumIzdavanja")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -459,19 +469,19 @@ namespace WebApplication1.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("DatumPodnosenja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DatumRjesavanja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusZahtjeva")
+                        .HasColumnType("int");
+
                     b.Property<long>("StudentId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("datumPodnosenja")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("datumRjesavanja")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("statusZahtjeva")
-                        .HasColumnType("int");
-
-                    b.Property<int>("tipZahtjeva")
+                    b.Property<int>("TipZahtjeva")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -485,10 +495,10 @@ namespace WebApplication1.Data.Migrations
                 {
                     b.HasBaseType("StudentHub.Models.Korisnik");
 
-                    b.Property<string>("Titula")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("AsistentTitula")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("AsistentTitula");
 
                     b.HasDiscriminator().HasValue(5);
                 });
@@ -497,16 +507,10 @@ namespace WebApplication1.Data.Migrations
                 {
                     b.HasBaseType("StudentHub.Models.Korisnik");
 
-                    b.Property<string>("Titula")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.ToTable("Korisnik", t =>
-                        {
-                            t.Property("Titula")
-                                .HasColumnName("Profesor_Titula");
-                        });
+                    b.Property<string>("ProfesorTitula")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("ProfesorTitula");
 
                     b.HasDiscriminator().HasValue(4);
                 });
@@ -515,27 +519,16 @@ namespace WebApplication1.Data.Migrations
                 {
                     b.HasBaseType("StudentHub.Models.Korisnik");
 
-                    b.Property<long>("StudijskiProgramId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("brojIndeksa")
-                        .IsRequired()
+                    b.Property<string>("BrojIndeksa")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("godinaStudija")
+                    b.Property<int?>("GodinaStudija")
                         .HasColumnType("int");
 
-                    b.Property<string>("podaciUplata")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("predhodnoObrazovanje")
-                        .IsRequired()
+                    b.Property<string>("PredhodnoObrazovanje")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.HasIndex("StudijskiProgramId");
 
                     b.HasDiscriminator().HasValue(3);
                 });
@@ -543,16 +536,6 @@ namespace WebApplication1.Data.Migrations
             modelBuilder.Entity("StudentHub.Models.StudentskaSluzba", b =>
                 {
                     b.HasBaseType("StudentHub.Models.Korisnik");
-
-                    b.Property<long?>("PredmetId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ZahtjevId")
-                        .HasColumnType("bigint");
-
-                    b.HasIndex("PredmetId");
-
-                    b.HasIndex("ZahtjevId");
 
                     b.HasDiscriminator().HasValue(2);
                 });
@@ -602,6 +585,10 @@ namespace WebApplication1.Data.Migrations
                         .WithMany()
                         .HasForeignKey("StudentId");
 
+                    b.HasOne("StudentHub.Models.StudentskaSluzba", "StudentskaSluzba")
+                        .WithMany()
+                        .HasForeignKey("StudentskaSluzbaId");
+
                     b.Navigation("Asistent");
 
                     b.Navigation("Korisnik");
@@ -611,6 +598,8 @@ namespace WebApplication1.Data.Migrations
                     b.Navigation("Profesor");
 
                     b.Navigation("Student");
+
+                    b.Navigation("StudentskaSluzba");
                 });
 
             modelBuilder.Entity("StudentHub.Models.NastavniPlan", b =>
@@ -645,6 +634,11 @@ namespace WebApplication1.Data.Migrations
                         .HasForeignKey("StudentskaSluzbaId")
                         .OnDelete(DeleteBehavior.NoAction);
 
+                    b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
+                        .WithMany()
+                        .HasForeignKey("StudijskiProgramId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Asistent");
 
                     b.Navigation("Korisnik");
@@ -652,6 +646,8 @@ namespace WebApplication1.Data.Migrations
                     b.Navigation("Profesor");
 
                     b.Navigation("StudentskaSluzba");
+
+                    b.Navigation("StudijskiProgram");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Ocjena", b =>
@@ -837,14 +833,6 @@ namespace WebApplication1.Data.Migrations
                         .HasForeignKey("StudentHub.Models.Student", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("StudentHub.Models.StudijskiProgram", "studijskiProgram")
-                        .WithMany()
-                        .HasForeignKey("StudijskiProgramId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("studijskiProgram");
                 });
 
             modelBuilder.Entity("StudentHub.Models.StudentskaSluzba", b =>
@@ -854,19 +842,6 @@ namespace WebApplication1.Data.Migrations
                         .HasForeignKey("StudentHub.Models.StudentskaSluzba", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("StudentHub.Models.Predmet", "Predmet")
-                        .WithMany()
-                        .HasForeignKey("PredmetId");
-
-                    b.HasOne("StudentHub.Models.Zahtjev", "Zahtjev")
-                        .WithMany()
-                        .HasForeignKey("ZahtjevId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Predmet");
-
-                    b.Navigation("Zahtjev");
                 });
 #pragma warning restore 612, 618
         }

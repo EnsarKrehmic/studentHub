@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentHub.Models
 {
@@ -32,9 +33,8 @@ namespace StudentHub.Models
         [MaxLength(50, ErrorMessage = "Prezime ne može biti duže od 50 karaktera.")]
         public string Prezime { get; set; }
 
-        [Required(ErrorMessage = "Email je obavezan.")]
         [EmailAddress(ErrorMessage = "Unesite validnu email adresu.")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required(ErrorMessage = "Lozinka je obavezna.")]
         [DataType(DataType.Password)]
@@ -44,7 +44,6 @@ namespace StudentHub.Models
         [Required(ErrorMessage = "Uloga je obavezna.")]
         [EnumDataType(typeof(Uloga))]
         public Uloga Uloga { get; set; }
-
         public Korisnik() { }
     }
 }

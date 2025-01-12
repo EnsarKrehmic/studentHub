@@ -40,7 +40,17 @@
                                 <li><a class="dropdown-item" asp-controller="Ispiti" asp-action="Index">Ispiti</a></li>
                                 <li><a class="dropdown-item" asp-controller="Ocjene" asp-action="Index">Ocjene</a></li>
                                 <li><a class="dropdown-item" asp-controller="Predmeti" asp-action="Index">Predmeti</a></li>
-                                <li><a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Index">Studijski Programi</a></li>
+                                <li><a class="dropdown-item" asp-controller="NastavniPlanovi" asp-action="Index">Nastavni planovi</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPrograms" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Studijski Programi
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownPrograms">
+                                <li><a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="1">Proizvodni biznis</a></li>
+                                <li><a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="2">Građevinarstvo</a></li>
+                                <li><a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="3">Softversko inženjerstvo</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -69,3 +79,4 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

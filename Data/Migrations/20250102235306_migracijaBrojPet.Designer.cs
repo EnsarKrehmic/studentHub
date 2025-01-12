@@ -12,8 +12,8 @@ using StudentHub.Data;
 namespace WebApplication1.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241228005715_migracijaBrojJedan")]
-    partial class migracijaBrojJedan
+    [Migration("20250102235306_migracijaBrojPet")]
+    partial class migracijaBrojPet
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,7 +119,6 @@ namespace WebApplication1.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ime")
@@ -141,16 +140,40 @@ namespace WebApplication1.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<long?>("StudijskiProgramId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("StudijskiProgramIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Uloga")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudijskiProgramId");
 
                     b.ToTable("Korisnik", (string)null);
 
                     b.HasDiscriminator<int>("Uloga").HasValue(1);
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("StudentHub.Models.KorisnikStudijskiProgram", b =>
+                {
+                    b.Property<long>("KorisnikId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("StudijskiProgramId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("KorisnikId", "StudijskiProgramId");
+
+                    b.HasIndex("StudijskiProgramId");
+
+                    b.ToTable("KorisnikStudijskiProgram", (string)null);
                 });
 
             modelBuilder.Entity("StudentHub.Models.NastavniPlan", b =>
@@ -206,6 +229,9 @@ namespace WebApplication1.Data.Migrations
                     b.Property<long?>("StudentskaSluzbaId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("StudijskiProgramId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("datumObjave")
                         .HasColumnType("datetime2");
 
@@ -218,6 +244,8 @@ namespace WebApplication1.Data.Migrations
                     b.HasIndex("ProfesorId");
 
                     b.HasIndex("StudentskaSluzbaId");
+
+                    b.HasIndex("StudijskiProgramId");
 
                     b.ToTable("Obavjestenje", (string)null);
                 });
@@ -489,9 +517,9 @@ namespace WebApplication1.Data.Migrations
                     b.HasBaseType("StudentHub.Models.Korisnik");
 
                     b.Property<string>("Titula")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("Asistent_Titula");
 
                     b.HasDiscriminator().HasValue(5);
                 });
@@ -501,15 +529,9 @@ namespace WebApplication1.Data.Migrations
                     b.HasBaseType("StudentHub.Models.Korisnik");
 
                     b.Property<string>("Titula")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.ToTable("Korisnik", t =>
-                        {
-                            t.Property("Titula")
-                                .HasColumnName("Profesor_Titula");
-                        });
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("Profesor_Titula");
 
                     b.HasDiscriminator().HasValue(4);
                 });
@@ -518,27 +540,19 @@ namespace WebApplication1.Data.Migrations
                 {
                     b.HasBaseType("StudentHub.Models.Korisnik");
 
-                    b.Property<long>("StudijskiProgramId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("brojIndeksa")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("godinaStudija")
+                    b.Property<int?>("godinaStudija")
                         .HasColumnType("int");
 
                     b.Property<string>("podaciUplata")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("predhodnoObrazovanje")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.HasIndex("StudijskiProgramId");
 
                     b.HasDiscriminator().HasValue(3);
                 });
@@ -616,6 +630,34 @@ namespace WebApplication1.Data.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("StudentHub.Models.Korisnik", b =>
+                {
+                    b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
+                        .WithMany()
+                        .HasForeignKey("StudijskiProgramId");
+
+                    b.Navigation("StudijskiProgram");
+                });
+
+            modelBuilder.Entity("StudentHub.Models.KorisnikStudijskiProgram", b =>
+                {
+                    b.HasOne("StudentHub.Models.Korisnik", "Korisnik")
+                        .WithMany()
+                        .HasForeignKey("KorisnikId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
+                        .WithMany()
+                        .HasForeignKey("StudijskiProgramId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Korisnik");
+
+                    b.Navigation("StudijskiProgram");
+                });
+
             modelBuilder.Entity("StudentHub.Models.NastavniPlan", b =>
                 {
                     b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
@@ -648,6 +690,11 @@ namespace WebApplication1.Data.Migrations
                         .HasForeignKey("StudentskaSluzbaId")
                         .OnDelete(DeleteBehavior.NoAction);
 
+                    b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
+                        .WithMany()
+                        .HasForeignKey("StudijskiProgramId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Asistent");
 
                     b.Navigation("Korisnik");
@@ -655,6 +702,8 @@ namespace WebApplication1.Data.Migrations
                     b.Navigation("Profesor");
 
                     b.Navigation("StudentskaSluzba");
+
+                    b.Navigation("StudijskiProgram");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Ocjena", b =>
@@ -840,14 +889,6 @@ namespace WebApplication1.Data.Migrations
                         .HasForeignKey("StudentHub.Models.Student", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("StudentHub.Models.StudijskiProgram", "studijskiProgram")
-                        .WithMany()
-                        .HasForeignKey("StudijskiProgramId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("studijskiProgram");
                 });
 
             modelBuilder.Entity("StudentHub.Models.StudentskaSluzba", b =>

@@ -17,7 +17,7 @@ namespace StudentHub.Models
         public string Sadrzaj { get; set; }
 
         [Required]
-        public DateTime datumObjave { get; set; } = DateTime.Now;
+        public DateTime DatumObjave { get; set; } = DateTime.Now;
 
         [ForeignKey("Korisnik")]
         public long? KorisnikId { get; set; }
@@ -34,6 +34,10 @@ namespace StudentHub.Models
         [ForeignKey("Asistent")]
         public long? AsistentId { get; set; }
         public Asistent? Asistent { get; set; }
+
+        [ForeignKey("StudijskiProgram")]
+        public long? StudijskiProgramId { get; set; }
+        public StudijskiProgram StudijskiProgram { get; set; }
 
         public Obavjestenje() { }
     }

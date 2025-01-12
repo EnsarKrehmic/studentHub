@@ -4,35 +4,21 @@
     ViewData["Title"] = "Kreiranje nove prijave";
 }
 
-<h1>
-    <h2>@ViewData["Title"]</h2>
+<h2>@ViewData["Title"]</h2>
 
-    <form asp-action="Create">
-        <div class="form-group">
-            <label asp-for="datumPrijave" class="control-label"></label>
-            <input asp-for="datumPrijave" class="form-control" />
-            <span asp-validation-for="datumPrijave" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="IspitId" class="control-label"></label>
-            <select asp-for="IspitId" class="form-control" asp-items="ViewBag.IspitId"></select>
-        </div>
-        <div class="form-group">
-            <label asp-for="StudentId" class="control-label"></label>
-            <select asp-for="StudentId" class="form-control" asp-items="ViewBag.brojIndeksa"></select>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Kreiraj</button>
-        </div>
-    </form>
-
-    <div>
-        <a asp-action="Index">Nazad</a>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="datumPrijave" class="control-label"></label>
+        <input asp-for="datumPrijave" class="form-control" />
+        <span asp-validation-for="datumPrijave" class="text-danger"></span>
     </div>
-</h1>
+    <div class="form-group">
+        <label asp-for="IspitId" class="control-label"></label>
+        <select asp-for="IspitId" class="form-control" asp-items="ViewBag.IspitId"></select>
+    </div>
+    <button type="submit" class="btn btn-primary">Kreiraj</button>
+</form>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+<div>
+    <a asp-action="Index">Nazad</a>
+</div>

@@ -24,7 +24,15 @@ namespace StudentHub.Controllers
             var applicationDbContext = _context.Ocjene
                 .Include(o => o.Predmet)
                 .Include(o => o.Profesor)
-                .Include(o => o.Student);
+                .Include(o => o.Student)
+                .Select(o => new
+                 {
+                     o.Id,
+                     o.Vrijednost,
+                     PredmetNaziv = o.Predmet.Naziv ?? "N/A", // Handle null values
+                     ProfesorIme = o.Profesor.Ime ?? "N/A", // Handle null values
+                     StudentIme = o.Student.Ime ?? "N/A" // Handle null values
+                 });
             return View(await applicationDbContext.ToListAsync());
         }
 

@@ -1,15 +1,5 @@
 [
   {
-    "ContainingType": "StudentHub.Controllers.HomeController",
-    "Method": "Index",
-    "RelativePath": "",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "StudentHub.Controllers.AsistentiController",
     "Method": "Index",
     "RelativePath": "Asistenti",
@@ -22,7 +12,7 @@
   {
     "ContainingType": "StudentHub.Controllers.AsistentiController",
     "Method": "Create",
-    "RelativePath": "Asistenti/Asistenti/Create",
+    "RelativePath": "Asistenti/Create",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -32,13 +22,13 @@
   {
     "ContainingType": "StudentHub.Controllers.AsistentiController",
     "Method": "Create",
-    "RelativePath": "Asistenti/Asistenti/Create",
+    "RelativePath": "Asistenti/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "Titula",
+        "Name": "AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -83,7 +73,7 @@
   {
     "ContainingType": "StudentHub.Controllers.AsistentiController",
     "Method": "Delete",
-    "RelativePath": "Asistenti/Asistenti/Delete/{id}",
+    "RelativePath": "Asistenti/Delete/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -91,7 +81,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -99,7 +89,7 @@
   {
     "ContainingType": "StudentHub.Controllers.AsistentiController",
     "Method": "DeleteConfirmed",
-    "RelativePath": "Asistenti/Asistenti/Delete/{id}",
+    "RelativePath": "Asistenti/Delete/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -107,7 +97,7 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -115,7 +105,7 @@
   {
     "ContainingType": "StudentHub.Controllers.AsistentiController",
     "Method": "Details",
-    "RelativePath": "Asistenti/Asistenti/Details/{id}",
+    "RelativePath": "Asistenti/Details/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -123,7 +113,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -131,15 +121,15 @@
   {
     "ContainingType": "StudentHub.Controllers.AsistentiController",
     "Method": "Edit",
-    "RelativePath": "Asistenti/Asistenti/Edit/{id}",
+    "RelativePath": "Asistenti/Edit/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "Type": "System.Int64",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -147,7 +137,7 @@
   {
     "ContainingType": "StudentHub.Controllers.AsistentiController",
     "Method": "Edit",
-    "RelativePath": "Asistenti/Asistenti/Edit/{id}",
+    "RelativePath": "Asistenti/Edit/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -158,14 +148,9 @@
         "IsRequired": false
       },
       {
-        "Name": "Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "Id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "JMBG",
@@ -193,21 +178,16 @@
         "IsRequired": false
       },
       {
+        "Name": "AsistentTitula",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "Uloga",
         "Type": "System.String",
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.AsistentiController",
-    "Method": "Index",
-    "RelativePath": "Asistenti/Asistenti/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -259,48 +239,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -341,276 +291,6 @@
       {
         "Name": "StudentskaSluzbaId",
         "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.ZahtjevId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.tipZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.statusZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumPodnosenja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumRjesavanja",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.PredmetId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
         "IsRequired": false
       },
       {
@@ -749,48 +429,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -831,276 +481,6 @@
       {
         "Name": "StudentskaSluzbaId",
         "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.ZahtjevId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.tipZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.statusZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumPodnosenja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumRjesavanja",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.PredmetId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
         "IsRequired": false
       },
       {
@@ -1163,16 +543,6 @@
   },
   {
     "ContainingType": "StudentHub.Controllers.HomeController",
-    "Method": "Index",
-    "RelativePath": "Home/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.HomeController",
     "Method": "Privacy",
     "RelativePath": "Home/Privacy",
     "HttpMethod": "GET",
@@ -1215,12 +585,12 @@
         "IsRequired": false
       },
       {
-        "Name": "datumOdrzavanja",
+        "Name": "DatumOdrzavanja",
         "Type": "System.DateTime",
         "IsRequired": false
       },
       {
-        "Name": "datumObjave",
+        "Name": "DatumObjave",
         "Type": "System.DateTime",
         "IsRequired": false
       },
@@ -1230,7 +600,7 @@
         "IsRequired": false
       },
       {
-        "Name": "brojBodova",
+        "Name": "BrojBodova",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -1265,7 +635,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.Profesor.Titula",
+        "Name": "Predmet.Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1310,7 +680,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.Asistent.Titula",
+        "Name": "Predmet.Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1351,7 +721,7 @@
       },
       {
         "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Int64",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -1360,7 +730,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.NastavniPlan.godinaStudija",
+        "Name": "Predmet.NastavniPlan.GodinaStudija",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1385,7 +755,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
+        "Name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -1435,7 +805,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Profesor.Titula",
+        "Name": "Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1480,7 +850,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Asistent.Titula",
+        "Name": "Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1525,48 +895,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -1601,6 +941,46 @@
       },
       {
         "Name": "Student.Uloga",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzbaId",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Id",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.JMBG",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Ime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Prezime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Lozinka",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Uloga",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -1690,12 +1070,12 @@
         "IsRequired": false
       },
       {
-        "Name": "datumOdrzavanja",
+        "Name": "DatumOdrzavanja",
         "Type": "System.DateTime",
         "IsRequired": false
       },
       {
-        "Name": "datumObjave",
+        "Name": "DatumObjave",
         "Type": "System.DateTime",
         "IsRequired": false
       },
@@ -1705,7 +1085,7 @@
         "IsRequired": false
       },
       {
-        "Name": "brojBodova",
+        "Name": "BrojBodova",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -1740,7 +1120,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.Profesor.Titula",
+        "Name": "Predmet.Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1785,7 +1165,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.Asistent.Titula",
+        "Name": "Predmet.Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1826,7 +1206,7 @@
       },
       {
         "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Int64",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -1835,7 +1215,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.NastavniPlan.godinaStudija",
+        "Name": "Predmet.NastavniPlan.GodinaStudija",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1860,7 +1240,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
+        "Name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -1910,7 +1290,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Profesor.Titula",
+        "Name": "Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -1955,7 +1335,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Asistent.Titula",
+        "Name": "Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -2000,48 +1380,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -2076,6 +1426,46 @@
       },
       {
         "Name": "Student.Uloga",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzbaId",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Id",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.JMBG",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Ime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Prezime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Lozinka",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudentskaSluzba.Uloga",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -2126,7 +1516,7 @@
         "IsRequired": false
       },
       {
-        "Name": "godinaStudija",
+        "Name": "GodinaStudija",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -2151,7 +1541,7 @@
         "IsRequired": false
       },
       {
-        "Name": "StudijskiProgram.trajanjeUGodinama",
+        "Name": "StudijskiProgram.TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -2241,7 +1631,7 @@
         "IsRequired": false
       },
       {
-        "Name": "godinaStudija",
+        "Name": "GodinaStudija",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -2266,7 +1656,7 @@
         "IsRequired": false
       },
       {
-        "Name": "StudijskiProgram.trajanjeUGodinama",
+        "Name": "StudijskiProgram.TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -2277,16 +1667,6 @@
     "ContainingType": "StudentHub.Controllers.NastavniPlanoviController",
     "Method": "Index",
     "RelativePath": "NastavniPlanovi/NastavniPlanovi/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.ObavjestenjaController",
-    "Method": "Index",
-    "RelativePath": "Obavjestenja",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -2327,7 +1707,7 @@
         "IsRequired": false
       },
       {
-        "Name": "datumObjave",
+        "Name": "DatumObjave",
         "Type": "System.DateTime",
         "IsRequired": false
       },
@@ -2377,276 +1757,6 @@
         "IsRequired": false
       },
       {
-        "Name": "StudentskaSluzba.ZahtjevId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.tipZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.statusZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumPodnosenja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumRjesavanja",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.PredmetId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
         "Name": "StudentskaSluzba.Id",
         "Type": "System.Int64",
         "IsRequired": false
@@ -2687,7 +1797,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Profesor.Titula",
+        "Name": "Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -2732,7 +1842,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Asistent.Titula",
+        "Name": "Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -2769,6 +1879,31 @@
       {
         "Name": "Asistent.Uloga",
         "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgramId",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgram.Id",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgram.Naziv",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgram.Opis",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgram.TrajanjeUGodinama",
+        "Type": "System.Int32",
         "IsRequired": false
       }
     ],
@@ -2867,7 +2002,7 @@
         "IsRequired": false
       },
       {
-        "Name": "datumObjave",
+        "Name": "DatumObjave",
         "Type": "System.DateTime",
         "IsRequired": false
       },
@@ -2917,276 +2052,6 @@
         "IsRequired": false
       },
       {
-        "Name": "StudentskaSluzba.ZahtjevId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.tipZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.statusZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumPodnosenja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumRjesavanja",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.PredmetId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
         "Name": "StudentskaSluzba.Id",
         "Type": "System.Int64",
         "IsRequired": false
@@ -3227,7 +2092,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Profesor.Titula",
+        "Name": "Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3272,7 +2137,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Asistent.Titula",
+        "Name": "Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3310,6 +2175,31 @@
         "Name": "Asistent.Uloga",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgramId",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgram.Id",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgram.Naziv",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgram.Opis",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgram.TrajanjeUGodinama",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -3321,7 +2211,13 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "studijskiProgramId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -3393,7 +2289,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.Profesor.Titula",
+        "Name": "Predmet.Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3438,7 +2334,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.Asistent.Titula",
+        "Name": "Predmet.Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3479,7 +2375,7 @@
       },
       {
         "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Int64",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -3488,7 +2384,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.NastavniPlan.godinaStudija",
+        "Name": "Predmet.NastavniPlan.GodinaStudija",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3513,7 +2409,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
+        "Name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -3523,48 +2419,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -3608,7 +2474,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Profesor.Titula",
+        "Name": "Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3768,7 +2634,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.Profesor.Titula",
+        "Name": "Predmet.Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3813,7 +2679,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.Asistent.Titula",
+        "Name": "Predmet.Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3854,7 +2720,7 @@
       },
       {
         "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Int64",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -3863,7 +2729,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.NastavniPlan.godinaStudija",
+        "Name": "Predmet.NastavniPlan.GodinaStudija",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -3888,7 +2754,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
+        "Name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -3898,48 +2764,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -3983,7 +2819,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Profesor.Titula",
+        "Name": "Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -4036,9 +2872,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
-    "Method": "Index",
-    "RelativePath": "Predmeti",
+    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "Method": "Create",
+    "RelativePath": "Predmeti/Predmet/Create",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -4046,28 +2882,13 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
+    "ContainingType": "StudentHub.Controllers.PredmetController",
     "Method": "Create",
-    "RelativePath": "Predmeti/Predmeti/Create",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
-    "Method": "Create",
-    "RelativePath": "Predmeti/Predmeti/Create",
+    "RelativePath": "Predmeti/Predmet/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
-      {
-        "Name": "Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
       {
         "Name": "Naziv",
         "Type": "System.String",
@@ -4084,48 +2905,18 @@
         "IsRequired": false
       },
       {
+        "Name": "ProfesorIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "AsistentIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
         "Name": "ProfesorId",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Uloga",
-        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -4134,108 +2925,33 @@
         "IsRequired": false
       },
       {
-        "Name": "Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
+    "ContainingType": "StudentHub.Controllers.PredmetController",
     "Method": "Delete",
-    "RelativePath": "Predmeti/Predmeti/Delete/{id}",
+    "RelativePath": "Predmeti/Predmet/Delete/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Int64",
         "IsRequired": false
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
+    "ContainingType": "StudentHub.Controllers.PredmetController",
     "Method": "DeleteConfirmed",
-    "RelativePath": "Predmeti/Predmeti/Delete/{id}",
+    "RelativePath": "Predmeti/Predmet/Delete/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -4249,42 +2965,10 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
+    "ContainingType": "StudentHub.Controllers.PredmetController",
     "Method": "Details",
-    "RelativePath": "Predmeti/Predmeti/Details/{id}",
+    "RelativePath": "Predmeti/Predmet/Details/{id}",
     "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
-    "Method": "Edit",
-    "RelativePath": "Predmeti/Predmeti/Edit/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
-    "Method": "Edit",
-    "RelativePath": "Predmeti/Predmeti/Edit/{id}",
-    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -4292,9 +2976,36 @@
         "Name": "id",
         "Type": "System.Int64",
         "IsRequired": false
-      },
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "Method": "Edit",
+    "RelativePath": "Predmeti/Predmet/Edit/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Name": "Id",
+        "Name": "id",
+        "Type": "System.Int64",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "Method": "Edit",
+    "RelativePath": "Predmeti/Predmet/Edit/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
         "Type": "System.Int64",
         "IsRequired": false
       },
@@ -4314,48 +3025,18 @@
         "IsRequired": false
       },
       {
+        "Name": "ProfesorIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "AsistentIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
         "Name": "ProfesorId",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Profesor.Uloga",
-        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -4364,92 +3045,17 @@
         "IsRequired": false
       },
       {
-        "Name": "Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetiController",
+    "ContainingType": "StudentHub.Controllers.PredmetController",
     "Method": "Index",
-    "RelativePath": "Predmeti/Predmeti/Index",
+    "RelativePath": "Predmeti/Predmet/Index",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -4469,7 +3075,7 @@
   {
     "ContainingType": "StudentHub.Controllers.PrijaveController",
     "Method": "Create",
-    "RelativePath": "Prijave/Prijave/Create",
+    "RelativePath": "Prijave/Create",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -4479,7 +3085,7 @@
   {
     "ContainingType": "StudentHub.Controllers.PrijaveController",
     "Method": "Create",
-    "RelativePath": "Prijave/Prijave/Create",
+    "RelativePath": "Prijave/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -4505,12 +3111,12 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.datumOdrzavanja",
+        "Name": "Ispit.DatumOdrzavanja",
         "Type": "System.DateTime",
         "IsRequired": false
       },
       {
-        "Name": "Ispit.datumObjave",
+        "Name": "Ispit.DatumObjave",
         "Type": "System.DateTime",
         "IsRequired": false
       },
@@ -4520,7 +3126,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.brojBodova",
+        "Name": "Ispit.BrojBodova",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -4555,7 +3161,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Predmet.Profesor.Titula",
+        "Name": "Ispit.Predmet.Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -4600,7 +3206,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Predmet.Asistent.Titula",
+        "Name": "Ispit.Predmet.Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -4641,7 +3247,7 @@
       },
       {
         "Name": "Ispit.Predmet.NastavniPlanId",
-        "Type": "System.Int64",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -4650,7 +3256,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Predmet.NastavniPlan.godinaStudija",
+        "Name": "Ispit.Predmet.NastavniPlan.GodinaStudija",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -4675,7 +3281,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
+        "Name": "Ispit.Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -4725,7 +3331,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Profesor.Titula",
+        "Name": "Ispit.Profesor.ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -4770,7 +3376,7 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Asistent.Titula",
+        "Name": "Ispit.Asistent.AsistentTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -4815,48 +3421,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Student.brojIndeksa",
+        "Name": "Ispit.Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Student.predhodnoObrazovanje",
+        "Name": "Ispit.Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Ispit.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Ispit.Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -4895,53 +3471,63 @@
         "IsRequired": false
       },
       {
+        "Name": "Ispit.StudentskaSluzbaId",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ispit.StudentskaSluzba.Id",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ispit.StudentskaSluzba.JMBG",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ispit.StudentskaSluzba.Ime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ispit.StudentskaSluzba.Prezime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ispit.StudentskaSluzba.Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ispit.StudentskaSluzba.Lozinka",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ispit.StudentskaSluzba.Uloga",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "StudentId",
         "Type": "System.Int64",
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -4985,7 +3571,7 @@
   {
     "ContainingType": "StudentHub.Controllers.PrijaveController",
     "Method": "Delete",
-    "RelativePath": "Prijave/Prijave/Delete/{id}",
+    "RelativePath": "Prijave/Delete/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -4993,7 +3579,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5001,7 +3587,7 @@
   {
     "ContainingType": "StudentHub.Controllers.PrijaveController",
     "Method": "DeleteConfirmed",
-    "RelativePath": "Prijave/Prijave/Delete/{id}",
+    "RelativePath": "Prijave/Delete/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -5009,7 +3595,7 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5017,7 +3603,7 @@
   {
     "ContainingType": "StudentHub.Controllers.PrijaveController",
     "Method": "Details",
-    "RelativePath": "Prijave/Prijave/Details/{id}",
+    "RelativePath": "Prijave/Details/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -5025,546 +3611,9 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.PrijaveController",
-    "Method": "Edit",
-    "RelativePath": "Prijave/Prijave/Edit/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.PrijaveController",
-    "Method": "Edit",
-    "RelativePath": "Prijave/Prijave/Edit/{id}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "datumPrijave",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "IspitId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.datumOdrzavanja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.datumObjave",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Lokacija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.brojBodova",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.PredmetId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.KorisnikId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Korisnik.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Korisnik.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Korisnik.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Korisnik.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Korisnik.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Korisnik.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Korisnik.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.StudentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ispit.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.PrijaveController",
-    "Method": "Index",
-    "RelativePath": "Prijave/Prijave/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -5580,7 +3629,7 @@
   {
     "ContainingType": "StudentHub.Controllers.ProfesoriController",
     "Method": "Create",
-    "RelativePath": "Profesori/Profesori/Create",
+    "RelativePath": "Profesori/Create",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -5590,13 +3639,13 @@
   {
     "ContainingType": "StudentHub.Controllers.ProfesoriController",
     "Method": "Create",
-    "RelativePath": "Profesori/Profesori/Create",
+    "RelativePath": "Profesori/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "Titula",
+        "Name": "ProfesorTitula",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -5641,7 +3690,7 @@
   {
     "ContainingType": "StudentHub.Controllers.ProfesoriController",
     "Method": "Delete",
-    "RelativePath": "Profesori/Profesori/Delete/{id}",
+    "RelativePath": "Profesori/Delete/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -5649,7 +3698,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5657,7 +3706,7 @@
   {
     "ContainingType": "StudentHub.Controllers.ProfesoriController",
     "Method": "DeleteConfirmed",
-    "RelativePath": "Profesori/Profesori/Delete/{id}",
+    "RelativePath": "Profesori/Delete/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -5665,7 +3714,7 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5673,7 +3722,7 @@
   {
     "ContainingType": "StudentHub.Controllers.ProfesoriController",
     "Method": "Details",
-    "RelativePath": "Profesori/Profesori/Details/{id}",
+    "RelativePath": "Profesori/Details/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -5681,7 +3730,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5689,15 +3738,15 @@
   {
     "ContainingType": "StudentHub.Controllers.ProfesoriController",
     "Method": "Edit",
-    "RelativePath": "Profesori/Profesori/Edit/{id}",
+    "RelativePath": "Profesori/Edit/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "Type": "System.Int64",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5705,7 +3754,7 @@
   {
     "ContainingType": "StudentHub.Controllers.ProfesoriController",
     "Method": "Edit",
-    "RelativePath": "Profesori/Profesori/Edit/{id}",
+    "RelativePath": "Profesori/Edit/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -5716,14 +3765,9 @@
         "IsRequired": false
       },
       {
-        "Name": "Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "Id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "JMBG",
@@ -5751,21 +3795,16 @@
         "IsRequired": false
       },
       {
+        "Name": "ProfesorTitula",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "Uloga",
         "Type": "System.String",
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.ProfesoriController",
-    "Method": "Index",
-    "RelativePath": "Profesori/Profesori/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -5781,7 +3820,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentiController",
     "Method": "Create",
-    "RelativePath": "Studenti/Studenti/Create",
+    "RelativePath": "Studenti/Create",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -5791,54 +3830,24 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentiController",
     "Method": "Create",
-    "RelativePath": "Studenti/Studenti/Create",
+    "RelativePath": "Studenti/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "brojIndeksa",
+        "Name": "BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "predhodnoObrazovanje",
+        "Name": "PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -5882,7 +3891,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentiController",
     "Method": "Delete",
-    "RelativePath": "Studenti/Studenti/Delete/{id}",
+    "RelativePath": "Studenti/Delete/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -5890,7 +3899,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5898,7 +3907,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentiController",
     "Method": "DeleteConfirmed",
-    "RelativePath": "Studenti/Studenti/Delete/{id}",
+    "RelativePath": "Studenti/Delete/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -5906,7 +3915,7 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5914,7 +3923,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentiController",
     "Method": "Details",
-    "RelativePath": "Studenti/Studenti/Details/{id}",
+    "RelativePath": "Studenti/Details/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -5922,7 +3931,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5930,15 +3939,15 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentiController",
     "Method": "Edit",
-    "RelativePath": "Studenti/Studenti/Edit/{id}",
+    "RelativePath": "Studenti/Edit/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "Type": "System.Int64",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5946,7 +3955,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentiController",
     "Method": "Edit",
-    "RelativePath": "Studenti/Studenti/Edit/{id}",
+    "RelativePath": "Studenti/Edit/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -5957,54 +3966,9 @@
         "IsRequired": false
       },
       {
-        "Name": "brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
         "Name": "Id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "JMBG",
@@ -6032,21 +3996,26 @@
         "IsRequired": false
       },
       {
+        "Name": "BrojIndeksa",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PredhodnoObrazovanje",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
         "Name": "Uloga",
         "Type": "System.String",
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.StudentiController",
-    "Method": "Index",
-    "RelativePath": "Studenti/Studenti/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -6062,7 +4031,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentskaSluzbaController",
     "Method": "Create",
-    "RelativePath": "StudentskaSluzba/StudentskaSluzba/Create",
+    "RelativePath": "StudentskaSluzba/Create",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -6072,281 +4041,11 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentskaSluzbaController",
     "Method": "Create",
-    "RelativePath": "StudentskaSluzba/StudentskaSluzba/Create",
+    "RelativePath": "StudentskaSluzba/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
-      {
-        "Name": "ZahtjevId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.tipZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.statusZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.datumPodnosenja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.datumRjesavanja",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "PredmetId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
       {
         "Name": "Id",
         "Type": "System.Int64",
@@ -6388,7 +4087,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentskaSluzbaController",
     "Method": "Delete",
-    "RelativePath": "StudentskaSluzba/StudentskaSluzba/Delete/{id}",
+    "RelativePath": "StudentskaSluzba/Delete/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -6396,7 +4095,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -6404,7 +4103,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentskaSluzbaController",
     "Method": "DeleteConfirmed",
-    "RelativePath": "StudentskaSluzba/StudentskaSluzba/Delete/{id}",
+    "RelativePath": "StudentskaSluzba/Delete/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -6412,7 +4111,7 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -6420,7 +4119,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentskaSluzbaController",
     "Method": "Details",
-    "RelativePath": "StudentskaSluzba/StudentskaSluzba/Details/{id}",
+    "RelativePath": "StudentskaSluzba/Details/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -6428,7 +4127,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -6436,15 +4135,15 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentskaSluzbaController",
     "Method": "Edit",
-    "RelativePath": "StudentskaSluzba/StudentskaSluzba/Edit/{id}",
+    "RelativePath": "StudentskaSluzba/Edit/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "Type": "System.Int64",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -6452,7 +4151,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudentskaSluzbaController",
     "Method": "Edit",
-    "RelativePath": "StudentskaSluzba/StudentskaSluzba/Edit/{id}",
+    "RelativePath": "StudentskaSluzba/Edit/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -6463,279 +4162,9 @@
         "IsRequired": false
       },
       {
-        "Name": "ZahtjevId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.tipZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.statusZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.datumPodnosenja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.datumRjesavanja",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Zahtjev.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "PredmetId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
         "Name": "Id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "JMBG",
@@ -6763,21 +4192,26 @@
         "IsRequired": false
       },
       {
+        "Name": "BrojIndeksa",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PredhodnoObrazovanje",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
         "Name": "Uloga",
         "Type": "System.String",
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.StudentskaSluzbaController",
-    "Method": "Index",
-    "RelativePath": "StudentskaSluzba/StudentskaSluzba/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -6824,7 +4258,7 @@
         "IsRequired": false
       },
       {
-        "Name": "trajanjeUGodinama",
+        "Name": "TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -6924,7 +4358,7 @@
         "IsRequired": false
       },
       {
-        "Name": "trajanjeUGodinama",
+        "Name": "TrajanjeUGodinama",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -6980,7 +4414,7 @@
         "IsRequired": false
       },
       {
-        "Name": "datumIzdavanja",
+        "Name": "DatumIzdavanja",
         "Type": "System.DateTime",
         "IsRequired": false
       },
@@ -6990,48 +4424,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -7072,276 +4476,6 @@
       {
         "Name": "StudentskaSluzbaId",
         "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.ZahtjevId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.tipZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.statusZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumPodnosenja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumRjesavanja",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.PredmetId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
         "IsRequired": false
       },
       {
@@ -7475,7 +4609,7 @@
         "IsRequired": false
       },
       {
-        "Name": "datumIzdavanja",
+        "Name": "DatumIzdavanja",
         "Type": "System.DateTime",
         "IsRequired": false
       },
@@ -7485,48 +4619,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -7567,276 +4671,6 @@
       {
         "Name": "StudentskaSluzbaId",
         "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.ZahtjevId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.tipZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.statusZahtjeva",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumPodnosenja",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.datumRjesavanja",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.StudentId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.brojIndeksa",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.predhodnoObrazovanje",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Zahtjev.Student.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.PredmetId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ECTS",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.ProfesorId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Profesor.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.AsistentId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Titula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Ime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Prezime",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Lozinka",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.Asistent.Uloga",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlanId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.godinaStudija",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "StudentskaSluzba.Predmet.NastavniPlan.StudijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
         "IsRequired": false
       },
       {
@@ -7926,22 +4760,22 @@
         "IsRequired": false
       },
       {
-        "Name": "tipZahtjeva",
+        "Name": "TipZahtjeva",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "statusZahtjeva",
+        "Name": "StatusZahtjeva",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "datumPodnosenja",
+        "Name": "DatumPodnosenja",
         "Type": "System.DateTime",
         "IsRequired": false
       },
       {
-        "Name": "datumRjesavanja",
+        "Name": "DatumRjesavanja",
         "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
@@ -7951,48 +4785,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
@@ -8116,22 +4920,22 @@
         "IsRequired": false
       },
       {
-        "Name": "tipZahtjeva",
+        "Name": "TipZahtjeva",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "statusZahtjeva",
+        "Name": "StatusZahtjeva",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "datumPodnosenja",
+        "Name": "DatumPodnosenja",
         "Type": "System.DateTime",
         "IsRequired": false
       },
       {
-        "Name": "datumRjesavanja",
+        "Name": "DatumRjesavanja",
         "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
@@ -8141,48 +4945,18 @@
         "IsRequired": false
       },
       {
-        "Name": "Student.brojIndeksa",
+        "Name": "Student.BrojIndeksa",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.predhodnoObrazovanje",
+        "Name": "Student.PredhodnoObrazovanje",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "Student.godinaStudija",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.podaciUplata",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.StudijskiProgramId",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Naziv",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.Opis",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Student.studijskiProgram.trajanjeUGodinama",
-        "Type": "System.Int32",
+        "Name": "Student.GodinaStudija",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {

@@ -1,4 +1,4 @@
-﻿@model StudentHub.Models.StudentskaSluzba
+﻿@model StudentHub.ViewModels.StudentskaSluzbaEditViewModel
 
 @{
     ViewData["Title"] = "izmjena podataka admina";
@@ -6,33 +6,42 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="JMBG" />
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Uloga" class="control-label"></label>
+        <select asp-for="Uloga" class="form-control" asp-items="ViewBag.Uloge"></select>
+        <span asp-validation-for="Uloga" class="text-danger"></span>
+    </div>
 
     <div class="form-group">
         <label asp-for="Ime" class="control-label"></label>
         <input asp-for="Ime" class="form-control" />
         <span asp-validation-for="Ime" class="text-danger"></span>
     </div>
+
     <div class="form-group">
         <label asp-for="Prezime" class="control-label"></label>
         <input asp-for="Prezime" class="form-control" />
         <span asp-validation-for="Prezime" class="text-danger"></span>
     </div>
+
     <div class="form-group">
         <label asp-for="Email" class="control-label"></label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
+
+    <div class="form-group">
+        <label asp-for="JMBG" class="control-label"></label>
+        <input asp-for="JMBG" class="form-control" />
+        <span asp-validation-for="JMBG" class="text-danger"></span>
+    </div>
+
     <div class="form-group">
         <label asp-for="Lozinka" class="control-label"></label>
         <input asp-for="Lozinka" class="form-control" />
         <span asp-validation-for="Lozinka" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Uloga" class="control-label"></label>
-        <select asp-for="Uloga" class="form-control" asp-items="Html.GetEnumSelectList<StudentHub.Models.Uloga>()"></select>
-        <span asp-validation-for="Uloga" class="text-danger"></span>
     </div>
 
     <div class="form-group">

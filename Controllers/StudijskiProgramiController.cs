@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
@@ -19,6 +20,7 @@ namespace StudentHub.Controllers
         [HttpGet]
         [Route("")]
         [Route("[Controller]/[Action]")]
+        [Authorize(Roles = "Studentska služba,Profesor,Asistent,Student")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.StudijskiProgrami.ToListAsync());
@@ -41,6 +43,12 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
+            var obavjestenja = await _context.Obavjestenja
+                .Where(o => o.StudijskiProgramId == id)
+                .ToListAsync();
+
+            ViewBag.Obavjestenja = obavjestenja;
+
             return View(studijskiProgram);
         }
 
@@ -56,7 +64,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Naziv,Opis,trajanjeUGodinama")] StudijskiProgram studijskiProgram)
+        public async Task<IActionResult> Create([Bind("Id,Naziv,Opis,TrajanjeUGodinama")] StudijskiProgram studijskiProgram)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +97,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Opis,trajanjeUGodinama")] StudijskiProgram studijskiProgram)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Opis,TrajanjeUGodinama")] StudijskiProgram studijskiProgram)
         {
             if (id != studijskiProgram.Id)
             {

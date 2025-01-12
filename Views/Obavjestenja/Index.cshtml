@@ -6,6 +6,26 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<div class="row mb-3">
+    <div class="col-md-4">
+        <form method="get">
+            <div class="form-group">
+                <label for="StudijskiProgramId">Odaberite studijski program</label>
+                <select class="form-control" id="StudijskiProgramId" name="studijskiProgramId" onchange="this.form.submit()">
+                    <option value="">Svi studijski programi</option>
+                    @foreach (var program in ViewData["StudijskiProgrami"] as IEnumerable<SelectListItem> ?? Enumerable.Empty<SelectListItem>())
+                    {
+                        <option value="@program.Value"
+                                selected="@(Context.Request.Query["studijskiProgramId"] == program.Value ? "selected" : "")">
+                            @program.Text
+                        </option>
+                    }
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
 <p>
     <a asp-action="Create" class="btn btn-primary">Dodaj novo obavještenje</a>
 </p>
@@ -17,7 +37,7 @@
             <tr>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Naslov)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Sadrzaj)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().datumObjave)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DatumObjave)</th>
                 <th>Objavio/la</th>
                 <th>Akcije</th>
             </tr>
@@ -28,7 +48,7 @@
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.Naslov)</td>
                     <td>@Html.DisplayFor(modelItem => item.Sadrzaj)</td>
-                    <td>@Html.DisplayFor(modelItem => item.datumObjave)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DatumObjave)</td>
                     <td>
                         @if (item.Korisnik is StudentskaSluzba)
                         {

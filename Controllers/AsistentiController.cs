@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
+using StudentHub.ViewModels;
 
 namespace StudentHub.Controllers
 {
@@ -17,18 +18,15 @@ namespace StudentHub.Controllers
         }
 
         // GET: Asistenti
-        [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Asistenti;
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Asistenti/Details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Asistenti/Details/{id}
+        [HttpGet("Details/{id:long}")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -36,8 +34,7 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var asistent = await _context.Asistenti
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var asistent = await _context.Asistenti.FirstOrDefaultAsync(m => m.Id == id);
             if (asistent == null)
             {
                 return NotFound();
@@ -46,22 +43,20 @@ namespace StudentHub.Controllers
             return View(asistent);
         }
 
-        // GET: Asistenti/Create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        // GET: Asistenti/Create{id}
+        [HttpGet("Create")]
         public IActionResult Create()
         {
-            ViewData["AsistentId"] = new SelectList(_context.Korisnici, "Id", "Id");
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View();
         }
 
         // POST: Asistenti/Create
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,JMBG,Ime,Prezime,Email,Lozinka,Titula")] Asistent asistent)
+        public async Task<IActionResult> Create([Bind("JMBG,Ime,Prezime,Email,Lozinka,AsistentTitula,Uloga")] Asistent asistent)
         {
-            // Proveri da li već postoji korisnik sa datim JMBG
+            // Provjeri da li već postoji korisnik sa datim JMBG
             var postojiKorisnik = await _context.Korisnici
                 .AnyAsync(k => k.JMBG == asistent.JMBG);
 
@@ -86,80 +81,114 @@ namespace StudentHub.Controllers
                     ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja asistenta.");
                 }
             }
-            ViewData["AsistentId"] = new SelectList(_context.Korisnici, "Id", "Id", asistent.Id);            
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View(asistent);
         }
 
-        // GET: Asistenti/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long? id)
+        // GET: Asistenti/Edit/{id}
+        [HttpGet("Edit/{id:long}")]
+        public async Task<IActionResult> Edit(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var asistent = await _context.Asistenti.FindAsync(id);
             if (asistent == null)
             {
                 return NotFound();
             }
-            ViewData["AsistentId"] = new SelectList(_context.Korisnici, "Id", "Id", asistent.Id);
-            return View(asistent);
+
+            var model = new AsistentEditViewModel
+            {
+                Id = asistent.Id,
+                JMBG = asistent.JMBG,
+                Ime = asistent.Ime,
+                Prezime = asistent.Prezime,
+                Email = asistent.Email,
+                AsistentTitula = asistent.AsistentTitula,
+                Lozinka = null,
+                Uloga = asistent.Uloga
+            };
+
+            ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
+                .Cast<Uloga>()
+                .Select(u => new SelectListItem
+                {
+                    Value = ((int)u).ToString(),
+                    Text = u.ToString(),
+                    Selected = u == asistent.Uloga
+                });
+
+            return View(model);
         }
 
-        // POST: Asistenti/Edit/5
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Asistenti/Edit/{id}
+        [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,JMBG,Ime,Prezime,Email,Lozinka,Titula")] Asistent asistent)
+        public async Task<IActionResult> Edit(long id, AsistentEditViewModel model)
         {
-            if (id != asistent.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
 
-            // Provjera da li postoji drugi korisnik sa istim JMBG osim trenutnog
-            if (_context.Korisnici.Any(k => k.JMBG == asistent.JMBG && k.Id != id))
+            // Proverite validaciju modela
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
-                return View(asistent);
+                // Ponovo generišite dropdown listu za prikaz u slučaju greške
+                ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
+                    .Cast<Uloga>()
+                    .Select(u => new SelectListItem
+                    {
+                        Value = ((int)u).ToString(),
+                        Text = u.ToString(),
+                        Selected = u == model.Uloga
+                    });
+                Console.WriteLine($"Uloga iz forme: {model.Uloga}");
+                return View(model);
             }
 
-            if (ModelState.IsValid)
+            if (!Enum.IsDefined(typeof(Uloga), model.Uloga))
             {
-                try
-                {
-                    _context.Update(asistent);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AsistentExists(asistent.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom ažuriranja asistenta.");
-                }
+                ModelState.AddModelError(nameof(model.Uloga), "Izabrana uloga nije validna.");
+                return View(model);
             }
-            ViewData["AsistentId"] = new SelectList(_context.Korisnici, "Id", "Id", asistent.Id);
-            return View(asistent);
+
+            try
+            {
+                var existingAsistent = await _context.Asistenti.FindAsync(id);
+                if (existingAsistent == null)
+                {
+                    return NotFound();
+                }
+
+                // Ažuriranje lozinke samo ako je uneta nova
+                if (!string.IsNullOrEmpty(model.Lozinka))
+                {
+                    existingAsistent.Lozinka = model.Lozinka;
+                }
+
+                // Ažuriranje ostalih podataka
+                existingAsistent.Ime = model.Ime;
+                existingAsistent.Prezime = model.Prezime;
+                existingAsistent.Email = model.Email;
+                existingAsistent.JMBG = model.JMBG;
+                existingAsistent.AsistentTitula = model.AsistentTitula;
+                existingAsistent.Uloga = model.Uloga;
+
+                // Sačuvajte promene u bazi
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AsistentExists(model.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
         }
 
-        // GET: Asistenti/Delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Asistenti/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -167,8 +196,7 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var asistent = await _context.Asistenti
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var asistent = await _context.Asistenti.FirstOrDefaultAsync(m => m.Id == id);
             if (asistent == null)
             {
                 return NotFound();
@@ -177,9 +205,8 @@ namespace StudentHub.Controllers
             return View(asistent);
         }
 
-        // POST: Asistenti/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Asistenti/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
+using StudentHub.ViewModels;
 
 namespace StudentHub.Controllers
 {
@@ -18,17 +19,25 @@ namespace StudentHub.Controllers
             _context = context;
         }
 
-        // GET: Obavjestenja
         [HttpGet]
-        [Route("")]
         [Route("[Controller]/[Action]")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? studijskiProgramId)
         {
-            var applicationDbContext = _context.Obavjestenja
+            var obavijestiQuery = _context.Obavjestenja
                 .Include(o => o.Asistent)
                 .Include(o => o.Profesor)
-                .Include(o => o.StudentskaSluzba);
-            return View(await applicationDbContext.ToListAsync());
+                .Include(o => o.StudentskaSluzba)
+                .AsQueryable();
+
+            if (studijskiProgramId.HasValue)
+            {
+                obavijestiQuery = obavijestiQuery.Where(o => o.StudijskiProgramId == studijskiProgramId.Value);
+            }
+
+            var obavijesti = await obavijestiQuery.OrderByDescending(o => o.DatumObjave).ToListAsync();
+            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
+
+            return View(obavijesti);
         }
 
         // GET: Obavjestenja/Details/5
@@ -51,20 +60,21 @@ namespace StudentHub.Controllers
         // GET: Obavjestenja/Create
         [HttpGet]
         [Route("[Controller]/[Action]")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
             return View();
         }
 
         // POST: Obavjestenja/Create
         [HttpPost]
         [Route("[Controller]/[Action]")]
-        public async Task<IActionResult> Create([Bind("Naslov,Sadrzaj")] Obavjestenje obavjestenje)
+        public async Task<IActionResult> Create([Bind("Naslov,Sadrzaj,StudijskiProgramId")] Obavjestenje obavjestenje)
         {
             if (ModelState.IsValid)
             {
-                Console.WriteLine($"Naslov: {obavjestenje.Naslov}, Sadrzaj: {obavjestenje.Sadrzaj}");
-                obavjestenje.datumObjave = DateTime.Now;
+                Console.WriteLine($"Naslov: {obavjestenje.Naslov}, Sadrzaj: {obavjestenje.Sadrzaj}, Studijski program: {obavjestenje.StudijskiProgramId}");
+                obavjestenje.DatumObjave = DateTime.Now;
 
                 // Pronalaženje korisnika u bazi prema User.Identity.Name
                 if (User.Identity?.IsAuthenticated == true)
@@ -105,6 +115,7 @@ namespace StudentHub.Controllers
                     Console.WriteLine($"{error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
                 }
             }
+            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
             return View(obavjestenje);
         }
 
@@ -117,7 +128,7 @@ namespace StudentHub.Controllers
 
             var obavjestenje = await _context.Obavjestenja.FindAsync(id);
             if (obavjestenje == null) return NotFound();
-
+            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
             return View(obavjestenje);
         }
 
@@ -125,7 +136,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Naslov,Sadrzaj")] Obavjestenje obavjestenje)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Naslov,Sadrzaj,StudijskiProgramId")] Obavjestenje obavjestenje)
         {
             if (id != obavjestenje.Id) return NotFound();
 
@@ -133,7 +144,7 @@ namespace StudentHub.Controllers
             {
                 try
                 {
-                    obavjestenje.datumObjave = DateTime.Now;
+                    obavjestenje.DatumObjave = DateTime.Now;
                     SetUserRoleIds(obavjestenje);
 
                     _context.Update(obavjestenje);
@@ -146,6 +157,7 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
             return View(obavjestenje);
         }
 

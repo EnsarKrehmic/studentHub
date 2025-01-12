@@ -2,53 +2,56 @@
 
 @{
     ViewData["Title"] = "Kreiranje novog ispita";
+    var isProfesor = User.IsInRole("Profesor");
+    var isAsistent = User.IsInRole("Asistent");
 }
 
-<h2>@ViewData["Title"]</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div class="form-group">
-                <label asp-for="PredmetId" class="control-label"></label>
-                <select asp-for="PredmetId" class="form-control" asp-items="ViewBag.PredmetId"></select>
-                <span asp-validation-for="PredmetId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProfesorId" class="control-label"></label>
-                <select asp-for="ProfesorId" class="form-control" asp-items="ViewBag.ProfesorId"></select>
-                <span asp-validation-for="ProfesorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AsistentId" class="control-label"></label>
-                <select asp-for="AsistentId" class="form-control" asp-items="ViewBag.AsistentId"></select>
-                <span asp-validation-for="AsistentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Lokacija" class="control-label"></label>
-                <input asp-for="Lokacija" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="brojBodova" class="control-label"></label>
-                <input asp-for="brojBodova" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="datumOdrzavanja" class="control-label"></label>
-                <input asp-for="datumOdrzavanja" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Kreiraj" class="btn btn-primary" />
-            </div>
-        </form>
+@if (isProfesor || isAsistent)
+{
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div class="form-group">
+                    <label asp-for="PredmetId" class="control-label"></label>
+                    <select asp-for="PredmetId" class="form-control" asp-items="ViewBag.PredmetId"></select>
+                    <span asp-validation-for="PredmetId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Lokacija" class="control-label"></label>
+                    <input asp-for="Lokacija" class="form-control" />
+                    <span asp-validation-for="Lokacija" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BrojBodova" class="control-label"></label>
+                    <input asp-for="BrojBodova" class="form-control" />
+                    <span asp-validation-for="BrojBodova" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DatumOdrzavanja" class="control-label"></label>
+                    <input asp-for="DatumOdrzavanja" class="form-control" />
+                    <span asp-validation-for="DatumOdrzavanja" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Kreiraj" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Nazad</a>
-</div>
+    <div>
+        <a asp-action="Index">Nazad</a>
+    </div>
 
-@section Scripts {
+    @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
     }
+}
+else
+{
+    <h3>Nemate dozvolu za kreiranje ispita.</h3>
+    <a asp-action="Index">Nazad</a>
 }

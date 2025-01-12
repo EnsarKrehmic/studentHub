@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
+using StudentHub.ViewModels;
 
 namespace StudentHub.Controllers
 {
@@ -17,18 +18,15 @@ namespace StudentHub.Controllers
         }
 
         // GET: Profesori
-        [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Profesori;
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Profesori/Details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Profesori/Details/{id}
+        [HttpGet("Details/{id:long}")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -36,8 +34,7 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var profesor = await _context.Profesori
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var profesor = await _context.Profesori.FirstOrDefaultAsync(m => m.Id == id);
             if (profesor == null)
             {
                 return NotFound();
@@ -47,21 +44,19 @@ namespace StudentHub.Controllers
         }
 
         // GET: Profesori/Create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("Create")]
         public IActionResult Create()
         {
-            ViewData["ProfesorId"] = new SelectList(_context.Korisnici, "Id", "Ime");
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View();
         }
 
         // POST: Profesori/Create
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("JMBG,Ime,Prezime,Email,Lozinka,Titula")] Profesor profesor)
+        public async Task<IActionResult> Create([Bind("Uloga,Ime,Prezime,JMBG,Email,Lozinka,ProfesorTitula")] Profesor profesor)
         {
-            // Proveri da li već postoji korisnik sa datim JMBG
+            // Provjera da li već postoji korisnik sa datim JMBG
             var postojiKorisnik = await _context.Korisnici
                 .AnyAsync(k => k.JMBG == profesor.JMBG);
 
@@ -86,80 +81,114 @@ namespace StudentHub.Controllers
                     ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja profesora.");
                 }
             }
-            ViewData["ProfesorId"] = new SelectList(_context.Korisnici, "Id", "Ime", profesor.Id);
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View(profesor);
         }
 
-        // GET: Profesori/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long? id)
+        // GET: Profesori/Edit/{id}
+        [HttpGet("Edit/{id:long}")]
+        public async Task<IActionResult> Edit(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var profesor = await _context.Profesori.FindAsync(id);
             if (profesor == null)
             {
                 return NotFound();
             }
-            ViewData["ProfesorId"] = new SelectList(_context.Korisnici, "Id", "Ime", profesor.Id);
-            return View(profesor);
+
+            var model = new ProfesorEditViewModel
+            {
+                Id = profesor.Id,
+                JMBG = profesor.JMBG,
+                Ime = profesor.Ime,
+                Prezime = profesor.Prezime,
+                Email = profesor.Email,
+                ProfesorTitula = profesor.ProfesorTitula,
+                Lozinka = null,
+                Uloga = profesor.Uloga
+            };
+
+            ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
+                .Cast<Uloga>()
+                .Select(u => new SelectListItem
+                {
+                    Value = ((int)u).ToString(),
+                    Text = u.ToString(),
+                    Selected = u == profesor.Uloga
+                });
+
+            return View(model);
         }
 
-        // POST: Profesori/Edit/5
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Profesori/Edit/{id}
+        [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("JMBG,Ime,Prezime,Email,Lozinka,Titula")] Profesor profesor)
+        public async Task<IActionResult> Edit(long id, ProfesorEditViewModel model)
         {
-            if (id != profesor.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
 
-            // Provjera da li postoji drugi korisnik sa istim JMBG osim trenutnog
-            if (_context.Korisnici.Any(k => k.JMBG == profesor.JMBG && k.Id != id))
+            // Provjera validacije modela
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
-                return View(profesor);
+                // Generisanje dropdown liste za prikaz u slučaju greške
+                ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
+                    .Cast<Uloga>()
+                    .Select(u => new SelectListItem
+                    {
+                        Value = ((int)u).ToString(),
+                        Text = u.ToString(),
+                        Selected = u == model.Uloga
+                    });
+                Console.WriteLine($"Uloga iz forme: {model.Uloga}");
+                return View(model);
             }
 
-            if (ModelState.IsValid)
+            if (!Enum.IsDefined(typeof(Uloga), model.Uloga))
             {
-                try
-                {
-                    _context.Update(profesor);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProfesorExists(profesor.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom ažuriranja profesora.");
-                }
+                ModelState.AddModelError(nameof(model.Uloga), "Izabrana uloga nije validna.");
+                return View(model);
             }
-            ViewData["ProfesorId"] = new SelectList(_context.Korisnici, "Id", "Ime", profesor.Id);
-            return View(profesor);
+
+            try
+            {
+                var existingProfesor = await _context.Profesori.FindAsync(id);
+                if (existingProfesor == null)
+                {
+                    return NotFound();
+                }
+
+                // Ažurirajte lozinku samo ako je uneta nova
+                if (!string.IsNullOrEmpty(model.Lozinka))
+                {
+                    existingProfesor.Lozinka = model.Lozinka;
+                }
+
+                // Ažurirajte ostale podatke
+                existingProfesor.Ime = model.Ime;
+                existingProfesor.Prezime = model.Prezime;
+                existingProfesor.Email = model.Email;
+                existingProfesor.JMBG = model.JMBG;
+                existingProfesor.ProfesorTitula = model.ProfesorTitula;
+                existingProfesor.Uloga = model.Uloga;
+
+                // Sačuvajte promene u bazi
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProfesorExists(model.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
         }
 
-        // GET: Profesori/Delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Profesori/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -167,8 +196,7 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var profesor = await _context.Profesori
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var profesor = await _context.Profesori.FirstOrDefaultAsync(m => m.Id == id);
             if (profesor == null)
             {
                 return NotFound();
@@ -177,9 +205,8 @@ namespace StudentHub.Controllers
             return View(profesor);
         }
 
-        // POST: Profesori/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Profesori/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
@@ -187,8 +214,12 @@ namespace StudentHub.Controllers
             if (profesor != null)
             {
                 _context.Profesori.Remove(profesor);
+                var korisnik = await _context.Korisnici.FindAsync(id);
+                if (korisnik != null)
+                {
+                    _context.Korisnici.Remove(korisnik);
+                }
             }
-
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

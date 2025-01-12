@@ -53,7 +53,7 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa");
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "BrojIndeksa");
             return View();
         }
 
@@ -61,7 +61,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("tipZahtjeva,statusZahtjeva,datumPodnosenja,datumRjesavanja,brojIndeksa,StudentId")] Zahtjev zahtjev)
+        public async Task<IActionResult> Create([Bind("TipZahtjeva,StatusZahtjeva,DatumPodnosenja,DatumRjesavanja,BrojIndeksa,StudentId")] Zahtjev zahtjev)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace StudentHub.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", zahtjev.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "BrojIndeksa", zahtjev.StudentId);
             return View(zahtjev);
         }
 
@@ -88,7 +88,7 @@ namespace StudentHub.Controllers
             {
                 return NotFound();
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", zahtjev.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "BrojIndeksa", zahtjev.StudentId);
             return View(zahtjev);
         }
 
@@ -98,7 +98,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("tipZahtjeva,statusZahtjeva,datumPodnosenja,datumRjesavanja,brojIndeksa,StudentId")] Zahtjev zahtjev)
+        public async Task<IActionResult> Edit(long id, [Bind("TipZahtjeva, StatusZahtjeva, DatumPodnosenja, DatumRjesavanja, BrojIndeksa, StudentId")] Zahtjev zahtjev)
         {
             if (id != zahtjev.Id)
             {
@@ -125,7 +125,7 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "brojIndeksa", zahtjev.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "BrojIndeksa", zahtjev.StudentId);
             return View(zahtjev);
         }
 

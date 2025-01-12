@@ -23,7 +23,7 @@ namespace StudentHub.Models
         public string Namjena { get; set; }
 
         [Required(ErrorMessage = "Datum izdavanja je obavezan.")]
-        public DateTime datumIzdavanja { get; set; }
+        public DateTime DatumIzdavanja { get; set; }
 
         [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]

@@ -1,164 +1,262 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
+using StudentHub.ViewModels;
+using System.Linq;
 
 namespace StudentHub.Controllers
 {
     [Route("Predmeti")]
-    public class PredmetiController : Controller
+    public class PredmetController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public PredmetiController(ApplicationDbContext context)
+        public PredmetController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Predmeti
+        // GET: Predmet/Index
         [HttpGet]
-        [Route("")]
         [Route("[Controller]/[Action]")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.Predmeti
-                .Include(p => p.Asistent)
-                .Include(p => p.NastavniPlan)
-                .Include(p => p.Profesor);
-            return View(await applicationDbContext.ToListAsync());
+            try
+            {
+                var predmeti = _context.Predmeti
+                    .Include(p => p.Profesor)
+                    .Include(p => p.Asistent)
+                    .ToList();
+                if (!predmeti.Any())
+                {
+                    Console.WriteLine("Nema predmeta.");
+                }
+                return View(predmeti);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return View("Error");
+            }
         }
 
-        // GET: Predmeti/Details/5
+
+        // GET: Predmet/Details/5
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Details(long? id)
+        public IActionResult Details(long id)
         {
-            if (id == null) return NotFound();
-
-            var predmet = await _context.Predmeti
-                .Include(p => p.Asistent)
-                .Include(p => p.NastavniPlan)
+            var predmet = _context.Predmeti
                 .Include(p => p.Profesor)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (predmet == null) return NotFound();
+                .Include(p => p.Asistent)
+                .FirstOrDefault(p => p.Id == id);
 
-            return View(predmet);
+            if (predmet == null)
+                return NotFound();
+
+            var profesori = _context.PredmetProfesori
+                .Where(pp => pp.PredmetId == id)
+                .Include(pp => pp.Profesor)
+                .ToList();
+
+            var asistenti = _context.PredmetAsistenti
+                .Where(pa => pa.PredmetId == id)
+                .Include(pa => pa.Asistent)
+                .ToList();
+
+            var viewModel = new PredmetDetailsViewModel
+            {
+                Predmet = predmet,
+                Profesori = profesori,
+                Asistenti = asistenti
+            };
+
+            return View(viewModel);
         }
 
-        // GET: Predmeti/Create
+        // GET: Predmet/Create
         [HttpGet]
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime");
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime");
-            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Naziv");
+            ViewBag.Profesori = _context.Profesori.ToList();
+            ViewBag.Asistenti = _context.Asistenti.ToList();
+            ViewBag.NastavniPlanId = _context.NastavniPlanovi
+                .Select(np => new SelectListItem
+                {
+                    Value = np.Id.ToString(),
+                    Text = np.GodinaStudija.ToString()
+                })
+                .ToList();
             return View();
         }
 
-        // POST: Predmeti/Create
+        // POST: Predmet/Create
         [HttpPost]
         [Route("[Controller]/[Action]")]
-        public async Task<IActionResult> Create([Bind("Naziv,Opis,ECTS,ProfesorId,AsistentId,NastavniPlanId")] Predmet predmet)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(PredmetCreateViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(predmet);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.Profesori = _context.Profesori.ToList();
+                ViewBag.Asistenti = _context.Asistenti.ToList();
+                ViewBag.NastavniPlanId = _context.NastavniPlanovi
+                    .Select(np => new SelectListItem
+                    {
+                        Value = np.Id.ToString(),
+                        Text = np.GodinaStudija.ToString()
+                    })
+                    .ToList();
+                return View(model);
             }
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", predmet.ProfesorId);
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", predmet.AsistentId);
-            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Naziv", predmet.NastavniPlanId);
-            return View(predmet);
+
+            var predmet = new Predmet
+            {
+                Naziv = model.Naziv,
+                Opis = model.Opis,
+                ECTS = model.ECTS,
+                ProfesorId = model.ProfesorId,
+                AsistentId = model.AsistentId,
+                NastavniPlanId = model.NastavniPlanId.GetValueOrDefault()
+            };
+
+            _context.Predmeti.Add(predmet);
+            _context.SaveChanges();
+
+            foreach (var profesorId in model.ProfesorIds)
+            {
+                _context.PredmetProfesori.Add(new PredmetProfesor
+                {
+                    PredmetId = predmet.Id,
+                    ProfesorId = profesorId
+                });
+            }
+
+            foreach (var asistentId in model.AsistentIds)
+            {
+                _context.PredmetAsistenti.Add(new PredmetAsistent
+                {
+                    PredmetId = predmet.Id,
+                    AsistentId = asistentId
+                });
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
-        // GET: Predmeti/Edit/5
+        // GET: Predmet/Edit/5
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long? id)
+        public IActionResult Edit(long id)
         {
-            if (id == null) return NotFound();
+            var predmet = _context.Predmeti.Find(id);
+            if (predmet == null)
+                return NotFound();
 
-            var predmet = await _context.Predmeti.FindAsync(id);
-            if (predmet == null) return NotFound();
+            var model = new PredmetCreateViewModel
+            {
+                Naziv = predmet.Naziv,
+                Opis = predmet.Opis,
+                ECTS = predmet.ECTS,
+                ProfesorId = predmet.ProfesorId,
+                AsistentId = predmet.AsistentId,
+                ProfesorIds = _context.PredmetProfesori
+                    .Where(pp => pp.PredmetId == id)
+                    .Select(pp => pp.ProfesorId)
+                    .ToList(),
+                AsistentIds = _context.PredmetAsistenti
+                    .Where(pa => pa.PredmetId == id)
+                    .Select(pa => pa.AsistentId)
+                    .ToList()
+            };
 
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", predmet.ProfesorId);
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", predmet.AsistentId);
-            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Naziv", predmet.NastavniPlanId);
-            return View(predmet);
+            ViewBag.Profesori = _context.Profesori.ToList();
+            ViewBag.Asistenti = _context.Asistenti.ToList();
+            return View(model);
         }
 
-        // POST: Predmeti/Edit/5
+        // POST: Predmet/Edit/5
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Opis,ECTS,ProfesorId,AsistentId,NastavniPlanId")] Predmet predmet)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(long id, PredmetCreateViewModel model)
         {
-            if (id != predmet.Id) return NotFound();
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(predmet);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PredmetExists(predmet.Id)) return NotFound();
-                    else throw;
-                }
-                return RedirectToAction(nameof(Index));
+                ViewBag.Profesori = _context.Profesori.ToList();
+                ViewBag.Asistenti = _context.Asistenti.ToList();
+                return View(model);
             }
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", predmet.ProfesorId);
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", predmet.AsistentId);
-            ViewData["NastavniPlanId"] = new SelectList(_context.NastavniPlanovi, "Id", "Naziv", predmet.NastavniPlanId);
-            return View(predmet);
+
+            var predmet = _context.Predmeti.Find(id);
+            if (predmet == null)
+                return NotFound();
+
+            predmet.Naziv = model.Naziv;
+            predmet.Opis = model.Opis;
+            predmet.ECTS = model.ECTS;
+            predmet.ProfesorId = model.ProfesorId;
+            predmet.AsistentId = model.AsistentId;
+
+            // Ažuriranje posrednih tabela
+            _context.PredmetProfesori.RemoveRange(_context.PredmetProfesori.Where(pp => pp.PredmetId == id));
+            _context.PredmetAsistenti.RemoveRange(_context.PredmetAsistenti.Where(pa => pa.PredmetId == id));
+
+            foreach (var profesorId in model.ProfesorIds)
+            {
+                _context.PredmetProfesori.Add(new PredmetProfesor
+                {
+                    PredmetId = id,
+                    ProfesorId = profesorId
+                });
+            }
+
+            foreach (var asistentId in model.AsistentIds)
+            {
+                _context.PredmetAsistenti.Add(new PredmetAsistent
+                {
+                    PredmetId = id,
+                    AsistentId = asistentId
+                });
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
-        // GET: Predmeti/Delete/5
+        // GET: Predmet/Delete/5
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Delete(long? id)
+        public IActionResult Delete(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var predmet = await _context.Predmeti
-                .Include(p => p.Asistent)
-                .Include(p => p.NastavniPlan)
-                .Include(p => p.Profesor)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var predmet = _context.Predmeti.Find(id);
             if (predmet == null)
-            {
                 return NotFound();
-            }
 
             return View(predmet);
         }
 
-        // POST: Predmeti/Delete/5
+        // POST: Predmet/Delete/5
         [HttpPost, ActionName("Delete")]
         [Route("[Controller]/[Action]/{id?}")]
-
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(long id)
         {
-            var predmet = await _context.Predmeti.FindAsync(id);
-            if (predmet != null)
-            {
-                _context.Predmeti.Remove(predmet);
-            }
+            var predmet = _context.Predmeti.Find(id);
+            if (predmet == null)
+                return NotFound();
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            _context.PredmetProfesori.RemoveRange(_context.PredmetProfesori.Where(pp => pp.PredmetId == id));
+            _context.PredmetAsistenti.RemoveRange(_context.PredmetAsistenti.Where(pa => pa.PredmetId == id));
+            _context.Predmeti.Remove(predmet);
+            _context.SaveChanges();
 
-        private bool PredmetExists(long id)
-        {
-            return _context.Predmeti.Any(e => e.Id == id);
+            return RedirectToAction("Index");
         }
     }
 }

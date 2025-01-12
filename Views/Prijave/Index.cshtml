@@ -6,27 +6,32 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<table class="table table-bordered table-hover">
+<table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().datumPrijave)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Ispit)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student)</th>
-            <th>Akcije</th>
+            <th>Datum prijave</th>
+            <th>Ispit</th>
+            <th>Student</th>
+            @if (User.IsInRole("Studentska služba"))
+            {
+                <th>Akcije</th>
+            }
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var prijava in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.datumPrijave)</td>
-                <td>@Html.DisplayFor(modelItem => item.Ispit.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.Id)</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Izmjena</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Brisanje</a>
-                </td>
+                <td>@prijava.datumPrijave.ToShortDateString()</td>
+                <td>@prijava.Ispit?.Predmet</td>
+                <td>@prijava.Student?.BrojIndeksa</td>
+                @if (User.IsInRole("Studentska služba"))
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@prijava.Id">Detalji</a> |
+                        <a asp-action="Delete" asp-route-id="@prijava.Id">Brisanje</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

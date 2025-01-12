@@ -17,7 +17,7 @@
             <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Prezime)</th>
             <th>@Html.DisplayNameFor(model => model.FirstOrDefault().JMBG)</th>
             <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Email)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Titula)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().ProfesorTitula)</th>
             <th>Akcije</th>
         </tr>
     </thead>
@@ -29,11 +29,11 @@
                 <td>@Html.DisplayFor(modelItem => item.Prezime)</td>
                 <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.Titula)</td>
+                <td>@Html.DisplayFor(modelItem => item.ProfesorTitula)</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.JMBG">Detalji</a> |
-                    <a asp-action="Edit" asp-route-id="@item.JMBG">Izmjena</a> |
-                    <a asp-action="Delete" asp-route-id="@item.JMBG">Brisanje</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
                 </td>
             </tr>
         }

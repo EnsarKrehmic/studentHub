@@ -5,13 +5,14 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div class="form-group">
-                <label asp-for="JMBG" class="control-label"></label>
-                <input asp-for="JMBG" class="form-control" />
-                <span asp-validation-for="JMBG" class="text-danger"></span>
+                <label asp-for="Uloga" class="control-label"></label>
+                <select asp-for="Uloga" class="form-control" asp-items="ViewBag.Uloge"></select>
+                <span asp-validation-for="Uloga" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Ime" class="control-label"></label>
@@ -24,14 +25,29 @@
                 <span asp-validation-for="Prezime" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="JMBG" class="control-label"></label>
+                <input asp-for="JMBG" class="form-control" />
+                <span asp-validation-for="JMBG" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="brojIndeksa" class="control-label"></label>
-                <input asp-for="brojIndeksa" class="form-control" />
-                <span asp-validation-for="brojIndeksa" class="text-danger"></span>
+                <label asp-for="BrojIndeksa" class="control-label"></label>
+                <input asp-for="BrojIndeksa" class="form-control" />
+                <span asp-validation-for="BrojIndeksa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GodinaStudija" class="control-label"></label>
+                <input asp-for="GodinaStudija" class="form-control" />
+                <span asp-validation-for="GodinaStudija" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PredhodnoObrazovanje" class="control-label"></label>
+                <input asp-for="PredhodnoObrazovanje" class="form-control" />
+                <span asp-validation-for="PredhodnoObrazovanje" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Lozinka" class="control-label"></label>
@@ -39,27 +55,7 @@
                 <span asp-validation-for="Lozinka" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="godinaStudija" class="control-label"></label>
-                <input asp-for="godinaStudija" class="form-control" />
-                <span asp-validation-for="godinaStudija" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="studijskiProgram" class="control-label"></label>
-                <input asp-for="studijskiProgram" class="form-control" />
-                <span asp-validation-for="studijskiProgram" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="predhodnoObrazovanje" class="control-label"></label>
-                <input asp-for="predhodnoObrazovanje" class="form-control" />
-                <span asp-validation-for="predhodnoObrazovanje" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="podaciUplata" class="control-label"></label>
-                <input asp-for="podaciUplata" class="form-control" />
-                <span asp-validation-for="podaciUplata" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                <input type="submit" value="Kreiraj" class="btn btn-primary" />
             </div>
         </form>
     </div>

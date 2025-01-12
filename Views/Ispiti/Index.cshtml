@@ -2,12 +2,12 @@
 
 @{
     ViewData["Title"] = "Lista ispita";
-    var currentUser = User.Identity.IsAuthenticated ? User.Identity.Name : "Gost";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <p>Obavještenje: Rok za prijavu ispita je 3 dana prije ispitnog roka, ne računajući neradne dane i vikende.</p>
+
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Dodaj novi ispit</a>
@@ -18,11 +18,11 @@
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Predmet)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Lokacija)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().brojBodova)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().datumOdrzavanja)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().datumObjave)</th>
+                <th>@Html.DisplayNameFor(model => model.Predmet)</th>
+                <th>@Html.DisplayNameFor(model => model.Lokacija)</th>
+                <th>@Html.DisplayNameFor(model => model.BrojBodova)</th>
+                <th>@Html.DisplayNameFor(model => model.DatumOdrzavanja)</th>
+                <th>@Html.DisplayNameFor(model => model.DatumObjave)</th>
                 <th>Akcije</th>
             </tr>
         </thead>
@@ -30,29 +30,19 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Predmet.Id)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Predmet.Naziv)</td>
                     <td>@Html.DisplayFor(modelItem => item.Lokacija)</td>
-                    <td>@Html.DisplayFor(modelItem => item.brojBodova)</td>
-                    <th>@Html.DisplayNameFor(model => model.FirstOrDefault().datumOdrzavanja)</th>
-                    <th>@Html.DisplayNameFor(model => model.FirstOrDefault().datumObjave)</th>
+                    <td>@Html.DisplayFor(modelItem => item.BrojBodova)</td>
+                    <td>@item.DatumOdrzavanja.ToShortDateString()</td>
+                    <td>@item.DatumObjave.ToShortDateString()</td>
                     <td>
-                        @if (item.Korisnik is Profesor)
-                        {
-                            @Html.DisplayFor(modelItem => ((Profesor)item.Korisnik).Ime)
-                        }
-                        else if (item.Korisnik is Asistent)
-                        {
-                            @Html.DisplayFor(modelItem => ((Asistent)item.Korisnik).Ime)
-                        }
-                        else
-                        {
-                            <span>Gost</span>
-                        }
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |
-                        <a asp-action="Edit" asp-route-id="@item.Id">Izmjena</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Brisanje</a>
+                        <form asp-action="Prijavi" asp-controller="Ispiti" method="post">
+                            <input type="hidden" name="ispitId" value="@item.Id" />
+                            <button type="submit" class="btn btn-success">Prijavi se</button>
+                        </form>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
                     </td>
                 </tr>
             }

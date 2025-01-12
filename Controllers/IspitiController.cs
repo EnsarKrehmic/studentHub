@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -56,8 +57,8 @@ namespace StudentHub.Controllers
         public IActionResult Create()
         {
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv");
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime");
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime");
+            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Titula", "Ime", "Prezime");
+            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Titula", "Ime", "Prezime");
             return View();
         }
 
@@ -65,55 +66,19 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("datumOdrzavanja,Lokacija,brojBodova,PredmetId,ProfesorId,AsistentId")] Ispit ispit)
+        public async Task<IActionResult> Create([Bind("Id, Predmet, Lokacija, BrojBodova, DatumOdrzavanja, DatumObjave")] Ispit ispit)
         {
             if (ModelState.IsValid)
             {
-                Console.WriteLine($"Predmet: {ispit.PredmetId}, Datum održavanja: {ispit.datumOdrzavanja}, Lokacija: {ispit.Lokacija}, Broj bodova: {ispit.brojBodova}");
-                ispit.datumObjave = DateTime.Now;
-
-                // Pronalaženje korisnika u bazi prema User.Identity.Name
-                if (User.Identity?.IsAuthenticated == true)
-                {
-                    if (long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long userId))
-                    {
-                        var korisnik = await _context.Korisnici
-                            .FirstOrDefaultAsync(k => k.Id == userId);
-
-                        if (korisnik != null)
-                        {
-                            ispit.KorisnikId = korisnik.Id; // Postavljanje povezanog entiteta
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Autentifikovani korisnik '{User.Identity.Name}' nije pronađen u bazi.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Korisnik nije autentifikovan. Obavještenje će biti kreirano bez korisnika.");
-                }
-
-                // Postavljanje dodatnih vrijednosti
+                ispit.DatumObjave = DateTime.Now;
                 SetUserRoleIds(ispit);
 
                 _context.Add(ispit);
                 await _context.SaveChangesAsync();
-                Console.WriteLine("Ispit uspješno kreiran.");
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                Console.WriteLine("ModelState nije validan. Greške:");
-                foreach (var error in ModelState)
-                {
-                    Console.WriteLine($"{error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
-                }
-            }
+
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ispit.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ispit.ProfesorId);
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", ispit.AsistentId);
             return View(ispit);
         }
 
@@ -126,10 +91,8 @@ namespace StudentHub.Controllers
 
             var ispit = await _context.Ispiti.FindAsync(id);
             if (ispit == null) return NotFound();
-            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ispit.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ispit.ProfesorId);
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", ispit.AsistentId);
 
+            ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ispit.PredmetId);
             return View(ispit);
         }
 
@@ -137,7 +100,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,datumOdrzavanja,Lokacija,brojBodova,PredmetId,ProfesorId,AsistentId")] Ispit ispit)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,DatumOdrzavanja,Lokacija,BrojBodova,PredmetId")] Ispit ispit)
         {
             if (id != ispit.Id) return NotFound();
 
@@ -145,7 +108,7 @@ namespace StudentHub.Controllers
             {
                 try
                 {
-                    ispit.datumObjave = DateTime.Now;
+                    ispit.DatumObjave = DateTime.Now;
                     SetUserRoleIds(ispit);
 
                     _context.Update(ispit);
@@ -154,13 +117,11 @@ namespace StudentHub.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!IspitExists(ispit.Id)) return NotFound();
-                    else throw;
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv", ispit.PredmetId);
-            ViewData["ProfesorId"] = new SelectList(_context.Profesori, "Id", "Ime", ispit.ProfesorId);
-            ViewData["AsistentId"] = new SelectList(_context.Asistenti, "Id", "Ime", ispit.AsistentId);
             return View(ispit);
         }
 
@@ -190,9 +151,8 @@ namespace StudentHub.Controllers
             if (ispit != null)
             {
                 _context.Ispiti.Remove(ispit);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -204,8 +164,11 @@ namespace StudentHub.Controllers
         // Pomoćna metoda za postavljanje korisničkih ID-ova i uloga
         private void SetUserRoleIds(Ispit ispit)
         {
-            Console.WriteLine("Postavljanje korisnika za ispit...");
-            if (User.IsInRole("Profesor"))
+            if (User.IsInRole("Studentska služba"))
+            {
+                ispit.StudentskaSluzbaId = GetCurrentUserId();
+            }
+            else if (User.IsInRole("Profesor"))
             {
                 ispit.ProfesorId = GetCurrentUserId();
             }

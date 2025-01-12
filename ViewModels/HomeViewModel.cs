@@ -1,4 +1,5 @@
 ﻿using StudentHub.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentHub.ViewModels
 {

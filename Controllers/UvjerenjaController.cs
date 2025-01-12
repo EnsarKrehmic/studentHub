@@ -66,7 +66,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Namjena,datumIzdavanja,brojIndeksa,StudentId,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
+        public async Task<IActionResult> Create([Bind("Id,Namjena,DatumIzdavanja,BrojIndeksa,StudentId,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
         {
             if (ModelState.IsValid)
             {
@@ -105,7 +105,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Namjena,datumIzdavanja,brojIndeksa,StudentId,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Namjena,DatumIzdavanja,BrojIndeksa,StudentId,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
         {
             if (id != uvjerenje.Id)
             {

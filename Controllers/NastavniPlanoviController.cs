@@ -54,7 +54,7 @@ namespace StudentHub.Controllers
         [Route("[Controller]/[Action]")]
         public IActionResult Create()
         {
-            ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Id");
+            ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
             return View();
         }
 
@@ -62,7 +62,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,godinaStudija,StudijskiProgramId")] NastavniPlan nastavniPlan)
+        public async Task<IActionResult> Create([Bind("Id,GodinaStudija,StudijskiProgramId")] NastavniPlan nastavniPlan)
         {
             if (ModelState.IsValid)
             {
@@ -70,7 +70,7 @@ namespace StudentHub.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Id", nastavniPlan.StudijskiProgramId);
+            ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", nastavniPlan.StudijskiProgramId);
             return View(nastavniPlan);
         }
 
@@ -94,7 +94,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,godinaStudija,StudijskiProgramId")] NastavniPlan nastavniPlan)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,GodinaStudija,StudijskiProgramId")] NastavniPlan nastavniPlan)
         {
             if (id != nastavniPlan.Id)
                 return NotFound();

@@ -18,18 +18,16 @@ namespace StudentHub.Controllers
         }
 
         // GET: localhost:port
-        [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
             // Preuzimanje podataka iz baze
             var obavijesti = await _context.Obavjestenja
-                .OrderByDescending(o => o.datumObjave)
+                .OrderByDescending(o => o.DatumObjave)
                 .Take(5)
                 .ToListAsync();
 
-            var viewModel = new HomeViewModel
+            // Kreiranje HomeViewModel-a
+            var homeViewModel = new HomeViewModel
             {
                 NajnovijeObavijesti = obavijesti,
                 BrojAsistenata = await _context.Asistenti.CountAsync(),
@@ -37,7 +35,8 @@ namespace StudentHub.Controllers
                 BrojStudenata = await _context.Studenti.CountAsync()
             };
 
-            return View(viewModel);
+            // Slanje HomeViewModel-a u View
+            return View(homeViewModel);
         }
 
         // GET: Home/Privacy

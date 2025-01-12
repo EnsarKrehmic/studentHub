@@ -10,21 +10,24 @@
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
-        <label asp-for="Vrijednost" class="control-label"></label>
+        <label asp-for="Vrijednost" class="control-label">Vrijednost ocjene</label>
         <input asp-for="Vrijednost" class="form-control" />
         <span asp-validation-for="Vrijednost" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="PredmetId" class="control-label"></label>
+        <label asp-for="PredmetId" class="control-label">Predmet</label>
         <select asp-for="PredmetId" class="form-control" asp-items="ViewBag.PredmetId"></select>
+        <span asp-validation-for="PredmetId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="StudentId" class="control-label"></label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.brojIndeksa"></select>
+        <label asp-for="StudentId" class="control-label">Student</label>
+        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.StudentId"></select>
+        <span asp-validation-for="StudentId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ProfesorId" class="control-label"></label>
+        <label asp-for="ProfesorId" class="control-label">Profesor</label>
         <select asp-for="ProfesorId" class="form-control" asp-items="ViewBag.ProfesorId"></select>
+        <span asp-validation-for="ProfesorId" class="text-danger"></span>
     </div>
 
     <div class="form-group">

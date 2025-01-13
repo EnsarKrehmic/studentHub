@@ -1235,6 +1235,17 @@
             }
           },
           {
+            "name": "Predmet.Semestar",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 12,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "KorisnikId",
             "in": "query",
             "schema": {
@@ -1986,6 +1997,17 @@
             }
           },
           {
+            "name": "Predmet.Semestar",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 12,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "KorisnikId",
             "in": "query",
             "schema": {
@@ -2428,18 +2450,6 @@
       }
     },
     "/NastavniPlanovi": {
-      "get": {
-        "tags": [
-          "NastavniPlanovi"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/NastavniPlanovi/NastavniPlanovi/Index": {
       "get": {
         "tags": [
           "NastavniPlanovi"
@@ -3961,6 +3971,17 @@
             }
           },
           {
+            "name": "Predmet.Semestar",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 12,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "StudentId",
             "in": "query",
             "required": true,
@@ -4470,6 +4491,17 @@
             }
           },
           {
+            "name": "Predmet.Semestar",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 12,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "StudentId",
             "in": "query",
             "required": true,
@@ -4695,7 +4727,7 @@
         }
       }
     },
-    "/Predmeti/Predmet/Index": {
+    "/Predmeti": {
       "get": {
         "tags": [
           "Predmet"
@@ -5368,6 +5400,17 @@
             "required": true,
             "schema": {
               "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Ispit.Predmet.Semestar",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 12,
               "minimum": 1,
               "type": "integer",
               "format": "int32"
@@ -6824,19 +6867,7 @@
         }
       }
     },
-    "/StudijskiProgrami/StudijskiProgrami/Index": {
-      "get": {
-        "tags": [
-          "StudijskiProgrami"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/StudijskiProgrami/StudijskiProgrami/Details/{id}": {
+    "/StudijskiProgrami/Details/{id}": {
       "get": {
         "tags": [
           "StudijskiProgrami"
@@ -6844,7 +6875,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6858,7 +6890,7 @@
         }
       }
     },
-    "/StudijskiProgrami/StudijskiProgrami/Create": {
+    "/StudijskiProgrami/Create": {
       "get": {
         "tags": [
           "StudijskiProgrami"
@@ -6918,7 +6950,7 @@
         }
       }
     },
-    "/StudijskiProgrami/StudijskiProgrami/Edit/{id}": {
+    "/StudijskiProgrami/Edit/{id}": {
       "get": {
         "tags": [
           "StudijskiProgrami"
@@ -6926,7 +6958,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6954,7 +6987,8 @@
           },
           {
             "name": "Id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6996,7 +7030,7 @@
         }
       }
     },
-    "/StudijskiProgrami/StudijskiProgrami/Delete/{id}": {
+    "/StudijskiProgrami/Delete/{id}": {
       "get": {
         "tags": [
           "StudijskiProgrami"
@@ -7004,7 +7038,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -7024,7 +7059,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"

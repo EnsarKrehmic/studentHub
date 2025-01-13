@@ -1,35 +1,78 @@
 ﻿@model IEnumerable<StudentHub.Models.NastavniPlan>
 
 @{
-    ViewData["Title"] = "Lista nastavnih planova";
+    ViewData["Title"] = "Nastavni planovi po studijskim programima";
+    var predmeti = ViewBag.Predmeti as List<StudentHub.Models.Predmet>;
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Kreiraj novi nastavni plan</a>
-</p>
+<div class="container mt-4">
+    @if (Model != null && Model.Any())
+    {
+        var studijskiProgrami = Model
+        .GroupBy(np => np.StudijskiProgram)
+        .OrderBy(grupa => grupa.Key.Naziv);
 
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().GodinaStudija)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().StudijskiProgram)</th>
-            <th>Akcije</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+        foreach (var grupa in studijskiProgrami)
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.GodinaStudija)</td>
-                <td>@Html.DisplayFor(modelItem => item.StudijskiProgram.Naziv)</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
-                </td>
-            </tr>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@grupa.Key.Naziv</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Opis programa: @grupa.Key.Opis</p>
+                    <p class="text-muted">Trajanje: @grupa.Key.TrajanjeUGodinama godine</p>
+
+                    <h5>Nastavni planovi:</h5>
+                    <ul class="list-group">
+                        @foreach (var nastavniPlan in grupa)
+                        {
+                            <li class="list-group-item">
+                                <h6>@nastavniPlan.GodinaStudija</h6>
+
+                                @* Prikaz predmeta za trenutni nastavni plan *@
+                                <h6>Predmeti:</h6>
+                                <ul class="list-inline">
+                                    @if (predmeti != null && predmeti.Any())
+                                    {
+                                        var povezaniPredmeti = predmeti.Where(p => p.NastavniPlanId == nastavniPlan.Id).ToList();
+                                        if (povezaniPredmeti.Any())
+                                        {
+                                            foreach (var predmet in povezaniPredmeti)
+                                            {
+                                                <li class="list-inline-item">
+                                                    <span class="badge bg-secondary">@predmet.Naziv</span>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li class="list-inline-item text-danger">Nema definisanih predmeta.</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li class="list-inline-item text-danger">Nema dostupnih podataka o predmetima.</li>
+                                    }
+                                </ul>
+
+                                <div class="mt-3">
+                                    <a asp-action="Details" asp-route-id="@nastavniPlan.Id" class="btn btn-info btn-sm">Detalji</a>
+                                    <a asp-action="Edit" asp-route-id="@nastavniPlan.Id" class="btn btn-warning btn-sm">Izmjena</a>
+                                    <a asp-action="Delete" asp-route-id="@nastavniPlan.Id" class="btn btn-danger btn-sm">Brisanje</a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            <strong>Nema dostupnih nastavnih planova!</strong>
+        </div>
+    }
+</div>

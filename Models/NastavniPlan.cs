@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentHub.Models
@@ -10,11 +11,13 @@ namespace StudentHub.Models
 
         [Required(ErrorMessage = "Godina studija je obavezna.")]
         [MaxLength(100, ErrorMessage = "Godina studija ne smije biti duža od 100 karaktera.")]
+        [DisplayName("Godina studija")]
         public string GodinaStudija { get; set; }
 
         [Required(ErrorMessage = "Studijski program je obavezan.")]
         [ForeignKey("StudijskiProgram")]
         public long StudijskiProgramId { get; set; }
+        [DisplayName("Studijski program")]
         public StudijskiProgram StudijskiProgram { get; set; }
 
         public NastavniPlan() { }

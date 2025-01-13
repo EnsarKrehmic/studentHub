@@ -721,7 +721,7 @@
       },
       {
         "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Int64",
         "IsRequired": false
       },
       {
@@ -756,6 +756,11 @@
       },
       {
         "Name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Predmet.Semestar",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -1206,7 +1211,7 @@
       },
       {
         "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Int64",
         "IsRequired": false
       },
       {
@@ -1241,6 +1246,11 @@
       },
       {
         "Name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Predmet.Semestar",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -1661,16 +1671,6 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.NastavniPlanoviController",
-    "Method": "Index",
-    "RelativePath": "NastavniPlanovi/NastavniPlanovi/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -2375,7 +2375,7 @@
       },
       {
         "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Int64",
         "IsRequired": false
       },
       {
@@ -2410,6 +2410,11 @@
       },
       {
         "Name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Predmet.Semestar",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -2720,7 +2725,7 @@
       },
       {
         "Name": "Predmet.NastavniPlanId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Int64",
         "IsRequired": false
       },
       {
@@ -2755,6 +2760,11 @@
       },
       {
         "Name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Predmet.Semestar",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -2865,6 +2875,16 @@
     "ContainingType": "StudentHub.Controllers.OcjeneController",
     "Method": "Index",
     "RelativePath": "Ocjene/Ocjene/Index",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "Method": "Index",
+    "RelativePath": "Predmeti",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -3053,16 +3073,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
-    "Method": "Index",
-    "RelativePath": "Predmeti/Predmet/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "StudentHub.Controllers.PrijaveController",
     "Method": "Index",
     "RelativePath": "Prijave",
@@ -3247,7 +3257,7 @@
       },
       {
         "Name": "Ispit.Predmet.NastavniPlanId",
-        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Int64",
         "IsRequired": false
       },
       {
@@ -3282,6 +3292,11 @@
       },
       {
         "Name": "Ispit.Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Ispit.Predmet.Semestar",
         "Type": "System.Int32",
         "IsRequired": false
       },
@@ -4227,7 +4242,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudijskiProgramiController",
     "Method": "Create",
-    "RelativePath": "StudijskiProgrami/StudijskiProgrami/Create",
+    "RelativePath": "StudijskiProgrami/Create",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -4237,7 +4252,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudijskiProgramiController",
     "Method": "Create",
-    "RelativePath": "StudijskiProgrami/StudijskiProgrami/Create",
+    "RelativePath": "StudijskiProgrami/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -4268,7 +4283,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudijskiProgramiController",
     "Method": "Delete",
-    "RelativePath": "StudijskiProgrami/StudijskiProgrami/Delete/{id}",
+    "RelativePath": "StudijskiProgrami/Delete/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -4276,7 +4291,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -4284,7 +4299,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudijskiProgramiController",
     "Method": "DeleteConfirmed",
-    "RelativePath": "StudijskiProgrami/StudijskiProgrami/Delete/{id}",
+    "RelativePath": "StudijskiProgrami/Delete/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -4292,7 +4307,7 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -4300,7 +4315,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudijskiProgramiController",
     "Method": "Details",
-    "RelativePath": "StudijskiProgrami/StudijskiProgrami/Details/{id}",
+    "RelativePath": "StudijskiProgrami/Details/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -4308,7 +4323,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -4316,7 +4331,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudijskiProgramiController",
     "Method": "Edit",
-    "RelativePath": "StudijskiProgrami/StudijskiProgrami/Edit/{id}",
+    "RelativePath": "StudijskiProgrami/Edit/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -4324,7 +4339,7 @@
       {
         "Name": "id",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -4332,7 +4347,7 @@
   {
     "ContainingType": "StudentHub.Controllers.StudijskiProgramiController",
     "Method": "Edit",
-    "RelativePath": "StudijskiProgrami/StudijskiProgrami/Edit/{id}",
+    "RelativePath": "StudijskiProgrami/Edit/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -4345,7 +4360,7 @@
       {
         "Name": "Id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "Naziv",
@@ -4363,16 +4378,6 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "StudentHub.Controllers.StudijskiProgramiController",
-    "Method": "Index",
-    "RelativePath": "StudijskiProgrami/StudijskiProgrami/Index",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {

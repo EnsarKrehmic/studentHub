@@ -29,8 +29,12 @@ namespace StudentHub.Models
 
         [Required(ErrorMessage = "Nastavni plan je obavezan.")]
         [ForeignKey("NastavniPlan")]
-        public long? NastavniPlanId { get; set; }
+        public long NastavniPlanId { get; set; }
         public NastavniPlan NastavniPlan { get; set; }
+
+        [Required(ErrorMessage = "Semestar je obavezan.")]
+        [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
+        public int Semestar { get; set; }
 
         public Predmet() { }
     }

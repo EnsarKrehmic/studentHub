@@ -2,23 +2,74 @@
 
 @{
     ViewData["Title"] = "Detalji nastavnog plana";
+    var predmeti = ViewBag.Predmeti as List<StudentHub.Models.Predmet>;
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>Podaci o nastavnom planu</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.GodinaStudija)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.GodinaStudija)</dd>
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>Podaci o nastavnom planu</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Godina studija:</dt>
+                <dd class="col-sm-9">@Model.GodinaStudija</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.StudijskiProgram)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.StudijskiProgram.Id)</dd>
-    </dl>
+                <dt class="col-sm-3">Studijski program:</dt>
+                <dd class="col-sm-9">@Model.StudijskiProgram.Naziv</dd>
+            </dl>
+        </div>
+    </div>
+
+    @if (predmeti != null && predmeti.Any())
+    {
+        <!-- Grupa predmeta po semestrima -->
+        @foreach (var semestar in predmeti.Select(p => p.Semestar).Distinct().OrderBy(s => s))
+        {
+            var semestarPredmeti = predmeti.Where(p => p.Semestar == semestar).ToList();
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h4>Predmeti - @(semestar % 2 == 1 ? "Prvi" : "Drugi") semestar @((semestar + 1) / 2). godina</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Naziv predmeta</th>
+                                <th>Opis</th>
+                                <th>ECTS bodovi</th>
+                                <th>Profesor</th>
+                                <th>Asistent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var predmet in semestarPredmeti)
+                            {
+                                <tr>
+                                    <td>@predmet.Naziv</td>
+                                    <td>@predmet.Opis</td>
+                                    <td>@predmet.ECTS</td>
+                                    <td>@(predmet.Profesor != null ? predmet.Profesor.Ime + " " + predmet.Profesor.Prezime + ", " + predmet.Profesor.ProfesorTitula : "N/A")</td>
+                                    <td>@(predmet.Asistent != null ? predmet.Asistent.Ime + " " + predmet.Asistent.Prezime + ", " + predmet.Asistent.AsistentTitula : "N/A")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            <strong>Nema definisanih predmeta za ovaj nastavni plan!</strong>
+        </div>
+    }
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Izmjena</a> |
-    <a asp-action="Index">Nazad</a>
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Izmjena</a>
+    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
 </div>

@@ -14,19 +14,19 @@
 
     <div class="row text-center mt-5">
         <div class="col-md-4">
-            <h3>Broj studenata</h3>
-            <p class="display-6">@Model.BrojStudenata</p>
-            <a href="@Url.Action("Index", "Studenti")" class="btn btn-primary">Pogledaj studente</a>
+            <h3>Proizvodni biznis</h3>
+            <p>Detalji o studijskom programu proizvodnog biznisa.</p>
+            <a href="@Url.Action("Details", "StudijskiProgrami", new { id = 1 })" class="btn btn-primary">Pogledaj detalje</a>
         </div>
         <div class="col-md-4">
-            <h3>Broj profesora</h3>
-            <p class="display-6">@Model.BrojProfesora</p>
-            <a href="@Url.Action("Index", "Profesori")" class="btn btn-primary">Pogledaj profesore</a>
+            <h3>Građevinarstvo</h3>
+            <p>Detalji o studijskom programu građevinarstva.</p>
+            <a href="@Url.Action("Details", "StudijskiProgrami", new { id = 2 })" class="btn btn-primary">Pogledaj detalje</a>
         </div>
         <div class="col-md-4">
-            <h3>Broj asistenata</h3>
-            <p class="display-6">@Model.BrojAsistenata</p>
-            <a href="@Url.Action("Index", "Asistenti")" class="btn btn-primary">Pogledaj asistente</a>
+            <h3>Softversko inženjerstvo</h3>
+            <p>Detalji o studijskom programu softverskog inženjerstva.</p>
+            <a href="@Url.Action("Details", "StudijskiProgrami", new { id = 3 })" class="btn btn-primary">Pogledaj detalje</a>
         </div>
     </div>
 

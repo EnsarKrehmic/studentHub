@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudentHub.Models
 {
@@ -16,6 +17,7 @@ namespace StudentHub.Models
 
         [Required(ErrorMessage = "Trajanje studijskog programa je obavezno.")]
         [Range(1, 6, ErrorMessage = "Trajanje mora biti između 1 i 6 godina.")]
+        [DisplayName("Trajanje (godine)")]
         public int TrajanjeUGodinama { get; set; }
 
         public StudijskiProgram() { }

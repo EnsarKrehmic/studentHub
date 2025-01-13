@@ -22,13 +22,17 @@ namespace StudentHub.Controllers
 
         // GET: NastavniPlanovi
         [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.NastavniPlanovi
-                .Include(n => n.StudijskiProgram);
-            return View(await applicationDbContext.ToListAsync());
+            var nastavniPlanovi = await _context.NastavniPlanovi
+                .Include(np => np.StudijskiProgram)
+                .ToListAsync();
+
+            // Grupisanje predmeta po nastavnim planovima
+            var predmeti = await _context.Predmeti.ToListAsync();
+            ViewBag.Predmeti = predmeti;
+
+            return View(nastavniPlanovi);
         }
 
         // GET: NastavniPlanovi/Details/5
@@ -46,8 +50,19 @@ namespace StudentHub.Controllers
             if (nastavniPlan == null)
                 return NotFound();
 
+            // Dohvati predmete za dati nastavni plan
+            var predmeti = await _context.Predmeti
+                .Include(p => p.Profesor)
+                .Include(p => p.Asistent)
+                .Where(p => p.NastavniPlanId == id)
+                .ToListAsync();
+
+            // Proslijedi predmete u ViewBag
+            ViewBag.Predmeti = predmeti;
+
             return View(nastavniPlan);
         }
+
 
         // GET: NastavniPlanovi/Create
         [HttpGet]

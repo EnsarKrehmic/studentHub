@@ -21,7 +21,6 @@ namespace StudentHub.Controllers
 
         // GET: Predmet/Index
         [HttpGet]
-        [Route("[Controller]/[Action]")]
         public IActionResult Index()
         {
             try

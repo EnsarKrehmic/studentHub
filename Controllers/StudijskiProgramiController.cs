@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
+using StudentHub.ViewModels;
 
 namespace StudentHub.Controllers
 {
@@ -18,17 +19,13 @@ namespace StudentHub.Controllers
 
         // GET: StudijskiProgrami
         [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
-        [Authorize(Roles = "Studentska služba,Profesor,Asistent,Student")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.StudijskiProgrami.ToListAsync());
         }
 
-        // GET: StudijskiProgrami/Details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: StudijskiProgrami/Details/{id}
+        [HttpGet("Details/{id:long}")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -43,26 +40,38 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
+            // Preuzimanje obavještenja povezanih sa studijskim programom
             var obavjestenja = await _context.Obavjestenja
                 .Where(o => o.StudijskiProgramId == id)
                 .ToListAsync();
 
-            ViewBag.Obavjestenja = obavjestenja;
+            // Brojanje korisnika
+            int brojStudenata = await _context.Studenti.CountAsync();
+            int brojProfesora = await _context.Profesori.CountAsync();
+            int brojAsistenata = await _context.Asistenti.CountAsync();
 
-            return View(studijskiProgram);
+            // Kreiranje ViewModel-a
+            var viewModel = new StudijskiProgramDetailsViewModel
+            {
+                StudijskiProgram = studijskiProgram,
+                Obavjestenja = obavjestenja,
+                BrojStudenata = brojStudenata,
+                BrojProfesora = brojProfesora,
+                BrojAsistenata = brojAsistenata
+            };
+
+            return View(viewModel);
         }
 
-        // GET: StudijskiProgrami/Create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        // GET: StudijskiProgrami/Create{id}
+        [HttpGet("Create")]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: StudijskiProgrami/Create
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Naziv,Opis,TrajanjeUGodinama")] StudijskiProgram studijskiProgram)
         {
@@ -75,9 +84,8 @@ namespace StudentHub.Controllers
             return View(studijskiProgram);
         }
 
-        // GET: StudijskiProgrami/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: StudijskiProgrami/Edit/{id}
+        [HttpGet("Edit/{id:long}")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -94,8 +102,7 @@ namespace StudentHub.Controllers
         }
 
         // POST: StudijskiProgrami/Edit/5
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
+        [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Opis,TrajanjeUGodinama")] StudijskiProgram studijskiProgram)
         {
@@ -127,9 +134,8 @@ namespace StudentHub.Controllers
             return View(studijskiProgram);
         }
 
-        // GET: StudijskiProgrami/Delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: StudijskiProgrami/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -147,9 +153,8 @@ namespace StudentHub.Controllers
             return View(studijskiProgram);
         }
 
-        // POST: StudijskiProgrami/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: StudijskiProgrami/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {

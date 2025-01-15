@@ -2882,7 +2882,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
     "Method": "Index",
     "RelativePath": "Predmeti",
     "HttpMethod": "GET",
@@ -2892,9 +2892,30 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
+    "Method": "AddStudentToSubject",
+    "RelativePath": "Predmeti/AddStudentToSubject",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "predmetId",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "studentId",
+        "Type": "System.Int64",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
     "Method": "Create",
-    "RelativePath": "Predmeti/Predmet/Create",
+    "RelativePath": "Predmeti/Create",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -2902,9 +2923,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
     "Method": "Create",
-    "RelativePath": "Predmeti/Predmet/Create",
+    "RelativePath": "Predmeti/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -2948,14 +2969,19 @@
         "Name": "NastavniPlanId",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
+      },
+      {
+        "Name": "Semestar",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
     "Method": "Delete",
-    "RelativePath": "Predmeti/Predmet/Delete/{id}",
+    "RelativePath": "Predmeti/Delete/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -2963,15 +2989,15 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
     "Method": "DeleteConfirmed",
-    "RelativePath": "Predmeti/Predmet/Delete/{id}",
+    "RelativePath": "Predmeti/Delete/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -2979,15 +3005,15 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
     "Method": "Details",
-    "RelativePath": "Predmeti/Predmet/Details/{id}",
+    "RelativePath": "Predmeti/Details/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -2995,15 +3021,15 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
     "Method": "Edit",
-    "RelativePath": "Predmeti/Predmet/Edit/{id}",
+    "RelativePath": "Predmeti/Edit/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -3011,15 +3037,15 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "StudentHub.Controllers.PredmetController",
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
     "Method": "Edit",
-    "RelativePath": "Predmeti/Predmet/Edit/{id}",
+    "RelativePath": "Predmeti/Edit/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -3027,7 +3053,7 @@
       {
         "Name": "id",
         "Type": "System.Int64",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "Naziv",
@@ -3067,6 +3093,32 @@
       {
         "Name": "NastavniPlanId",
         "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Semestar",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StudentHub.Controllers.PredmetiController",
+    "Method": "RemoveStudentFromSubject",
+    "RelativePath": "Predmeti/RemoveStudentFromSubject",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "predmetId",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "studentId",
+        "Type": "System.Int64",
         "IsRequired": false
       }
     ],

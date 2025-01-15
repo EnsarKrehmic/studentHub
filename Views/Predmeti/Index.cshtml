@@ -1,67 +1,104 @@
 ﻿@model IEnumerable<StudentHub.Models.Predmet>
 
 @{
-    ViewData["Title"] = "Lista predmeta";
+    ViewData["Title"] = "Lista predmeta po studijskim programima";
 }
 
 <h2>@ViewData["Title"]</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj novi predmet</a>
+    <a asp-action="Create" class="btn btn-primary mb-4">Dodaj novi predmet</a>
 </p>
 
 @if (Model != null && Model.Any())
 {
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Naziv)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Opis)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().ECTS)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Profesor)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Asistent)</th>
-                <th>Akcije</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Naziv)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Opis)</td>
-                    <td>@Html.DisplayFor(modelItem => item.ECTS)</td>
-                    <td>
-                        @if (item.Profesor != null)
-                        {
-                            @item.Profesor.Ime @item.Profesor.Prezime
-                        }
-                        else
-                        {
-                            <span>Profesor nije dodijeljen.</span>
-                        }
-                    </td>
-                    <td>
-                        @if (item.Asistent != null)
-                        {
-                            @item.Asistent.Ime @item.Asistent.Prezime
-                        }
-                        else
-                        {
-                            <span>Asistent nije dodijeljen.</span>
-                        }
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
+    var studijskiProgrami = Model
+        .GroupBy(p => p.NastavniPlan.StudijskiProgram.Naziv)
+        .OrderBy(g => g.Key);
 
-    </table>
+    foreach (var programGroup in studijskiProgrami)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h4>@programGroup.Key</h4>
+            </div>
+            <div class="card-body">
+                @{
+                    var godineGrupe = programGroup
+                    .GroupBy(p => p.NastavniPlan.GodinaStudija)
+                    .OrderBy(g => g.Key);
+                }
+
+                @foreach (var godinaGroup in godineGrupe)
+                {
+                    <div>
+                        <h5 class="text-primary">Godina studija: @godinaGroup.Key</h5>
+                        <table class="table table-bordered table-hover table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 17%;">Naziv predmeta</th>
+                                    <th style="width: 26%;">Opis</th>
+                                    <th style="width: 7%;">ECTS bodovi</th>
+                                    <th style="width: 17%;">Profesor</th>
+                                    <th style="width: 17%;">Asistent</th>
+                                    <th style="width: 16%;">Akcije</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var predmet in godinaGroup)
+                                {
+                                    <tr>
+                                        <td>@predmet.Naziv</td>
+                                        <td>
+                                            @if (!string.IsNullOrWhiteSpace(predmet.Opis))
+                                            {
+                                                @((predmet.Opis.Length > 50) ? $"{predmet.Opis.Substring(0, 50)}..." : predmet.Opis)
+                                            }
+                                        </td>
+                                        <td>@predmet.ECTS</td>
+                                        <td>
+                                            @if (predmet.Profesor != null)
+                                            {
+                                                @($"{predmet.Profesor.Ime} {predmet.Profesor.Prezime}{(string.IsNullOrEmpty(predmet.Profesor.ProfesorTitula) ? "" : $", {predmet.Profesor.ProfesorTitula}")}")
+                                            }
+                                            else
+                                            {
+                                                <span>Profesor nije dodijeljen</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (predmet.Asistent != null)
+                                            {
+                                                @($"{predmet.Asistent.Ime} {predmet.Asistent.Prezime}{(string.IsNullOrEmpty(predmet.Asistent.AsistentTitula) ? "" : $", {predmet.Asistent.AsistentTitula}")}")
+                                            }
+                                            else
+                                            {
+                                                <span>Asistent nije dodijeljen</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a asp-action="Details" asp-route-id="@predmet.Id" class="btn btn-info btn-sm">Detalji</a>
+                                            <a asp-action="Edit" asp-route-id="@predmet.Id" class="btn btn-warning btn-sm">Izmjena</a>
+                                            <a asp-action="Delete" asp-route-id="@predmet.Id" class="btn btn-danger btn-sm">Brisanje</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 }
 else
 {
-    <p>Nema predmeta za prikaz.</p>
-}   
+    <p class="alert alert-warning">Nema predmeta za prikaz.</p>
+}

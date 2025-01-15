@@ -4730,7 +4730,7 @@
     "/Predmeti": {
       "get": {
         "tags": [
-          "Predmet"
+          "Predmeti"
         ],
         "responses": {
           "200": {
@@ -4739,15 +4739,16 @@
         }
       }
     },
-    "/Predmeti/Predmet/Details/{id}": {
+    "/Predmeti/Details/{id}": {
       "get": {
         "tags": [
-          "Predmet"
+          "Predmeti"
         ],
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4761,10 +4762,10 @@
         }
       }
     },
-    "/Predmeti/Predmet/Create": {
+    "/Predmeti/Create": {
       "get": {
         "tags": [
-          "Predmet"
+          "Predmeti"
         ],
         "responses": {
           "200": {
@@ -4774,7 +4775,7 @@
       },
       "post": {
         "tags": [
-          "Predmet"
+          "Predmeti"
         ],
         "parameters": [
           {
@@ -4798,6 +4799,8 @@
             "in": "query",
             "required": true,
             "schema": {
+              "maximum": 30,
+              "minimum": 1,
               "type": "integer",
               "format": "int32"
             }
@@ -4847,6 +4850,17 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "Semestar",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 12,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -4856,15 +4870,16 @@
         }
       }
     },
-    "/Predmeti/Predmet/Edit/{id}": {
+    "/Predmeti/Edit/{id}": {
       "get": {
         "tags": [
-          "Predmet"
+          "Predmeti"
         ],
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4879,12 +4894,13 @@
       },
       "post": {
         "tags": [
-          "Predmet"
+          "Predmeti"
         ],
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4911,6 +4927,8 @@
             "in": "query",
             "required": true,
             "schema": {
+              "maximum": 30,
+              "minimum": 1,
               "type": "integer",
               "format": "int32"
             }
@@ -4960,6 +4978,17 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "Semestar",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 12,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -4969,15 +4998,16 @@
         }
       }
     },
-    "/Predmeti/Predmet/Delete/{id}": {
+    "/Predmeti/Delete/{id}": {
       "get": {
         "tags": [
-          "Predmet"
+          "Predmeti"
         ],
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4992,11 +5022,72 @@
       },
       "post": {
         "tags": [
-          "Predmet"
+          "Predmeti"
         ],
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Predmeti/AddStudentToSubject": {
+      "post": {
+        "tags": [
+          "Predmeti"
+        ],
+        "parameters": [
+          {
+            "name": "predmetId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "studentId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Predmeti/RemoveStudentFromSubject": {
+      "post": {
+        "tags": [
+          "Predmeti"
+        ],
+        "parameters": [
+          {
+            "name": "predmetId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "studentId",
             "in": "query",
             "schema": {
               "type": "integer",

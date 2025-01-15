@@ -1,4 +1,4 @@
-﻿@model StudentHub.Models.Predmet
+﻿@model StudentHub.ViewModels.PredmetDetailsViewModel
 
 @{
     ViewData["Title"] = "Brisanje predmeta";
@@ -6,33 +6,110 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<h3>Da li ste sigurni da želite obrisati ovog asistenta?</h3>
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Naziv)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Naziv)</dd>
+<div class="container mt-4">
+    <!-- Opšti podaci o predmetu -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>Podaci o predmetu</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Naziv predmeta:</dt>
+                <dd class="col-sm-9">@Model.Predmet.Naziv</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Opis)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Opis)</dd>
+                <dt class="col-sm-3">Opis:</dt>
+                <dd class="col-sm-9">@Model.Predmet.Opis</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.ECTS)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ECTS)</dd>
+                <dt class="col-sm-3">ECTS bodovi:</dt>
+                <dd class="col-sm-9">@Model.Predmet.ECTS</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Profesor)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Profesor.Ime)</dd>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Profesor.Prezime)</dd>
+                <dt class="col-sm-3">Nastavni plan:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Predmet.NastavniPlan != null)
+                    {
+                        <span>
+                            Predmet pripada nastavnom planu:
+                            @Model.Predmet.NastavniPlan.GodinaStudija. godina,
+                            @(Model.Predmet.Semestar == 1 ? "prvi" :
+                                Model.Predmet.Semestar == 2 ? "drugi" :
+                                Model.Predmet.Semestar == 3 ? "treći" :
+                                Model.Predmet.Semestar + ".") semestar
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-warning">Nema dodijeljen nastavni plan.</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+    </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Asistent)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Asistent.Ime)</dd>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Asistent.Prezime)</dd>
+    <!-- Nastavno osoblje -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h4>Nastavno osoblje</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Uloga</th>
+                        <th>Ime i prezime</th>
+                        <th>Titula</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Profesor -->
+                    @if (Model.Profesori.Any())
+                    {
+                        @foreach (var profesor in Model.Profesori)
+                        {
+                            <tr>
+                                <td>Profesor</td>
+                                <td>@profesor.Profesor?.Ime @profesor.Profesor?.Prezime</td>
+                                <td>@profesor.Profesor?.ProfesorTitula</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>Profesor</td>
+                            <td colspan="2" class="text-warning">Nema dodijeljen profesor.</td>
+                        </tr>
+                    }
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.NastavniPlan)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.NastavniPlan.Id)</dd>
-    </dl>
+                    <!-- Asistent -->
+                    @if (Model.Asistenti.Any())
+                    {
+                        @foreach (var asistent in Model.Asistenti)
+                        {
+                            <tr>
+                                <td>Asistent</td>
+                                <td>@asistent.Asistent?.Ime @asistent.Asistent?.Prezime</td>
+                                <td>@asistent.Asistent.AsistentTitula</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>Asistent</td>
+                            <td colspan="2" class="text-warning">Nema dodijeljen asistent.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Obriši</button> |
-    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-</form>
+<!-- Akcije -->
+<div class="mt-3">
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Predmet.Id" />
+        <button type="submit" class="btn btn-danger">Obriši</button>
+        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    </form>
+</div>

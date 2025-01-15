@@ -56,11 +56,33 @@ namespace StudentHub.Data
                 .HasValue<Asistent>(Uloga.Asistent);
 
             // Konfiguracija za Predmet -> Profesor
+            modelBuilder.Entity<Predmet>()
+                .HasOne(p => p.Profesor)
+                .WithMany()
+                .HasForeignKey(p => p.ProfesorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Konfiguracija za Predmet -> Asistent
+            modelBuilder.Entity<Predmet>()
+                .HasOne(p => p.Asistent)
+                .WithMany()
+                .HasForeignKey(p => p.AsistentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Konfiguracija za Predmet -> Profesor
+            modelBuilder.Entity<Predmet>()
+                .HasOne(p => p.Profesor)
+                .WithMany()
+                .HasForeignKey(p => p.ProfesorId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Konfiguracija za PredmetProfesor -> Profesor
             modelBuilder.Entity<PredmetProfesor>()
                 .HasOne(pp => pp.Profesor)
                 .WithMany()
                 .HasForeignKey(pp => pp.ProfesorId);
 
+            // Konfiguracija za PredmetProfesor -> Predmet
             modelBuilder.Entity<PredmetProfesor>()
                 .HasOne(pp => pp.Predmet)
                 .WithMany()
@@ -70,12 +92,13 @@ namespace StudentHub.Data
                 .Property(p => p.ProfesorTitula)
                 .HasColumnName("ProfesorTitula");
 
-            // Konfiguracija za Predmet -> Asistent
+            // Konfiguracija za PredmetAsistent -> Asistent
             modelBuilder.Entity<PredmetAsistent>()
                 .HasOne(pa => pa.Asistent)
                 .WithMany()
                 .HasForeignKey(pa => pa.AsistentId);
 
+            // Konfiguracija za PredmetAsistent -> Predmet
             modelBuilder.Entity<PredmetAsistent>()
                 .HasOne(pa => pa.Predmet)
                 .WithMany()
@@ -94,13 +117,25 @@ namespace StudentHub.Data
                 .HasForeignKey(u => u.StudentskaSluzbaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // DeleteBehavior.Restrict -> ne dozvoljava brisanje entiteta ako postoji referenca na njega
-            // Konfiguracija za Predmet -> NastavniPlan
             modelBuilder.Entity<Predmet>()
                 .HasOne(p => p.NastavniPlan)
                 .WithMany()
                 .HasForeignKey(p => p.NastavniPlanId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<StudentNaPredmetu>()
+                .HasOne(snp => snp.Student)
+                .WithMany()
+                .HasForeignKey(snp => snp.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<StudentNaPredmetu>()
+                .HasOne(snp => snp.Predmet)
+                .WithMany()
+                .HasForeignKey(snp => snp.PredmetId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // DeleteBehavior.Restrict -> ne dozvoljava brisanje entiteta ako postoji referenca na njega
 
             // Konfiguracija za Ocjena -> Predmet
             modelBuilder.Entity<Ocjena>()
@@ -173,27 +208,6 @@ namespace StudentHub.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // DeleteBehavior.NoAction -> ne dozvoljava brisanje entiteta ako postoji referenca na njega
-
-            // Konfiguracija za Predmet -> Profesor
-            modelBuilder.Entity<Predmet>()
-                .HasOne(p => p.Profesor)
-                .WithMany()
-                .HasForeignKey(p => p.ProfesorId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            // Konfiguracija za Predmet -> Asistent
-            modelBuilder.Entity<Predmet>()
-                .HasOne(p => p.Asistent)
-                .WithMany()
-                .HasForeignKey(p => p.AsistentId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            // Konfiguracija za Predmet -> NastavniPlan
-            modelBuilder.Entity<Predmet>()
-                .HasOne(p => p.NastavniPlan)
-                .WithMany()
-                .HasForeignKey(p => p.NastavniPlanId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             // Konfiguracija za Obavještenje -> StudentskaSluzba
             modelBuilder.Entity<Obavjestenje>()

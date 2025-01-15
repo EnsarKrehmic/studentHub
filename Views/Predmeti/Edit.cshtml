@@ -1,57 +1,128 @@
-﻿@model StudentHub.Models.Predmet
+﻿@model StudentHub.ViewModels.PredmetCreateViewModel
 
 @{
     ViewData["Title"] = "Izmjena podataka predmeta";
 }
 
 <h2>@ViewData["Title"]</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Naziv" class="control-label"></label>
-                <input asp-for="Naziv" class="form-control" />
-                <span asp-validation-for="Naziv" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Opis" class="control-label"></label>
-                <input asp-for="Opis" class="form-control" />
-                <span asp-validation-for="Opis" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ECTS" class="control-label"></label>
-                <input asp-for="ECTS" class="form-control" />
-                <span asp-validation-for="ECTS" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProfesorId" class="control-label"></label>
-                <select asp-for="ProfesorId" class="form-control" asp-items="ViewBag.ProfesorId"></select>
-                <span asp-validation-for="ProfesorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AsistentId" class="control-label"></label>
-                <select asp-for="AsistentId" class="form-control" asp-items="ViewBag.AsistentId"></select>
-                <span asp-validation-for="AsistentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NastavniPlanId" class="control-label"></label>
-                <select asp-for="NastavniPlanId" class="form-control" asp-items="ViewBag.NastavniPlanId"></select>
-                <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Sačuvaj promjene" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Nazad</a>
-</div>
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Naziv" class="control-label"></label>
+        <input asp-for="Naziv" class="form-control" />
+        <span asp-validation-for="Naziv" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Opis" class="control-label"></label>
+        <textarea asp-for="Opis" class="form-control"></textarea>
+        <span asp-validation-for="Opis" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ECTS" class="control-label"></label>
+        <input asp-for="ECTS" class="form-control" />
+        <span asp-validation-for="ECTS" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ProfesorIds">Profesor/i (opcionalno)</label>
+        <select class="form-control" id="ProfesorIds" name="ProfesorIds" multiple>
+            @foreach (var profesor in (IEnumerable<SelectListItem>)ViewBag.Profesori)
+            {
+                <option value="@profesor.Value" selected="@(profesor.Selected)">
+                    @profesor.Text
+                </option>
+            }
+        </select>
+        <span class="text-danger" data-valmsg-for="ProfesorIds" data-valmsg-replace="true"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="AsistentIds">Asistent/i (opcionalno)</label>
+        <select class="form-control" id="AsistentIds" name="AsistentIds" multiple>
+            @foreach (var asistent in (IEnumerable<SelectListItem>)ViewBag.Asistenti)
+            {
+                <option value="@asistent.Value" selected="@(asistent.Selected)">
+                    @asistent.Text
+                </option>
+            }
+        </select>
+        <span class="text-danger" data-valmsg-for="AsistentIds" data-valmsg-replace="true"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="NastavniPlanId">Nastavni plan (opcionalno)</label>
+        <select asp-for="NastavniPlanId" asp-items="ViewBag.NastavniPlanId" class="form-control">
+            <option value="">Odaberite nastavni plan</option>
+        </select>
+        <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Semestar">Semestar</label>
+        <select asp-for="Semestar" class="form-control">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <option value="@i" selected="@(Model.Semestar == i)">
+                    @i
+                </option>
+            }
+        </select>
+        <span asp-validation-for="Semestar" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Sačuvaj promjene</button>
+</form>
 
 @section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.validator.addMethod("atLeastOneProfessor", function (value, element) {
+                return $("#ProfesorIds option:selected").length > 0;
+            }, "Please select at least one professor.");
+
+            $.validator.addMethod("atLeastOneAssistant", function (value, element) {
+                return $("#AsistentIds option:selected").length > 0;
+            }, "Please select at least one assistant.");
+
+            $("form").validate({
+                rules: {
+                    ProfesorIds: {
+                        atLeastOneProfessor: true
+                    },
+                    AsistentIds: {
+                        atLeastOneAssistant: true
+                    }
+                },
+                messages: {
+                    Naziv: {
+                        required: "Naziv predmeta je obavezan."
+                    },
+                    Opis: {
+                        required: "Opis predmeta je obavezan."
+                    },
+                    ECTS: {
+                        required: "Vrijednost ECTS bodova predmeta je obavezna.",
+                        range: "Broj ECTS bodova mora biti između 1 i 30."
+                    },
+                    Semestar: {
+                        required: "Semestar je obavezan.",
+                        range: "Semestar mora biti između 1 i 12."
+                    },
+                    ProfesorIds: {
+                        atLeastOneProfessor: "Please select at least one professor."
+                    },
+                    AsistentIds: {
+                        atLeastOneAssistant: "Please select at least one assistant."
+                    }
+                }
+            });
+        });
+    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

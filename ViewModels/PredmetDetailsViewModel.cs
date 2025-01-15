@@ -8,5 +8,7 @@ namespace StudentHub.ViewModels
         public Predmet Predmet { get; set; }
         public List<PredmetProfesor> Profesori { get; set; }
         public List<PredmetAsistent> Asistenti { get; set; }
+        public List<StudentNaPredmetu> StudentiNaPredmetu { get; set; }
+        public Student StudentId { get; set; }
     }
 }

@@ -274,3 +274,5 @@ C:\Users\User\source\repos\StudentHub\obj\Debug\net8.0\refint\StudentHub.dll
 C:\Users\User\source\repos\StudentHub\obj\Debug\net8.0\StudentHub.pdb
 C:\Users\User\source\repos\StudentHub\obj\Debug\net8.0\StudentHub.genruntimeconfig.cache
 C:\Users\User\source\repos\StudentHub\obj\Debug\net8.0\ref\StudentHub.dll
+C:\Users\User\source\repos\StudentHub\bin\Debug\net8.0\X.PagedList.dll
+C:\Users\User\source\repos\StudentHub\bin\Debug\net8.0\X.PagedList.Mvc.Core.dll

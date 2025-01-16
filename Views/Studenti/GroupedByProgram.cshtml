@@ -1,0 +1,37 @@
+﻿@model List<StudentHub.ViewModels.StudentiGroupedByProgramViewModel>
+
+@{
+    ViewData["Title"] = "Lista studenata po studijskim programima";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@foreach (var group in Model)
+{
+    <h5>@group.StudijskiProgram.Naziv</h5>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Ime</th>
+                <th>Prezime</th>
+                <th>Broj Indeksa</th>
+                <th>Godina Studija</th>
+                <th>Semestar</th>
+                <th>Predmet</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in group.Studenti)
+            {
+                <tr>
+                    <td>@student.Ime</td>
+                    <td>@student.Prezime</td>
+                    <td>@student.BrojIndeksa</td>
+                    <td>@student.GodinaStudija</td>
+                    <td>@student.Semestar</td>
+                    <td>@(student.Predmet != null ? student.Predmet.Naziv : "N/A")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

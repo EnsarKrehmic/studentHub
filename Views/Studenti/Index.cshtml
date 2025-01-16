@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<StudentHub.Models.Student>
 
 @{
-    ViewData["Title"] = "Lista studenata";
+    ViewData["Title"] = "Lista svih studenata na fakultetu";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -10,16 +10,33 @@
     <a asp-action="Create" class="btn btn-primary">Dodaj novog studenta</a>
 </p>
 
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Pretraži studente" />
+    </div>
+    <div class="form-group">
+        <label for="StudijskiProgramId">Filtrirajte studente prema studijskom programu</label>
+        <select id="StudijskiProgramId" name="studijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami">
+            <option value="">Svi programi</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Pretraži</button>
+    </div>
+</form>
+
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Ime)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Prezime)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().JMBG)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Email)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().BrojIndeksa)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().GodinaStudija)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().PredhodnoObrazovanje)</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">Ime</a>
+            </th>
+            <th>Prezime</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["IndexSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">Broj Indeksa</a>
+            </th>
+            <th>Godina Studija</th>
+            <th>Semestar</th>
             <th>Akcije</th>
         </tr>
     </thead>
@@ -29,11 +46,9 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Ime)</td>
                 <td>@Html.DisplayFor(modelItem => item.Prezime)</td>
-                <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
-                <td>@Html.DisplayFor(modelItem => item.Email)</td>
                 <td>@Html.DisplayFor(modelItem => item.BrojIndeksa)</td>
                 <td>@Html.DisplayFor(modelItem => item.GodinaStudija)</td>
-                <td>@Html.DisplayFor(modelItem => item.PredhodnoObrazovanje)</td>
+                <td>@Html.DisplayFor(modelItem => item.Semestar)</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>

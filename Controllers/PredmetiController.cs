@@ -79,12 +79,17 @@ namespace StudentHub.Controllers
                     .Include(snp => snp.Student)
                     .ToList();
 
+                var ocjene = _context.Ocjene
+                    .Where(o => studentiNaPredmetu.Select(snp => snp.StudentId).Contains(o.StudentId) && o.PredmetId == id)
+                    .ToDictionary(o => o.StudentId, o => (float?)o.Vrijednost);
+
                 var viewModel = new PredmetDetailsViewModel
                 {
                     Predmet = predmet,
                     Profesori = profesori,
                     Asistenti = asistenti,
-                    StudentiNaPredmetu = studentiNaPredmetu
+                    StudentiNaPredmetu = studentiNaPredmetu,
+                    Ocjene = ocjene
                 };
 
                 ViewBag.Studenti = _context.Studenti
@@ -566,6 +571,170 @@ namespace StudentHub.Controllers
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = "Student je uspješno uklonjen sa predmeta.";
+
+            return RedirectToAction("Details", new { id = predmetId });
+        }
+
+        [HttpPost("AddGrade")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddGrade(long predmetId, long studentId, float ocjena)
+        {
+            // Validate the grade
+            if (ocjena < 5 || ocjena > 10)
+            {
+                ModelState.AddModelError("Ocjena", "Ocjena mora biti između 5 i 10.");
+            }
+
+            // Check if the student exists
+            var student = _context.Studenti.Find(studentId);
+            if (student == null)
+            {
+                ModelState.AddModelError("StudentId", "Odabrani student ne postoji.");
+            }
+
+            // Check if the subject exists
+            var predmet = _context.Predmeti
+                .Include(p => p.NastavniPlan)
+                .FirstOrDefault(p => p.Id == predmetId);
+            if (predmet == null)
+            {
+                ModelState.AddModelError("PredmetId", "Odabrani predmet ne postoji.");
+            }
+
+            // Check if the professor exists
+            var profesor = _context.Profesori.FirstOrDefault(p => p.Id == predmet.ProfesorId);
+            if (profesor == null)
+            {
+                ModelState.AddModelError("ProfesorId", "Odabrani profesor ne postoji.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Reload the ViewBag.Studenti for the dropdown list
+                ViewBag.Studenti = _context.Studenti
+                    .Select(s => new SelectListItem
+                    {
+                        Value = s.Id.ToString(),
+                        Text = $"{s.Ime} {s.Prezime} ({s.BrojIndeksa})"
+                    }).ToList();
+
+                // Reload the view model
+                var profesori = _context.PredmetProfesori
+                    .Where(pp => pp.PredmetId == predmetId)
+                    .Include(pp => pp.Profesor)
+                    .Where(pp => pp.Profesor.Uloga == Uloga.Profesor)
+                    .ToList();
+
+                var asistenti = _context.PredmetAsistenti
+                    .Where(pa => pa.PredmetId == predmetId)
+                    .Include(pa => pa.Asistent)
+                    .Where(pa => pa.Asistent.Uloga == Uloga.Asistent)
+                    .ToList();
+
+                var studentiNaPredmetu = _context.StudentiNaPredmetima
+                    .Where(snp => snp.PredmetId == predmetId)
+                    .Include(snp => snp.Student)
+                    .ToList();
+
+                var ocjene = _context.Ocjene
+                    .Where(o => studentiNaPredmetu.Select(snp => snp.StudentId).Contains(o.StudentId) && o.PredmetId == predmetId)
+                    .ToDictionary(o => o.StudentId, o => (float?)o.Vrijednost);
+
+                var viewModel = new PredmetDetailsViewModel
+                {
+                    Predmet = predmet,
+                    Profesori = profesori,
+                    Asistenti = asistenti,
+                    StudentiNaPredmetu = studentiNaPredmetu,
+                    Ocjene = ocjene
+                };
+
+                return View("Details", viewModel);
+            }
+
+            // Add the grade
+            var ocjenaEntity = new Ocjena
+            {
+                PredmetId = predmetId,
+                StudentId = studentId,
+                ProfesorId = profesor.Id,
+                Vrijednost = ocjena
+            };
+
+            _context.Ocjene.Add(ocjenaEntity);
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "Ocjena je uspješno dodana.";
+
+            return RedirectToAction("Details", new { id = predmetId });
+        }
+
+        [HttpPost("EditGrade")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditGrade(long predmetId, long studentId, float ocjena)
+        {
+            // Validate the grade
+            if (ocjena < 5 || ocjena > 10)
+            {
+                ModelState.AddModelError("Ocjena", "Ocjena mora biti između 5 i 10.");
+            }
+
+            // Check if the student exists
+            var student = _context.Studenti.Find(studentId);
+            if (student == null)
+            {
+                ModelState.AddModelError("StudentId", "Odabrani student ne postoji.");
+            }
+
+            // Check if the subject exists
+            var predmet = _context.Predmeti
+                .Include(p => p.NastavniPlan)
+                .FirstOrDefault(p => p.Id == predmetId);
+            if (predmet == null)
+            {
+                ModelState.AddModelError("PredmetId", "Odabrani predmet ne postoji.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Details", new { id = predmetId });
+            }
+
+            // Update the grade
+            var ocjenaEntity = _context.Ocjene
+                .FirstOrDefault(o => o.PredmetId == predmetId && o.StudentId == studentId);
+            if (ocjenaEntity != null)
+            {
+                ocjenaEntity.Vrijednost = ocjena;
+                _context.Ocjene.Update(ocjenaEntity);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Ocjena je uspješno ažurirana.";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Ocjena nije pronađena.");
+            }
+
+            return RedirectToAction("Details", new { id = predmetId });
+        }
+
+        [HttpPost("RemoveGrade")]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoveGrade(long predmetId, long studentId)
+        {
+            // Check if the grade exists
+            var ocjenaEntity = _context.Ocjene
+                .FirstOrDefault(o => o.PredmetId == predmetId && o.StudentId == studentId);
+            if (ocjenaEntity != null)
+            {
+                _context.Ocjene.Remove(ocjenaEntity);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Ocjena je uspješno uklonjena.";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Ocjena nije pronađena.");
+            }
 
             return RedirectToAction("Details", new { id = predmetId });
         }

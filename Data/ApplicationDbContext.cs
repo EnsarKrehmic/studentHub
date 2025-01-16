@@ -207,6 +207,24 @@ namespace StudentHub.Data
                 .HasForeignKey<Student>(s => s.Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.StudijskiProgram)
+                .WithMany()
+                .HasForeignKey(s => s.StudijskiProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.NastavniPlan)
+                .WithMany()
+                .HasForeignKey(s => s.NastavniPlanId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.Predmet)
+                .WithMany()
+                .HasForeignKey(s => s.PredmetId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // DeleteBehavior.NoAction -> ne dozvoljava brisanje entiteta ako postoji referenca na njega
 
             // Konfiguracija za Obavještenje -> StudentskaSluzba

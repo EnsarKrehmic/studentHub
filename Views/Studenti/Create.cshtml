@@ -1,4 +1,4 @@
-﻿@model StudentHub.Models.Student
+﻿@model StudentHub.ViewModels.StudentCreateViewModel
 
 @{
     ViewData["Title"] = "Kreiranje novog studenta";
@@ -10,9 +10,9 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div class="form-group">
-                <label asp-for="Uloga" class="control-label"></label>
-                <select asp-for="Uloga" class="form-control" asp-items="ViewBag.Uloge"></select>
-                <span asp-validation-for="Uloga" class="text-danger"></span>
+                <label asp-for="JMBG" class="control-label"></label>
+                <input asp-for="JMBG" class="form-control" />
+                <span asp-validation-for="JMBG" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Ime" class="control-label"></label>
@@ -25,14 +25,14 @@
                 <span asp-validation-for="Prezime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="JMBG" class="control-label"></label>
-                <input asp-for="JMBG" class="form-control" />
-                <span asp-validation-for="JMBG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lozinka" class="control-label"></label>
+                <input asp-for="Lozinka" class="form-control" />
+                <span asp-validation-for="Lozinka" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BrojIndeksa" class="control-label"></label>
@@ -50,18 +50,55 @@
                 <span asp-validation-for="PredhodnoObrazovanje" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Lozinka" class="control-label"></label>
-                <input asp-for="Lozinka" class="form-control" />
-                <span asp-validation-for="Lozinka" class="text-danger"></span>
+                <label asp-for="Uloga" class="control-label"></label>
+                <select asp-for="Uloga" class="form-control" asp-items="ViewBag.Uloge"></select>
+                <span asp-validation-for="Uloga" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Kreiraj" class="btn btn-primary" />
+                <label asp-for="StudijskiProgramId" class="control-label"></label>
+                <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami" id="StudijskiProgramId"></select>
+                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NastavniPlanId" class="control-label"></label>
+                <select asp-for="NastavniPlanId" class="form-control" asp-items="ViewBag.NastavniPlanovi"></select>
+                <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Semestar" class="control-label"></label>
+                <input asp-for="Semestar" class="form-control" />
+                <span asp-validation-for="Semestar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PredmetIds" class="control-label">Predmeti</label>
+                <select asp-for="PredmetIds" class="form-control" asp-items="ViewBag.Predmeti" id="PredmetId" multiple="multiple"></select>
+                <span asp-validation-for="PredmetIds" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
+    <script>
+        document.getElementById('StudijskiProgramId').addEventListener('change', function () {
+            var studijskiProgramId = this.value;
+            fetch('/Studenti/GetPredmetiByStudijskiProgram/' + studijskiProgramId)
+                .then(response => response.json())
+                .then(data => {
+                    var predmetSelect = document.getElementById('PredmetId');
+                    predmetSelect.innerHTML = '';
+                    data.forEach(predmet => {
+                        var option = document.createElement('option');
+                        option.value = predmet.id;
+                        option.text = predmet.naziv;
+                        predmetSelect.appendChild(option);
+                    });
+                });
+        });
+    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

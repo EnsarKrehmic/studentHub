@@ -123,11 +123,12 @@
                         <th>Ime i prezime</th>
                         <th>Broj indeksa</th>
                         <th>Godina studija</th>
+                        <th>Ocjena</th>
                         <th>Akcije</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.StudentiNaPredmetu.Any())
+                    @if (Model?.StudentiNaPredmetu?.Any() == true)
                     {
                         @foreach (var studentNaPredmetu in Model.StudentiNaPredmetu)
                         {
@@ -136,10 +137,37 @@
                                 <td>@studentNaPredmetu.Student?.BrojIndeksa</td>
                                 <td>@studentNaPredmetu.Student?.GodinaStudija</td>
                                 <td>
+                                    @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true)
+                                    {
+                                        @Model.Ocjene[studentNaPredmetu.StudentId]
+                                    }
+                                    else
+                                    {
+                                        <span class="text-warning">Nema ocjene</span>
+                                    }
+                                </td>
+                                <td>
                                     <form asp-action="RemoveStudentFromSubject" method="post" style="display:inline;">
-                                        <input type="hidden" name="predmetId" value="@Model.Predmet.Id" />
+                                        <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
                                         <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
                                         <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
+                                    </form>
+                                    <form asp-action="AddGrade" method="post" style="display:inline;">
+                                        <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
+                                        <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
+                                        <input type="number" name="ocjena" min="5" max="10" step="0.5" class="form-control d-inline-block w-auto" required />
+                                        <button type="submit" class="btn btn-primary btn-sm">Dodaj ocjenu</button>
+                                    </form>
+                                    <form asp-action="EditGrade" method="post" style="display:inline;">
+                                        <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
+                                        <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
+                                        <input type="number" name="ocjena" min="5" max="10" step="0.5" class="form-control d-inline-block w-auto" value="@(Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true ? Model.Ocjene[studentNaPredmetu.StudentId] : (float?)null)" required />
+                                        <button type="submit" class="btn btn-warning btn-sm">Izmijeni ocjenu</button>
+                                    </form>
+                                    <form asp-action="RemoveGrade" method="post" style="display:inline;">
+                                        <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
+                                        <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Ukloni ocjenu</button>
                                     </form>
                                 </td>
                             </tr>
@@ -148,8 +176,9 @@
                     else
                     {
                         <tr>
-                            <td colspan="4" class="text-warning">Nema studenata na ovom predmetu.</td>
+                            <td colspan="5" class="text-warning">Nema studenata na ovom predmetu.</td>
                         </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -164,7 +193,7 @@
             </form>
         </div>
     </div>
-</div>
+
 
 <!-- Akcije -->
 <div class="mt-3">

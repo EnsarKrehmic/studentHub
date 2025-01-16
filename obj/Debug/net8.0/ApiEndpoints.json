@@ -6,7 +6,23 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "sortOrder",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "searchString",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "studijskiProgramId",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -28,27 +44,17 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "AsistentTitula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "Ime",
         "Type": "System.String",
         "IsRequired": false
       },
       {
         "Name": "Prezime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "JMBG",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -63,8 +69,23 @@
         "IsRequired": false
       },
       {
+        "Name": "AsistentTitula",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "Uloga",
         "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgramIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PredmetIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       }
     ],
@@ -153,17 +174,17 @@
         "IsRequired": true
       },
       {
-        "Name": "JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "Ime",
         "Type": "System.String",
         "IsRequired": false
       },
       {
         "Name": "Prezime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "JMBG",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -186,6 +207,32 @@
         "Name": "Uloga",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgramIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PredmetIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StudentHub.Controllers.AsistentiController",
+    "Method": "GetPredmetiByStudijskiProgram",
+    "RelativePath": "Asistenti/GetPredmetiByStudijskiProgram",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studijskiProgramIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -5603,7 +5650,23 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "sortOrder",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "searchString",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "studijskiProgramId",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -5625,27 +5688,17 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ProfesorTitula",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Id",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "Ime",
         "Type": "System.String",
         "IsRequired": false
       },
       {
         "Name": "Prezime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "JMBG",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -5660,8 +5713,23 @@
         "IsRequired": false
       },
       {
+        "Name": "ProfesorTitula",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "Uloga",
         "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgramIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PredmetIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       }
     ],
@@ -5750,17 +5818,17 @@
         "IsRequired": true
       },
       {
-        "Name": "JMBG",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "Ime",
         "Type": "System.String",
         "IsRequired": false
       },
       {
         "Name": "Prezime",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "JMBG",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -5783,6 +5851,32 @@
         "Name": "Uloga",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "StudijskiProgramIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PredmetIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StudentHub.Controllers.ProfesoriController",
+    "Method": "GetPredmetiByStudijskiProgram",
+    "RelativePath": "Profesori/GetPredmetiByStudijskiProgram",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studijskiProgramIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

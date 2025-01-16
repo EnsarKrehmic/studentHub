@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentHub.ViewModels
 {
-    public class AsistentEditViewModel
+    public class AsistentCreateViewModel
     {
-        public long Id { get; set; }
-
         [Required(ErrorMessage = "Ime je obavezno.")]
         public string Ime { get; set; }
 

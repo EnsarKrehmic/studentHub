@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
 using StudentHub.ViewModels;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudentHub.Controllers
 {
@@ -19,10 +21,39 @@ namespace StudentHub.Controllers
 
         // GET: Profesori
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, long? studijskiProgramId)
         {
-            var applicationDbContext = _context.Profesori;
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentStudijskiProgramId"] = studijskiProgramId;
+
+            var profesoriQuery = _context.Profesori.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                profesoriQuery = profesoriQuery.Where(p => p.Ime.Contains(searchString) || p.Prezime.Contains(searchString));
+            }
+
+            if (studijskiProgramId.HasValue)
+            {
+                profesoriQuery = profesoriQuery.Where(p => _context.ProfesorStudijskiProgrami.Any(psp => psp.ProfesorId == p.Id && psp.StudijskiProgramId == studijskiProgramId.Value));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    profesoriQuery = profesoriQuery.OrderByDescending(p => p.Ime);
+                    break;
+                default:
+                    profesoriQuery = profesoriQuery.OrderBy(p => p.Ime);
+                    break;
+            }
+
+            var profesori = await profesoriQuery.ToListAsync();
+
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studijskiProgramId);
+
+            return View(profesori);
         }
 
         // GET: Profesori/Details/{id}
@@ -34,58 +65,99 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var profesor = await _context.Profesori.FirstOrDefaultAsync(m => m.Id == id);
+            var profesor = await _context.Profesori
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (profesor == null)
             {
                 return NotFound();
             }
 
-            return View(profesor);
+            var studijskiProgrami = await _context.ProfesorStudijskiProgrami
+                .Where(psp => psp.ProfesorId == id)
+                .Select(psp => psp.StudijskiProgram)
+                .ToListAsync();
+
+            var predmeti = await _context.PredmetProfesori
+                .Where(pp => pp.ProfesorId == id)
+                .Select(pp => pp.Predmet)
+                .ToListAsync();
+
+            var viewModel = new ProfesorDetailsViewModel
+            {
+                Profesor = profesor,
+                StudijskiProgrami = studijskiProgrami,
+                Predmeti = predmeti
+            };
+
+            return View(viewModel);
         }
 
-        // GET: Profesori/Create
+        // POST: Profesori/Create
         [HttpGet("Create")]
         public IActionResult Create()
         {
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View();
         }
 
-        // POST: Profesori/Create
+        // POST: Asistenti/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Uloga,Ime,Prezime,JMBG,Email,Lozinka,ProfesorTitula")] Profesor profesor)
+        public async Task<IActionResult> Create(ProfesorCreateViewModel model)
         {
-            // Provjera da li već postoji korisnik sa datim JMBG
-            var postojiKorisnik = await _context.Korisnici
-                .AnyAsync(k => k.JMBG == profesor.JMBG);
-
-            if (postojiKorisnik)
-            {
-                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
-                return View(profesor);
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                var profesor = new Profesor
                 {
-                    _context.Profesori.Add(profesor);
-                    await _context.SaveChangesAsync();
+                    Ime = model.Ime,
+                    Prezime = model.Prezime,
+                    JMBG = model.JMBG,
+                    Email = model.Email,
+                    Lozinka = model.Lozinka,
+                    ProfesorTitula = model.ProfesorTitula,
+                    Uloga = model.Uloga
+                };
 
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
+                _context.Profesori.Add(profesor);
+                await _context.SaveChangesAsync();
+
+                if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
                 {
-                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja profesora.");
+                    foreach (var studijskiProgramId in model.StudijskiProgramIds)
+                    {
+                        _context.ProfesorStudijskiProgrami.Add(new ProfesorStudijskiProgram
+                        {
+                            ProfesorId = profesor.Id,
+                            StudijskiProgramId = studijskiProgramId
+                        });
+                    }
                 }
+
+                if (model.PredmetIds != null && model.PredmetIds.Any())
+                {
+                    foreach (var predmetId in model.PredmetIds)
+                    {
+                        _context.PredmetProfesori.Add(new PredmetProfesor
+                        {
+                            ProfesorId = profesor.Id,
+                            PredmetId = predmetId
+                        });
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View(profesor);
+            return View(model);
         }
 
-        // GET: Profesori/Edit/{id}
+        // GET: Asistenti/Edit/{id}
         [HttpGet("Edit/{id:long}")]
         public async Task<IActionResult> Edit(long id)
         {
@@ -98,28 +170,30 @@ namespace StudentHub.Controllers
             var model = new ProfesorEditViewModel
             {
                 Id = profesor.Id,
-                JMBG = profesor.JMBG,
                 Ime = profesor.Ime,
                 Prezime = profesor.Prezime,
+                JMBG = profesor.JMBG,
                 Email = profesor.Email,
+                Lozinka = profesor.Lozinka,
                 ProfesorTitula = profesor.ProfesorTitula,
-                Lozinka = null,
-                Uloga = profesor.Uloga
+                Uloga = profesor.Uloga,
+                StudijskiProgramIds = await _context.ProfesorStudijskiProgrami
+                    .Where(psp => psp.ProfesorId == profesor.Id)
+                    .Select(psp => psp.StudijskiProgramId)
+                    .ToListAsync(),
+                PredmetIds = await _context.PredmetProfesori
+                    .Where(pp => pp.ProfesorId == profesor.Id)
+                    .Select(pp => pp.PredmetId)
+                    .ToListAsync()
             };
 
-            ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
-                .Cast<Uloga>()
-                .Select(u => new SelectListItem
-                {
-                    Value = ((int)u).ToString(),
-                    Text = u.ToString(),
-                    Selected = u == profesor.Uloga
-                });
-
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View(model);
         }
 
-        // POST: Profesori/Edit/{id}
+        // POST: Asistenti/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, ProfesorEditViewModel model)
@@ -129,62 +203,84 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            // Provjera validacije modela
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                // Generisanje dropdown liste za prikaz u slučaju greške
-                ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
-                    .Cast<Uloga>()
-                    .Select(u => new SelectListItem
-                    {
-                        Value = ((int)u).ToString(),
-                        Text = u.ToString(),
-                        Selected = u == model.Uloga
-                    });
-                Console.WriteLine($"Uloga iz forme: {model.Uloga}");
-                return View(model);
-            }
-
-            if (!Enum.IsDefined(typeof(Uloga), model.Uloga))
-            {
-                ModelState.AddModelError(nameof(model.Uloga), "Izabrana uloga nije validna.");
-                return View(model);
-            }
-
-            try
-            {
-                var existingProfesor = await _context.Profesori.FindAsync(id);
-                if (existingProfesor == null)
+                var profesor = await _context.Profesori.FindAsync(id);
+                if (profesor == null)
                 {
                     return NotFound();
                 }
 
-                // Ažurirajte lozinku samo ako je uneta nova
-                if (!string.IsNullOrEmpty(model.Lozinka))
+                profesor.Ime = model.Ime;
+                profesor.Prezime = model.Prezime;
+                profesor.JMBG = model.JMBG;
+                profesor.Email = model.Email;
+                profesor.Lozinka = model.Lozinka;
+                profesor.ProfesorTitula = model.ProfesorTitula;
+                profesor.Uloga = model.Uloga;
+
+                _context.Update(profesor);
+
+                var existingStudijskiProgrami = await _context.ProfesorStudijskiProgrami
+                    .Where(psp => psp.ProfesorId == profesor.Id)
+                    .Select(psp => psp.StudijskiProgramId)
+                    .ToListAsync();
+                var newStudijskiProgrami = model.StudijskiProgramIds.Except(existingStudijskiProgrami).ToList();
+                var removedStudijskiProgrami = existingStudijskiProgrami.Except(model.StudijskiProgramIds).ToList();
+
+                foreach (var studijskiProgramId in newStudijskiProgrami)
                 {
-                    existingProfesor.Lozinka = model.Lozinka;
+                    _context.ProfesorStudijskiProgrami.Add(new ProfesorStudijskiProgram
+                    {
+                        ProfesorId = profesor.Id,
+                        StudijskiProgramId = studijskiProgramId
+                    });
                 }
 
-                // Ažurirajte ostale podatke
-                existingProfesor.Ime = model.Ime;
-                existingProfesor.Prezime = model.Prezime;
-                existingProfesor.Email = model.Email;
-                existingProfesor.JMBG = model.JMBG;
-                existingProfesor.ProfesorTitula = model.ProfesorTitula;
-                existingProfesor.Uloga = model.Uloga;
+                foreach (var studijskiProgramId in removedStudijskiProgrami)
+                {
+                    var profesorStudijskiProgram = await _context.ProfesorStudijskiProgrami
+                        .FirstOrDefaultAsync(psp => psp.ProfesorId == profesor.Id && psp.StudijskiProgramId == studijskiProgramId);
+                    if (profesorStudijskiProgram != null)
+                    {
+                        _context.ProfesorStudijskiProgrami.Remove(profesorStudijskiProgram);
+                    }
+                }
 
-                // Sačuvajte promene u bazi
+                var existingPredmeti = await _context.PredmetProfesori
+                    .Where(pp => pp.ProfesorId == profesor.Id)
+                    .Select(pp => pp.PredmetId)
+                    .ToListAsync();
+                var newPredmeti = model.PredmetIds.Except(existingPredmeti).ToList();
+                var removedPredmeti = existingPredmeti.Except(model.PredmetIds).ToList();
+
+                foreach (var predmetId in newPredmeti)
+                {
+                    _context.PredmetProfesori.Add(new PredmetProfesor
+                    {
+                        ProfesorId = profesor.Id,
+                        PredmetId = predmetId
+                    });
+                }
+
+                foreach (var predmetId in removedPredmeti)
+                {
+                    var predmetProfesor = await _context.PredmetProfesori
+                        .FirstOrDefaultAsync(pp => pp.ProfesorId == profesor.Id && pp.PredmetId == predmetId);
+                    if (predmetProfesor != null)
+                    {
+                        _context.PredmetProfesori.Remove(predmetProfesor);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProfesorExists(model.Id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
+
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
+            return View(model);
         }
 
         // GET: Profesori/Delete/{id}
@@ -224,9 +320,20 @@ namespace StudentHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProfesorExists(long id)
+        [HttpPost("GetPredmetiByStudijskiProgram")]
+        public async Task<IActionResult> GetPredmetiByStudijskiProgram([FromBody] List<long> studijskiProgramIds)
         {
-            return _context.Profesori.Any(e => e.Id == id);
+            if (studijskiProgramIds == null || !studijskiProgramIds.Any())
+            {
+                return Json(new List<object>());
+            }
+
+            var predmeti = await _context.Predmeti
+                .Where(p => studijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                .Select(p => new { id = p.Id, naziv = p.Naziv })
+                .ToListAsync();
+
+            return Json(predmeti);
         }
     }
 }

@@ -10,6 +10,30 @@
         "tags": [
           "Asistenti"
         ],
+        "parameters": [
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "studijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -57,37 +81,10 @@
         ],
         "parameters": [
           {
-            "name": "AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
             "name": "Ime",
             "in": "query",
             "required": true,
             "schema": {
-              "maxLength": 50,
               "type": "string"
             }
           },
@@ -96,13 +93,21 @@
             "in": "query",
             "required": true,
             "schema": {
-              "maxLength": 50,
+              "type": "string"
+            }
+          },
+          {
+            "name": "JMBG",
+            "in": "query",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           },
           {
             "name": "Email",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "email"
@@ -113,9 +118,16 @@
             "in": "query",
             "required": true,
             "schema": {
-              "minLength": 8,
               "type": "string",
               "format": "password"
+            }
+          },
+          {
+            "name": "AsistentTitula",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -124,6 +136,28 @@
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/Uloga"
+            }
+          },
+          {
+            "name": "StudijskiProgramIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "PredmetIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
             }
           }
         ],
@@ -179,21 +213,10 @@
             }
           },
           {
-            "name": "JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
             "name": "Ime",
             "in": "query",
             "required": true,
             "schema": {
-              "maxLength": 50,
               "type": "string"
             }
           },
@@ -202,13 +225,21 @@
             "in": "query",
             "required": true,
             "schema": {
-              "maxLength": 50,
+              "type": "string"
+            }
+          },
+          {
+            "name": "JMBG",
+            "in": "query",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           },
           {
             "name": "Email",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "email"
@@ -217,15 +248,17 @@
           {
             "name": "Lozinka",
             "in": "query",
+            "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "password"
             }
           },
           {
             "name": "AsistentTitula",
             "in": "query",
+            "required": true,
             "schema": {
-              "maxLength": 30,
               "type": "string"
             }
           },
@@ -235,6 +268,28 @@
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/Uloga"
+            }
+          },
+          {
+            "name": "StudijskiProgramIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "PredmetIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
             }
           }
         ],
@@ -282,6 +337,49 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Asistenti/GetPredmetiByStudijskiProgram": {
+      "post": {
+        "tags": [
+          "Asistenti"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -9407,6 +9505,30 @@
         "tags": [
           "Profesori"
         ],
+        "parameters": [
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "studijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -9454,37 +9576,10 @@
         ],
         "parameters": [
           {
-            "name": "ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
             "name": "Ime",
             "in": "query",
             "required": true,
             "schema": {
-              "maxLength": 50,
               "type": "string"
             }
           },
@@ -9493,13 +9588,21 @@
             "in": "query",
             "required": true,
             "schema": {
-              "maxLength": 50,
+              "type": "string"
+            }
+          },
+          {
+            "name": "JMBG",
+            "in": "query",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           },
           {
             "name": "Email",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "email"
@@ -9510,9 +9613,16 @@
             "in": "query",
             "required": true,
             "schema": {
-              "minLength": 8,
               "type": "string",
               "format": "password"
+            }
+          },
+          {
+            "name": "ProfesorTitula",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -9521,6 +9631,28 @@
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/Uloga"
+            }
+          },
+          {
+            "name": "StudijskiProgramIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "PredmetIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
             }
           }
         ],
@@ -9576,21 +9708,10 @@
             }
           },
           {
-            "name": "JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
             "name": "Ime",
             "in": "query",
             "required": true,
             "schema": {
-              "maxLength": 50,
               "type": "string"
             }
           },
@@ -9599,13 +9720,21 @@
             "in": "query",
             "required": true,
             "schema": {
-              "maxLength": 50,
+              "type": "string"
+            }
+          },
+          {
+            "name": "JMBG",
+            "in": "query",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           },
           {
             "name": "Email",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "email"
@@ -9614,15 +9743,17 @@
           {
             "name": "Lozinka",
             "in": "query",
+            "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "password"
             }
           },
           {
             "name": "ProfesorTitula",
             "in": "query",
+            "required": true,
             "schema": {
-              "maxLength": 30,
               "type": "string"
             }
           },
@@ -9632,6 +9763,28 @@
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/Uloga"
+            }
+          },
+          {
+            "name": "StudijskiProgramIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "PredmetIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
             }
           }
         ],
@@ -9679,6 +9832,49 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Profesori/GetPredmetiByStudijskiProgram": {
+      "post": {
+        "tags": [
+          "Profesori"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"

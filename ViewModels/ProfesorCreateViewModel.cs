@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentHub.ViewModels
 {
-    public class AsistentEditViewModel
+    public class ProfesorCreateViewModel
     {
-        public long Id { get; set; }
-
         [Required(ErrorMessage = "Ime je obavezno.")]
         public string Ime { get; set; }
 
@@ -26,7 +24,7 @@ namespace StudentHub.ViewModels
         public string Lozinka { get; set; }
 
         [Required(ErrorMessage = "Titula je obavezna.")]
-        public string AsistentTitula { get; set; }
+        public string ProfesorTitula { get; set; }
 
         [Required(ErrorMessage = "Uloga je obavezna.")]
         [EnumDataType(typeof(Uloga))]

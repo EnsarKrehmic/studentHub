@@ -988,6 +988,50 @@
             }
           },
           {
+            "name": "StudentskaSluzba.StudijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "StudentskaSluzba.Id",
             "in": "query",
             "schema": {
@@ -1630,6 +1674,50 @@
             }
           },
           {
+            "name": "StudentskaSluzba.StudijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "StudentskaSluzba.Id",
             "in": "query",
             "schema": {
@@ -1770,17 +1858,14 @@
         "tags": [
           "Ispiti"
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
+        "parameters": [
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
-        }
-      }
-    },
-    "/Ispiti/Ispiti/Index": {
-      "get": {
-        "tags": [
-          "Ispiti"
         ],
         "responses": {
           "200": {
@@ -1789,7 +1874,7 @@
         }
       }
     },
-    "/Ispiti/Ispiti/Details/{id}": {
+    "/Ispiti/Details/{id}": {
       "get": {
         "tags": [
           "Ispiti"
@@ -1797,7 +1882,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1811,7 +1897,7 @@
         }
       }
     },
-    "/Ispiti/Ispiti/Create": {
+    "/Ispiti/Create": {
       "get": {
         "tags": [
           "Ispiti"
@@ -1828,8 +1914,109 @@
         ],
         "parameters": [
           {
-            "name": "Id",
+            "name": "StudijskiProgramId",
             "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "NastavniPlanId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "PredmetId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "DatumOdrzavanja",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "Lokacija",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "minLength": 0,
+              "type": "string"
+            }
+          },
+          {
+            "name": "BrojBodova",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Ispiti/Edit/{id}": {
+      "get": {
+        "tags": [
+          "Ispiti"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Ispiti"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1856,7 +2043,6 @@
           {
             "name": "Lokacija",
             "in": "query",
-            "required": true,
             "schema": {
               "maxLength": 200,
               "type": "string"
@@ -1868,6 +2054,122 @@
             "schema": {
               "maximum": 100,
               "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "StudijskiProgramId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "NastavniPlanId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "NastavniPlan.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "NastavniPlan.GodinaStudija",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "NastavniPlan.StudijskiProgramId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "NastavniPlan.StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "NastavniPlan.StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "NastavniPlan.StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
               "type": "integer",
               "format": "int32"
             }
@@ -2154,804 +2456,6 @@
               "type": "integer",
               "format": "int32"
             }
-          },
-          {
-            "name": "KorisnikId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Korisnik.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Korisnik.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Korisnik.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Korisnik.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "ProfesorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Profesor.ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Profesor.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Profesor.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Profesor.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "AsistentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Asistent.AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Asistent.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Asistent.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Asistent.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "StudentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.BrojIndeksa",
-            "in": "query",
-            "schema": {
-              "maxLength": 20,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.PredhodnoObrazovanje",
-            "in": "query",
-            "schema": {
-              "maxLength": 200,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.GodinaStudija",
-            "in": "query",
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgramId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.NastavniPlanId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.GodinaStudija",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgramId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.Semestar",
-            "in": "query",
-            "schema": {
-              "maximum": 12,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.PredmetId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.ECTS",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 30,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.Predmet.ProfesorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Student.Predmet.AsistentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlanId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.GodinaStudija",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgramId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.Predmet.Semestar",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 12,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Student.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Student.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "StudentskaSluzbaId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
           }
         ],
         "responses": {
@@ -2961,7 +2465,7 @@
         }
       }
     },
-    "/Ispiti/Ispiti/Edit/{id}": {
+    "/Ispiti/Delete/{id}": {
       "get": {
         "tags": [
           "Ispiti"
@@ -2969,7 +2473,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -2989,1136 +2494,33 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "DatumOdrzavanja",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "DatumObjave",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "Lokacija",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 200,
-              "type": "string"
-            }
-          },
-          {
-            "name": "BrojBodova",
-            "in": "query",
-            "schema": {
-              "maximum": 100,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "PredmetId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
-          },
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Ispiti/Prijavi": {
+      "post": {
+        "tags": [
+          "Ispiti"
+        ],
+        "parameters": [
           {
-            "name": "Predmet.Id",
+            "name": "id",
             "in": "query",
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.ECTS",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 30,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Predmet.ProfesorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.Profesor.ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Profesor.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.Profesor.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Profesor.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Profesor.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Profesor.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Predmet.Profesor.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Predmet.Profesor.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Predmet.AsistentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.Asistent.AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Asistent.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.Asistent.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Asistent.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Asistent.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.Asistent.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Predmet.Asistent.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Predmet.Asistent.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Predmet.NastavniPlanId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.NastavniPlan.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.NastavniPlan.GodinaStudija",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.NastavniPlan.StudijskiProgramId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.NastavniPlan.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Predmet.NastavniPlan.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.NastavniPlan.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Predmet.Semestar",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 12,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "KorisnikId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Korisnik.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Korisnik.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Korisnik.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Korisnik.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "ProfesorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Profesor.ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Profesor.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Profesor.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Profesor.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "AsistentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Asistent.AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Asistent.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Asistent.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Asistent.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "StudentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.BrojIndeksa",
-            "in": "query",
-            "schema": {
-              "maxLength": 20,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.PredhodnoObrazovanje",
-            "in": "query",
-            "schema": {
-              "maxLength": 200,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.GodinaStudija",
-            "in": "query",
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgramId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.NastavniPlanId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.GodinaStudija",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgramId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.Semestar",
-            "in": "query",
-            "schema": {
-              "maximum": 12,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.PredmetId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.ECTS",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 30,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.Predmet.ProfesorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Student.Predmet.Profesor.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Student.Predmet.AsistentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Student.Predmet.Asistent.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlanId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.GodinaStudija",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgramId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.Predmet.Semestar",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 12,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Student.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Student.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Student.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Student.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Student.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "StudentskaSluzbaId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
             }
           }
         ],
@@ -4129,15 +2531,16 @@
         }
       }
     },
-    "/Ispiti/Ispiti/Delete/{id}": {
+    "/Ispiti/GetNastavniPlanoviByStudijskiProgram/{studijskiProgramId}": {
       "get": {
         "tags": [
           "Ispiti"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "query",
+            "name": "studijskiProgramId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4149,15 +2552,18 @@
             "description": "OK"
           }
         }
-      },
-      "post": {
+      }
+    },
+    "/Ispiti/GetPredmetiByNastavniPlan/{nastavniPlanId}": {
+      "get": {
         "tags": [
           "Ispiti"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "query",
+            "name": "nastavniPlanId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4437,7 +2843,7 @@
         }
       }
     },
-    "/Obavjestenja/Obavjestenja/Index": {
+    "/Obavjestenja": {
       "get": {
         "tags": [
           "Obavjestenja"
@@ -4459,7 +2865,7 @@
         }
       }
     },
-    "/Obavjestenja/Obavjestenja/Details/{id}": {
+    "/Obavjestenja/Details/{id}": {
       "get": {
         "tags": [
           "Obavjestenja"
@@ -4467,7 +2873,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4481,7 +2888,7 @@
         }
       }
     },
-    "/Obavjestenja/Obavjestenja/Create": {
+    "/Obavjestenja/Create": {
       "get": {
         "tags": [
           "Obavjestenja"
@@ -4498,8 +2905,87 @@
         ],
         "parameters": [
           {
-            "name": "Id",
+            "name": "Naslov",
             "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "type": "string"
+            }
+          },
+          {
+            "name": "Sadrzaj",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 1000,
+              "type": "string"
+            }
+          },
+          {
+            "name": "DatumObjave",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "StudijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Obavjestenja/Edit/{id}": {
+      "get": {
+        "tags": [
+          "Obavjestenja"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Obavjestenja"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4530,6 +3016,51 @@
             "schema": {
               "type": "string",
               "format": "date-time"
+            }
+          },
+          {
+            "name": "StudijskiProgramId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
             }
           },
           {
@@ -4608,6 +3139,50 @@
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
             }
           },
           {
@@ -4827,50 +3402,6 @@
             "schema": {
               "$ref": "#/components/schemas/Uloga"
             }
-          },
-          {
-            "name": "StudijskiProgramId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
           }
         ],
         "responses": {
@@ -4880,7 +3411,7 @@
         }
       }
     },
-    "/Obavjestenja/Obavjestenja/Edit/{id}": {
+    "/Obavjestenja/Delete/{id}": {
       "get": {
         "tags": [
           "Obavjestenja"
@@ -4888,7 +3419,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4908,424 +3440,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Naslov",
-            "in": "query",
+            "in": "path",
             "required": true,
-            "schema": {
-              "maxLength": 200,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Sadrzaj",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 1000,
-              "type": "string"
-            }
-          },
-          {
-            "name": "DatumObjave",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "KorisnikId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Korisnik.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Korisnik.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Korisnik.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Korisnik.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Korisnik.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "StudentskaSluzbaId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "StudentskaSluzba.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "ProfesorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Profesor.ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Profesor.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Profesor.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Profesor.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Profesor.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "AsistentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Asistent.AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Asistent.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Asistent.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Asistent.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Asistent.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "StudijskiProgramId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Obavjestenja/Obavjestenja/Delete/{id}": {
-      "get": {
-        "tags": [
-          "Obavjestenja"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Obavjestenja"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -5351,19 +3467,7 @@
         }
       }
     },
-    "/Ocjene/Ocjene/Index": {
-      "get": {
-        "tags": [
-          "Ocjene"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Ocjene/Ocjene/Details/{id}": {
+    "/Ocjene/Details/{id}": {
       "get": {
         "tags": [
           "Ocjene"
@@ -5371,7 +3475,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -5385,7 +3490,7 @@
         }
       }
     },
-    "/Ocjene/Ocjene/Create": {
+    "/Ocjene/Create": {
       "get": {
         "tags": [
           "Ocjene"
@@ -6293,7 +4398,7 @@
         }
       }
     },
-    "/Ocjene/Ocjene/Edit/{id}": {
+    "/Ocjene/Edit/{id}": {
       "get": {
         "tags": [
           "Ocjene"
@@ -6301,7 +4406,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6329,7 +4435,8 @@
           },
           {
             "name": "Id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -7219,7 +5326,7 @@
         }
       }
     },
-    "/Ocjene/Ocjene/Delete/{id}": {
+    "/Ocjene/Delete/{id}": {
       "get": {
         "tags": [
           "Ocjene"
@@ -7227,7 +5334,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -7247,7 +5355,31 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Ocjene/Student/{studentId}": {
+      "get": {
+        "tags": [
+          "Ocjene"
+        ],
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -7802,7 +5934,7 @@
             }
           },
           {
-            "name": "datumPrijave",
+            "name": "DatumPrijave",
             "in": "query",
             "required": true,
             "schema": {
@@ -7848,7 +5980,6 @@
           {
             "name": "Ispit.Lokacija",
             "in": "query",
-            "required": true,
             "schema": {
               "maxLength": 200,
               "type": "string"
@@ -7860,6 +5991,122 @@
             "schema": {
               "maximum": 100,
               "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Ispit.StudijskiProgramId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Ispit.StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Ispit.StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "Ispit.StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "Ispit.StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Ispit.NastavniPlanId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Ispit.NastavniPlan.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Ispit.NastavniPlan.GodinaStudija",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "Ispit.NastavniPlan.StudijskiProgramId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Ispit.NastavniPlan.StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Ispit.NastavniPlan.StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "Ispit.NastavniPlan.StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "Ispit.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
               "type": "integer",
               "format": "int32"
             }
@@ -8145,804 +6392,6 @@
               "minimum": 1,
               "type": "integer",
               "format": "int32"
-            }
-          },
-          {
-            "name": "Ispit.KorisnikId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Korisnik.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Korisnik.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Korisnik.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Korisnik.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Korisnik.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Ispit.Korisnik.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Ispit.Korisnik.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Ispit.ProfesorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Profesor.ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Profesor.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Profesor.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Profesor.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Profesor.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Profesor.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Ispit.Profesor.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Ispit.Profesor.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Ispit.AsistentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Asistent.AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Asistent.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Asistent.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Asistent.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Asistent.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Asistent.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Ispit.Asistent.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Ispit.Asistent.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Ispit.StudentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.BrojIndeksa",
-            "in": "query",
-            "schema": {
-              "maxLength": 20,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.PredhodnoObrazovanje",
-            "in": "query",
-            "schema": {
-              "maxLength": 200,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.GodinaStudija",
-            "in": "query",
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Ispit.Student.StudijskiProgramId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Ispit.Student.NastavniPlanId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.NastavniPlan.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.NastavniPlan.GodinaStudija",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.NastavniPlan.StudijskiProgramId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.NastavniPlan.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.NastavniPlan.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.NastavniPlan.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Ispit.Student.Semestar",
-            "in": "query",
-            "schema": {
-              "maximum": 12,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Ispit.Student.PredmetId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.ECTS",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 30,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.ProfesorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Profesor.ProfesorTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Profesor.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Profesor.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Profesor.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Profesor.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Profesor.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Profesor.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Profesor.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.AsistentId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Asistent.AsistentTitula",
-            "in": "query",
-            "schema": {
-              "maxLength": 30,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Asistent.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Asistent.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Asistent.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Asistent.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Asistent.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Asistent.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Asistent.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.NastavniPlanId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.NastavniPlan.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.NastavniPlan.GodinaStudija",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.NastavniPlan.StudijskiProgramId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.NastavniPlan.StudijskiProgram.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.NastavniPlan.StudijskiProgram.Naziv",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 100,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.NastavniPlan.StudijskiProgram.Opis",
-            "in": "query",
-            "schema": {
-              "maxLength": 500,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.NastavniPlan.StudijskiProgram.TrajanjeUGodinama",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Ispit.Student.Predmet.Semestar",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 12,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Ispit.Student.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.Student.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.Student.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Ispit.Student.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Ispit.Student.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
-            }
-          },
-          {
-            "name": "Ispit.StudentskaSluzbaId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.StudentskaSluzba.Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Ispit.StudentskaSluzba.JMBG",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 13,
-              "minLength": 13,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.StudentskaSluzba.Ime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.StudentskaSluzba.Prezime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ispit.StudentskaSluzba.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          {
-            "name": "Ispit.StudentskaSluzba.Lozinka",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
-            }
-          },
-          {
-            "name": "Ispit.StudentskaSluzba.Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
             }
           },
           {
@@ -10364,6 +7813,23 @@
         "tags": [
           "StudentskaSluzba"
         ],
+        "parameters": [
+          {
+            "name": "searchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "studijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -10457,11 +7923,8 @@
           {
             "name": "Lozinka",
             "in": "query",
-            "required": true,
             "schema": {
-              "minLength": 8,
-              "type": "string",
-              "format": "password"
+              "type": "string"
             }
           },
           {
@@ -10470,6 +7933,15 @@
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/Uloga"
+            }
+          },
+          {
+            "name": "StudijskiProgramId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -10568,29 +8040,11 @@
             }
           },
           {
-            "name": "BrojIndeksa",
+            "name": "Uloga",
             "in": "query",
+            "required": true,
             "schema": {
-              "maxLength": 20,
-              "type": "string"
-            }
-          },
-          {
-            "name": "PredhodnoObrazovanje",
-            "in": "query",
-            "schema": {
-              "maxLength": 200,
-              "type": "string"
-            }
-          },
-          {
-            "name": "GodinaStudija",
-            "in": "query",
-            "schema": {
-              "maximum": 6,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/Uloga"
             }
           },
           {
@@ -10600,51 +8054,6 @@
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
-          },
-          {
-            "name": "NastavniPlanId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "Semestar",
-            "in": "query",
-            "schema": {
-              "maximum": 12,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "PredmetId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "PredmetIds",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          },
-          {
-            "name": "Uloga",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Uloga"
             }
           }
         ],
@@ -11519,6 +8928,50 @@
             }
           },
           {
+            "name": "StudentskaSluzba.StudijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "StudentskaSluzba.Id",
             "in": "query",
             "schema": {
@@ -12166,6 +9619,50 @@
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgramId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Naziv",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.Opis",
+            "in": "query",
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            }
+          },
+          {
+            "name": "StudentskaSluzba.StudijskiProgram.TrajanjeUGodinama",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
             }
           },
           {

@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,30 +20,28 @@ namespace StudentHub.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("")]
         public async Task<IActionResult> Index(int? studijskiProgramId)
         {
-            var obavijestiQuery = _context.Obavjestenja
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+
+            var obavjestenja = _context.Obavjestenja
                 .Include(o => o.Asistent)
                 .Include(o => o.Profesor)
                 .Include(o => o.StudentskaSluzba)
+                .Include(o => o.StudijskiProgram)
                 .AsQueryable();
 
             if (studijskiProgramId.HasValue)
             {
-                obavijestiQuery = obavijestiQuery.Where(o => o.StudijskiProgramId == studijskiProgramId.Value);
+                obavjestenja = obavjestenja.Where(o => o.StudijskiProgramId == studijskiProgramId);
             }
 
-            var obavijesti = await obavijestiQuery.OrderByDescending(o => o.DatumObjave).ToListAsync();
-            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
-
-            return View(obavijesti);
+            return View(await obavjestenja.ToListAsync());
         }
 
-        // GET: Obavjestenja/Details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Obavjestenja/Details/{id}
+        [HttpGet("Details/{id:long}")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null) return NotFound();
@@ -58,112 +57,120 @@ namespace StudentHub.Controllers
         }
 
         // GET: Obavjestenja/Create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
-        public async Task<IActionResult> Create()
+        [HttpGet("Create")]
+        public IActionResult Create()
         {
-            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
             return View();
         }
 
         // POST: Obavjestenja/Create
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
-        public async Task<IActionResult> Create([Bind("Naslov,Sadrzaj,StudijskiProgramId")] Obavjestenje obavjestenje)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(ObavjestenjeCreateViewModel dto)
         {
+            // Provera validnosti modela
             if (ModelState.IsValid)
             {
-                Console.WriteLine($"Naslov: {obavjestenje.Naslov}, Sadrzaj: {obavjestenje.Sadrzaj}, Studijski program: {obavjestenje.StudijskiProgramId}");
-                obavjestenje.DatumObjave = DateTime.Now;
+                Console.WriteLine("Uneti podaci za obavještenje:");
 
-                // Pronalaženje korisnika u bazi prema User.Identity.Name
+                // Ispis atributa
+                Console.WriteLine($"Naslov: {dto.Naslov}");
+                Console.WriteLine($"Sadrzaj: {dto.Sadrzaj}");
+                Console.WriteLine($"StudijskiProgramId: {dto.StudijskiProgramId}");
+
+                dto.DatumObjave = DateTime.Now;
+
+                // Logika za autentifikovanog korisnika
                 if (User.Identity?.IsAuthenticated == true)
                 {
-                    if (long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long userId))
-                    {
-                        var korisnik = await _context.Korisnici
-                            .FirstOrDefaultAsync(k => k.Id == userId);
-
-                        if (korisnik != null)
-                        {
-                            obavjestenje.KorisnikId = korisnik.Id; // Postavljanje povezanog entiteta
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Autentifikovani korisnik '{User.Identity.Name}' nije pronađen u bazi.");
-                    }
+                    Console.WriteLine($"Autentifikovan korisnik: {User.Identity.Name}");
                 }
                 else
                 {
-                    Console.WriteLine("Korisnik nije autentifikovan. Obavještenje će biti kreirano bez korisnika.");
+                    Console.WriteLine("Korisnik nije autentifikovan.");
                 }
 
-                // Postavljanje dodatnih vrijednosti
-                SetUserRoleIds(obavjestenje);
+                var obavjestenje = new Obavjestenje
+                {
+                    Naslov = dto.Naslov,
+                    Sadrzaj = dto.Sadrzaj,
+                    StudijskiProgramId = dto.StudijskiProgramId,
+                    DatumObjave = DateTime.Now
+                };
 
                 _context.Add(obavjestenje);
                 await _context.SaveChangesAsync();
-                Console.WriteLine("Obavještenje uspješno kreirano.");
+                Console.WriteLine("Obavještenje je uspešno sačuvano.");
                 return RedirectToAction(nameof(Index));
             }
-            else
+
+            // Ispis grešaka validacije
+            Console.WriteLine("ModelState nije validan. Greške:");
+            foreach (var error in ModelState)
             {
-                Console.WriteLine("ModelState nije validan. Greške:");
-                foreach (var error in ModelState)
-                {
-                    Console.WriteLine($"{error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
-                }
+                Console.WriteLine($"{error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
             }
-            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
-            return View(obavjestenje);
+
+            // Ponovno postavljanje ViewBag-a za dropdown listu
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", dto.StudijskiProgramId);
+
+            return View(dto);
         }
 
         // GET: Obavjestenja/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        [HttpGet("Edit/{id:long}")]
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var obavjestenje = await _context.Obavjestenja.FindAsync(id);
-            if (obavjestenje == null) return NotFound();
-            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
+            if (obavjestenje == null)
+            {
+                return NotFound();
+            }
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", obavjestenje.StudijskiProgramId);
             return View(obavjestenje);
         }
 
-        // POST: Obavjestenja/Edit/5
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Obavjestenja/Edit/{id}
+        [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Naslov,Sadrzaj,StudijskiProgramId")] Obavjestenje obavjestenje)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Naslov,Sadrzaj,StudijskiProgram")] Obavjestenje obavjestenje)
         {
-            if (id != obavjestenje.Id) return NotFound();
+            if (id != obavjestenje.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    obavjestenje.DatumObjave = DateTime.Now;
-                    SetUserRoleIds(obavjestenje);
-
                     _context.Update(obavjestenje);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ObavjestenjeExists(obavjestenje.Id)) return NotFound();
-                    else throw;
+                    if (!ObavjestenjeExists(obavjestenje.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudijskiProgrami"] = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", obavjestenje.StudijskiProgramId);
             return View(obavjestenje);
         }
 
-        // GET: Obavjestenja/Delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Obavjestenja/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null) return NotFound();
@@ -177,9 +184,8 @@ namespace StudentHub.Controllers
             return View(obavjestenje);
         }
 
-        // POST: Obavjestenja/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Obavjestenja/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {

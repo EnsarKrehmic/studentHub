@@ -8,26 +8,46 @@
 
 <h3>Da li ste sigurni da želite obrisati ovo uvjerenje?</h3>
 <div>
+    <h4>Uvjerenje</h4>
+    <hr />
     <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Namjena)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Namjena)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DatumIzdavanja)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DatumIzdavanja)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Id)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.StudentskaSluzba)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.StudentskaSluzba.Id)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Vrsta)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Vrsta)</dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Namjena)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Namjena)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DatumIzdavanja)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DatumIzdavanja)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Student.BrojIndeksa)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Student.BrojIndeksa)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Student.Ime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Student.Ime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Student.Prezime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Student.Prezime)
+        </dd>
     </dl>
-</div>
 
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Obriši</button> |
-    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-</form>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <input type="submit" value="Obriši" class="btn btn-danger" /> |
+            <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+        </div>
+    </form>
+</div>

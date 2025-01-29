@@ -6,14 +6,17 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<table class="table table-bordered table-hover">
+<p>
+    <a asp-action="Create" class="btn btn-primary">Dodaj novo uvjerenje</a>
+</p>
+
+<table class="table table-bordered table-hover mt-3">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Namjena)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DatumIzdavanja)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().StudentskaSluzba)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Vrsta)</th>
+            <th>Namjena</th>
+            <th>Datum Izdavanja</th>
+            <th>Student</th>
+            <th>Vrsta</th>
             <th>Akcije</th>
         </tr>
     </thead>
@@ -21,13 +24,13 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Namjena)</td>
-                <td>@Html.DisplayFor(modelItem => item.DatumIzdavanja)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.StudentskaSluzba.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.Vrsta)</td>
+                <td>@item.Namjena</td>
+                <td>@item.DatumIzdavanja</td>
+                <td>@item.Student.BrojIndeksa</td>
+                <td>@item.Student.Ime</td>
+                <td>@item.Student.Prezime</td>
+                <td>@item.Vrsta</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
                 </td>
@@ -35,3 +38,7 @@
         }
     </tbody>
 </table>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+</div>

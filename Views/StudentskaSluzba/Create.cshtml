@@ -1,53 +1,54 @@
-﻿@model StudentHub.Models.StudentskaSluzba
+﻿@model StudentHub.ViewModels.StudentskaSluzbaEditViewModel
 
 @{
-    ViewData["Title"] = "Kreiranje admina";
+    ViewData["Title"] = "Dodaj novog člana studentske službe";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div class="form-group">
-                <label asp-for="Uloga" class="control-label"></label>
-                <select asp-for="Uloga" class="form-control" asp-items="ViewBag.Uloge"></select>
-                <span asp-validation-for="Uloga" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ime" class="control-label"></label>
-                <input asp-for="Ime" class="form-control" />
-                <span asp-validation-for="Ime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Prezime" class="control-label"></label>
-                <input asp-for="Prezime" class="form-control" />
-                <span asp-validation-for="Prezime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JMBG" class="control-label"></label>
-                <input asp-for="JMBG" class="form-control" />
-                <span asp-validation-for="JMBG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Lozinka" class="control-label"></label>
-                <input asp-for="Lozinka" class="form-control" />
-                <span asp-validation-for="Lozinka" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Kreiraj" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Ime" class="control-label"></label>
+        <input asp-for="Ime" class="form-control" />
+        <span asp-validation-for="Ime" class="text-danger"></span>
     </div>
-</div>
+    <div class="form-group">
+        <label asp-for="Prezime" class="control-label"></label>
+        <input asp-for="Prezime" class="form-control" />
+        <span asp-validation-for="Prezime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="JMBG" class="control-label"></label>
+        <input asp-for="JMBG" class="form-control" />
+        <span asp-validation-for="JMBG" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Lozinka" class="control-label"></label>
+        <input asp-for="Lozinka" class="form-control" />
+        <span asp-validation-for="Lozinka" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Uloga" class="control-label"></label>
+        <select asp-for="Uloga" class="form-control" asp-items="Html.GetEnumSelectList<Uloga>()"></select>
+        <span asp-validation-for="Uloga" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="StudijskiProgramId" class="control-label"></label>
+        <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami"></select>
+        <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Dodaj" class="btn btn-primary" />
+    </div>
+</form>
 
 <div>
-    <a asp-action="Index">Nazad</a>
+    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
 </div>
 
 @section Scripts {

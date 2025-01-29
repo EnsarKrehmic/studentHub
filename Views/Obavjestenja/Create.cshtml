@@ -1,35 +1,34 @@
-﻿@model StudentHub.Models.Obavjestenje
+﻿@model StudentHub.ViewModels.ObavjestenjeCreateViewModel
 
 @{
-    ViewData["Title"] = "Kreiranje novog obavještenja";
+    ViewData["Title"] = "Kreiraj obavještenje";
 }
 
 <h2>@ViewData["Title"]</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div class="form-group">
-                <label asp-for="Naslov" class="control-label">Naslov</label>
-                <input asp-for="Naslov" class="form-control" />
-                <span asp-validation-for="Naslov" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Sadrzaj" class="control-label">Sadrzaj</label>
-                <textarea asp-for="Sadrzaj" class="form-control"></textarea>
-                <span asp-validation-for="Sadrzaj" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StudijskiProgramId" class="control-label">Studijski program</label>
-                <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami"></select>
-                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Kreiraj</button>
-            </div>
-        </form>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label asp-for="StudijskiProgramId" class="control-label">Studijski program</label>
+        <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami">
+            <option value="">Izaberite studijski program</option>
+        </select>
+        <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
     </div>
-</div>
+    <div class="form-group">
+        <label asp-for="Naslov" class="control-label"></label>
+        <input asp-for="Naslov" class="form-control" />
+        <span asp-validation-for="Naslov" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Sadrzaj" class="control-label"></label>
+        <textarea asp-for="Sadrzaj" class="form-control"></textarea>
+        <span asp-validation-for="Sadrzaj" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>
+    </div>
+</form>
 
 <div>
     <a asp-action="Index">Nazad</a>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
+using StudentHub.ViewModels;
 
 namespace StudentHub.Controllers
 {
@@ -16,29 +17,20 @@ namespace StudentHub.Controllers
         }
 
         // GET: Ocjene
-        [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Ocjene
+            var ocjene = await _context.Ocjene
                 .Include(o => o.Predmet)
                 .Include(o => o.Profesor)
                 .Include(o => o.Student)
-                .Select(o => new
-                 {
-                     o.Id,
-                     o.Vrijednost,
-                     PredmetNaziv = o.Predmet.Naziv ?? "N/A", // Handle null values
-                     ProfesorIme = o.Profesor.Ime ?? "N/A", // Handle null values
-                     StudentIme = o.Student.Ime ?? "N/A" // Handle null values
-                 });
-            return View(await applicationDbContext.ToListAsync());
+                .ToListAsync();
+
+            return View(ocjene);
         }
 
-        // GET: Ocjene/Details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Ocjene/Details/{id}
+        [HttpGet("Details/{id:long}")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -60,8 +52,7 @@ namespace StudentHub.Controllers
         }
 
         // GET: Ocjene/Create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("Create")]
         public IActionResult Create()
         {
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv");
@@ -71,8 +62,7 @@ namespace StudentHub.Controllers
         }
 
         // POST: Ocjene/Create
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Vrijednost,PredmetId,brojIndeksa,StudentId,ProfesorId")] Ocjena ocjena)
         {
@@ -88,9 +78,8 @@ namespace StudentHub.Controllers
             return View(ocjena);
         }
 
-        // GET: Ocjene/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Ocjene/Edit/{id}
+        [HttpGet("Edit/{id:long}")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -109,9 +98,8 @@ namespace StudentHub.Controllers
             return View(ocjena);
         }
 
-        // POST: Ocjene/Edit/5
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Ocjene/Edit/{id}
+        [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Vrijednost,PredmetId,brojIndeksa,StudentId,ProfesorId")] Ocjena ocjena)
         {
@@ -146,9 +134,8 @@ namespace StudentHub.Controllers
             return View(ocjena);
         }
 
-        // GET: Ocjene/Delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
+        // GET: Ocjene/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -169,9 +156,8 @@ namespace StudentHub.Controllers
             return View(ocjena);
         }
 
-        // POST: Ocjene/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Ocjene/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
@@ -188,6 +174,39 @@ namespace StudentHub.Controllers
         private bool OcjenaExists(long id)
         {
             return _context.Ocjene.Any(e => e.Id == id);
+        }
+
+        // GET: Ocjene/Student/{studentId}
+        [HttpGet("Student/{studentId:long}")]
+        public async Task<IActionResult> Student(long studentId)
+        {
+            var student = await _context.Studenti
+                .FirstOrDefaultAsync(s => s.Id == studentId);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var ocjene = await _context.Ocjene
+                .Where(o => o.StudentId == studentId)
+                .Include(o => o.Predmet)
+                .ToListAsync();
+
+            var ocjeneViewModel = new OcjeneViewModel
+            {
+                StudentId = student.Id,
+                StudentIme = student.Ime,
+                StudentPrezime = student.Prezime,
+                Ocjene = ocjene.Select(o => new OcjenaPredmetViewModel
+                {
+                    PredmetNaziv = o.Predmet.Naziv,
+                    OcjenaVrijednost = o.Vrijednost
+                }).ToList(),
+                Prosjek = ocjene.Any() ? ocjene.Average(o => o.Vrijednost) : 0
+            };
+
+            return View(ocjeneViewModel);
         }
     }
 }

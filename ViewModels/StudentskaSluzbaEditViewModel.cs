@@ -27,5 +27,8 @@ namespace StudentHub.ViewModels
         [Required(ErrorMessage = "Uloga je obavezna.")]
         [EnumDataType(typeof(Uloga))]
         public Uloga Uloga { get; set; }
+
+        [Required(ErrorMessage = "Studijski program je obavezan.")]
+        public long StudijskiProgramId { get; set; }
     }
 }

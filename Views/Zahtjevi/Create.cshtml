@@ -19,7 +19,7 @@
     </div>
     <div class="form-group">
         <label asp-for="DatumPodnosenja" class="control-label"></label>
-        <input asp-for="DatumPodnosenja" class="form-control" />
+        <input asp-for="DatumPodnosenja" class="form-control" readonly />
         <span asp-validation-for="DatumPodnosenja" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -27,10 +27,7 @@
         <input asp-for="DatumRjesavanja" class="form-control" />
         <span asp-validation-for="DatumRjesavanja" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="StudentId" class="control-label"></label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.brojIndeksa"></select>
-    </div>
+    <input type="hidden" asp-for="StudentId" />
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Kreiraj</button>
     </div>
@@ -41,5 +38,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

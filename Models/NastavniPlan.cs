@@ -15,9 +15,9 @@ namespace StudentHub.Models
         public string GodinaStudija { get; set; }
 
         [Required(ErrorMessage = "Studijski program je obavezan.")]
+        [DisplayName("Studijski program")]
         [ForeignKey("StudijskiProgram")]
         public long StudijskiProgramId { get; set; }
-        [DisplayName("Studijski program")]
         public StudijskiProgram StudijskiProgram { get; set; }
 
         public NastavniPlan() { }

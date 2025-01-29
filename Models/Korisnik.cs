@@ -41,6 +41,22 @@ namespace StudentHub.Models
         [MinLength(8, ErrorMessage = "Lozinka mora imati najmanje 8 karaktera.")]
         public string Lozinka { get; set; }
 
+        [ForeignKey("Student")]
+        public long? StudentId { get; set; }
+        public Student Student { get; set; }
+
+        [ForeignKey("Profesor")]
+        public long? ProfesorId { get; set; }
+        public Profesor Profesor { get; set; }
+
+        [ForeignKey("Asistent")]
+        public long? AsistentId { get; set; }
+        public Asistent Asistent { get; set; }
+
+        [ForeignKey("StudentskaSluzba")]
+        public long? StudentskaSluzbaId { get; set; }
+        public StudentskaSluzba StudentskaSluzba { get; set; }
+
         [Required(ErrorMessage = "Uloga je obavezna.")]
         [EnumDataType(typeof(Uloga))]
         public Uloga Uloga { get; set; }

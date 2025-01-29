@@ -6,14 +6,18 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<table class="table table-bordered table-hover">
+<p>
+    <a asp-action="Create" class="btn btn-primary">Dodaj novi zahtjev</a>
+</p>
+
+<table class="table table-bordered table-hover mt-3">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().TipZahtjeva)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().StatusZahtjeva)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DatumPodnosenja)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DatumRjesavanja)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student)</th>
+            <th>Tip Zahtjeva</th>
+            <th>Status Zahtjeva</th>
+            <th>Datum Podnošenja</th>
+            <th>Datum Rješavanja</th>
+            <th>Student</th>
             <th>Akcije</th>
         </tr>
     </thead>
@@ -21,13 +25,14 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.TipZahtjeva)</td>
-                <td>@Html.DisplayFor(modelItem => item.StatusZahtjeva)</td>
-                <td>@Html.DisplayFor(modelItem => item.DatumPodnosenja)</td>
-                <td>@Html.DisplayFor(modelItem => item.DatumRjesavanja)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.Id)</td>
+                <td>@item.TipZahtjeva</td>
+                <td>@item.StatusZahtjeva</td>
+                <td>@item.DatumPodnosenja</td>
+                <td>@item.DatumRjesavanja</td>
+                <td>@item.Student.BrojIndeksa</td>
+                <td>@item.Student.Ime</td>
+                <td>@item.Student.Prezime</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
                 </td>
@@ -35,3 +40,7 @@
         }
     </tbody>
 </table>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+</div>

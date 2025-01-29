@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
-    "\\Data",
-    "\\Data\\Migrations"
+    "\\Data"
   ],
   "SelectedNode": "\\StudentHub.sln",
   "PreviewInSolutionExplorer": false

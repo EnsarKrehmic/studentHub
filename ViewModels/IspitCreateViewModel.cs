@@ -1,0 +1,28 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace StudentHub.ViewModels
+{
+    public class IspitCreateViewModel
+    {
+        [Required(ErrorMessage = "Studijski program je obavezan.")]
+        public long StudijskiProgramId { get; set; }
+
+        [Required(ErrorMessage = "Nastavni plan je obavezan.")]
+        public long NastavniPlanId { get; set; }
+
+        [Required(ErrorMessage = "Predmet je obavezan.")]
+        public long PredmetId { get; set; }
+
+        [Required(ErrorMessage = "Datum održavanja je obavezan.")]
+        [DataType(DataType.Date)]
+        public DateTime DatumOdrzavanja { get; set; }
+
+        [Required(ErrorMessage = "Lokacija je obavezna.")]
+        [StringLength(100, ErrorMessage = "Lokacija ne može biti duža od 100 karaktera.")]
+        public string Lokacija { get; set; }
+
+        [Required(ErrorMessage = "Broj bodova je obavezan.")]
+        [Range(1, 100, ErrorMessage = "Broj bodova mora biti između 1 i 100.")]
+        public int BrojBodova { get; set; }
+    }
+}

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentHub.Models
 {
@@ -8,36 +10,37 @@ namespace StudentHub.Models
         public long Id { get; set; }
 
         [Required(ErrorMessage = "Datum održavanja je obavezan.")]
+        [DisplayName("Datum održavanja")]
         public DateTime DatumOdrzavanja { get; set; }
 
         [Required]
+        [DisplayName("Datum objave")]
         public DateTime DatumObjave { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "Lokacija je obavezna.")]
         [MaxLength(200, ErrorMessage = "Lokacija ne smije biti duža od 200 karaktera.")]
-        public string Lokacija { get; set; }
+        public string? Lokacija { get; set; }
 
         [Range(0, 100, ErrorMessage = "Broj bodova mora biti između 0 i 100.")]
-        public int BrojBodova { get; set; }
+        [DisplayName("Broj bodova")]
+        public int? BrojBodova { get; set; }
+
+        [Required(ErrorMessage = "Studijski program je obavezan.")]
+        [DisplayName("Studijski program")]
+        [ForeignKey("StudijskiProgram")]
+        public long StudijskiProgramId { get; set; }
+        public StudijskiProgram StudijskiProgram { get; set; }
+
+        [Required(ErrorMessage = "Nastavni plan je obavezan.")]
+        [DisplayName("Nastavni plan")]
+        [ForeignKey("NastavniPlan")]
+        public long NastavniPlanId { get; set; }
+        public NastavniPlan NastavniPlan { get; set; }
 
         [Required(ErrorMessage = "Predmet je obavezan.")]
+        [DisplayName("Predmet")]
+        [ForeignKey("Predmet")]
         public long PredmetId { get; set; }
         public Predmet Predmet { get; set; }
-
-        public long? KorisnikId { get; set; }
-        public Korisnik? Korisnik { get; set; }
-
-        public long? ProfesorId { get; set; }
-        public Profesor? Profesor { get; set; }
-
-        public long? AsistentId { get; set; }
-        public Asistent? Asistent { get; set; }
-
-        public long? StudentId { get; set; }
-        public Student? Student { get; set; }
-
-        public long? StudentskaSluzbaId { get; set; }
-        public StudentskaSluzba? StudentskaSluzba { get; set; }
 
         public Ispit() { }
     }

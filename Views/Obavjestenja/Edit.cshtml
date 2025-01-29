@@ -1,4 +1,4 @@
-﻿@model StudentHub.Models.Obavjestenje
+﻿@model StudentHub.ViewModels.ObavjestenjeCreateViewModel
 
 @{
     ViewData["Title"] = "Izmjena podataka obavještenja";
@@ -6,25 +6,25 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="StudijskiProgramId" class="control-label">Studijski program</label>
+        <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami">
+            <option value="">Izaberite studijski program</option>
+        </select>
+        <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+    </div>
 
     <div class="form-group">
-        <label asp-for="Naslov" class="control-label">Naslov</label>
+        <label asp-for="Naslov" class="control-label"></label>
         <input asp-for="Naslov" class="form-control" />
         <span asp-validation-for="Naslov" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Sadrzaj" class="control-label">Sadrzaj</label>
+        <label asp-for="Sadrzaj" class="control-label"></label>
         <textarea asp-for="Sadrzaj" class="form-control"></textarea>
         <span asp-validation-for="Sadrzaj" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="StudijskiProgramId" class="control-label">Studijski Program</label>
-        <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami"></select>
-        <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
     </div>
 
     <div class="form-group">

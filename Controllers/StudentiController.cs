@@ -152,19 +152,15 @@ namespace StudentHub.Controllers
         {
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.NastavniPlanovi = new SelectList(_context.NastavniPlanovi, "Id", "GodinaStudija");
-            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
             return View();
         }
 
         // POST: Studenti/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("JMBG,Ime,Prezime,Email,Lozinka,BrojIndeksa,GodinaStudija,PredhodnoObrazovanje,Uloga,StudijskiProgramId,NastavniPlanId,Semestar,PredmetIds")] StudentCreateViewModel model)
+        public async Task<IActionResult> Create([Bind("JMBG,Ime,Prezime,Email,Lozinka,BrojIndeksa,GodinaStudija,PredhodnoObrazovanje,Uloga,StudijskiProgramId,Semestar,PredmetIds")] StudentCreateViewModel model)
         {
-            // Provjeri da li već postoji korisnik sa datim JMBG
-            var postojiKorisnik = await _context.Korisnici
-                .AnyAsync(k => k.JMBG == model.JMBG);
+            var postojiKorisnik = await _context.Korisnici.AnyAsync(k => k.JMBG == model.JMBG);
 
             if (postojiKorisnik)
             {
@@ -176,6 +172,15 @@ namespace StudentHub.Controllers
             {
                 try
                 {
+                    var nastavniPlan = await _context.NastavniPlanovi
+                        .FirstOrDefaultAsync(np => np.StudijskiProgramId == model.StudijskiProgramId && np.GodinaStudija == model.GodinaStudija.ToString());
+
+                    if (nastavniPlan == null)
+                    {
+                        ModelState.AddModelError("NastavniPlanId", "Nastavni plan za odabranu godinu studija i semestar nije pronađen.");
+                        return View(model);
+                    }
+
                     var student = new Student
                     {
                         JMBG = model.JMBG,
@@ -188,7 +193,7 @@ namespace StudentHub.Controllers
                         PredhodnoObrazovanje = model.PredhodnoObrazovanje,
                         Uloga = model.Uloga,
                         StudijskiProgramId = model.StudijskiProgramId,
-                        NastavniPlanId = model.NastavniPlanId,
+                        NastavniPlanId = nastavniPlan.Id,
                         Semestar = model.Semestar
                     };
 
@@ -214,13 +219,11 @@ namespace StudentHub.Controllers
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Došlo je do greške: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja asistenta.");
+                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja studenta.");
                 }
             }
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.NastavniPlanovi = new SelectList(_context.NastavniPlanovi, "Id", "GodinaStudija");
-            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
             return View(model);
         }
 
@@ -327,8 +330,18 @@ namespace StudentHub.Controllers
                 existingStudent.GodinaStudija = model.GodinaStudija;
                 existingStudent.Uloga = model.Uloga;
                 existingStudent.StudijskiProgramId = model.StudijskiProgramId;
-                existingStudent.NastavniPlanId = model.NastavniPlanId;
                 existingStudent.Semestar = model.Semestar;
+
+                var nastavniPlan = await _context.NastavniPlanovi
+                    .FirstOrDefaultAsync(np => np.StudijskiProgramId == model.StudijskiProgramId && np.GodinaStudija == model.GodinaStudija.ToString());
+
+                if (nastavniPlan == null)
+                {
+                    ModelState.AddModelError("NastavniPlanId", "Nastavni plan za odabranu godinu studija i semestar nije pronađen.");
+                    return View(model);
+                }
+
+                existingStudent.NastavniPlanId = nastavniPlan.Id;
 
                 var existingPredmeti = await _context.StudentiNaPredmetima
                     .Where(snp => snp.StudentId == existingStudent.Id)
@@ -433,6 +446,25 @@ namespace StudentHub.Controllers
         {
             var predmeti = await _context.Predmeti
                 .Where(p => p.NastavniPlan.StudijskiProgramId == studijskiProgramId)
+                .Select(p => new { id = p.Id, naziv = p.Naziv })
+                .ToListAsync();
+
+            return Json(predmeti);
+        }
+
+        [HttpGet("GetPredmetiByStudijskiProgramAndNastavniPlan")]
+        public async Task<IActionResult> GetPredmetiByStudijskiProgramAndNastavniPlan(long studijskiProgramId, int godinaStudija, int semestar)
+        {
+            var nastavniPlan = await _context.NastavniPlanovi
+                .FirstOrDefaultAsync(np => np.StudijskiProgramId == studijskiProgramId && np.GodinaStudija == godinaStudija.ToString());
+
+            if (nastavniPlan == null)
+            {
+                return Json(new List<object>());
+            }
+
+            var predmeti = await _context.Predmeti
+                .Where(p => p.NastavniPlanId == nastavniPlan.Id && p.Semestar == semestar)
                 .Select(p => new { id = p.Id, naziv = p.Naziv })
                 .ToListAsync();
 

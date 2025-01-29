@@ -22,7 +22,7 @@
         @foreach (var prijava in Model)
         {
             <tr>
-                <td>@prijava.datumPrijave.ToShortDateString()</td>
+                <td>@prijava.DatumPrijave.ToShortDateString()</td>
                 <td>@prijava.Ispit?.Predmet</td>
                 <td>@prijava.Student?.BrojIndeksa</td>
                 @if (User.IsInRole("Studentska služba"))

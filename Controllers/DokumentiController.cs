@@ -17,83 +17,74 @@ namespace StudentHub.Controllers
         }
 
         // GET: Dokumenti
-        [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var dokumenti = _context.Dokumenti
-                .Include(d => d.Student)
-                .Include(d => d.StudentskaSluzba);
-            return View(await dokumenti.ToListAsync());
+            var dokumenti = await _context.Dokumenti.Include(d => d.Student).ToListAsync();
+            return View(dokumenti);
         }
 
-        // GET: Dokumenti/details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Details(long? id)
+        // GET: Dokumenti/Details/{id}
+        [HttpGet("Details/{id:long}")]
+        public async Task<IActionResult> Details(long id)
         {
-            if (id == null) return NotFound();
-
             var dokument = await _context.Dokumenti
                 .Include(d => d.Student)
                 .Include(d => d.StudentskaSluzba)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            if (dokument == null)
+            {
+                return NotFound();
+            }
 
-            if (dokument == null) return NotFound();
             return View(dokument);
         }
 
-        // GET: Dokumenti/create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        // GET: Dokumenti/Create
+        [HttpGet("Create")]
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime");
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime");
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime");
             return View();
         }
 
-        // POST: Dokumenti/create
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
+        // POST: Dokumenti/Create
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Naziv,Putanja,brojIndeksa,StudentId,StudentskaSluzbaId")] Dokument dokument)
+        public async Task<IActionResult> Create([Bind("Naziv,Putanja,StudentId")] Dokument dokument)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(dokument);
+                _context.Dokumenti.Add(dokument);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", dokument.StudentId);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", dokument.StudentskaSluzbaId);
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", dokument.StudentId);
             return View(dokument);
         }
 
-        // GET: Dokumenti/edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long? id)
+        // GET: Dokumenti/Edit/{id}
+        [HttpGet("Edit/{id:long}")]
+        public async Task<IActionResult> Edit(long id)
         {
-            if (id == null) return NotFound();
-
             var dokument = await _context.Dokumenti.FindAsync(id);
-            if (dokument == null) return NotFound();
-
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", dokument.StudentId);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", dokument.StudentskaSluzbaId);
+            if (dokument == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", dokument.StudentId);
             return View(dokument);
         }
 
-        // POST: Dokumenti/edit/5
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Dokumenti/Edit/{id}
+        [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Putanja,brojIndeksa,StudentId,StudentskaSluzbaId")] Dokument dokument)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Putanja,StudentId")] Dokument dokument)
         {
-            if (id != dokument.Id) return NotFound();
+            if (id != dokument.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
@@ -104,43 +95,53 @@ namespace StudentHub.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Dokumenti.Any(e => e.Id == dokument.Id)) return NotFound();
-                    else throw;
+                    if (!DokumentExists(dokument.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
+            }
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", dokument.StudentId);
+            return View(dokument);
+        }
+
+        // GET: Dokumenti/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var dokument = await _context.Dokumenti
+                .Include(d => d.Student)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (dokument == null)
+            {
+                return NotFound();
             }
 
             return View(dokument);
         }
 
-        // GET: Dokumenti/delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null) return NotFound();
-
-            var dokument = await _context.Dokumenti
-                .Include(d => d.Student)
-                .Include(d => d.StudentskaSluzba)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (dokument == null) return NotFound();
-
-            return View(dokument);
-        }
-
-        // POST: Dokumenti/delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Dokumenti/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var dokument = await _context.Dokumenti.FindAsync(id);
-            if (dokument != null) _context.Dokumenti.Remove(dokument);
-
-            await _context.SaveChangesAsync();
+            if (dokument != null)
+            {
+                _context.Dokumenti.Remove(dokument);
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool DokumentExists(long id)
+        {
+            return _context.Dokumenti.Any(e => e.Id == id);
         }
     }
 }

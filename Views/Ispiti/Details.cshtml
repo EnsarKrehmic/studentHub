@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Detalji ispita";
-    var isStudent = User.IsInRole("Student");
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -22,25 +21,13 @@
 
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DatumOdrzavanja)</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.DatumOdrzavanja)</dd>
-
-        <dt class="col-sm-2">Objavio/la</dt>
-        <dd class="col-sm-10">
-            @if (Model.Korisnik is Profesor)
-            {
-                @Html.DisplayFor(modelItem => ((Profesor)Model.Korisnik).Ime)
-            }
-            else if (Model.Korisnik is Asistent)
-            {
-                @Html.DisplayFor(modelItem => ((Asistent)Model.Korisnik).Ime)
-            }
-        </dd>
     </dl>
 </div>
 
-@if (isStudent)
+@if (User.IsInRole("Student"))
 {
     <form asp-action="Prijavi" asp-controller="Ispiti" method="post">
-        <input type="hidden" name="ispitId" value="@Model.Id" />
+        <input type="hidden" name="id" value="@Model.Id" />
         <button type="submit" class="btn btn-success">Prijavi se</button>
     </form>
 }

@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudentHub.Models;
 
 namespace StudentHub.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -58,6 +59,13 @@ namespace StudentHub.Data
                 .HasValue<Student>(Uloga.Student)
                 .HasValue<Profesor>(Uloga.Profesor)
                 .HasValue<Asistent>(Uloga.Asistent);
+
+            // Konfiguracija za StudijskiProgram -> Fakultet
+            modelBuilder.Entity<StudentskaSluzba>()
+                .HasOne(ss => ss.StudijskiProgram)
+                .WithMany()
+                .HasForeignKey(ss => ss.StudijskiProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za Predmet -> Profesor
             modelBuilder.Entity<Predmet>()
@@ -300,18 +308,18 @@ namespace StudentHub.Data
                 .HasForeignKey(i => i.PredmetId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Konfiguracija za Ispit -> Profesor
+            // Konfiguracija za Ispit -> StudijskiProgram
             modelBuilder.Entity<Ispit>()
-                .HasOne(i => i.Profesor)
+                .HasOne(i => i.StudijskiProgram)
                 .WithMany()
-                .HasForeignKey(i => i.ProfesorId)
+                .HasForeignKey(i => i.StudijskiProgramId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Konfiguracija za Ispit -> Asistent
+            // Konfiguracija za Ispit -> NastavniPlan
             modelBuilder.Entity<Ispit>()
-                .HasOne(i => i.Asistent)
+                .HasOne(i => i.NastavniPlan)
                 .WithMany()
-                .HasForeignKey(i => i.AsistentId)
+                .HasForeignKey(i => i.NastavniPlanId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             // Konfiguracija za Dokument -> Student

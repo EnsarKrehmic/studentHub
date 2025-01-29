@@ -1,44 +1,34 @@
 ﻿@model StudentHub.Models.Uvjerenje
 
 @{
-    ViewData["Title"] = "Izmjena podataka uvjerenja";
+    ViewData["Title"] = "Izmjena uvjerenja";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-
     <div class="form-group">
         <label asp-for="Namjena" class="control-label"></label>
         <input asp-for="Namjena" class="form-control" />
         <span asp-validation-for="Namjena" class="text-danger"></span>
     </div>
-
     <div class="form-group">
         <label asp-for="DatumIzdavanja" class="control-label"></label>
         <input asp-for="DatumIzdavanja" class="form-control" />
         <span asp-validation-for="DatumIzdavanja" class="text-danger"></span>
     </div>
-
     <div class="form-group">
         <label asp-for="StudentId" class="control-label"></label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.brojIndeksa"></select>
+        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti"></select>
+        <span asp-validation-for="StudentId" class="text-danger"></span>
     </div>
-
-    <div class="form-group">
-        <label asp-for="StudentskaSluzbaId" class="control-label"></label>
-        <select asp-for="StudentskaSluzbaId" class="form-control" asp-items="ViewBag.StudentskaSluzbaId"></select>
-    </div>
-
     <div class="form-group">
         <label asp-for="Vrsta" class="control-label"></label>
         <select asp-for="Vrsta" class="form-control"></select>
         <span asp-validation-for="Vrsta" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Sačuvaj promjene</button>
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>
     </div>
 </form>
 

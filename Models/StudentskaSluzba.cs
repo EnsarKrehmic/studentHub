@@ -4,6 +4,10 @@ namespace StudentHub.Models
 {
     public class StudentskaSluzba : Korisnik
     {
+        [ForeignKey("StudijskiProgram")]
+        public long StudijskiProgramId { get; set; }
+        public StudijskiProgram StudijskiProgram { get; set; }
+
         public StudentskaSluzba() { }
     }
 }

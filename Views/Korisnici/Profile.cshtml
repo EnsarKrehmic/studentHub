@@ -1,0 +1,118 @@
+﻿@model StudentHub.ViewModels.KorisnikProfileViewModel
+
+@{
+    ViewData["Title"] = "Korisnički profil";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h4>@Model.Ime @Model.Prezime</h4>
+    <p>JMBG: @Model.JMBG</p>
+    <p>Email: @Model.Email</p>
+    <p>Uloga: @Model.Uloga</p>
+
+    @if (Model.Student != null)
+    {
+        <h4>Student</h4>
+        <p>Broj Indeksa: @Model.Student.BrojIndeksa</p>
+        <p>Godina Studija: @Model.Student.GodinaStudija</p>
+        <p>Semestar: @Model.Student.Semestar</p>
+        <p>Studijski Program: @Model.Student.StudijskiProgram.Naziv</p>
+    }
+    else if (Model.Profesor != null)
+    {
+        <h4>Profesor</h4>
+        <p>Titula: @Model.Profesor.ProfesorTitula</p>
+    }
+    else if (Model.Asistent != null)
+    {
+        <h4>Asistent</h4>
+        <p>Titula: @Model.Asistent.AsistentTitula</p>
+    }
+    else if (Model.StudentskaSluzba != null)
+    {
+        <h4>Studentska Služba</h4>
+        <p>Studijski Program: @Model.StudentskaSluzba.StudijskiProgram.Naziv</p>
+    }
+</div>
+
+<div>
+    <h3>Dokumenti</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Putanja</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dokument in Model.Dokumenti)
+            {
+                <tr>
+                    <td>@dokument.Naziv</td>
+                    <td>@dokument.Putanja</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h3>Zahtjevi</h3>
+    <a asp-controller="Zahtjevi" asp-action="Create" asp-route-studentId="@Model.Student.Id" class="btn btn-primary">Kreiraj novi zahtjev</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tip Zahtjeva</th>
+                <th>Status Zahtjeva</th>
+                <th>Datum Podnošenja</th>
+                <th>Datum Rješavanja</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var zahtjev in Model.Zahtjevi)
+            {
+                <tr>
+                    <td>@zahtjev.TipZahtjeva</td>
+                    <td>@zahtjev.StatusZahtjeva</td>
+                    <td>@zahtjev.DatumPodnosenja</td>
+                    <td>@zahtjev.DatumRjesavanja</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h3>Uvjerenja</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Namjena</th>
+                <th>Datum Izdavanja</th>
+                <th>Vrsta</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var uvjerenje in Model.Uvjerenja)
+            {
+                <tr>
+                    <td>@uvjerenje.Namjena</td>
+                    <td>@uvjerenje.DatumIzdavanja</td>
+                    <td>@uvjerenje.Vrsta</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-3">
+    <a href="@Url.Action("Index", "Korisnici")" class="btn btn-secondary">Povratak na listu korisnika</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -221,6 +221,7 @@ namespace StudentHub.Controllers
             }
         }
 
+        // GET: Predmeti/Edit/{id}
         [HttpGet("Edit/{id:long}")]
         public IActionResult Edit(long id)
         {
@@ -284,6 +285,7 @@ namespace StudentHub.Controllers
             }
         }
 
+        // POST: Predmeti/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(long id, PredmetCreateViewModel model)
@@ -737,6 +739,17 @@ namespace StudentHub.Controllers
             }
 
             return RedirectToAction("Details", new { id = predmetId });
+        }
+
+        [HttpGet("GetPredmetiByStudijskiProgramAndNastavniPlan")]
+        public async Task<IActionResult> GetPredmetiByStudijskiProgramAndNastavniPlan(long studijskiProgramId, long nastavniPlanId)
+        {
+            var predmeti = await _context.Predmeti
+                .Where(p => p.NastavniPlan.StudijskiProgramId == studijskiProgramId && p.NastavniPlanId == nastavniPlanId)
+                .Select(p => new { id = p.Id, naziv = p.Naziv })
+                .ToListAsync();
+
+            return Json(predmeti);
         }
     }
 }

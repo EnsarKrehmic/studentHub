@@ -1,55 +1,112 @@
-﻿@model IEnumerable<StudentHub.Models.Ispit>
+﻿@model IEnumerable<StudentHub.ViewModels.IspitDetailsViewModel>
+@using System.Security.Claims
+@using StudentHub.Data
+@using Microsoft.EntityFrameworkCore
 
 @{
-    ViewData["Title"] = "Lista ispita";
+    ViewData["Title"] = "Lista ispita po studijskim programima i predmetima";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <p>Obavještenje: Rok za prijavu ispita je 3 dana prije ispitnog roka, ne računajući neradne dane i vikende.</p>
 
+<div class="container mt-4">
+    <a asp-action="Create" class="btn btn-primary mb-3">Dodaj novi ispit</a>
+    @if (Model != null && Model.Any())
+    {
+        foreach (var program in Model)
+        {
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@program.StudijskiProgram.Naziv</h3>
+                </div>
+                <div class="card-body">
+                    @foreach (var plan in program.NastavniPlanovi)
+                    {
+                        <h4>Nastavni plan za @plan.NastavniPlan.GodinaStudija. godinu</h4>
+                        <table class="table table-bordered table-fixed">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Predmet</th>
+                                    <th style="width: 8%;">
+                                        <a asp-action="Index" asp-route-sortOrder="@program.DateSortParm">Datum Održavanja</a>
+                                    </th>
+                                    <th style="width: 4%;">
+                                        <a asp-action="Index" asp-route-sortOrder="@program.LocationSortParm">Lokacija</a>
+                                    </th>
+                                    <th style="width: 3%;">
+                                        <a asp-action="Index" asp-route-sortOrder="@program.PointsSortParm">Broj Bodova</a>
+                                    </th>
+                                    <th style="width: 30%%;">Akcije</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var predmet in plan.Predmeti)
+                                {
+                                    foreach (var ispit in predmet.Ispiti)
+                                    {
+                                        <tr>
+                                            <td style="width: 21%;">@predmet.Predmet.Naziv</td>
+                                            <td style="width: 12%;">@ispit.DatumOdrzavanja.ToShortDateString()</td>
+                                            <td style="width: 5%;">@ispit.Lokacija</td>
+                                            <td style="width: 12%;">@ispit.BrojBodova</td>
+                                            <td style="width: 40%;">
+                                                <a asp-action="Details" asp-route-id="@ispit.Id" class="btn btn-info btn-sm">Detalji</a>
+                                                <a asp-action="Edit" asp-route-id="@ispit.Id" class="btn btn-warning btn-sm">Izmjena</a>
+                                                <a asp-action="Delete" asp-route-id="@ispit.Id" class="btn btn-danger btn-sm">Brisanje</a>
+                                                @if (ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now)
+                                                {
+                                                    <form asp-action="Prijavi" method="post" style="display:inline;">
+                                                        <input type="hidden" name="id" value="@ispit.Id" />
+                                                        <button type="submit" class="btn btn-success btn-sm">Prijavi se</button>
+                                                    </form>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            <strong>Nema dostupnih ispita!</strong>
+        </div>
+    }
+</div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj novi ispit</a>
-</p>
+<style>
+    .table-fixed thead th {
+        position: center;
+        top: 0;
+        background-color: #f8f9fa;
+    }
+</style>
 
-@if (Model != null && Model.Any())
-{
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Predmet)</th>
-                <th>@Html.DisplayNameFor(model => model.Lokacija)</th>
-                <th>@Html.DisplayNameFor(model => model.BrojBodova)</th>
-                <th>@Html.DisplayNameFor(model => model.DatumOdrzavanja)</th>
-                <th>@Html.DisplayNameFor(model => model.DatumObjave)</th>
-                <th>Akcije</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Predmet.Naziv)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Lokacija)</td>
-                    <td>@Html.DisplayFor(modelItem => item.BrojBodova)</td>
-                    <td>@item.DatumOdrzavanja.ToShortDateString()</td>
-                    <td>@item.DatumObjave.ToShortDateString()</td>
-                    <td>
-                        <form asp-action="Prijavi" asp-controller="Ispiti" method="post">
-                            <input type="hidden" name="ispitId" value="@item.Id" />
-                            <button type="submit" class="btn btn-success">Prijavi se</button>
-                        </form>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Nema ispita za prikaz.</p>
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".prijavi-form").validate({
+                rules: {
+                    id: {
+                        required: true
+                    }
+                },
+                messages: {
+                    id: {
+                        required: "Morate odabrati ispit."
+                    }
+                }
+            });
+        });
+    </script>
 }

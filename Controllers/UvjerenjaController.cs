@@ -17,27 +17,17 @@ namespace StudentHub.Controllers
         }
 
         // GET: Uvjerenja
-        [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Uvjerenja
-                .Include(u => u.Student)
-                .Include(u => u.StudentskaSluzba);
-            return View(await applicationDbContext.ToListAsync());
+            var uvjerenja = await _context.Uvjerenja.Include(u => u.Student).ToListAsync();
+            return View(uvjerenja);
         }
 
-        // GET: Uvjerenja/Details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Details(long? id)
+        // GET: Uvjerenja/Details/{id}
+        [HttpGet("Details/{id:long}")]
+        public async Task<IActionResult> Details(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var uvjerenje = await _context.Uvjerenja
                 .Include(u => u.Student)
                 .Include(u => u.StudentskaSluzba)
@@ -51,61 +41,45 @@ namespace StudentHub.Controllers
         }
 
         // GET: Uvjerenja/Create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("Create")]
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime");
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime");
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime");
             return View();
         }
 
         // POST: Uvjerenja/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Namjena,DatumIzdavanja,BrojIndeksa,StudentId,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
+        public async Task<IActionResult> Create([Bind("Namjena,DatumIzdavanja,StudentId,Vrsta")] Uvjerenje uvjerenje)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(uvjerenje);
+                _context.Uvjerenja.Add(uvjerenje);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", uvjerenje.StudentId);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", uvjerenje.StudentskaSluzbaId);
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", uvjerenje.StudentId);
             return View(uvjerenje);
         }
 
-        // GET: Uvjerenja/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long? id)
+        // GET: Uvjerenja/Edit/{id}
+        [HttpGet("Edit/{id:long}")]
+        public async Task<IActionResult> Edit(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var uvjerenje = await _context.Uvjerenja.FindAsync(id);
             if (uvjerenje == null)
             {
                 return NotFound();
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", uvjerenje.StudentId);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", uvjerenje.StudentskaSluzbaId);
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", uvjerenje.StudentId);
             return View(uvjerenje);
         }
 
-        // POST: Uvjerenja/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Uvjerenja/Edit/{id}
+        [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Namjena,DatumIzdavanja,BrojIndeksa,StudentId,StudentskaSluzbaId,Vrsta")] Uvjerenje uvjerenje)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Namjena,DatumIzdavanja,StudentId,Vrsta")] Uvjerenje uvjerenje)
         {
             if (id != uvjerenje.Id)
             {
@@ -132,24 +106,16 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "Ime", uvjerenje.StudentId);
-            ViewData["StudentskaSluzbaId"] = new SelectList(_context.StudentskeSluzbe, "Id", "Ime", uvjerenje.StudentskaSluzbaId);
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", uvjerenje.StudentId);
             return View(uvjerenje);
         }
 
-        // GET: Uvjerenja/Delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Delete(long? id)
+        // GET: Uvjerenja/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
+        public async Task<IActionResult> Delete(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var uvjerenje = await _context.Uvjerenja
                 .Include(u => u.Student)
-                .Include(u => u.StudentskaSluzba)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (uvjerenje == null)
             {
@@ -159,9 +125,8 @@ namespace StudentHub.Controllers
             return View(uvjerenje);
         }
 
-        // POST: Uvjerenja/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Uvjerenja/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
@@ -169,9 +134,8 @@ namespace StudentHub.Controllers
             if (uvjerenje != null)
             {
                 _context.Uvjerenja.Remove(uvjerenje);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

@@ -13,12 +13,10 @@
                 <label for="StudijskiProgramId">Odaberite studijski program</label>
                 <select class="form-control" id="StudijskiProgramId" name="studijskiProgramId" onchange="this.form.submit()">
                     <option value="">Svi studijski programi</option>
-                    @foreach (var program in ViewData["StudijskiProgrami"] as IEnumerable<SelectListItem> ?? Enumerable.Empty<SelectListItem>())
+                    @foreach (var program in ViewBag.StudijskiProgrami as IEnumerable<SelectListItem>)
                     {
-                        <option value="@program.Value"
-                                selected="@(Context.Request.Query["studijskiProgramId"] == program.Value ? "selected" : "")">
-                            @program.Text
-                        </option>
+                        var isSelected = program.Value == Context.Request.Query["studijskiProgramId"] ? "selected" : "";
+                        @: <option value="@program.Value" @isSelected>@program.Text</option>
                     }
                 </select>
             </div>
@@ -38,7 +36,7 @@
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Naslov)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Sadrzaj)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DatumObjave)</th>
-                <th>Objavio/la</th>
+                <th>Studijski Program</th>
                 <th>Akcije</th>
             </tr>
         </thead>
@@ -49,24 +47,7 @@
                     <td>@Html.DisplayFor(modelItem => item.Naslov)</td>
                     <td>@Html.DisplayFor(modelItem => item.Sadrzaj)</td>
                     <td>@Html.DisplayFor(modelItem => item.DatumObjave)</td>
-                    <td>
-                        @if (item.Korisnik is StudentskaSluzba)
-                        {
-                            @Html.DisplayFor(modelItem => ((StudentskaSluzba)item.Korisnik).Ime)
-                        }
-                        else if (item.Korisnik is Profesor)
-                        {
-                            @Html.DisplayFor(modelItem => ((Profesor)item.Korisnik).Ime)
-                        }
-                        else if (item.Korisnik is Asistent)
-                        {
-                            @Html.DisplayFor(modelItem => ((Asistent)item.Korisnik).Ime)
-                        }
-                        else
-                        {
-                            <span>Gost</span>
-                        }
-                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.StudijskiProgram.Naziv)</td>
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>

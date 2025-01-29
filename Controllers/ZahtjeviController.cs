@@ -17,26 +17,17 @@ namespace StudentHub.Controllers
         }
 
         // GET: Zahtjevi
-        [HttpGet]
-        [Route("")]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Zahtjevi
-                .Include(z => z.Student);
-            return View(await applicationDbContext.ToListAsync());
+            var zahtjevi = await _context.Zahtjevi.Include(z => z.Student).ToListAsync();
+            return View(zahtjevi);
         }
 
-        // GET: Zahtjevi/Details/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Details(long? id)
+        // GET: Zahtjevi/Details/{id}
+        [HttpGet("Details/{id:long}")]
+        public async Task<IActionResult> Details(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var zahtjev = await _context.Zahtjevi
                 .Include(z => z.Student)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -49,56 +40,45 @@ namespace StudentHub.Controllers
         }
 
         // GET: Zahtjevi/Create
-        [HttpGet]
-        [Route("[Controller]/[Action]")]
+        [HttpGet("Create")]
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "BrojIndeksa");
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime");
             return View();
         }
 
         // POST: Zahtjevi/Create
-        [HttpPost]
-        [Route("[Controller]/[Action]")]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TipZahtjeva,StatusZahtjeva,DatumPodnosenja,DatumRjesavanja,BrojIndeksa,StudentId")] Zahtjev zahtjev)
+        public async Task<IActionResult> Create([Bind("TipZahtjeva,StatusZahtjeva,DatumPodnosenja,DatumRjesavanja,StudentId")] Zahtjev zahtjev)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(zahtjev);
+                _context.Zahtjevi.Add(zahtjev);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "BrojIndeksa", zahtjev.StudentId);
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", zahtjev.StudentId);
             return View(zahtjev);
         }
 
-        // GET: Zahtjevi/Edit/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Edit(long? id)
+        // GET: Zahtjevi/Edit/{id}
+        [HttpGet("Edit/{id:long}")]
+        public async Task<IActionResult> Edit(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var zahtjev = await _context.Zahtjevi.FindAsync(id);
             if (zahtjev == null)
             {
                 return NotFound();
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "BrojIndeksa", zahtjev.StudentId);
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", zahtjev.StudentId);
             return View(zahtjev);
         }
 
-        // POST: Zahtjevi/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Zahtjevi/Edit/{id}
+        [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("TipZahtjeva, StatusZahtjeva, DatumPodnosenja, DatumRjesavanja, BrojIndeksa, StudentId")] Zahtjev zahtjev)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,TipZahtjeva,StatusZahtjeva,DatumPodnosenja,DatumRjesavanja,StudentId")] Zahtjev zahtjev)
         {
             if (id != zahtjev.Id)
             {
@@ -125,20 +105,14 @@ namespace StudentHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Studenti, "Id", "BrojIndeksa", zahtjev.StudentId);
+            ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime", zahtjev.StudentId);
             return View(zahtjev);
         }
 
-        // GET: Zahtjevi/Delete/5
-        [HttpGet]
-        [Route("[Controller]/[Action]/{id?}")]
-        public async Task<IActionResult> Delete(long? id)
+        // GET: Zahtjevi/Delete/{id}
+        [HttpGet("Delete/{id:long}")]
+        public async Task<IActionResult> Delete(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var zahtjev = await _context.Zahtjevi
                 .Include(z => z.Student)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -150,9 +124,8 @@ namespace StudentHub.Controllers
             return View(zahtjev);
         }
 
-        // POST: Zahtjevi/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Route("[Controller]/[Action]/{id?}")]
+        // POST: Zahtjevi/Delete/{id}
+        [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
@@ -160,9 +133,8 @@ namespace StudentHub.Controllers
             if (zahtjev != null)
             {
                 _context.Zahtjevi.Remove(zahtjev);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

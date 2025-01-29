@@ -8,7 +8,7 @@ using StudentHub.Data;
 
 #nullable disable
 
-namespace WebApplication1.Data.Migrations
+namespace StudentHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -21,6 +21,208 @@ namespace WebApplication1.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
 
             modelBuilder.Entity("StudentHub.Models.AsistentStudijskiProgram", b =>
                 {
@@ -86,10 +288,7 @@ namespace WebApplication1.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("AsistentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("BrojBodova")
+                    b.Property<int?>("BrojBodova")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DatumObjave")
@@ -98,39 +297,26 @@ namespace WebApplication1.Data.Migrations
                     b.Property<DateTime>("DatumOdrzavanja")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("KorisnikId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Lokacija")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<long>("NastavniPlanId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("PredmetId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("ProfesorId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("StudentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("StudentskaSluzbaId")
+                    b.Property<long>("StudijskiProgramId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AsistentId");
-
-                    b.HasIndex("KorisnikId");
+                    b.HasIndex("NastavniPlanId");
 
                     b.HasIndex("PredmetId");
 
-                    b.HasIndex("ProfesorId");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("StudentskaSluzbaId");
+                    b.HasIndex("StudijskiProgramId");
 
                     b.ToTable("Ispit", (string)null);
                 });
@@ -142,6 +328,9 @@ namespace WebApplication1.Data.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("AsistentId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -165,10 +354,27 @@ namespace WebApplication1.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<long?>("ProfesorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("StudentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("StudentskaSluzbaId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Uloga")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AsistentId");
+
+                    b.HasIndex("ProfesorId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("StudentskaSluzbaId");
 
                     b.ToTable("Korisnik", (string)null);
 
@@ -233,7 +439,7 @@ namespace WebApplication1.Data.Migrations
                     b.Property<long?>("StudentskaSluzbaId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("StudijskiProgramId")
+                    b.Property<long>("StudijskiProgramId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -380,14 +586,14 @@ namespace WebApplication1.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("DatumPrijave")
+                        .HasColumnType("datetime2");
+
                     b.Property<long>("IspitId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("StudentId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime>("datumPrijave")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -603,7 +809,69 @@ namespace WebApplication1.Data.Migrations
                 {
                     b.HasBaseType("StudentHub.Models.Korisnik");
 
+                    b.Property<long>("StudijskiProgramId")
+                        .HasColumnType("bigint");
+
+                    b.HasIndex("StudijskiProgramId");
+
+                    b.ToTable("Korisnik", t =>
+                        {
+                            t.Property("StudijskiProgramId")
+                                .HasColumnName("StudentskaSluzba_StudijskiProgramId");
+                        });
+
                     b.HasDiscriminator().HasValue(2);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StudentHub.Models.AsistentStudijskiProgram", b =>
@@ -646,14 +914,11 @@ namespace WebApplication1.Data.Migrations
 
             modelBuilder.Entity("StudentHub.Models.Ispit", b =>
                 {
-                    b.HasOne("StudentHub.Models.Asistent", "Asistent")
+                    b.HasOne("StudentHub.Models.NastavniPlan", "NastavniPlan")
                         .WithMany()
-                        .HasForeignKey("AsistentId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("StudentHub.Models.Korisnik", "Korisnik")
-                        .WithMany()
-                        .HasForeignKey("KorisnikId");
+                        .HasForeignKey("NastavniPlanId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("StudentHub.Models.Predmet", "Predmet")
                         .WithMany()
@@ -661,10 +926,34 @@ namespace WebApplication1.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
+                        .WithMany()
+                        .HasForeignKey("StudijskiProgramId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("NastavniPlan");
+
+                    b.Navigation("Predmet");
+
+                    b.Navigation("StudijskiProgram");
+                });
+
+            modelBuilder.Entity("StudentHub.Models.Korisnik", b =>
+                {
+                    b.HasOne("StudentHub.Models.Asistent", "Asistent")
+                        .WithMany()
+                        .HasForeignKey("AsistentId");
+
+                    b.HasOne("StudentHub.Models.Korisnik", null)
+                        .WithOne()
+                        .HasForeignKey("StudentHub.Models.Korisnik", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StudentHub.Models.Profesor", "Profesor")
                         .WithMany()
-                        .HasForeignKey("ProfesorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("ProfesorId");
 
                     b.HasOne("StudentHub.Models.Student", "Student")
                         .WithMany()
@@ -675,10 +964,6 @@ namespace WebApplication1.Data.Migrations
                         .HasForeignKey("StudentskaSluzbaId");
 
                     b.Navigation("Asistent");
-
-                    b.Navigation("Korisnik");
-
-                    b.Navigation("Predmet");
 
                     b.Navigation("Profesor");
 
@@ -722,7 +1007,8 @@ namespace WebApplication1.Data.Migrations
                     b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
                         .WithMany()
                         .HasForeignKey("StudijskiProgramId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Asistent");
 
@@ -912,32 +1198,8 @@ namespace WebApplication1.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("StudentHub.Models.Asistent", b =>
-                {
-                    b.HasOne("StudentHub.Models.Korisnik", null)
-                        .WithOne()
-                        .HasForeignKey("StudentHub.Models.Asistent", "Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("StudentHub.Models.Profesor", b =>
-                {
-                    b.HasOne("StudentHub.Models.Korisnik", null)
-                        .WithOne()
-                        .HasForeignKey("StudentHub.Models.Profesor", "Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("StudentHub.Models.Student", b =>
                 {
-                    b.HasOne("StudentHub.Models.Korisnik", null)
-                        .WithOne()
-                        .HasForeignKey("StudentHub.Models.Student", "Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("StudentHub.Models.NastavniPlan", "NastavniPlan")
                         .WithMany()
                         .HasForeignKey("NastavniPlanId")
@@ -963,11 +1225,13 @@ namespace WebApplication1.Data.Migrations
 
             modelBuilder.Entity("StudentHub.Models.StudentskaSluzba", b =>
                 {
-                    b.HasOne("StudentHub.Models.Korisnik", null)
-                        .WithOne()
-                        .HasForeignKey("StudentHub.Models.StudentskaSluzba", "Id")
+                    b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
+                        .WithMany()
+                        .HasForeignKey("StudijskiProgramId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("StudijskiProgram");
                 });
 #pragma warning restore 612, 618
         }

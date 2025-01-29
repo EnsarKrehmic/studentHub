@@ -19,25 +19,26 @@ namespace StudentHub.Models
         [Required]
         public DateTime DatumObjave { get; set; } = DateTime.Now;
 
+        [Required(ErrorMessage = "Studijski program je obavezan.")]
+        [ForeignKey("StudijskiProgram")]
+        public long StudijskiProgramId { get; set; }
+        public StudijskiProgram StudijskiProgram { get; set; }
+
         [ForeignKey("Korisnik")]
         public long? KorisnikId { get; set; }
-        public Korisnik? Korisnik { get; set; }
+        public Korisnik Korisnik { get; set; }
 
         [ForeignKey("StudentskaSluzba")]
         public long? StudentskaSluzbaId { get; set; }
-        public StudentskaSluzba? StudentskaSluzba { get; set; }
+        public StudentskaSluzba StudentskaSluzba { get; set; }
 
         [ForeignKey("Profesor")]
         public long? ProfesorId { get; set; }
-        public Profesor? Profesor { get; set; }
+        public Profesor Profesor { get; set; }
 
         [ForeignKey("Asistent")]
         public long? AsistentId { get; set; }
-        public Asistent? Asistent { get; set; }
-
-        [ForeignKey("StudijskiProgram")]
-        public long? StudijskiProgramId { get; set; }
-        public StudijskiProgram StudijskiProgram { get; set; }
+        public Asistent Asistent { get; set; }
 
         public Obavjestenje() { }
     }

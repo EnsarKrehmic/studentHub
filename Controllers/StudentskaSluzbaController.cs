@@ -19,10 +19,28 @@ namespace StudentHub.Controllers
 
         // GET: StudentskaSluzba
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, long? studijskiProgramId)
         {
-            var applicationDbContext = _context.StudentskeSluzbe;
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentStudijskiProgramId"] = studijskiProgramId;
+
+            var query = _context.StudentskeSluzbe.Include(s => s.StudijskiProgram).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(s => s.Ime.Contains(searchString) || s.Prezime.Contains(searchString));
+            }
+
+            if (studijskiProgramId.HasValue)
+            {
+                query = query.Where(s => s.StudijskiProgramId == studijskiProgramId.Value);
+            }
+
+            var studentskaSluzba = await query.ToListAsync();
+
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studijskiProgramId);
+
+            return View(studentskaSluzba);
         }
 
         // GET: StudentskaSluzba/Details/{id}
@@ -47,6 +65,7 @@ namespace StudentHub.Controllers
         [HttpGet("Create")]
         public IActionResult Create()
         {
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View();
         }
@@ -54,35 +73,28 @@ namespace StudentHub.Controllers
         // POST: StudentskaSluzba/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Uloga,Ime,Prezime,JMBG,Email,Lozinka")] StudentskaSluzba studentskaSluzba)
+        public async Task<IActionResult> Create(StudentskaSluzbaEditViewModel model)
         {
-            // Provjera da li već postoji korisnik sa datim JMBG
-            var postojiKorisnik = await _context.Korisnici
-                .AnyAsync(k => k.JMBG == studentskaSluzba.JMBG);
-
-            if (postojiKorisnik)
-            {
-                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
-                return View(studentskaSluzba);
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                var studentskaSluzba = new StudentskaSluzba
                 {
-                    _context.StudentskeSluzbe.Add(studentskaSluzba);
-                    await _context.SaveChangesAsync();
+                    JMBG = model.JMBG,
+                    Ime = model.Ime,
+                    Prezime = model.Prezime,
+                    Email = model.Email,
+                    Lozinka = model.Lozinka,
+                    Uloga = model.Uloga,
+                    StudijskiProgramId = model.StudijskiProgramId
+                };
 
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja asistenta.");
-                }
+                _context.StudentskeSluzbe.Add(studentskaSluzba);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View(studentskaSluzba);
+            return View(model);
         }
 
         // GET: StudentskaSluzba/Edit/{id}
@@ -98,91 +110,53 @@ namespace StudentHub.Controllers
             var model = new StudentskaSluzbaEditViewModel
             {
                 Id = studentskaSluzba.Id,
+                JMBG = studentskaSluzba.JMBG,
                 Ime = studentskaSluzba.Ime,
                 Prezime = studentskaSluzba.Prezime,
-                JMBG = studentskaSluzba.JMBG,
                 Email = studentskaSluzba.Email,
-                Lozinka = null,
-                Uloga = studentskaSluzba.Uloga
+                Lozinka = studentskaSluzba.Lozinka,
+                Uloga = studentskaSluzba.Uloga,
+                StudijskiProgramId = studentskaSluzba.StudijskiProgramId
             };
 
-            ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
-                .Cast<Uloga>()
-                .Select(u => new SelectListItem
-                {
-                    Value = ((int)u).ToString(),
-                    Text = u.ToString(),
-                    Selected = u == studentskaSluzba.Uloga
-                });
-
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studentskaSluzba.StudijskiProgramId);
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
             return View(model);
         }
 
         // POST: StudentskaSluzba/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, StudentEditViewModel model)
+        public async Task<IActionResult> Edit(long id, StudentskaSluzbaEditViewModel model)
         {
             if (id != model.Id)
             {
                 return NotFound();
             }
 
-            // Provjera validacije modela
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                // Generisanje dropdown liste za prikaz u slučaju greške
-                ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
-                    .Cast<Uloga>()
-                    .Select(u => new SelectListItem
-                    {
-                        Value = ((int)u).ToString(),
-                        Text = u.ToString(),
-                        Selected = u == model.Uloga
-                    });
-                Console.WriteLine($"Uloga iz forme: {model.Uloga}");
-                return View(model);
-            }
-
-            if (!Enum.IsDefined(typeof(Uloga), model.Uloga))
-            {
-                ModelState.AddModelError(nameof(model.Uloga), "Izabrana uloga nije validna.");
-                return View(model);
-            }
-
-            try
-            {
-                var existingStudentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
-                if (existingStudentskaSluzba == null)
+                var studentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
+                if (studentskaSluzba == null)
                 {
                     return NotFound();
                 }
 
-                // Ažurirajte lozinku samo ako je uneta nova
-                if (!string.IsNullOrEmpty(model.Lozinka))
-                {
-                    existingStudentskaSluzba.Lozinka = model.Lozinka;
-                }
+                studentskaSluzba.JMBG = model.JMBG;
+                studentskaSluzba.Ime = model.Ime;
+                studentskaSluzba.Prezime = model.Prezime;
+                studentskaSluzba.Email = model.Email;
+                studentskaSluzba.Lozinka = model.Lozinka;
+                studentskaSluzba.Uloga = model.Uloga;
+                studentskaSluzba.StudijskiProgramId = model.StudijskiProgramId;
 
-                // Ažurirajte ostale podatke
-                existingStudentskaSluzba.Ime = model.Ime;
-                existingStudentskaSluzba.Prezime = model.Prezime;
-                existingStudentskaSluzba.Email = model.Email;
-                existingStudentskaSluzba.JMBG = model.JMBG;
-                existingStudentskaSluzba.Uloga = model.Uloga;
-
-                // Sačuvajte promene u bazi
+                _context.Update(studentskaSluzba);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StudentskaSluzbaExists(model.Id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
+            return View(model);
         }
 
         // GET: StudentskaSluzba/Delete/{id}

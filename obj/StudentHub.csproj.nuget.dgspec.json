@@ -11,7 +11,7 @@
         "projectName": "StudentHub",
         "projectPath": "C:\\Users\\User\\source\\repos\\StudentHub\\StudentHub.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\StudentHub\\obj\\",
+        "outputPath": "C:\\Users\\User\\source\\repos\\studentHub\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -5,6 +5,9 @@ namespace StudentHub.ViewModels
 {
     public class PredmetCreateViewModel
     {
+        [Key]
+        public long Id { get; set; }
+
         [Required(ErrorMessage = "Naziv predmeta je obavezan.")]
         public string Naziv { get; set; }
 

@@ -35,7 +35,7 @@ namespace StudentHub.Controllers
             return View(nastavniPlanovi);
         }
 
-        // GET: NastavniPlanovi/Details/5
+        // GET: NastavniPlanovi/Details/{id}
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
         public async Task<IActionResult> Details(long? id)
@@ -63,7 +63,6 @@ namespace StudentHub.Controllers
             return View(nastavniPlan);
         }
 
-
         // GET: NastavniPlanovi/Create
         [HttpGet]
         [Route("[Controller]/[Action]")]
@@ -89,7 +88,7 @@ namespace StudentHub.Controllers
             return View(nastavniPlan);
         }
 
-        // GET: NastavniPlanovi/Edit/5
+        // GET: NastavniPlanovi/Edit/{id}
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
         public async Task<IActionResult> Edit(long? id)
@@ -134,7 +133,7 @@ namespace StudentHub.Controllers
             return View(nastavniPlan);
         }
 
-        // GET: NastavniPlanovi/Delete/5
+        // GET: NastavniPlanovi/Delete/{id}
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
         public async Task<IActionResult> Delete(long? id)
@@ -152,7 +151,7 @@ namespace StudentHub.Controllers
             return View(nastavniPlan);
         }
 
-        // POST: NastavniPlanovi/Delete/5
+        // POST: NastavniPlanovi/Delete/{id}
         [HttpPost, ActionName("Delete")]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]

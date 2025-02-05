@@ -1,13 +1,16 @@
 ﻿@model IEnumerable<StudentHub.Models.Profesor>
 
 @{
-    ViewData["Title"] = "Lista profesora svih studijskih programa";
+    ViewData["Title"] = "Lista svih profesora na fakultetu";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj novog profesora</a>
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Dodaj novog profesora</a>
+    }
 </p>
 
 <form asp-action="Index" method="get">
@@ -28,12 +31,53 @@
 <table class="table table-bordered table-hover mt-3">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Ime)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Prezime)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().JMBG)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Email)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().ProfesorTitula)</th>
-            <th>Akcije</th>
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["NameSortParm"]" 
+                asp-route-searchString="@ViewData["CurrentFilter"]" 
+                asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Ime)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["SurnameSortParm"]" 
+                asp-route-searchString="@ViewData["CurrentFilter"]" 
+                asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Prezime)
+                </a>
+            </th>
+            @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+            {
+                <th>
+                    <a asp-action="Index" 
+                    asp-route-sortOrder="@ViewData["JMBGSortParm"]" 
+                    asp-route-searchString="@ViewData["CurrentFilter"]" 
+                    asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().JMBG)
+                    </a>
+                </th>
+            }
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["EmailSortParm"]" 
+                asp-route-searchString="@ViewData["CurrentFilter"]" 
+                asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["TitulaSortParm"]" 
+                asp-route-searchString="@ViewData["CurrentFilter"]" 
+                asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().ProfesorTitula)
+                </a>
+            </th>
+            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+            {
+                <th>Akcije</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -42,15 +86,29 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Ime)</td>
                 <td>@Html.DisplayFor(modelItem => item.Prezime)</td>
-                <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
+                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                {
+                    <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
+
+                }
                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
                 <td>@Html.DisplayFor(modelItem => item.ProfesorTitula)</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                    }
+                    @if (User.IsInRole("Studentska služba"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+</div>

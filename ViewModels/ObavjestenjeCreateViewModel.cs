@@ -15,6 +15,11 @@ namespace StudentHub.ViewModels
         [Required]
         public DateTime DatumObjave { get; set; } = DateTime.Now;
 
-        public long StudijskiProgramId { get; set; }
+
+        [Required(ErrorMessage = "Studijski program je obavezan.")]
+        public List<long> StudijskiProgramiIds { get; set; } = new();
+
+        public long? KorisnikId { get; set; }
     }
+
 }

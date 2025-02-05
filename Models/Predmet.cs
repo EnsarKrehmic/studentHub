@@ -27,14 +27,16 @@ namespace StudentHub.Models
         public long? AsistentId { get; set; }
         public Asistent Asistent { get; set; }
 
-        [Required(ErrorMessage = "Nastavni plan je obavezan.")]
+        [ForeignKey("StudijskiProgram")]
+        public long? StudijskiProgramId { get; set; }
+        public StudijskiProgram StudijskiProgram { get; set; }
+
         [ForeignKey("NastavniPlan")]
-        public long NastavniPlanId { get; set; }
+        public long? NastavniPlanId { get; set; }
         public NastavniPlan NastavniPlan { get; set; }
 
-        [Required(ErrorMessage = "Semestar je obavezan.")]
         [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
-        public int Semestar { get; set; }
+        public int? Semestar { get; set; }
 
         public Predmet() { }
     }

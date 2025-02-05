@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace StudentHub.Controllers
         // GET: NastavniPlanovi/Details/{id}
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -66,6 +68,7 @@ namespace StudentHub.Controllers
         // GET: NastavniPlanovi/Create
         [HttpGet]
         [Route("[Controller]/[Action]")]
+        [Authorize(Roles = "Studentska služba")]
         public IActionResult Create()
         {
             ViewData["StudijskiProgramId"] = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
@@ -76,6 +79,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Create([Bind("Id,GodinaStudija,StudijskiProgramId")] NastavniPlan nastavniPlan)
         {
             if (ModelState.IsValid)
@@ -91,6 +95,7 @@ namespace StudentHub.Controllers
         // GET: NastavniPlanovi/Edit/{id}
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -108,6 +113,7 @@ namespace StudentHub.Controllers
         [HttpPost]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, [Bind("Id,GodinaStudija,StudijskiProgramId")] NastavniPlan nastavniPlan)
         {
             if (id != nastavniPlan.Id)
@@ -136,6 +142,7 @@ namespace StudentHub.Controllers
         // GET: NastavniPlanovi/Delete/{id}
         [HttpGet]
         [Route("[Controller]/[Action]/{id?}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -155,6 +162,7 @@ namespace StudentHub.Controllers
         [HttpPost, ActionName("Delete")]
         [Route("[Controller]/[Action]/{id?}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var nastavniPlan = await _context.NastavniPlanovi.FindAsync(id);

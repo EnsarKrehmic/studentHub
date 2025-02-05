@@ -7,16 +7,16 @@
 <h2>@ViewData["Title"]</h2>
 
 <dl>
-    <dt>Datum prijave</dt>
-    <dd>@Model.DatumPrijave.ToShortDateString()</dd>
-
-    <dt>Ispit</dt>
+    <dt>Ispit:</dt>
     <dd>@Model.Ispit?.Predmet</dd>
 
-    <dt>Student</dt>
+    <dt>Broj indeksa:</dt>
     <dd>@Model.Student?.BrojIndeksa</dd>
+
+    <dt>Datum prijave:</dt>
+    <dd>@Model.DatumPrijave.ToShortDateString()</dd>
 </dl>
 
 <div>
-    <a asp-action="Index">Nazad</a>
+    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
 </div>

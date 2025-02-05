@@ -19,8 +19,11 @@
                 <dt class="col-sm-3">Prezime:</dt>
                 <dd class="col-sm-9">@Model.Profesor.Prezime</dd>
 
-                <dt class="col-sm-3">JMBG:</dt>
-                <dd class="col-sm-9">@Model.Profesor.JMBG</dd>
+                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                {
+                    <dt class="col-sm-3">JMBG:</dt>
+                    <dd class="col-sm-9">@Model.Profesor.JMBG</dd>
+                }
 
                 <dt class="col-sm-3">Email:</dt>
                 <dd class="col-sm-9">@Model.Profesor.Email</dd>
@@ -64,6 +67,9 @@
 </div>
 
 <div class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.Profesor.Id" class="btn btn-warning">Izmjena</a>
-    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Profesor.Id" class="btn btn-warning">Izmjena</a>
+    }    
+    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
 </div>

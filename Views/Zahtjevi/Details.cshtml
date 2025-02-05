@@ -34,6 +34,9 @@
 </div>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Izmjena</a> |
-    <a asp-action="Index">Nazad</a>
+    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Izmjena</a>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
 </div>

@@ -1,43 +1,83 @@
 ﻿@model StudentHub.Models.Obavjestenje
 
 @{
-    ViewData["Title"] = "Detalji obavještenja";
+    ViewData["Title"] = Model.Naslov;
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <div class="card-body">
+            <h1 class="card-title text-center mb-4">@Model.Naslov</h1>
 
-<div>
-    <h4>Podaci o obavještenju</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Naslov)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Naslov)</dd>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted">
+                    <i class="bi bi-person-circle"></i>
+                    <strong>Autor:</strong>
+                    @if (Model.Korisnik is StudentskaSluzba)
+                    {
+                        @(((StudentskaSluzba)Model.Korisnik).Ime) @: @(((StudentskaSluzba)Model.Korisnik).Prezime)
+                    }
+                    else if (Model.Korisnik is Profesor)
+                    {
+                        @( ((Profesor)Model.Korisnik).ProfesorTitula ) @: @( ((Profesor)Model.Korisnik).Ime ) + " " + @(((Profesor)Model.Korisnik).Prezime)
+                    }
+                    else if (Model.Korisnik is Asistent)
+                    {
+                        @(((Asistent)Model.Korisnik).AsistentTitula) @: @(((Asistent)Model.Korisnik).Ime) + " " + @(((Asistent)Model.Korisnik).Prezime)
+                    }
+                    else
+                    {
+                        <span class="text-danger">Nepoznato</span>
+                    }
+                </span>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Sadrzaj)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Sadrzaj)</dd>
+                <span class="text-muted">
+                    <i class="bi bi-calendar-event"></i>
+                    <strong>Datum objave:</strong> @Model.DatumObjave.ToString("dd.MM.yyyy")
+                </span>
+            </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DatumObjave)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DatumObjave)</dd>
+            <hr />
 
-        <dt class="col-sm-2">Objavio/la</dt>
-        <dd class="col-sm-10">
-            @if (Model.Korisnik is StudentskaSluzba)
-            {
-                @Html.DisplayFor(modelItem => ((StudentskaSluzba)Model.Korisnik).Ime)
-            }
-            else if (Model.Korisnik is Profesor)
-            {
-                @Html.DisplayFor(modelItem => ((Profesor)Model.Korisnik).Ime)
-            }
-            else if (Model.Korisnik is Asistent)
-            {
-                @Html.DisplayFor(modelItem => ((Asistent)Model.Korisnik).Ime)
-            }
-        </dd>
-    </dl>
+            <div class="mb-3">
+                <h5 class="text-primary">Studijski programi:</h5>
+                @if (Model.ObavjestenjeStudijskiProgrami != null && Model.ObavjestenjeStudijskiProgrami.Any())
+                {
+                    @foreach (var osp in Model.ObavjestenjeStudijskiProgrami)
+                    {
+                        <span class="badge bg-secondary me-1">@osp.StudijskiProgram.Naziv</span>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">Nema povezanih studijskih programa.</span>
+                }
+            </div>
+
+            <hr />
+
+            <div class="mb-4">
+                <h5 class="text-primary">Sadržaj obavještenja:</h5>
+                <p class="lead">@Model.Sadrzaj</p>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> Izmjena
+                    </a>
+                }
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Nazad na listu
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Izmjena</a> |
-    <a asp-action="Index">Nazad</a>
-</div>
+@section Scripts {
+    <script>
+    </script>
+}

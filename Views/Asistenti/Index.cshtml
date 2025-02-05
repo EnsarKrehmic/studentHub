@@ -1,39 +1,83 @@
 ﻿@model IEnumerable<StudentHub.Models.Asistent>
 
 @{
-    ViewData["Title"] = "Lista asistenata svih studijskih programa";
+    ViewData["Title"] = "Lista svih asistenata na fakultetu";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj novog asistenta</a>
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Dodaj novog asistenta</a>
+    }
 </p>
 
 <form asp-action="Index" method="get">
     <div class="form-group">
-        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Pretraži asistenta" />
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Pretraži asistente" />
     </div>
     <div class="form-group">
-        <label for="StudijskiProgramId">Filtrirajte profesore prema studijskom programu</label>
+        <label for="StudijskiProgramId">Filtrirajte asistente prema studijskom programu</label>
         <select id="StudijskiProgramId" name="studijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami">
             <option value="">Svi programi</option>
         </select>
     </div>
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Pretraži</button>
+        <button type="submit" class="btn btn-primary mt-3">Pretraži</button>
     </div>
 </form>
 
 <table class="table table-bordered table-hover mt-3">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Ime)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Prezime)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().JMBG)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Email)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().AsistentTitula)</th>
-            <th>Akcije</th>
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["NameSortParm"]" 
+                asp-route-searchString="@ViewData["CurrentFilter"]" 
+                asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Ime)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["SurnameSortParm"]" 
+                asp-route-searchString="@ViewData["CurrentFilter"]" 
+                asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Prezime)
+                </a>
+            </th>
+            @if (User.IsInRole("Studentska služba") || User.IsInRole("Asistent"))
+            {
+                <th>
+                    <a asp-action="Index" 
+                    asp-route-sortOrder="@ViewData["JMBGSortParm"]" 
+                    asp-route-searchString="@ViewData["CurrentFilter"]" 
+                    asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().JMBG)
+                    </a>
+                </th>
+            }
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["EmailSortParm"]" 
+                asp-route-searchString="@ViewData["CurrentFilter"]" 
+                asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["TitulaSortParm"]" 
+                asp-route-searchString="@ViewData["CurrentFilter"]" 
+                asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().AsistentTitula)
+                </a>
+            </th>
+            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+            {
+                <th>Akcije</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -42,15 +86,29 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Ime)</td>
                 <td>@Html.DisplayFor(modelItem => item.Prezime)</td>
-                <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
+                @if (User.IsInRole("Studentska služba") || User.IsInRole("Asistent"))
+                {
+                    <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
+
+                }
                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
                 <td>@Html.DisplayFor(modelItem => item.AsistentTitula)</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                    }
+                    @if (User.IsInRole("Studentska služba"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+</div>

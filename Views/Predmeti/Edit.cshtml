@@ -72,7 +72,10 @@
         <span asp-validation-for="Semestar" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Sačuvaj promjene</button>
+    <div class="form-group">
+        <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
+        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
+    </div>
 </form>
 
 @section Scripts {

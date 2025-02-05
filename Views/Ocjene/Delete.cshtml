@@ -6,25 +6,36 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<h3>Da li ste sigurni da želite obrisati ovu ocjenu?</h3>
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Vrijednost)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Vrijednost)</dd>
+<div class="alert alert-warning" role="alert">
+    <h4 class="alert-heading">Da li ste sigurni da želite obrisati ovu ocjenu?</h4>
+    <p>Ova akcija je nepovratna i trajno će ukloniti sve podatke o ocjeni.</p>
+</div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Predmet)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Predmet.Id)</dd>
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+        <h5>Podaci o ocjeni</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Student:</dt>
+            <dd class="col-sm-9">@Model.Student.Id</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Id)</dd>
+            <dt class="col-sm-3">Predmet:</dt>
+            <dd class="col-sm-9">@Model.Predmet.Id</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Profesor)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Profesor.Id)</dd>
-    </dl>
+            <dt class="col-sm-3">Profesor:</dt>
+            <dd class="col-sm-9">@Model.Profesor.Id</dd>
+
+            <dt class="col-sm-3">Vrijednost:</dt>
+            <dd class="col-sm-9">@Model.Vrijednost</dd>
+        </dl>
+    </div>
 </div>
 
 <form asp-action="Delete">
     <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Obriši</button> |
-    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    <div class="form-group">
+        <button type="submit" class="btn btn-danger">Obriši</button>
+        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    </div>
 </form>

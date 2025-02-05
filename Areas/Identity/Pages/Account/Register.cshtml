@@ -1,0 +1,88 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registracija";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (!User.IsInRole("Studentska služba"))
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Pristup odbijen!</strong> Samo korisnici iz Studentske službe mogu registrovati nove korisnike.
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Instrukcije za kreiranje korisnika -->
+            <div class="alert alert-info" role="alert">
+                <h3>Kako kreirati i upravljati korisnicima</h3>
+                <p>Ova stranica pruža detaljne korake za kreiranje i upravljanje korisnicima na platformi. Ako želite dodati novog studenta, člana studentske službe, profesora ili asistenta, pratite sledeće upute:</p>
+
+                <h4>Kreiranje novog korisnika (student, studentska služba, profesor, asistent)</h4>
+                <ol>
+                    <li>Pristupite <strong>Identity</strong> stranici platforme putem menija "Dodaj korisnika".</li>
+                    <li>
+                        Unesite potrebne podatke:
+                        <ul>
+                            <li><strong>Email</strong>: Unesite validnu email adresu korisnika.</li>
+                            <li><strong>Lozinka</strong>: Kreirajte lozinku korisnika.</li>
+                            <li><strong>Potvrda lozinke</strong>: Potvrdite lozinku korisnika.</li>
+                        </ul>
+                    </li>
+                    <li>Kliknite na opciju <strong>Kreiraj korisnika</strong> (Ovo će Vas odvesti na stranicu 'Potvrda registracije').</li>
+                    <li>Na stranici potvrde registracije kliknite na <strong>Kliknite ovdje da potvrdite svoj račun</strong> (Ovo će uspješno potvrditi kreiranje računa sa unesenom email adresom).</li>
+                </ol>
+
+                <h4>Pregled i uređivanje podataka korisnika</h4>
+                <p>Da biste pregledali ili uredili podatke korisnika (student, profesor, asistent), pratite sledeće korake:</p>
+                <ol>
+                    <li>Posetite stranicu za <a href="/Studenti">Listu svih studenata</a>, <a href="/StudentskaSluzba">Listu svih članova studentske službe</a>, <a href="/Profesori">Listu svih profesora</a> ili <a href="/Asistenti">Listu svih asistenata</a>.</li>
+                    <li>Korišćenjem opcije <strong>Filter</strong> možete suziti pretragu korisnika po različitim kriterijumima (npr. studijski program).</li>
+                    <li>Klikom na bilo koji  <strong>atribut</strong> možete suziti pretragu korisnika po odabranom atributu.</li>
+                    <li>Kliknite na dugme <strong>Izmjeni</strong> pored željenog korisnika kako biste pristupili formi za uređivanje njegovih podataka.</li>
+                    <li>Kliknite na dugme <strong>Brisanje</strong> pored željenog korisnika kako biste pristupili formi za brisanje korisnika.</li>
+                </ol>
+
+                <h4>Dodavanje korisnika na predmet</h4>
+                <p>Za dodavanje korisnika na predmet, pratite sledeće korake:</p>
+                <ol>
+                    <li>Pristupite <a href="/Predmeti">Listi svih predmeta</a>.</li>
+                    <li>Odaberite željeni predmet klikom na <strong>Detalji</strong>.</li>
+                    <li>Izaberite odgovarajućeg korisnika (studenta, asistenta, profesora) i kliknite na opciju za dodavanje korisnika na predmet.</li>
+                </ol>
+
+                <p>Za dodatne informacije ili pomoć, kontaktirajte administratorski tim platforme.</p>
+            </div>
+
+            <!-- Forma za kreiranje novog korisnika -->
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <h2>Napravi novi korisnički račun</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="ime@primjer.com" />
+                    <label asp-for="Input.Email">Email adresa</label>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Password" type="password" class="form-control" autocomplete="new-password" placeholder="Lozinka" />
+                    <label asp-for="Input.Password">Lozinka</label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.ConfirmPassword" type="password" class="form-control" autocomplete="new-password" placeholder="Ponovite lozinku" />
+                    <label asp-for="Input.ConfirmPassword">Potvrda lozinke</label>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Kreiraj korisnika</button>
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

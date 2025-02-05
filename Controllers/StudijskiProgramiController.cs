@@ -24,7 +24,6 @@ namespace StudentHub.Controllers
             return View(await _context.StudijskiProgrami.ToListAsync());
         }
 
-        // GET: StudijskiProgrami/Details/{id}
         [HttpGet("Details/{id:long}")]
         public async Task<IActionResult> Details(long? id)
         {
@@ -42,13 +41,34 @@ namespace StudentHub.Controllers
 
             // Preuzimanje obavještenja povezanih sa studijskim programom
             var obavjestenja = await _context.Obavjestenja
-                .Where(o => o.StudijskiProgramId == id)
+                .Where(o => o.ObavjestenjeStudijskiProgrami.Any(osp => osp.StudijskiProgramId == id))
+                .Select(o => new ObavjestenjeDetailsViewModel
+                {
+                    Id = o.Id,
+                    Naslov = o.Naslov,
+                    Sadrzaj = o.Sadrzaj,
+                    DatumObjave = o.DatumObjave,
+                    Kreirao = o.Profesor != null ? $"Profesor: {o.Profesor.Ime} {o.Profesor.Prezime}" :
+                              o.Asistent != null ? $"Asistent: {o.Asistent.Ime} {o.Asistent.Prezime}" :
+                              o.StudentskaSluzba != null ? "Studentska služba" : "Nepoznato"
+                })
                 .ToListAsync();
 
-            // Brojanje korisnika
-            int brojStudenata = await _context.Studenti.CountAsync();
-            int brojProfesora = await _context.Profesori.CountAsync();
-            int brojAsistenata = await _context.Asistenti.CountAsync();
+            // Brojanje korisnika povezanih sa studijskim programom
+            int brojStudenata = await _context.StudentStudijskiProgrami
+                .CountAsync(s => s.StudijskiProgramId == id);
+
+            int brojProfesora = await _context.PredmetProfesori
+                .Where(pp => pp.Predmet.NastavniPlan.StudijskiProgramId == id)
+                .Select(pp => pp.ProfesorId)
+                .Distinct()
+                .CountAsync();
+
+            int brojAsistenata = await _context.PredmetAsistenti
+                .Where(pa => pa.Predmet.NastavniPlan.StudijskiProgramId == id)
+                .Select(pa => pa.AsistentId)
+                .Distinct()
+                .CountAsync();
 
             // Kreiranje ViewModel-a
             var viewModel = new StudijskiProgramDetailsViewModel
@@ -63,8 +83,10 @@ namespace StudentHub.Controllers
             return View(viewModel);
         }
 
+
         // GET: StudijskiProgrami/Create{id}
         [HttpGet("Create")]
+        [Authorize(Roles = "Studentska služba")]
         public IActionResult Create()
         {
             return View();
@@ -73,6 +95,7 @@ namespace StudentHub.Controllers
         // POST: StudijskiProgrami/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Create([Bind("Id,Naziv,Opis,TrajanjeUGodinama")] StudijskiProgram studijskiProgram)
         {
             if (ModelState.IsValid)
@@ -86,6 +109,7 @@ namespace StudentHub.Controllers
 
         // GET: StudijskiProgrami/Edit/{id}
         [HttpGet("Edit/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -104,6 +128,7 @@ namespace StudentHub.Controllers
         // POST: StudijskiProgrami/Edit/5
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Naziv,Opis,TrajanjeUGodinama")] StudijskiProgram studijskiProgram)
         {
             if (id != studijskiProgram.Id)
@@ -136,6 +161,7 @@ namespace StudentHub.Controllers
 
         // GET: StudijskiProgrami/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -156,6 +182,7 @@ namespace StudentHub.Controllers
         // POST: StudijskiProgrami/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var studijskiProgram = await _context.StudijskiProgrami.FindAsync(id);

@@ -1,0 +1,22 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Potvrda registracije";
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+        <p>
+            Ova aplikacija trenutno nema registrovan pravi email server, pogledajte <a href="https://aka.ms/aspaccountconf">ovu dokumentaciju</a> kako konfigurirati pravi email server.
+            Normalno, ovo bi bilo poslano na email: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Kliknite ovdje da potvrdite svoj račun</a>
+        </p>
+    }
+    else
+    {
+        <p>
+            Molimo vas da provjerite svoj email kako biste potvrdili svoj račun.
+        </p>
+    }
+}

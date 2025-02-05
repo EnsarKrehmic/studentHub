@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 namespace StudentHub.Controllers
 {
     [Route("Prijave")]
+    [Authorize]
     public class PrijaveController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,11 +23,6 @@ namespace StudentHub.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var prijave = _context.Prijave
-                .Include(p => p.Ispit)
-                .Include(p => p.Student);
-            return View(prijave);
-
             var applicationDbContext = _context.Prijave
                 .Include(p => p.Ispit)
                 .Include(p => p.Student);
@@ -34,6 +31,7 @@ namespace StudentHub.Controllers
 
         // GET: Prijave/Details/{id}
         [HttpGet("Details/{id:long}")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null) return NotFound();
@@ -54,6 +52,7 @@ namespace StudentHub.Controllers
 
         // GET: Prijave/Create
         [HttpGet("Create")]
+        [Authorize(Roles = "Student")]
         public IActionResult Create()
         {
             ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Naziv");
@@ -63,6 +62,7 @@ namespace StudentHub.Controllers
         // POST: Prijave/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> Create([Bind("DatumPrijave,IspitId")] Prijava prijava)
         {
             prijava.StudentId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -97,13 +97,15 @@ namespace StudentHub.Controllers
                 return View(prijava);
             }
 
+            var studentId = prijava.StudentId;
+
             // Check if the student is enrolled in the same study program, curriculum, and subject
-            var studentId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var student = await _context.Studenti
-                .Include(s => s.StudijskiProgram)
+                .Include(s => s.StudentStudijskiProgrami)
+                .ThenInclude(ssp => ssp.StudijskiProgram)
                 .FirstOrDefaultAsync(s => s.Id == studentId);
 
-            if (student == null || student.StudijskiProgramId != ispit.StudijskiProgramId)
+            if (student == null || !student.StudentStudijskiProgrami.Any(ssp => ssp.StudijskiProgramId == ispit.StudijskiProgramId))
             {
                 ModelState.AddModelError("IspitId", "Niste upisani u odgovarajući studijski program.");
                 ViewData["IspitId"] = new SelectList(_context.Ispiti, "Id", "Naziv", prijava.IspitId);
@@ -123,6 +125,7 @@ namespace StudentHub.Controllers
 
         // GET: Prijave/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null) return NotFound();
@@ -140,6 +143,7 @@ namespace StudentHub.Controllers
         // POST: Prijave/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var prijava = await _context.Prijave.FindAsync(id);

@@ -11,6 +11,8 @@ namespace StudentHub.ViewModels
         public List<StudentNaPredmetu> StudentiNaPredmetu { get; set; }
         public Dictionary<long, float?> Ocjene { get; set; }
         public long StudentId { get; set; }
+        public long ProfesorId { get; set; }
+        public long AsistentId { get; set; }
         public float? Ocjena { get; set; }
     }
 }

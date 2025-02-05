@@ -6,9 +6,30 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<p>Da li ste sigurni da želite obrisati prijavu za ispit na predmetu: "@Model.Ispit?.Predmet" studenta "@Model.Student?.BrojIndeksa"?</p>
+<div class="alert alert-warning" role="alert">
+    <h4 class="alert-heading">Da li ste sigurni da želite obrisati ovu prijavu?</h4>
+    <p>Ova akcija je nepovratna i trajno će ukloniti sve podatke o prijavi.</p>
+</div>
 
-<form asp-action="Delete" method="post">
-    <button type="submit" class="btn btn-danger">Obriši</button>
-    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+        <h5>Podaci o prijavi</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Predmet:</dt>
+            <dd class="col-sm-9">@Model.Ispit?.Predmet</dd>
+
+            <dt class="col-sm-3">Broj indeksa:</dt>
+            <dd class="col-sm-9">@Model.Student?.BrojIndeksa</dd>
+        </dl>
+    </div>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <button type="submit" class="btn btn-danger">Obriši</button>
+        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    </div>
 </form>

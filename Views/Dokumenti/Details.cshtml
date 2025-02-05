@@ -30,7 +30,10 @@
     </dl>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Izmjena</a> |
-    <a asp-action="Index">Nazad</a>
+<div class="mt-3">
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Izmjena</a>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
 </div>

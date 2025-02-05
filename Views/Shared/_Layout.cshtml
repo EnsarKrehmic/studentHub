@@ -37,8 +37,12 @@
                                 Akademski podaci
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownAcademic">
-                                <li><a class="dropdown-item" asp-controller="Ispiti" asp-action="Index">Ispiti</a></li>
-                                <li><a class="dropdown-item" asp-controller="Ocjene" asp-action="Index">Ocjene</a></li>
+                                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Ispiti" asp-action="Index">Ispiti</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Ocjene" asp-action="Index">Ocjene</a></li>
+                                }
+
                                 <li><a class="dropdown-item" asp-controller="Predmeti" asp-action="Index">Predmeti</a></li>
                                 <li><a class="dropdown-item" asp-controller="NastavniPlanovi" asp-action="Index">Nastavni planovi</a></li>
                             </ul>

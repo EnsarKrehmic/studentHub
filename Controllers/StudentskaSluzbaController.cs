@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -19,24 +20,56 @@ namespace StudentHub.Controllers
 
         // GET: StudentskaSluzba
         [HttpGet("")]
-        public async Task<IActionResult> Index(string searchString, long? studijskiProgramId)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, long? studijskiProgramId)
         {
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["SurnameSortParm"] = sortOrder == "surname_asc" ? "surname_desc" : "surname_asc";
+            ViewData["JMBGSortParm"] = sortOrder == "jmbg_asc" ? "jmbg_desc" : "jmbg_asc";
+            ViewData["EmailSortParm"] = sortOrder == "email_asc" ? "email_desc" : "email_asc";
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentStudijskiProgramId"] = studijskiProgramId;
 
-            var query = _context.StudentskeSluzbe.Include(s => s.StudijskiProgram).AsQueryable();
+            var studentskesluzbequery = _context.StudentskeSluzbe.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(s => s.Ime.Contains(searchString) || s.Prezime.Contains(searchString));
+                studentskesluzbequery = studentskesluzbequery.Where(s => s.Ime.Contains(searchString) || s.Prezime.Contains(searchString));
             }
 
             if (studijskiProgramId.HasValue)
             {
-                query = query.Where(s => s.StudijskiProgramId == studijskiProgramId.Value);
+                studentskesluzbequery = studentskesluzbequery.Where(p => _context.StudentskaSluzbaStudijskiProgrami.Any(psp => psp.StudentskaSluzbaId == p.Id && psp.StudijskiProgramId == studijskiProgramId.Value));
             }
 
-            var studentskaSluzba = await query.ToListAsync();
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    studentskesluzbequery = studentskesluzbequery.OrderByDescending(p => p.Ime);
+                    break;
+                case "surname_asc":
+                    studentskesluzbequery = studentskesluzbequery.OrderBy(p => p.Prezime);
+                    break;
+                case "surname_desc":
+                    studentskesluzbequery = studentskesluzbequery.OrderByDescending(p => p.Prezime);
+                    break;
+                case "jmbg_asc":
+                    studentskesluzbequery = studentskesluzbequery.OrderBy(p => p.JMBG);
+                    break;
+                case "jmbg_desc":
+                    studentskesluzbequery = studentskesluzbequery.OrderByDescending(p => p.JMBG);
+                    break;
+                case "email_asc":
+                    studentskesluzbequery = studentskesluzbequery.OrderBy(p => p.Email);
+                    break;
+                case "email_desc":
+                    studentskesluzbequery = studentskesluzbequery.OrderByDescending(p => p.Email);
+                    break;
+                default:
+                    studentskesluzbequery = studentskesluzbequery.OrderBy(p => p.Ime);
+                    break;
+            }
+
+            var studentskaSluzba = await studentskesluzbequery.ToListAsync();
 
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studijskiProgramId);
 
@@ -45,6 +78,7 @@ namespace StudentHub.Controllers
 
         // GET: StudentskaSluzba/Details/{id}
         [HttpGet("Details/{id:long}")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -52,53 +86,30 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var studentskaSluzba = await _context.StudentskeSluzbe.FirstOrDefaultAsync(m => m.Id == id);
-            if (studentskaSluzba == null)
+            var studentskasluzba = await _context.StudentskeSluzbe
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (studentskasluzba == null)
             {
                 return NotFound();
             }
 
-            return View(studentskaSluzba);
-        }
+            var studijskiProgrami = await _context.StudentskaSluzbaStudijskiProgrami
+                .Where(psp => psp.StudentskaSluzbaId == id)
+                .Select(psp => psp.StudijskiProgram)
+                .ToListAsync();
 
-        // GET: StudentskaSluzba/Create
-        [HttpGet("Create")]
-        public IActionResult Create()
-        {
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View();
-        }
-
-        // POST: StudentskaSluzba/Create
-        [HttpPost("Create")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(StudentskaSluzbaEditViewModel model)
-        {
-            if (ModelState.IsValid)
+            var viewModel = new StudentskaSluzbaDetailsViewModel
             {
-                var studentskaSluzba = new StudentskaSluzba
-                {
-                    JMBG = model.JMBG,
-                    Ime = model.Ime,
-                    Prezime = model.Prezime,
-                    Email = model.Email,
-                    Lozinka = model.Lozinka,
-                    Uloga = model.Uloga,
-                    StudijskiProgramId = model.StudijskiProgramId
-                };
+                StudentskaSluzba = studentskasluzba,
+                StudijskiProgrami = studijskiProgrami,
+            };
 
-                _context.StudentskeSluzbe.Add(studentskaSluzba);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View(model);
+            return View(viewModel);
         }
 
         // GET: StudentskaSluzba/Edit/{id}
         [HttpGet("Edit/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
             var studentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
@@ -114,19 +125,20 @@ namespace StudentHub.Controllers
                 Ime = studentskaSluzba.Ime,
                 Prezime = studentskaSluzba.Prezime,
                 Email = studentskaSluzba.Email,
-                Lozinka = studentskaSluzba.Lozinka,
                 Uloga = studentskaSluzba.Uloga,
                 StudijskiProgramId = studentskaSluzba.StudijskiProgramId
             };
 
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studentskaSluzba.StudijskiProgramId);
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
+
             return View(model);
         }
 
         // POST: StudentskaSluzba/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, StudentskaSluzbaEditViewModel model)
         {
             if (id != model.Id)
@@ -146,21 +158,24 @@ namespace StudentHub.Controllers
                 studentskaSluzba.Ime = model.Ime;
                 studentskaSluzba.Prezime = model.Prezime;
                 studentskaSluzba.Email = model.Email;
-                studentskaSluzba.Lozinka = model.Lozinka;
                 studentskaSluzba.Uloga = model.Uloga;
                 studentskaSluzba.StudijskiProgramId = model.StudijskiProgramId;
 
+                // Lozinku ne menjamo!
                 _context.Update(studentskaSluzba);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
+
             return View(model);
         }
 
         // GET: StudentskaSluzba/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -180,6 +195,7 @@ namespace StudentHub.Controllers
         // POST: StudentskaSluzba/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var studentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);

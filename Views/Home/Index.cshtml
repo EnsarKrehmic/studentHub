@@ -32,11 +32,30 @@
 
     <div class="mt-5">
         <h2>Najnovije obavijesti</h2>
-        <ul>
-            @foreach (var obavijest in Model.NajnovijeObavijesti)
-            {
-                <li>@obavijest.Naslov - @obavijest.DatumObjave.ToShortDateString()</li>
-            }
-        </ul>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Naslov</th>
+                    <th>Autor</th>
+                    <th>Studijski program</th>
+                    <th>Datum objave</th>
+                    <th>Detalji</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obavijest in Model.NajnovijeObavijesti)
+                {
+                    <tr>
+                        <td>@obavijest.Naslov</td>
+                        <td>@obavijest.AutorIme</td>
+                        <td>@string.Join(", ", obavijest.StudijskiProgramNazivi)</td>
+                        <td>@obavijest.DatumObjave.ToShortDateString()</td>
+                        <td>
+                            <a href="@Url.Action("Details", "Obavjestenja", new { id = obavijest.Id })" class="btn btn-primary btn-sm">Pogledaj</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

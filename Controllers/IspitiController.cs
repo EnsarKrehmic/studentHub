@@ -82,6 +82,7 @@ namespace StudentHub.Controllers
 
         // GET: Ispiti/Details/{id}
         [HttpGet("Details/{id:long}")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -98,6 +99,7 @@ namespace StudentHub.Controllers
 
         // GET: Ispiti/Create
         [HttpGet("Create")]
+        [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public IActionResult Create()
         {
             try
@@ -134,6 +136,7 @@ namespace StudentHub.Controllers
         // POST: Ispiti/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Create(IspitCreateViewModel model)
         {
             if (!ModelState.IsValid)
@@ -180,6 +183,7 @@ namespace StudentHub.Controllers
 
         // GET: Ispiti/Edit/{id}
         [HttpGet("Edit/{id:long}")]
+        [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -210,6 +214,7 @@ namespace StudentHub.Controllers
         // POST: Ispiti/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Edit(long id, [Bind("Id,DatumOdrzavanja,Lokacija,BrojBodova,PredmetId,StudijskiProgramId,NastavniPlanId")] Ispit ispit)
         {
             if (id != ispit.Id)
@@ -245,6 +250,7 @@ namespace StudentHub.Controllers
 
         // GET: Ispiti/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null) return NotFound();
@@ -260,6 +266,7 @@ namespace StudentHub.Controllers
         // POST: Ispiti/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var ispit = await _context.Ispiti.FindAsync(id);
@@ -277,13 +284,11 @@ namespace StudentHub.Controllers
         }
 
         // POST: Ispiti/Prijavi/{id}
-        // POST: Ispiti/Prijavi/{id}
         [HttpPost("Prijavi")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> Prijavi(long id)
         {
-            // Uklonjena provera autentifikacije i tvrdnji
-
             var ispit = await _context.Ispiti
                 .Include(i => i.Predmet)
                 .Include(i => i.StudijskiProgram)
@@ -294,7 +299,6 @@ namespace StudentHub.Controllers
                 return NotFound("Ispit ne postoji.");
             }
 
-            // Check if the registration period is valid (3 days before the exam date)
             if (ispit.DatumOdrzavanja.AddDays(-3) <= DateTime.Now)
             {
                 return BadRequest("Rok za prijavu ispita je istekao.");
@@ -303,8 +307,7 @@ namespace StudentHub.Controllers
             var prijava = new Prijava
             {
                 IspitId = id,
-                // Postavite StudentId na neki podrazumevani ID ili ga uklonite ako nije potreban
-                StudentId = 0, // Podrazumevani ID za gosta
+                StudentId = 0,
                 DatumPrijave = DateTime.Now
             };
 
@@ -317,7 +320,8 @@ namespace StudentHub.Controllers
         private bool UserBelongsToStudijskiProgramAndPredmet(long studentId, long? studijskiProgramId, long? predmetId)
         {
             var student = _context.Studenti
-                .Include(s => s.StudijskiProgram)
+                .Include(s => s.StudentStudijskiProgrami)
+                .ThenInclude(ssp => ssp.StudijskiProgram)
                 .FirstOrDefault(s => s.Id == studentId);
 
             if (student == null || studijskiProgramId == null || predmetId == null)
@@ -325,7 +329,10 @@ namespace StudentHub.Controllers
                 return false;
             }
 
-            return student.StudijskiProgramId == studijskiProgramId && student.IsEnrolledInPredmet(predmetId.Value, _context);
+            bool belongsToStudijskiProgram = student.StudentStudijskiProgrami
+                .Any(ssp => ssp.StudijskiProgramId == studijskiProgramId);
+
+            return belongsToStudijskiProgram && student.IsEnrolledInPredmet(predmetId.Value, _context);
         }
 
         [HttpGet("GetNastavniPlanoviByStudijskiProgram/{studijskiProgramId}")]

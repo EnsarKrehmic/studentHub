@@ -13,192 +13,263 @@
     </div>
 }
 
-<div class="container mt-4">
-    <!-- Opšti podaci o predmetu -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h3>Podaci o predmetu</h3>
-        </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Naziv predmeta:</dt>
-                <dd class="col-sm-9">@Model.Predmet?.Naziv</dd>
-
-                <dt class="col-sm-3">Opis:</dt>
-                <dd class="col-sm-9">@Model.Predmet?.Opis</dd>
-
-                <dt class="col-sm-3">ECTS bodovi:</dt>
-                <dd class="col-sm-9">@Model.Predmet?.ECTS</dd>
-
-                <dt class="col-sm-3">Nastavni plan:</dt>
-                <dd class="col-sm-9">
-                    @if (Model.Predmet?.NastavniPlan != null)
-                    {
-                        <span>
-                            Predmet pripada nastavnom planu:
-                            @Model.Predmet.NastavniPlan.GodinaStudija. godina,
-                            @(Model.Predmet.Semestar == 1 ? "prvi" :
-                                Model.Predmet.Semestar == 2 ? "drugi" :
-                                Model.Predmet.Semestar == 3 ? "treći" :
-                                Model.Predmet.Semestar + ".") semestar
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="text-warning">Nema dodijeljen nastavni plan.</span>
-                    }
-                </dd>
-            </dl>
-        </div>
+@if (Model?.Predmet == null)
+{
+    <div class="alert alert-danger">
+        Predmet nije pronađen ili je uklonjen.
     </div>
+}
+else
+{
+    <div class="container mt-4">
+        <!-- Opšti podaci o predmetu -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>Podaci o predmetu</h3>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Naziv predmeta:</dt>
+                    <dd class="col-sm-9">@Model.Predmet?.Naziv</dd>
 
-    <!-- Nastavno osoblje -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h4>Nastavno osoblje</h4>
+                    <dt class="col-sm-3">Opis:</dt>
+                    <dd class="col-sm-9">@Model.Predmet?.Opis</dd>
+
+                    <dt class="col-sm-3">ECTS bodovi:</dt>
+                    <dd class="col-sm-9">@Model.Predmet?.ECTS</dd>
+
+                    <dt class="col-sm-3">Nastavni plan:</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Predmet?.NastavniPlan != null)
+                        {
+                            <span>
+                                Predmet pripada nastavnom planu:
+                                @Model.Predmet.NastavniPlan.GodinaStudija. godina,
+                                @(Model.Predmet.Semestar == 1 ? "prvi" :
+                                    Model.Predmet.Semestar == 2 ? "drugi" :
+                                    Model.Predmet.Semestar == 3 ? "treći" :
+                                    Model.Predmet.Semestar == 4 ? "četvrti" :
+                                    Model.Predmet.Semestar == 5 ? "peti" :
+                                    Model.Predmet.Semestar == 6 ? "šesti" :
+                                    Model.Predmet.Semestar == 7 ? "sedmi" :
+                                    Model.Predmet.Semestar == 8 ? "osmi" :
+                                    Model.Predmet.Semestar + ".") semestar
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-warning">Nema dodijeljen nastavni plan.</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
         </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Uloga</th>
-                        <th>Ime i prezime</th>
-                        <th>Titula</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Profesor -->
-                    @if (Model.Profesori.Any())
-                    {
-                        @foreach (var profesor in Model.Profesori)
+
+        <!-- Profesori -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h4>Profesori</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ime i prezime</th>
+                            <th>Titula</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Profesori.Any())
+                        {
+                            @foreach (var profesor in Model.Profesori)
+                            {
+                                <tr>
+                                    <td>@profesor.Profesor?.Ime @profesor.Profesor?.Prezime</td>
+                                    <td>@profesor.Profesor?.ProfesorTitula</td>
+                                    <td>
+                                        <form asp-action="RemoveProfesorFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-profesorId="@profesor.ProfesorId" method="post">
+                                            <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>Profesor</td>
-                                <td>@profesor.Profesor?.Ime @profesor.Profesor?.Prezime</td>
-                                <td>@profesor.Profesor?.ProfesorTitula</td>
+                                <td colspan="3" class="text-warning">Nema dodijeljenog profesora.</td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td>Profesor</td>
-                            <td colspan="2" class="text-warning">Nema dodijeljen profesor.</td>
-                        </tr>
-                    }
+                    </tbody>
+                </table>
 
-                    <!-- Asistent -->
-                    @if (Model.Asistenti.Any())
-                    {
-                        @foreach (var asistent in Model.Asistenti)
+                <form asp-action="AddProfesorToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
+                    <div class="form-group">
+                        <label for="ProfesorId">Dodaj profesora:</label>
+                        <select asp-for="ProfesorId" asp-items="ViewBag.Profesori" class="form-control"></select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Dodaj profesora</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Asistenti -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h4>Asistenti</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ime i prezime</th>
+                            <th>Titula</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Asistenti.Any())
+                        {
+                            @foreach (var asistent in Model.Asistenti)
+                            {
+                                <tr>
+                                    <td>@asistent.Asistent?.Ime @asistent.Asistent?.Prezime</td>
+                                    <td>@asistent.Asistent?.AsistentTitula</td>
+                                    <td>
+                                        <form asp-action="RemoveAsistentFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-asistentId="@asistent.AsistentId" method="post">
+                                            <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>Asistent</td>
-                                <td>@asistent.Asistent?.Ime @asistent.Asistent?.Prezime</td>
-                                <td>@asistent.Asistent.AsistentTitula</td>
+                                <td colspan="3" class="text-warning">Nema dodijeljenog asistenta.</td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td>Asistent</td>
-                            <td colspan="2" class="text-warning">Nema dodijeljen asistent.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+                    </tbody>
+                </table>
 
-    <!-- Studenti na predmetu -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h4>Studenti na predmetu</h4>
+                <form asp-action="AddAsistentToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
+                    <div class="form-group">
+                        <label for="AsistentId">Dodaj asistenta:</label>
+                        <select asp-for="AsistentId" asp-items="ViewBag.Asistenti" class="form-control"></select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Dodaj asistenta</button>
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Ime i prezime</th>
-                        <th>Broj indeksa</th>
-                        <th>Godina studija</th>
-                        <th>Ocjena</th>
-                        <th>Akcije</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model?.StudentiNaPredmetu?.Any() == true)
-                    {
-                        @foreach (var studentNaPredmetu in Model.StudentiNaPredmetu)
+
+        <!-- Studenti na predmetu -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h4>Studenti na predmetu</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ime i prezime</th>
+                            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                            {
+                                <th>Broj indeksa</th>
+                            }
+                            <th>Godina studija</th>
+                            <th>Ocjena</th>
+                            @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                            {
+                                <th>Akcije</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.StudentiNaPredmetu?.Any() == true)
                         {
-                            <tr>
-                                <td>@studentNaPredmetu.Student?.Ime @studentNaPredmetu.Student?.Prezime</td>
-                                <td>@studentNaPredmetu.Student?.BrojIndeksa</td>
-                                <td>@studentNaPredmetu.Student?.GodinaStudija</td>
-                                <td>
-                                    @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true)
+                            @foreach (var studentNaPredmetu in Model.StudentiNaPredmetu)
+                            {
+                                <tr>
+                                    <td>@studentNaPredmetu.Student?.Ime @studentNaPredmetu.Student?.Prezime</td>
+                                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                     {
-                                        @Model.Ocjene[studentNaPredmetu.StudentId]
+                                        <td>@studentNaPredmetu.Student?.BrojIndeksa</td>
                                     }
-                                    else
-                                    {
-                                        <span class="text-warning">Nema ocjene</span>
-                                    }
-                                </td>
-                                <td>
-                                    <form asp-action="RemoveStudentFromSubject" method="post" style="display:inline;">
-                                        <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
-                                        <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
-                                        <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
-                                    </form>
-                                    <form asp-action="AddGrade" method="post" style="display:inline;">
-                                        <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
-                                        <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
-                                        <input type="number" name="ocjena" min="5" max="10" step="0.5" class="form-control d-inline-block w-auto" required />
-                                        <button type="submit" class="btn btn-primary btn-sm">Dodaj ocjenu</button>
-                                    </form>
-                                    <form asp-action="EditGrade" method="post" style="display:inline;">
-                                        <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
-                                        <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
-                                        <input type="number" name="ocjena" min="5" max="10" step="0.5" class="form-control d-inline-block w-auto" value="@(Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true ? Model.Ocjene[studentNaPredmetu.StudentId] : (float?)null)" required />
-                                        <button type="submit" class="btn btn-warning btn-sm">Izmijeni ocjenu</button>
-                                    </form>
-                                    <form asp-action="RemoveGrade" method="post" style="display:inline;">
-                                        <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
-                                        <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
-                                        <button type="submit" class="btn btn-danger btn-sm">Ukloni ocjenu</button>
-                                    </form>
-                                </td>
+                                    <td>@studentNaPredmetu.Student?.GodinaStudija</td>
+                                    <td>
+                                        @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true)
+                                        {
+                                            @Model.Ocjene[studentNaPredmetu.StudentId]
+                                        }
+                                        else
+                                        {
+                                            <span class="text-warning">Nema ocjene</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                                        {
+                                            <form asp-action="RemoveStudentFromSubject" method="post" style="display:inline;">
+                                                <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
+                                                <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
+                                            </form>
+                                        }
+                                        @if (User.IsInRole("Profesor"))
+                                        {
+                                            <form asp-action="AddGrade" method="post" style="display:inline;">
+                                                <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
+                                                <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
+                                                <input type="number" name="ocjena" min="5" max="10" step="0.5" class="form-control d-inline-block w-auto" required />
+                                                <button type="submit" class="btn btn-primary btn-sm">Dodaj ocjenu</button>
+                                            </form>
+                                            <form asp-action="EditGrade" method="post" style="display:inline;">
+                                                <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
+                                                <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
+                                                <input type="number" name="ocjena" min="5" max="10" step="0.5" class="form-control d-inline-block w-auto" value="@(Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true ? Model.Ocjene[studentNaPredmetu.StudentId] : (float?)null)" required />
+                                                <button type="submit" class="btn btn-warning btn-sm">Izmijeni ocjenu</button>
+                                            </form>
+                                            <form asp-action="RemoveGrade" method="post" style="display:inline;">
+                                                <input type="hidden" name="predmetId" value="@Model?.Predmet?.Id" />
+                                                <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Ukloni ocjenu</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-warning">Nema studenata na ovom predmetu.</td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="5" class="text-warning">Nema studenata na ovom predmetu.</td>
-                        </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-
-            <form asp-action="AddStudentToSubject" method="post">
-                <div class="form-group">
-                    <label for="StudentId">Dodaj studenta:</label>
-                    <select asp-for="StudentId" asp-items="ViewBag.Studenti" class="form-control"></select>
-                </div>
-                <input type="hidden" asp-for="Predmet.Id" />
-                <button type="submit" class="btn btn-primary">Dodaj</button>
-            </form>
+                    </tbody>
+                </table>
+                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                {
+                    <form asp-action="AddStudentToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
+                        <div class="form-group">
+                            <label for="StudentId">Dodaj studenta:</label>
+                            <select asp-for="StudentId" asp-items="ViewBag.Studenti" class="form-control"></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Dodaj studenta</button>
+                    </form>
+                }
+            </div>
         </div>
     </div>
-
+}
 
 <!-- Akcije -->
 <div class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.Predmet.Id" class="btn btn-warning">Izmjena</a>
-    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Predmet.Id" class="btn btn-warning">Izmjena</a>
+        }    
+    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
 </div>
 
 @section Scripts {

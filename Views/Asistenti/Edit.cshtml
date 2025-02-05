@@ -28,11 +28,6 @@
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Lozinka" class="control-label"></label>
-        <input asp-for="Lozinka" class="form-control" />
-        <span asp-validation-for="Lozinka" class="text-danger"></span>
-    </div>
-    <div class="form-group">
         <label asp-for="AsistentTitula" class="control-label"></label>
         <input asp-for="AsistentTitula" class="form-control" />
         <span asp-validation-for="AsistentTitula" class="text-danger"></span>
@@ -53,13 +48,10 @@
         <span asp-validation-for="PredmetIds" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Sačuvaj" class="btn btn-primary" />
+        <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
+        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
     </div>
 </form>
-
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
-</div>
 
 @section Scripts {
     <script>

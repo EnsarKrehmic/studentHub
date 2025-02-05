@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -8,6 +9,7 @@ using StudentHub.ViewModels;
 namespace StudentHub.Controllers
 {
     [Route("Ocjene")]
+    [Authorize]
     public class OcjeneController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,6 +33,7 @@ namespace StudentHub.Controllers
 
         // GET: Ocjene/Details/{id}
         [HttpGet("Details/{id:long}")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -53,6 +56,7 @@ namespace StudentHub.Controllers
 
         // GET: Ocjene/Create
         [HttpGet("Create")]
+        [Authorize(Roles = "Profesor")]
         public IActionResult Create()
         {
             ViewData["PredmetId"] = new SelectList(_context.Predmeti, "Id", "Naziv");
@@ -64,6 +68,7 @@ namespace StudentHub.Controllers
         // POST: Ocjene/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> Create([Bind("Id,Vrijednost,PredmetId,brojIndeksa,StudentId,ProfesorId")] Ocjena ocjena)
         {
             if (ModelState.IsValid)
@@ -80,6 +85,7 @@ namespace StudentHub.Controllers
 
         // GET: Ocjene/Edit/{id}
         [HttpGet("Edit/{id:long}")]
+        [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -101,6 +107,7 @@ namespace StudentHub.Controllers
         // POST: Ocjene/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Vrijednost,PredmetId,brojIndeksa,StudentId,ProfesorId")] Ocjena ocjena)
         {
             if (id != ocjena.Id)
@@ -136,6 +143,7 @@ namespace StudentHub.Controllers
 
         // GET: Ocjene/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -159,6 +167,7 @@ namespace StudentHub.Controllers
         // POST: Ocjene/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var ocjena = await _context.Ocjene.FindAsync(id);

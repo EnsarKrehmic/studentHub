@@ -6,54 +6,97 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>@Model.Student.Ime @Model.Student.Prezime</h4>
-    <p>JMBG: @Model.Student.JMBG</p>
-    <p>Email: @Model.Student.Email</p>
-    <p>Broj Indeksa: @Model.Student.BrojIndeksa</p>
-    <p>Godina Studija: @Model.Student.GodinaStudija</p>
-    <p>Semestar: @Model.Student.Semestar</p>
-    <p>Studijski Program: @Model.Student.StudijskiProgram.Naziv</p>
-</div>
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>Podaci o studentu</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Ime:</dt>
+                <dd class="col-sm-9">@Model.Student.Ime</dd>
 
-<div class="mt-4">
-    <h4>Predmeti koje student pohađa</h4>
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Naziv Predmeta</th>
-                <th>Opis</th>
-                <th>ECTS</th>
-                <th>Semestar</th>
-                <th>Ocjena</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var predmet in Model.Predmeti)
-            {
+                <dt class="col-sm-3">Prezime:</dt>
+                <dd class="col-sm-9">@Model.Student.Prezime</dd>
+
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                {
+                    <dt class="col-sm-3">JMBG:</dt>
+                    <dd class="col-sm-9">@Model.Student.JMBG</dd>
+                }
+
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                {
+                    <dt class="col-sm-3">Broj indeksa:</dt>
+                    <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
+                }
+
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">@Model.Student.Email</dd>
+
+                <dt class="col-sm-3">Godina studija:</dt>
+                <dd class="col-sm-9">@Model.Student.GodinaStudija</dd>
+
+                <dt class="col-sm-3">Semestar:</dt>
+                <dd class="col-sm-9">@Model.Student.Semestar</dd>
+
+                <dt class="col-sm-3">Uloga:</dt>
+                <dd class="col-sm-9">@Model.Student.Uloga</dd>
+
+                <dt class="col-sm-3">Titula:</dt>
+                <dd class="col-sm-9">@Model.Student.GodinaStudija</dd>
+
+                <dt class="col-sm-3">Studijski program:</dt>
+                <dd class="col-sm-9">
+                    @Model.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram?.Naziv ?? "N/A"
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h4>Predmeti koje student pohađa</h4>
+        <table class="table table-bordered table-hover">
+            <thead>
                 <tr>
-                    <td>@predmet.Naziv</td>
-                    <td>@predmet.Opis</td>
-                    <td>@predmet.ECTS</td>
-                    <td>@predmet.Semestar</td>
-                    <td>
-                        @if (Model.Ocjene.ContainsKey(predmet.Id))
-                        {
-                            @Model.Ocjene[predmet.Id]
-                        }
-                        else
-                        {
-                            <span class="text-warning">Nema ocjene</span>
-                        }
-                    </td>
+                    <th>Naziv predmeta</th>
+                    <th>Opis</th>
+                    <th>ECTS</th>
+                    <th>Semestar</th>
+                    <th>Ocjena</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var predmet in Model.Predmeti)
+                {
+                    <tr>
+                        <td>@predmet.Naziv</td>
+                        <td>@predmet.Opis</td>
+                        <td>@predmet.ECTS</td>
+                        <td>@predmet.Semestar</td>
+                        <td>
+                            @if (Model.Ocjene.ContainsKey(predmet.Id))
+                            {
+                                @Model.Ocjene[predmet.Id]
+                            }
+                            else
+                            {
+                                <span class="text-warning">Nema ocjene</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="mt-3">
-    <a href="@Url.Action("Index", "Studenti")" class="btn btn-secondary">Povratak na listu studenata</a>
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Student.Id" class="btn btn-warning">Izmjena</a>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
 </div>
 
 @section Scripts {

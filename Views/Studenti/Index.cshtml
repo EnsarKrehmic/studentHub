@@ -7,7 +7,10 @@
 <h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj novog studenta</a>
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Dodaj novog studenta</a>
+    }
 </p>
 
 <form asp-action="Index" method="get">
@@ -25,19 +28,65 @@
     </div>
 </form>
 
-<table class="table table-bordered table-hover">
+<table class="table table-bordered table-hover mt-3">
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">Ime</a>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["NameSortParm"]"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Ime)
+                </a>
             </th>
-            <th>Prezime</th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["IndexSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">Broj Indeksa</a>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["SurnameSortParm"]"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Prezime)
+                </a>
             </th>
-            <th>Godina Studija</th>
-            <th>Semestar</th>
-            <th>Akcije</th>
+            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+            {
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["JMBGSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]"
+                       asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().JMBG)
+                    </a>
+                </th>
+            }
+            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+            {
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["IndexSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]"
+                       asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().BrojIndeksa)
+                    </a>
+                </th>
+            }
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["EmailSortParm"]"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+                </a>
+            </th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Semestar)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().GodinaStudija)</th>
+            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+            {
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().PrethodnoObrazovanje)</th>
+            }
+            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+            {
+                <th>Akcije</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -46,15 +95,40 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Ime)</td>
                 <td>@Html.DisplayFor(modelItem => item.Prezime)</td>
-                <td>@Html.DisplayFor(modelItem => item.BrojIndeksa)</td>
-                <td>@Html.DisplayFor(modelItem => item.GodinaStudija)</td>
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                {
+                    <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
+
+                }
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                {
+                    <td>@Html.DisplayFor(modelItem => item.BrojIndeksa)</td>
+
+                }
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
                 <td>@Html.DisplayFor(modelItem => item.Semestar)</td>
+                <td>@Html.DisplayFor(modelItem => item.GodinaStudija)</td>
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                {
+                    <td>@Html.DisplayFor(modelItem => item.PrethodnoObrazovanje)</td>
+
+                }
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                    }
+                    @if (User.IsInRole("Studentska služba"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+</div>

@@ -14,7 +14,7 @@ namespace StudentHub.Models
 
         [MaxLength(200, ErrorMessage = "Prethodno obrazovanje ne može biti duže od 200 karaktera.")]
         [Display(Name = "Predhodno obrazovanje")]
-        public string? PredhodnoObrazovanje { get; set; }
+        public string? PrethodnoObrazovanje { get; set; }
 
         [Range(1, 6, ErrorMessage = "Godina studija mora biti između 1 i 6.")]
         [Display(Name = "Godina studija")]
@@ -23,20 +23,12 @@ namespace StudentHub.Models
         [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
         public int? Semestar { get; set; }
 
-        [ForeignKey("StudijskiProgram")]
-        [Display(Name = "Studijski program")]
-        public long StudijskiProgramId { get; set; }
-        public StudijskiProgram StudijskiProgram { get; set; }
-
         [ForeignKey("NastavniPlan")]
         [Display(Name = "Nastavni plan")]
         public long? NastavniPlanId { get; set; }
         public NastavniPlan NastavniPlan { get; set; }
 
-        [ForeignKey("Predmet")]
-        [Display(Name = "Predmet/i")]
-        public long? PredmetId { get; set; }
-        public Predmet Predmet { get; set; }
+        public List<StudentStudijskiProgram> StudentStudijskiProgrami { get; set; } = new();
 
         public bool IsEnrolledInPredmet(long predmetId, ApplicationDbContext context)
         {

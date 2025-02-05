@@ -7,7 +7,10 @@
 <h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Dodajte novu ocjenu</a>
+    @if (User.IsInRole("Profesor"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Kreiraj novu ocjenu</a>
+    }
 </p>
 
 <table class="table table-bordered table-hover">
@@ -17,7 +20,10 @@
             <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Predmet)</th>
             <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student)</th>
             <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Profesor)</th>
-            <th>Akcije</th>
+            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+            {
+                <th>Akcije</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -29,11 +35,22 @@
                 <td>@Html.DisplayFor(modelItem => item.Student.Id)</td>
                 <td>@Html.DisplayFor(modelItem => item.Profesor.Id)</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Detalji</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Izmjena</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Brisanje</a>
+                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Detalji</a>
+                    }
+                    @if (User.IsInRole("Studentska služba"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Brisanje</a>
+                    }
+                    
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+</div>

@@ -8,31 +8,32 @@ namespace StudentHub.ViewModels
     {
         public long Id { get; set; }
 
-        [Required(ErrorMessage = "Ime je obavezno.")]
-        public string Ime { get; set; }
+        [StringLength(13, MinimumLength = 13, ErrorMessage = "JMBG mora imati tačno 13 karaktera.")]
+        public string? JMBG { get; set; }
 
-        [Required(ErrorMessage = "Prezime je obavezno.")]
-        public string Prezime { get; set; }
+        [MaxLength(50, ErrorMessage = "Ime ne može biti duže od 50 karaktera.")]
+        public string? Ime { get; set; }
 
-        [Required(ErrorMessage = "JMBG je obavezan.")]
-        public string JMBG { get; set; }
+        [MaxLength(50, ErrorMessage = "Prezime ne može biti duže od 50 karaktera.")]
+        public string? Prezime { get; set; }
 
-        [Required(ErrorMessage = "Email je obavezan.")]
         [EmailAddress(ErrorMessage = "Unesite validnu email adresu.")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
+        public string? AsistentTitula { get; set; }
 
-        [Required(ErrorMessage = "Lozinka je obavezna.")]
-        [DataType(DataType.Password)]
-        public string Lozinka { get; set; }
+        [Required(ErrorMessage = "Studijski program je obavezan.")]
+        [Display(Name = "Studijski program/i")]
+        public long StudijskiProgramId { get; set; }
 
-        [Required(ErrorMessage = "Titula je obavezna.")]
-        public string AsistentTitula { get; set; }
-
-        [Required(ErrorMessage = "Uloga je obavezna.")]
-        [EnumDataType(typeof(Uloga))]
-        public Uloga Uloga { get; set; }
+        [Display(Name = "Predmet/i")]
+        public long? PredmetId { get; set; }
 
         public List<long> StudijskiProgramIds { get; set; } = new List<long>();
         public List<long> PredmetIds { get; set; } = new List<long>();
+
+        [Required(ErrorMessage = "Uloga je obavezna.")]
+
+        [EnumDataType(typeof(Uloga))]
+        public Uloga Uloga { get; set; }
     }
 }

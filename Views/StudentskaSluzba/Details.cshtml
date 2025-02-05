@@ -1,33 +1,57 @@
-﻿@model StudentHub.Models.StudentskaSluzba
+﻿@model StudentHub.ViewModels.StudentskaSluzbaDetailsViewModel
 
 @{
-    ViewData["Title"] = "Detalji admina";
+    ViewData["Title"] = "Detalji člana studentske službe";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>Podaci o adminu</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Ime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Ime)</dd>
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>Podaci o adminu</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Ime:</dt>
+                <dd class="col-sm-9">@Model.StudentskaSluzba.Ime</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Prezime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Prezime)</dd>
+                <dt class="col-sm-3">Prezime:</dt>
+                <dd class="col-sm-9">@Model.StudentskaSluzba.Prezime</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.JMBG)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.JMBG)</dd>
+                @if (User.IsInRole("Studentska služba"))
+                {
+                    <dt class="col-sm-3">JMBG:</dt>
+                    <dd class="col-sm-9">@Model.StudentskaSluzba.JMBG</dd>
+                }
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Email)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Email)</dd>
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">@Model.StudentskaSluzba.Email</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Lozinka)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Lozinka)</dd>
-    </dl>
+                <dt class="col-sm-3">Uloga:</dt>
+                <dd class="col-sm-9">@Model.StudentskaSluzba.Uloga</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h4>Studijski programi</h4>
+        </div>
+        <div class="card-body">
+            <ul>
+                @foreach (var studijskiProgram in Model.StudijskiProgrami)
+                {
+                    <li>@studijskiProgram.Naziv</li>
+                }
+            </ul>
+        </div>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Izmjena</a> |
-    <a asp-action="Index">Nazad</a>
+<div class="mt-3">
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.StudentskaSluzba.Id" class="btn btn-warning">Izmjena</a>
+    }    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
 </div>

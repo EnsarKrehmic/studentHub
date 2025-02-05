@@ -48,7 +48,10 @@
         <input asp-for="BrojBodova" class="form-control" />
         <span asp-validation-for="BrojBodova" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Kreiraj</button>
+    <div class="form-group">
+        <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />
+        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
+    </div>
 </form>
 
 @section Scripts {

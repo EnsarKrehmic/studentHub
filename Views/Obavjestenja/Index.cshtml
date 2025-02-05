@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StudentHub.Models.Obavjestenje>
+﻿@model IEnumerable<StudentHub.ViewModels.ObavjestenjeViewModel>
 
 @{
     ViewData["Title"] = "Lista obavještenja";
@@ -25,8 +25,12 @@
 </div>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj novo obavještenje</a>
+    @if (User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Kreiraj novo obavještenje</a>
+    }
 </p>
+
 
 @if (Model != null && Model.Any())
 {
@@ -36,8 +40,11 @@
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Naslov)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Sadrzaj)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DatumObjave)</th>
-                <th>Studijski Program</th>
-                <th>Akcije</th>
+                <th>Studijski program</th>
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                {
+                    <th>Akcije</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -47,11 +54,17 @@
                     <td>@Html.DisplayFor(modelItem => item.Naslov)</td>
                     <td>@Html.DisplayFor(modelItem => item.Sadrzaj)</td>
                     <td>@Html.DisplayFor(modelItem => item.DatumObjave)</td>
-                    <td>@Html.DisplayFor(modelItem => item.StudijskiProgram.Naziv)</td>
+                    <td>@string.Join(", ", item.StudijskiProgramNazivi)</td>
                     <td>
+                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                    {
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                    }
+                    @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                    {
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    }
                     </td>
                 </tr>
             }
@@ -62,3 +75,7 @@ else
 {
     <p>Nema obavještenja za prikaz.</p>
 }
+
+<div>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+</div>

@@ -8,11 +8,10 @@
 
 <form asp-action="Edit" method="post">
     <div class="form-group">
-        <label asp-for="StudijskiProgramId" class="control-label">Studijski program</label>
-        <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami">
-            <option value="">Izaberite studijski program</option>
+        <label asp-for="StudijskiProgramiIds" class="control-label">Studijski programi</label>
+        <select asp-for="StudijskiProgramiIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" multiple>
         </select>
-        <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+        <span asp-validation-for="StudijskiProgramiIds" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -28,13 +27,12 @@
     </div>
 
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Sačuvaj promjene</button>
+        <div class="form-group">
+            <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
+            <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
+        </div>
     </div>
 </form>
-
-<div>
-    <a asp-action="Index">Nazad</a>
-</div>
 
 @section Scripts {
     @{

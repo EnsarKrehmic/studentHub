@@ -8,6 +8,11 @@
 
 <form asp-action="Edit">
     <div class="form-group">
+        <label asp-for="StudentId" class="control-label"></label>
+        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti"></select>
+        <span asp-validation-for="StudentId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="TipZahtjeva" class="control-label"></label>
         <select asp-for="TipZahtjeva" class="form-control"></select>
         <span asp-validation-for="TipZahtjeva" class="text-danger"></span>
@@ -28,18 +33,10 @@
         <span asp-validation-for="DatumRjesavanja" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="StudentId" class="control-label"></label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti"></select>
-        <span asp-validation-for="StudentId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Sačuvaj</button>
+        <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
+        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
     </div>
 </form>
-
-<div>
-    <a asp-action="Index">Nazad</a>
-</div>
 
 @section Scripts {
     @{

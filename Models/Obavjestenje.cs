@@ -19,11 +19,6 @@ namespace StudentHub.Models
         [Required]
         public DateTime DatumObjave { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "Studijski program je obavezan.")]
-        [ForeignKey("StudijskiProgram")]
-        public long StudijskiProgramId { get; set; }
-        public StudijskiProgram StudijskiProgram { get; set; }
-
         [ForeignKey("Korisnik")]
         public long? KorisnikId { get; set; }
         public Korisnik Korisnik { get; set; }
@@ -40,6 +35,7 @@ namespace StudentHub.Models
         public long? AsistentId { get; set; }
         public Asistent Asistent { get; set; }
 
+        public List<ObavjestenjeStudijskiProgram> ObavjestenjeStudijskiProgrami { get; set; }
         public Obavjestenje() { }
     }
 }

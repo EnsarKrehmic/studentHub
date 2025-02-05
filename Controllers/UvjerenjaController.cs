@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -7,6 +8,7 @@ using StudentHub.Models;
 namespace StudentHub.Controllers
 {
     [Route("Uvjerenja")]
+    [Authorize]
     public class UvjerenjaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,6 +20,7 @@ namespace StudentHub.Controllers
 
         // GET: Uvjerenja
         [HttpGet("")]
+        [Authorize(Roles = "Student, Studentska služba")]
         public async Task<IActionResult> Index()
         {
             var uvjerenja = await _context.Uvjerenja.Include(u => u.Student).ToListAsync();
@@ -26,6 +29,7 @@ namespace StudentHub.Controllers
 
         // GET: Uvjerenja/Details/{id}
         [HttpGet("Details/{id:long}")]
+        [Authorize(Roles = "Student, Studentska služba")]
         public async Task<IActionResult> Details(long id)
         {
             var uvjerenje = await _context.Uvjerenja
@@ -42,6 +46,7 @@ namespace StudentHub.Controllers
 
         // GET: Uvjerenja/Create
         [HttpGet("Create")]
+        [Authorize(Roles = "Studentska služba")]
         public IActionResult Create()
         {
             ViewBag.Studenti = new SelectList(_context.Studenti, "Id", "ImePrezime");
@@ -51,6 +56,7 @@ namespace StudentHub.Controllers
         // POST: Uvjerenja/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Create([Bind("Namjena,DatumIzdavanja,StudentId,Vrsta")] Uvjerenje uvjerenje)
         {
             if (ModelState.IsValid)
@@ -65,6 +71,7 @@ namespace StudentHub.Controllers
 
         // GET: Uvjerenja/Edit/{id}
         [HttpGet("Edit/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
             var uvjerenje = await _context.Uvjerenja.FindAsync(id);
@@ -79,6 +86,7 @@ namespace StudentHub.Controllers
         // POST: Uvjerenja/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Namjena,DatumIzdavanja,StudentId,Vrsta")] Uvjerenje uvjerenje)
         {
             if (id != uvjerenje.Id)
@@ -112,6 +120,7 @@ namespace StudentHub.Controllers
 
         // GET: Uvjerenja/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Delete(long id)
         {
             var uvjerenje = await _context.Uvjerenja
@@ -128,6 +137,7 @@ namespace StudentHub.Controllers
         // POST: Uvjerenja/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var uvjerenje = await _context.Uvjerenja.FindAsync(id);

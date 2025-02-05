@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -24,6 +25,10 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, long? studijskiProgramId)
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["SurnameSortParm"] = sortOrder == "surname_asc" ? "surname_desc" : "surname_asc";
+            ViewData["JMBGSortParm"] = sortOrder == "jmbg_asc" ? "jmbg_desc" : "jmbg_asc";
+            ViewData["EmailSortParm"] = sortOrder == "email_asc" ? "email_desc" : "email_asc";
+            ViewData["TitulaSortParm"] = sortOrder == "titula_asc" ? "titula_desc" : "titula_asc";
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentStudijskiProgramId"] = studijskiProgramId;
 
@@ -44,6 +49,30 @@ namespace StudentHub.Controllers
                 case "name_desc":
                     profesoriQuery = profesoriQuery.OrderByDescending(p => p.Ime);
                     break;
+                case "surname_asc":
+                    profesoriQuery = profesoriQuery.OrderBy(p => p.Prezime);
+                    break;
+                case "surname_desc":
+                    profesoriQuery = profesoriQuery.OrderByDescending(p => p.Prezime);
+                    break;
+                case "jmbg_asc":
+                    profesoriQuery = profesoriQuery.OrderBy(p => p.JMBG);
+                    break;
+                case "jmbg_desc":
+                    profesoriQuery = profesoriQuery.OrderByDescending(p => p.JMBG);
+                    break;
+                case "email_asc":
+                    profesoriQuery = profesoriQuery.OrderBy(p => p.Email);
+                    break;
+                case "email_desc":
+                    profesoriQuery = profesoriQuery.OrderByDescending(p => p.Email);
+                    break;
+                case "titula_asc":
+                    profesoriQuery = profesoriQuery.OrderBy(p => p.ProfesorTitula);
+                    break;
+                case "titula_desc":
+                    profesoriQuery = profesoriQuery.OrderByDescending(p => p.ProfesorTitula);
+                    break;
                 default:
                     profesoriQuery = profesoriQuery.OrderBy(p => p.Ime);
                     break;
@@ -58,6 +87,7 @@ namespace StudentHub.Controllers
 
         // GET: Profesori/Details/{id}
         [HttpGet("Details/{id:long}")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -92,73 +122,9 @@ namespace StudentHub.Controllers
             return View(viewModel);
         }
 
-        // POST: Profesori/Create
-        [HttpGet("Create")]
-        public IActionResult Create()
-        {
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View();
-        }
-
-        // POST: Asistenti/Create
-        [HttpPost("Create")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProfesorCreateViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var profesor = new Profesor
-                {
-                    Ime = model.Ime,
-                    Prezime = model.Prezime,
-                    JMBG = model.JMBG,
-                    Email = model.Email,
-                    Lozinka = model.Lozinka,
-                    ProfesorTitula = model.ProfesorTitula,
-                    Uloga = model.Uloga
-                };
-
-                _context.Profesori.Add(profesor);
-                await _context.SaveChangesAsync();
-
-                if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
-                {
-                    foreach (var studijskiProgramId in model.StudijskiProgramIds)
-                    {
-                        _context.ProfesorStudijskiProgrami.Add(new ProfesorStudijskiProgram
-                        {
-                            ProfesorId = profesor.Id,
-                            StudijskiProgramId = studijskiProgramId
-                        });
-                    }
-                }
-
-                if (model.PredmetIds != null && model.PredmetIds.Any())
-                {
-                    foreach (var predmetId in model.PredmetIds)
-                    {
-                        _context.PredmetProfesori.Add(new PredmetProfesor
-                        {
-                            ProfesorId = profesor.Id,
-                            PredmetId = predmetId
-                        });
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View(model);
-        }
-
-        // GET: Asistenti/Edit/{id}
+        // GET: Profesori/Edit/{id}
         [HttpGet("Edit/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
             var profesor = await _context.Profesori.FindAsync(id);
@@ -174,7 +140,6 @@ namespace StudentHub.Controllers
                 Prezime = profesor.Prezime,
                 JMBG = profesor.JMBG,
                 Email = profesor.Email,
-                Lozinka = profesor.Lozinka,
                 ProfesorTitula = profesor.ProfesorTitula,
                 Uloga = profesor.Uloga,
                 StudijskiProgramIds = await _context.ProfesorStudijskiProgrami
@@ -193,9 +158,10 @@ namespace StudentHub.Controllers
             return View(model);
         }
 
-        // POST: Asistenti/Edit/{id}
+        // POST: Profesori/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, ProfesorEditViewModel model)
         {
             if (id != model.Id)
@@ -215,7 +181,6 @@ namespace StudentHub.Controllers
                 profesor.Prezime = model.Prezime;
                 profesor.JMBG = model.JMBG;
                 profesor.Email = model.Email;
-                profesor.Lozinka = model.Lozinka;
                 profesor.ProfesorTitula = model.ProfesorTitula;
                 profesor.Uloga = model.Uloga;
 
@@ -285,6 +250,7 @@ namespace StudentHub.Controllers
 
         // GET: Profesori/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -304,6 +270,7 @@ namespace StudentHub.Controllers
         // POST: Profesori/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var profesor = await _context.Profesori.FindAsync(id);

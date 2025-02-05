@@ -8,6 +8,7 @@ namespace StudentHub.Models
         public long StudijskiProgramId { get; set; }
         public StudijskiProgram StudijskiProgram { get; set; }
 
+        public List<StudentskaSluzbaStudijskiProgram> StudentskaSluzbaStudijskiProgrami { get; set; }
         public StudentskaSluzba() { }
     }
 }

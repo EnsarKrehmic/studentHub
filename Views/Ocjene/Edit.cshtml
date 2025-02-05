@@ -8,11 +8,10 @@
 
 <form asp-action="Edit">
     <input type="hidden" asp-for="Id" />
-
     <div class="form-group">
-        <label asp-for="Vrijednost" class="control-label">Vrijednost ocjene</label>
-        <input asp-for="Vrijednost" class="form-control" />
-        <span asp-validation-for="Vrijednost" class="text-danger"></span>
+        <label asp-for="StudentId" class="control-label">Student</label>
+        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.StudentId"></select>
+        <span asp-validation-for="StudentId" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="PredmetId" class="control-label">Predmet</label>
@@ -20,24 +19,20 @@
         <span asp-validation-for="PredmetId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="StudentId" class="control-label">Student</label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.StudentId"></select>
-        <span asp-validation-for="StudentId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
         <label asp-for="ProfesorId" class="control-label">Profesor</label>
         <select asp-for="ProfesorId" class="form-control" asp-items="ViewBag.ProfesorId"></select>
         <span asp-validation-for="ProfesorId" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Sačuvaj promjene</button>
+        <label asp-for="Vrijednost" class="control-label">Vrijednost ocjene</label>
+        <input asp-for="Vrijednost" class="form-control" />
+        <span asp-validation-for="Vrijednost" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
+        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
     </div>
 </form>
-
-<div>
-    <a asp-action="Index">Nazad</a>
-</div>
 
 @section Scripts {
     @{

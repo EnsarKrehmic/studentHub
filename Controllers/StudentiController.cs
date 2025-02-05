@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -22,42 +23,55 @@ namespace StudentHub.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index(string sortOrder, string searchString, long? studijskiProgramId)
         {
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["SurnameSortParm"] = sortOrder == "surname_asc" ? "surname_desc" : "surname_asc";
+            ViewData["JMBGSortParm"] = sortOrder == "jmbg_asc" ? "jmbg_desc" : "jmbg_asc";
             ViewData["IndexSortParm"] = sortOrder == "index_asc" ? "index_desc" : "index_asc";
+            ViewData["EmailSortParm"] = sortOrder == "email_asc" ? "email_desc" : "email_asc";
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentStudijskiProgramId"] = studijskiProgramId;
 
-            var studentsQuery = _context.Studenti
-                .Include(s => s.StudijskiProgram)
-                .AsQueryable();
+            var studentiQuery = _context.Studenti.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                studentsQuery = studentsQuery.Where(s => s.Ime.Contains(searchString) || s.Prezime.Contains(searchString));
+                studentiQuery = studentiQuery.Where(s => s.Ime.Contains(searchString) || s.Prezime.Contains(searchString));
             }
 
             if (studijskiProgramId.HasValue)
             {
-                studentsQuery = studentsQuery.Where(s => s.StudijskiProgramId == studijskiProgramId.Value);
+                studentiQuery = studentiQuery.Where(p => _context.StudentStudijskiProgrami.Any(psp => psp.StudentId == p.Id && psp.StudijskiProgramId == studijskiProgramId.Value));
             }
 
             switch (sortOrder)
             {
                 case "name_desc":
-                    studentsQuery = studentsQuery.OrderByDescending(s => s.Ime);
+                    studentiQuery = studentiQuery.OrderByDescending(s => s.Ime);
+                    break;
+                case "surname_asc":
+                    studentiQuery = studentiQuery.OrderBy(s => s.Prezime);
+                    break;
+                case "surname_desc":
+                    studentiQuery = studentiQuery.OrderByDescending(s => s.Prezime);
+                    break;
+                case "jmbg_asc":
+                    studentiQuery = studentiQuery.OrderBy(s => s.JMBG);
+                    break;
+                case "jmbg_desc":
+                    studentiQuery = studentiQuery.OrderByDescending(s => s.JMBG);
                     break;
                 case "index_asc":
-                    studentsQuery = studentsQuery.OrderBy(s => s.BrojIndeksa);
+                    studentiQuery = studentiQuery.OrderBy(s => s.BrojIndeksa);
                     break;
                 case "index_desc":
-                    studentsQuery = studentsQuery.OrderByDescending(s => s.BrojIndeksa);
+                    studentiQuery = studentiQuery.OrderByDescending(s => s.BrojIndeksa);
                     break;
                 default:
-                    studentsQuery = studentsQuery.OrderBy(s => s.Ime);
+                    studentiQuery = studentiQuery.OrderBy(s => s.Ime);
                     break;
             }
 
-            var students = await studentsQuery.ToListAsync();
+            var students = await studentiQuery.ToListAsync();
 
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studijskiProgramId);
 
@@ -66,6 +80,7 @@ namespace StudentHub.Controllers
 
         // GET: Studenti/Details{id}
         [HttpGet("Details/{id:long}")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id, string sortOrder, string searchString, long? studijskiProgramId)
         {
             if (id == null)
@@ -74,14 +89,16 @@ namespace StudentHub.Controllers
             }
 
             var student = await _context.Studenti
-                .Include(s => s.StudijskiProgram)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
+                .Include(s => s.StudentStudijskiProgrami)
+                .ThenInclude(ssp => ssp.StudijskiProgram)
+                .FirstOrDefaultAsync(m => m.Id == id)
+                ?? throw new InvalidOperationException("Student nije pronađen.");
+
+            // Uzmite prvi (ili glavni) studijski program ako postoji
+            var studijskiProgram = student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram;
 
             var predmeti = await _context.StudentiNaPredmetima
+                .Include(snp => snp.Predmet)
                 .Where(snp => snp.StudentId == id)
                 .Select(snp => snp.Predmet)
                 .ToListAsync();
@@ -91,7 +108,8 @@ namespace StudentHub.Controllers
                 .ToDictionaryAsync(o => o.PredmetId, o => (float?)o.Vrijednost);
 
             var studentsQuery = _context.Studenti
-                .Include(s => s.StudijskiProgram)
+                .Include(s => s.StudentStudijskiProgrami)
+                .ThenInclude(ssp => ssp.StudijskiProgram)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -101,39 +119,13 @@ namespace StudentHub.Controllers
 
             if (studijskiProgramId.HasValue)
             {
-                studentsQuery = studentsQuery.Where(s => s.StudijskiProgramId == studijskiProgramId.Value);
-            }
-
-            var groupedStudents = await studentsQuery
-                .GroupBy(s => s.StudijskiProgram)
-                .Select(g => new StudentiGroupedByProgramViewModel
-                {
-                    StudijskiProgram = g.Key,
-                    Studenti = g.ToList()
-                })
-                .ToListAsync();
-
-            // Apply sorting
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    groupedStudents.ForEach(g => g.Studenti = g.Studenti.OrderByDescending(s => s.Ime).ToList());
-                    break;
-                case "index_asc":
-                    groupedStudents.ForEach(g => g.Studenti = g.Studenti.OrderBy(s => s.BrojIndeksa).ToList());
-                    break;
-                case "index_desc":
-                    groupedStudents.ForEach(g => g.Studenti = g.Studenti.OrderByDescending(s => s.BrojIndeksa).ToList());
-                    break;
-                default:
-                    groupedStudents.ForEach(g => g.Studenti = g.Studenti.OrderBy(s => s.Ime).ToList());
-                    break;
+                studentsQuery = studentsQuery
+                    .Where(s => s.StudentStudijskiProgrami.Any(ssp => ssp.StudijskiProgramId == studijskiProgramId.Value));
             }
 
             var viewModel = new StudentDetailsViewModel
             {
                 Student = student,
-                GroupedStudents = groupedStudents,
                 CurrentSort = sortOrder,
                 SearchString = searchString,
                 StudijskiProgramId = studijskiProgramId,
@@ -146,113 +138,32 @@ namespace StudentHub.Controllers
             return View(viewModel);
         }
 
-        // GET: Studenti/Create
-        [HttpGet("Create")]
-        public IActionResult Create()
-        {
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            return View();
-        }
-
-        // POST: Studenti/Create
-        [HttpPost("Create")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("JMBG,Ime,Prezime,Email,Lozinka,BrojIndeksa,GodinaStudija,PredhodnoObrazovanje,Uloga,StudijskiProgramId,Semestar,PredmetIds")] StudentCreateViewModel model)
-        {
-            var postojiKorisnik = await _context.Korisnici.AnyAsync(k => k.JMBG == model.JMBG);
-
-            if (postojiKorisnik)
-            {
-                ModelState.AddModelError("JMBG", "Korisnik sa ovim JMBG-om već postoji.");
-                return View(model);
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var nastavniPlan = await _context.NastavniPlanovi
-                        .FirstOrDefaultAsync(np => np.StudijskiProgramId == model.StudijskiProgramId && np.GodinaStudija == model.GodinaStudija.ToString());
-
-                    if (nastavniPlan == null)
-                    {
-                        ModelState.AddModelError("NastavniPlanId", "Nastavni plan za odabranu godinu studija i semestar nije pronađen.");
-                        return View(model);
-                    }
-
-                    var student = new Student
-                    {
-                        JMBG = model.JMBG,
-                        Ime = model.Ime,
-                        Prezime = model.Prezime,
-                        Email = model.Email,
-                        Lozinka = model.Lozinka,
-                        BrojIndeksa = model.BrojIndeksa,
-                        GodinaStudija = model.GodinaStudija,
-                        PredhodnoObrazovanje = model.PredhodnoObrazovanje,
-                        Uloga = model.Uloga,
-                        StudijskiProgramId = model.StudijskiProgramId,
-                        NastavniPlanId = nastavniPlan.Id,
-                        Semestar = model.Semestar
-                    };
-
-                    _context.Studenti.Add(student);
-                    await _context.SaveChangesAsync();
-
-                    if (model.PredmetIds != null && model.PredmetIds.Any())
-                    {
-                        foreach (var predmetId in model.PredmetIds)
-                        {
-                            _context.StudentiNaPredmetima.Add(new StudentNaPredmetu
-                            {
-                                StudentId = student.Id,
-                                PredmetId = predmetId,
-                                AkademskaGodina = DateTime.Now.Year.ToString()
-                            });
-                        }
-                        await _context.SaveChangesAsync();
-                    }
-
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Došlo je do greške: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "Došlo je do greške prilikom kreiranja studenta.");
-                }
-            }
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            return View(model);
-        }
-
         // GET: Studenti/Edit/{id}
         [HttpGet("Edit/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
-            var student = await _context.Studenti
-                .FirstOrDefaultAsync(s => s.Id == id);
+            var student = await _context.Studenti.FindAsync(id);
             if (student == null)
             {
                 return NotFound();
             }
 
+            var studijskiProgramId = student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgramId ?? 0;
+
             var model = new StudentEditViewModel
             {
                 Id = student.Id,
-                JMBG = student.JMBG,
                 Ime = student.Ime,
                 Prezime = student.Prezime,
+                JMBG = student.JMBG,
                 Email = student.Email,
                 BrojIndeksa = student.BrojIndeksa,
-                PredhodnoObrazovanje = student.PredhodnoObrazovanje,
+                StudijskiProgramId = studijskiProgramId,
                 GodinaStudija = student.GodinaStudija,
-                Lozinka = null,
-                Uloga = student.Uloga,
-                StudijskiProgramId = student.StudijskiProgramId,
-                NastavniPlanId = student.NastavniPlanId,
                 Semestar = student.Semestar,
+                PrethodnoObrazovanje = student.PrethodnoObrazovanje,
+                Uloga = student.Uloga,
                 PredmetIds = await _context.StudentiNaPredmetima
                     .Where(snp => snp.StudentId == student.Id)
                     .Select(snp => snp.PredmetId)
@@ -268,16 +179,21 @@ namespace StudentHub.Controllers
                     Selected = u == student.Uloga
                 });
 
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", student.StudijskiProgramId);
-            ViewBag.NastavniPlanovi = new SelectList(_context.NastavniPlanovi, "Id", "GodinaStudija", student.NastavniPlanId);
-            ViewBag.Predmeti = new SelectList(_context.Predmeti.Where(p => p.NastavniPlan.StudijskiProgramId == student.StudijskiProgramId), "Id", "Naziv");
+            ViewBag.StudijskiProgrami = new SelectList(
+                _context.StudijskiProgrami, "Id", "Naziv", studijskiProgramId);
+            ViewBag.NastavniPlanovi = new SelectList(
+                _context.NastavniPlanovi, "Id", "GodinaStudija", student.NastavniPlanId);
+            ViewBag.Predmeti = new SelectList(
+                _context.Predmeti.Where(p => _context.StudentiNaPredmetima
+                    .Any(snp => snp.StudentId == student.Id && snp.PredmetId == p.Id)),
+                "Id", "Naziv");
 
             return View(model);
         }
 
-        // POST: Studenti/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, StudentEditViewModel model)
         {
             if (id != model.Id)
@@ -287,70 +203,49 @@ namespace StudentHub.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
-                    .Cast<Uloga>()
-                    .Select(u => new SelectListItem
-                    {
-                        Value = ((int)u).ToString(),
-                        Text = u.ToString(),
-                        Selected = u == model.Uloga
-                    });
-                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
-                ViewBag.NastavniPlanovi = new SelectList(_context.NastavniPlanovi, "Id", "GodinaStudija", model.NastavniPlanId);
-                ViewBag.Predmeti = new SelectList(_context.Predmeti.Where(p => p.NastavniPlan.StudijskiProgramId == model.StudijskiProgramId), "Id", "Naziv");
+                ViewBag.StudijskiProgrami = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
+                ViewBag.Predmeti = new SelectList(await _context.Predmeti.ToListAsync(), "Id", "Naziv");
                 return View(model);
             }
 
-            if (!Enum.IsDefined(typeof(Uloga), model.Uloga))
+            var existingStudent = await _context.Studenti.Include(s => s.StudentStudijskiProgrami)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (existingStudent == null)
             {
-                ModelState.AddModelError(nameof(model.Uloga), "Izabrana uloga nije validna.");
+                return NotFound();
+            }
+
+            existingStudent.Ime = model.Ime;
+            existingStudent.Prezime = model.Prezime;
+            existingStudent.Email = model.Email;
+            existingStudent.BrojIndeksa = model.BrojIndeksa;
+            existingStudent.PrethodnoObrazovanje = model.PrethodnoObrazovanje;
+            existingStudent.GodinaStudija = model.GodinaStudija;
+            existingStudent.Uloga = model.Uloga;
+            existingStudent.Semestar = model.Semestar;
+
+            var nastavniPlan = await _context.NastavniPlanovi
+                .FirstOrDefaultAsync(np => np.StudijskiProgramId == model.StudijskiProgramId
+                                           && np.GodinaStudija == model.GodinaStudija.ToString());
+
+            if (nastavniPlan == null)
+            {
+                ModelState.AddModelError("NastavniPlanId", "Nastavni plan za odabranu godinu studija nije pronađen.");
                 return View(model);
             }
 
-            try
+            existingStudent.NastavniPlanId = nastavniPlan.Id;
+
+            var stariPredmeti = await _context.StudentiNaPredmetima
+                .Where(snp => snp.StudentId == existingStudent.Id)
+                .ToListAsync();
+
+            _context.StudentiNaPredmetima.RemoveRange(stariPredmeti);
+
+            if (model.PredmetIds != null && model.PredmetIds.Any())
             {
-                var existingStudent = await _context.Studenti
-                    .FirstOrDefaultAsync(s => s.Id == id);
-                if (existingStudent == null)
-                {
-                    return NotFound();
-                }
-
-                if (!string.IsNullOrEmpty(model.Lozinka))
-                {
-                    existingStudent.Lozinka = model.Lozinka;
-                }
-
-                existingStudent.Ime = model.Ime;
-                existingStudent.Prezime = model.Prezime;
-                existingStudent.Email = model.Email;
-                existingStudent.JMBG = model.JMBG;
-                existingStudent.BrojIndeksa = model.BrojIndeksa;
-                existingStudent.PredhodnoObrazovanje = model.PredhodnoObrazovanje;
-                existingStudent.GodinaStudija = model.GodinaStudija;
-                existingStudent.Uloga = model.Uloga;
-                existingStudent.StudijskiProgramId = model.StudijskiProgramId;
-                existingStudent.Semestar = model.Semestar;
-
-                var nastavniPlan = await _context.NastavniPlanovi
-                    .FirstOrDefaultAsync(np => np.StudijskiProgramId == model.StudijskiProgramId && np.GodinaStudija == model.GodinaStudija.ToString());
-
-                if (nastavniPlan == null)
-                {
-                    ModelState.AddModelError("NastavniPlanId", "Nastavni plan za odabranu godinu studija i semestar nije pronađen.");
-                    return View(model);
-                }
-
-                existingStudent.NastavniPlanId = nastavniPlan.Id;
-
-                var existingPredmeti = await _context.StudentiNaPredmetima
-                    .Where(snp => snp.StudentId == existingStudent.Id)
-                    .Select(snp => snp.PredmetId)
-                    .ToListAsync();
-                var newPredmeti = model.PredmetIds.Except(existingPredmeti).ToList();
-                var removedPredmeti = existingPredmeti.Except(model.PredmetIds).ToList();
-
-                foreach (var predmetId in newPredmeti)
+                foreach (var predmetId in model.PredmetIds)
                 {
                     _context.StudentiNaPredmetima.Add(new StudentNaPredmetu
                     {
@@ -359,32 +254,31 @@ namespace StudentHub.Controllers
                         AkademskaGodina = DateTime.Now.Year.ToString()
                     });
                 }
-
-                foreach (var predmetId in removedPredmeti)
-                {
-                    var studentNaPredmetu = await _context.StudentiNaPredmetima
-                        .FirstOrDefaultAsync(snp => snp.StudentId == existingStudent.Id && snp.PredmetId == predmetId);
-                    if (studentNaPredmetu != null)
-                    {
-                        _context.StudentiNaPredmetima.Remove(studentNaPredmetu);
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
+
+            // Ažuriranje pomoćne tabele StudentStudijskiProgram
+            var existingEntries = _context.StudentStudijskiProgrami
+                .Where(ssp => ssp.StudentId == existingStudent.Id)
+                .ToList();
+
+            _context.StudentStudijskiProgrami.RemoveRange(existingEntries);
+
+            if (model.StudijskiProgramId != 0)
             {
-                if (!StudentExists(model.Id))
+                _context.StudentStudijskiProgrami.Add(new StudentStudijskiProgram
                 {
-                    return NotFound();
-                }
-                throw;
+                    StudentId = existingStudent.Id,
+                    StudijskiProgramId = model.StudijskiProgramId
+                });
             }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Studenti/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -404,6 +298,7 @@ namespace StudentHub.Controllers
         // POST: Studenti/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var student = await _context.Studenti.FindAsync(id);
@@ -429,14 +324,17 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> GroupedByProgram()
         {
             var groupedStudents = await _context.Studenti
-                .Include(s => s.StudijskiProgram)
-                .GroupBy(s => s.StudijskiProgram)
+                .Include(s => s.StudentStudijskiProgrami)
+                .ThenInclude(ssp => ssp.StudijskiProgram)
+                .SelectMany(s => s.StudentStudijskiProgrami)
+                .GroupBy(ssp => ssp.StudijskiProgram)
                 .Select(g => new StudentiGroupedByProgramViewModel
                 {
                     StudijskiProgram = g.Key,
-                    Studenti = g.ToList()
+                    Studenti = g.Select(ssp => ssp.Student).ToList()
                 })
                 .ToListAsync();
+
 
             return View(groupedStudents);
         }
@@ -446,29 +344,30 @@ namespace StudentHub.Controllers
         {
             var predmeti = await _context.Predmeti
                 .Where(p => p.NastavniPlan.StudijskiProgramId == studijskiProgramId)
-                .Select(p => new { id = p.Id, naziv = p.Naziv })
+                .Select(p => new
+                {
+                    id = p.Id,
+                    naziv = p.Naziv
+                })
                 .ToListAsync();
 
             return Json(predmeti);
         }
 
-        [HttpGet("GetPredmetiByStudijskiProgramAndNastavniPlan")]
-        public async Task<IActionResult> GetPredmetiByStudijskiProgramAndNastavniPlan(long studijskiProgramId, int godinaStudija, int semestar)
+        [HttpGet("GetNastavniPlanovi/{studijskiProgramId}")]
+        public async Task<IActionResult> GetNastavniPlanovi(long studijskiProgramId)
         {
-            var nastavniPlan = await _context.NastavniPlanovi
-                .FirstOrDefaultAsync(np => np.StudijskiProgramId == studijskiProgramId && np.GodinaStudija == godinaStudija.ToString());
-
-            if (nastavniPlan == null)
-            {
-                return Json(new List<object>());
-            }
-
-            var predmeti = await _context.Predmeti
-                .Where(p => p.NastavniPlanId == nastavniPlan.Id && p.Semestar == semestar)
-                .Select(p => new { id = p.Id, naziv = p.Naziv })
+            var nastavaniPlanovi = await _context.NastavniPlanovi
+                .Where(np => np.StudijskiProgramId == studijskiProgramId)
+                .Select(np => new
+                {
+                    id = np.Id,
+                    naziv = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godinu"
+                })
                 .ToListAsync();
 
-            return Json(predmeti);
+            return Json(nastavaniPlanovi);
         }
+
     }
 }

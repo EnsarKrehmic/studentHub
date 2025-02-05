@@ -20,7 +20,11 @@ namespace StudentHub.Models
         [Range(1, 6, ErrorMessage = "Trajanje mora biti između 1 i 6 godina.")]
         [DisplayName("Trajanje (godine)")]
         public int TrajanjeUGodinama { get; set; }
-
+        public List<StudentStudijskiProgram> StudentStudijskiProgrami { get; set; } = new();
+        public List<AsistentStudijskiProgram> AsistentStudijskiProgrami { get; set; } = new();
+        public List<ProfesorStudijskiProgram> ProfesorStudijskiProgrami { get; set; } = new();
+        public List<StudentskaSluzbaStudijskiProgram> StudentskaSluzbaStudijskiProgrami { get; set; } = new();
+        public List<ObavjestenjeStudijskiProgram> ObavjestenjeStudijskiProgrami { get; set; } = new();
         public StudijskiProgram() { }
     }
 }

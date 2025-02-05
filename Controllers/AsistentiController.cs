@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -24,6 +25,10 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, long? studijskiProgramId)
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["SurnameSortParm"] = sortOrder == "surname_asc" ? "surname_desc" : "surname_asc";
+            ViewData["JMBGSortParm"] = sortOrder == "jmbg_asc" ? "jmbg_desc" : "jmbg_asc";
+            ViewData["EmailSortParm"] = sortOrder == "email_asc" ? "email_desc" : "email_asc";
+            ViewData["TitulaSortParm"] = sortOrder == "titula_asc" ? "titula_desc" : "titula_asc";
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentStudijskiProgramId"] = studijskiProgramId;
 
@@ -44,6 +49,30 @@ namespace StudentHub.Controllers
                 case "name_desc":
                     asistentiQuery = asistentiQuery.OrderByDescending(p => p.Ime);
                     break;
+                case "surname_asc":
+                    asistentiQuery = asistentiQuery.OrderBy(p => p.Prezime);
+                    break;
+                case "surname_desc":
+                    asistentiQuery = asistentiQuery.OrderByDescending(p => p.Prezime);
+                    break;
+                case "jmbg_asc":
+                    asistentiQuery = asistentiQuery.OrderBy(p => p.JMBG);
+                    break;
+                case "jmbg_desc":
+                    asistentiQuery = asistentiQuery.OrderByDescending(p => p.JMBG);
+                    break;
+                case "email_asc":
+                    asistentiQuery = asistentiQuery.OrderBy(p => p.Email);
+                    break;
+                case "email_desc":
+                    asistentiQuery = asistentiQuery.OrderByDescending(p => p.Email);
+                    break;
+                case "titula_asc":
+                    asistentiQuery = asistentiQuery.OrderBy(p => p.AsistentTitula);
+                    break;
+                case "titula_desc":
+                    asistentiQuery = asistentiQuery.OrderByDescending(p => p.AsistentTitula);
+                    break;
                 default:
                     asistentiQuery = asistentiQuery.OrderBy(p => p.Ime);
                     break;
@@ -58,6 +87,7 @@ namespace StudentHub.Controllers
 
         // GET: Asistenti/Details/{id}
         [HttpGet("Details/{id:long}")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -92,73 +122,9 @@ namespace StudentHub.Controllers
             return View(viewModel);
         }
 
-        // GET: Asistenti/Create
-        [HttpGet("Create")]
-        public IActionResult Create()
-        {
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View();
-        }
-
-        // POST: Asistenti/Create
-        [HttpPost("Create")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AsistentCreateViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var asistent = new Asistent
-                {
-                    Ime = model.Ime,
-                    Prezime = model.Prezime,
-                    JMBG = model.JMBG,
-                    Email = model.Email,
-                    Lozinka = model.Lozinka,
-                    AsistentTitula = model.AsistentTitula,
-                    Uloga = model.Uloga
-                };
-
-                _context.Asistenti.Add(asistent);
-                await _context.SaveChangesAsync();
-
-                if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
-                {
-                    foreach (var studijskiProgramId in model.StudijskiProgramIds)
-                    {
-                        _context.AsistentStudijskiProgrami.Add(new AsistentStudijskiProgram
-                        {
-                            AsistentId = asistent.Id,
-                            StudijskiProgramId = studijskiProgramId
-                        });
-                    }
-                }
-
-                if (model.PredmetIds != null && model.PredmetIds.Any())
-                {
-                    foreach (var predmetId in model.PredmetIds)
-                    {
-                        _context.PredmetAsistenti.Add(new PredmetAsistent
-                        {
-                            AsistentId = asistent.Id,
-                            PredmetId = predmetId
-                        });
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View(model);
-        }
-
         // GET: Asistenti/Edit/{id}
         [HttpGet("Edit/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
             var asistent = await _context.Asistenti.FindAsync(id);
@@ -174,7 +140,6 @@ namespace StudentHub.Controllers
                 Prezime = asistent.Prezime,
                 JMBG = asistent.JMBG,
                 Email = asistent.Email,
-                Lozinka = asistent.Lozinka,
                 AsistentTitula = asistent.AsistentTitula,
                 Uloga = asistent.Uloga,
                 StudijskiProgramIds = await _context.AsistentStudijskiProgrami
@@ -189,13 +154,21 @@ namespace StudentHub.Controllers
 
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
             ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View(model);
+
+            ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
+                            .Cast<Uloga>()
+                            .Select(u => new SelectListItem
+                            {
+                                Value = ((int)u).ToString(),
+                                Text = u.ToString(),
+                                Selected = u == asistent.Uloga
+                            }); return View(model);
         }
 
         // POST: Asistenti/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, AsistentEditViewModel model)
         {
             if (id != model.Id)
@@ -215,7 +188,6 @@ namespace StudentHub.Controllers
                 asistent.Prezime = model.Prezime;
                 asistent.JMBG = model.JMBG;
                 asistent.Email = model.Email;
-                asistent.Lozinka = model.Lozinka;
                 asistent.AsistentTitula = model.AsistentTitula;
                 asistent.Uloga = model.Uloga;
 
@@ -285,6 +257,7 @@ namespace StudentHub.Controllers
 
         // GET: Asistenti/Delete/{id}
         [HttpGet("Delete/{id:long}")]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -304,6 +277,7 @@ namespace StudentHub.Controllers
         // POST: Asistenti/Delete/{id}
         [HttpPost("Delete/{id:long}")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var asistent = await _context.Asistenti.FindAsync(id);

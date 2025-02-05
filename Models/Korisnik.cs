@@ -20,46 +20,30 @@ namespace StudentHub.Models
     {
         [Key]
         public long Id { get; set; }
+        public string AspNetUserId { get; set; }
 
         [Required(ErrorMessage = "JMBG je obavezan.")]
         [StringLength(13, MinimumLength = 13, ErrorMessage = "JMBG mora imati tačno 13 karaktera.")]
-        public string JMBG { get; set; }
+        public string? JMBG { get; set; }
 
         [Required(ErrorMessage = "Ime je obavezno.")]
         [MaxLength(50, ErrorMessage = "Ime ne može biti duže od 50 karaktera.")]
-        public string Ime { get; set; }
+        public string? Ime { get; set; }
 
         [Required(ErrorMessage = "Prezime je obavezno.")]
         [MaxLength(50, ErrorMessage = "Prezime ne može biti duže od 50 karaktera.")]
-        public string Prezime { get; set; }
+        public string? Prezime { get; set; }
 
         [EmailAddress(ErrorMessage = "Unesite validnu email adresu.")]
         public string? Email { get; set; }
 
-        [Required(ErrorMessage = "Lozinka je obavezna.")]
         [DataType(DataType.Password)]
-        [MinLength(8, ErrorMessage = "Lozinka mora imati najmanje 8 karaktera.")]
-        public string Lozinka { get; set; }
-
-        [ForeignKey("Student")]
-        public long? StudentId { get; set; }
-        public Student Student { get; set; }
-
-        [ForeignKey("Profesor")]
-        public long? ProfesorId { get; set; }
-        public Profesor Profesor { get; set; }
-
-        [ForeignKey("Asistent")]
-        public long? AsistentId { get; set; }
-        public Asistent Asistent { get; set; }
-
-        [ForeignKey("StudentskaSluzba")]
-        public long? StudentskaSluzbaId { get; set; }
-        public StudentskaSluzba StudentskaSluzba { get; set; }
+        public string? Lozinka { get; set; }
 
         [Required(ErrorMessage = "Uloga je obavezna.")]
         [EnumDataType(typeof(Uloga))]
         public Uloga Uloga { get; set; }
+
         public Korisnik() { }
     }
 }

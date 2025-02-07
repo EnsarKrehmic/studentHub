@@ -1,4 +1,6 @@
-﻿@model IEnumerable<StudentHub.ViewModels.ObavjestenjeViewModel>
+﻿@using System.Security.Claims
+
+@model IEnumerable<StudentHub.ViewModels.ObavjestenjeViewModel>
 
 @{
     ViewData["Title"] = "Lista obavještenja";
@@ -31,7 +33,6 @@
     }
 </p>
 
-
 @if (Model != null && Model.Any())
 {
     <table class="table table-bordered table-hover">
@@ -52,7 +53,17 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.Naslov)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Sadrzaj)</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Sadrzaj))
+                        {
+                            var preview = item.Sadrzaj.Length > 20 ? item.Sadrzaj.Substring(0, 20) + "..." : item.Sadrzaj;
+                            @preview
+                        }
+                        else
+                        {
+                            <span>Nema sadržaja</span>
+                        }
+                    </td>
                     <td>@Html.DisplayFor(modelItem => item.DatumObjave)</td>
                     <td>@string.Join(", ", item.StudijskiProgramNazivi)</td>
                     <td>
@@ -60,7 +71,7 @@
                     {
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
                     }
-                    @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                    @if (item.KorisnikAspNetUserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                     {
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>

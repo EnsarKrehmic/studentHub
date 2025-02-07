@@ -132,6 +132,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Me/source/repos/studentHub/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Me/source/repos/studentHub/Views/Ispiti/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSXNwaXRpXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -212,8 +216,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2NqZW5lXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Me/source/repos/studentHub/Views/Ocjene/Student.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2NqZW5lXFN0dWRlbnQuY3NodG1s
+[C:/Users/Me/source/repos/studentHub/Views/Ocjene/OcjenaCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2NqZW5lXE9jamVuYUNhcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Me/source/repos/studentHub/Views/Predmeti/Create.cshtml]
@@ -246,6 +250,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Me/source/repos/studentHub/Views/Prijave/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJpamF2ZVxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/Views/Prijave/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJpamF2ZVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Me/source/repos/studentHub/Views/Prijave/Index.cshtml]
@@ -292,6 +300,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudGlcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Me/source/repos/studentHub/Views/Studenti/GroupedByProgram.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudGlcR3JvdXBlZEJ5UHJvZ3JhbS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Me/source/repos/studentHub/Views/Studenti/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudGlcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -326,6 +338,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Me/source/repos/studentHub/Views/StudijskiProgrami/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGlqc2tpUHJvZ3JhbWlcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/Views/StudijskiProgrami/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGlqc2tpUHJvZ3JhbWlcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Me/source/repos/studentHub/Views/Uvjerenja/Create.cshtml]

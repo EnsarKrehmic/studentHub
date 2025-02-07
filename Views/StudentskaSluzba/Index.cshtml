@@ -82,10 +82,18 @@
                 @if (User.IsInRole("Studentska služba"))
                 {
                     <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
-
                 }
                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.StudijskiProgram.Naziv)</td>
+                <td>
+                    @if (item.StudentskaSluzbaStudijskiProgrami.Any())
+                    {
+                        @string.Join(", ", item.StudentskaSluzbaStudijskiProgrami.Select(sp => sp.StudijskiProgram.Naziv))
+                    }
+                    else
+                    {
+                        <span>Nema dodijeljenih programa</span>
+                    }
+                </td>
                 <td>
                     @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                     {

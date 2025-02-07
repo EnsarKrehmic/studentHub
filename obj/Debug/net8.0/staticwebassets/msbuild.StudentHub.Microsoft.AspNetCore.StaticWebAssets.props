@@ -558,5 +558,41 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\StudentHub.1mp7n4vejp.bundle.scp.css'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\1f1a183c-65e4-4123-8908-173c0b11c127_indeks prva stranica.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>StudentHub</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/StudentHub</BasePath>
+      <RelativePath>uploads/1f1a183c-65e4-4123-8908-173c0b11c127_indeks prva stranica.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>g8nne3fz59</Fingerprint>
+      <Integrity>YD9VwVOwhXdwrnvK/CYMLippU//am4irQcP+7PrlpIM=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\1f1a183c-65e4-4123-8908-173c0b11c127_indeks prva stranica.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\bc86023d-53d7-4ec9-b50d-00ef4d7a993f_kjr_logo_king_signatured.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>StudentHub</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/StudentHub</BasePath>
+      <RelativePath>uploads/bc86023d-53d7-4ec9-b50d-00ef4d7a993f_kjr_logo_king_signatured.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>3ob64d1seg</Fingerprint>
+      <Integrity>bZc+wc8o74nA5AEQrlMhicERPOeq0JDvjZB4GkdKF3c=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\bc86023d-53d7-4ec9-b50d-00ef4d7a993f_kjr_logo_king_signatured.png'))</OriginalItemSpec>
+    </StaticWebAsset>
   </ItemGroup>
 </Project>

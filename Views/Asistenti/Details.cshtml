@@ -7,47 +7,64 @@
 <h2>@ViewData["Title"]</h2>
 
 <div class="container mt-4">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h3>Podaci o asistentu</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3>Podaci o asistentu</h3>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Ime:</dt>
+                        <dd class="col-sm-8">@Model.Asistent.Ime</dd>
+
+                        <dt class="col-sm-4">Prezime:</dt>
+                        <dd class="col-sm-8">@Model.Asistent.Prezime</dd>
+
+                        @if (User.IsInRole("Studentska služba") || User.IsInRole("Asistent"))
+                        {
+                            <dt class="col-sm-4">JMBG:</dt>
+                            <dd class="col-sm-8">@Model.Asistent.JMBG</dd>
+                        }
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Asistent.Email</dd>
+
+                        <dt class="col-sm-4">Titula:</dt>
+                        <dd class="col-sm-8">@Model.Asistent.AsistentTitula</dd>
+
+                        <dt class="col-sm-4">Uloga:</dt>
+                        <dd class="col-sm-8">@Model.Asistent.Uloga</dd>
+                    </dl>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Ime:</dt>
-                <dd class="col-sm-9">@Model.Asistent.Ime</dd>
 
-                <dt class="col-sm-3">Prezime:</dt>
-                <dd class="col-sm-9">@Model.Asistent.Prezime</dd>
-
-                @if (User.IsInRole("Studentska služba") || User.IsInRole("Asistent"))
-                {
-                    <dt class="col-sm-3">JMBG:</dt>
-                    <dd class="col-sm-9">@Model.Asistent.JMBG</dd>
-                }
-
-                <dt class="col-sm-3">Email:</dt>
-                <dd class="col-sm-9">@Model.Asistent.Email</dd>
-
-                <dt class="col-sm-3">Titula:</dt>
-                <dd class="col-sm-9">@Model.Asistent.AsistentTitula</dd>
-
-                <dt class="col-sm-3">Uloga:</dt>
-                <dd class="col-sm-9">@Model.Asistent.Uloga</dd>
-            </dl>
-        </div>
-    </div>
-
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h4>Studijski programi</h4>
-        </div>
-        <div class="card-body">
-            <ul>
-                @foreach (var studijskiProgram in Model.StudijskiProgrami)
-                {
-                    <li>@studijskiProgram.Naziv</li>
-                }
-            </ul>
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h4>Studijski programi</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.StudijskiProgrami.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var studijskiProgram in Model.StudijskiProgrami)
+                            {
+                                <li class="list-group-item">
+                                    <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@studijskiProgram.Id" class="text-decoration-none">
+                                        @studijskiProgram.Naziv
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Asistent trenutno nije dodijeljen nijednom studijskom programu.</p>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 
@@ -56,12 +73,32 @@
             <h4>Predmeti</h4>
         </div>
         <div class="card-body">
-            <ul>
-                @foreach (var predmet in Model.Predmeti)
-                {
-                    <li>@predmet.Naziv</li>
-                }
-            </ul>
+            @if (Model.Predmeti.Any())
+            {
+                <div class="row">
+                    @foreach (var predmet in Model.Predmeti)
+                    {
+                        <div class="col-md-4">
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none">
+                                            @predmet.Naziv
+                                        </a>
+                                    </h5>
+                                    <p class="card-text"><strong>ECTS:</strong> @predmet.ECTS</p>
+                                    <p class="card-text"><strong>Semestar:</strong> @(predmet.Semestar)</p>
+                                    <p class="card-text"><strong>Opis:</strong> @(string.IsNullOrEmpty(predmet.Opis) ? "Nema opisa." : predmet.Opis)</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">Asistent trenutno nije dodijeljen nijednom predmetu.</p>
+            }
         </div>
     </div>
 </div>

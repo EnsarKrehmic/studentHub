@@ -1,30 +1,39 @@
-﻿@model StudentHub.Models.Dokument
+﻿@model StudentHub.ViewModels.DokumentCreateViewModel
 
 @{
-    ViewData["Title"] = "Kreiranje novog dokumenta";
+    ViewData["Title"] = "Dodaj novi dokument";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="Naziv" class="control-label"></label>
         <input asp-for="Naziv" class="form-control" />
         <span asp-validation-for="Naziv" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Putanja" class="control-label"></label>
-        <input asp-for="Putanja" class="form-control" />
-        <span asp-validation-for="Putanja" class="text-danger"></span>
+        <label asp-for="Datoteka" class="control-label">Datoteka</label>
+        <input asp-for="Datoteka" type="file" class="form-control" />
+        <span asp-validation-for="Datoteka" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="StudentId" class="control-label"></label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti"></select>
+        <label asp-for="StudentId" class="control-label">Student</label>
+        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti">
+            <option value="">-- Izaberite Studenta --</option>
+        </select>
         <span asp-validation-for="StudentId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />
-        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
+        <label asp-for="StudentskaSluzbaId" class="control-label">Studentska Služba</label>
+        <select asp-for="StudentskaSluzbaId" class="form-control" asp-items="ViewBag.StudentskeSluzbe">
+            <option value="">-- Izaberite Studentsku Službu --</option>
+        </select>
+        <span asp-validation-for="StudentskaSluzbaId" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3">
+        <input type="submit" value="Dodaj" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Otkaži</a>
     </div>
 </form>
 

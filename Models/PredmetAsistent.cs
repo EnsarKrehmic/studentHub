@@ -17,5 +17,8 @@ namespace StudentHub.Models
         [ForeignKey("Asistent")]
         public long AsistentId { get; set; }
         public Asistent Asistent { get; set; }
+
+        [ForeignKey("AspNetUser")]
+        public string AspNetUserId { get; set; }
     }
 }

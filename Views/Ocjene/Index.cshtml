@@ -1,56 +1,95 @@
-﻿@model IEnumerable<StudentHub.Models.Ocjena>
+﻿@model IEnumerable<StudentHub.ViewModels.OcjenaViewModel>
 
 @{
     ViewData["Title"] = "Lista ocjena";
+    var userRole = User.IsInRole("Student") ? "Student" : User.IsInRole("Profesor") ? "Profesor" : "Studentska služba";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container mt-4">
+    <h2 class="text-center">Lista ocjena</h2>
 
-<p>
-    @if (User.IsInRole("Profesor"))
+    @if (Model.Any())
     {
-        <a asp-action="Create" class="btn btn-primary">Kreiraj novu ocjenu</a>
-    }
-</p>
+        @if (userRole == "Studentska služba")
+        {
+            var prosjekPoStudijskomProgramu = Model
+            .GroupBy(o => o.StudentStudijskiProgramNaziv)
+            .Select(g => new { StudijskiProgram = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
+            .ToList();
 
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Vrijednost)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Predmet)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Profesor)</th>
-            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-            {
-                <th>Akcije</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Prosjek po studijskim programima</h5>
+                    <ul class="list-group">
+                        @foreach (var item in prosjekPoStudijskomProgramu)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>@item.StudijskiProgram</strong>
+                                <span class="badge bg-dark">@item.Prosjek.ToString("0.00")</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        else if (userRole == "Student")
+        {
+            var prosjekOcjena = Model.Average(o => o.Vrijednost);
+
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Prosjek ocjena</h5>
+                    <p class="card-text"><strong id="averageGrade">@prosjekOcjena.ToString("0.00")</strong></p>
+                </div>
+            </div>
+        }
+        else if (userRole == "Profesor")
+        {
+            var prosjekPoPredmetu = Model
+            .GroupBy(o => o.PredmetNaziv)
+            .Select(g => new { Predmet = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
+            .ToList();
+
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Prosjek po predmetima</h5>
+                    <ul class="list-group">
+                        @foreach (var item in prosjekPoPredmetu)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>@item.Predmet</strong>
+                                <span class="badge bg-dark">@item.Prosjek.ToString("0.00")</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    }
+
+    <div class="row">
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Vrijednost)</td>
-                <td>@Html.DisplayFor(modelItem => item.Predmet.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.Profesor.Id)</td>
-                <td>
-                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-                    {
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Detalji</a>
-                    }
-                    @if (User.IsInRole("Studentska služba"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Izmjena</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Brisanje</a>
-                    }
-                    
-                </td>
-            </tr>
+            @await Html.PartialAsync("OcjenaCard", item)
         }
-    </tbody>
-</table>
+    </div>
 
-<div>
-    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu</a>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script type="text/javascript">
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
+
+        connection.on("UpdateAverageGrade", (predmetId, averageGrade) => {
+            document.getElementById("averageGrade").innerText = averageGrade.toFixed(2);
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+    </script>
+}

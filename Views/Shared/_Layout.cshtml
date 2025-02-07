@@ -57,9 +57,18 @@
                                 <li><a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="3">Softversko inženjerstvo</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Obavjestenja" asp-action="Index">Obavještenja</a>
-                        </li>
+                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Obavjestenja" asp-action="Index">Obavještenja</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Dokumenti" asp-action="Index">Dokumenti</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

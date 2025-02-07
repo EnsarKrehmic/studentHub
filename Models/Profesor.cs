@@ -9,7 +9,6 @@ namespace StudentHub.Models
         [MaxLength(30, ErrorMessage = "Titula ne može biti duža od 30 karaktera.")]
         [DisplayName("Titula")]
         public string? ProfesorTitula { get; set; }
-
         public List<PredmetProfesor> Predmeti { get; set; } = new List<PredmetProfesor>();
         public List<ProfesorStudijskiProgram> ProfesorStudijskiProgrami { get; set; }
 

@@ -5,11 +5,11 @@ namespace StudentHub.Models
 {
     public enum TipZahtjeva
     {
-        [Display(Name = "Upis")]
+        [Display(Name = "Ispisnica")]
         Upis,
-        [Display(Name = "Statusna potvrda")]
+        [Display(Name = "Potrvda o statusu studenta")]
         StatusnaPotvrda,
-        [Display(Name = "Ispitna potvrda")]
+        [Display(Name = "Uvjerenje o polozenim ispitima")]
         IspitnaPotvrda,
         [Display(Name = "Ostalo")]
         Ostalo
@@ -19,6 +19,8 @@ namespace StudentHub.Models
     {
         [Display(Name = "Podnesen")]
         Podnesen,
+        [Display(Name = "Primljen")]
+        Primljen,
         [Display(Name = "Odbijen")]
         Odbijen,
         [Display(Name = "Prihvaćen")]
@@ -42,6 +44,7 @@ namespace StudentHub.Models
         public DateTime DatumPodnosenja { get; set; }
 
         public DateTime? DatumRjesavanja { get; set; }
+        public string? Napomena;
 
         [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]

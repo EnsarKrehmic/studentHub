@@ -107,6 +107,7 @@ namespace StudentHub.Controllers
                 .Select(psp => psp.StudijskiProgram)
                 .ToListAsync();
 
+            // Dohvatanje predmeta koje profesor predaje
             var predmeti = await _context.PredmetProfesori
                 .Where(pp => pp.ProfesorId == id)
                 .Select(pp => pp.Predmet)

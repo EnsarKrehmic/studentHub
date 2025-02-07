@@ -4,90 +4,80 @@
     ViewData["Title"] = "Detalji studenta";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4">@ViewData["Title"]</h2>
 
-<div class="container mt-4">
+<div class="container">
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
             <h3>Podaci o studentu</h3>
         </div>
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Ime:</dt>
-                <dd class="col-sm-9">@Model.Student.Ime</dd>
-
-                <dt class="col-sm-3">Prezime:</dt>
-                <dd class="col-sm-9">@Model.Student.Prezime</dd>
-
-                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-                {
-                    <dt class="col-sm-3">JMBG:</dt>
-                    <dd class="col-sm-9">@Model.Student.JMBG</dd>
-                }
-
-                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-                {
-                    <dt class="col-sm-3">Broj indeksa:</dt>
-                    <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
-                }
-
-                <dt class="col-sm-3">Email:</dt>
-                <dd class="col-sm-9">@Model.Student.Email</dd>
-
-                <dt class="col-sm-3">Godina studija:</dt>
-                <dd class="col-sm-9">@Model.Student.GodinaStudija</dd>
-
-                <dt class="col-sm-3">Semestar:</dt>
-                <dd class="col-sm-9">@Model.Student.Semestar</dd>
-
-                <dt class="col-sm-3">Uloga:</dt>
-                <dd class="col-sm-9">@Model.Student.Uloga</dd>
-
-                <dt class="col-sm-3">Titula:</dt>
-                <dd class="col-sm-9">@Model.Student.GodinaStudija</dd>
-
-                <dt class="col-sm-3">Studijski program:</dt>
-                <dd class="col-sm-9">
-                    @Model.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram?.Naziv ?? "N/A"
-                </dd>
-            </dl>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-primary">Osnovni podaci</h5>
+                    <p><strong>Ime i prezime:</strong> @Model.Student.Ime @Model.Student.Prezime</p>
+                    <p><strong>Email:</strong> @Model.Student.Email</p>
+                    <p><strong>Broj indeksa:</strong> @Model.Student.BrojIndeksa</p>
+                    <p><strong>Godina studija:</strong> @Model.Student.GodinaStudija</p>
+                    <p><strong>Semestar:</strong> @Model.Student.Semestar</p>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-primary">Dodatne informacije</h5>
+                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                    {
+                        <p><strong>JMBG:</strong> @Model.Student.JMBG</p>
+                    }
+                    <p><strong>Uloga:</strong> @Model.Student.Uloga</p>
+                    <p>
+                        <strong>Studijski program:</strong>
+                        @(Model.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram?.Naziv ?? "Nepoznato")
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="mt-4">
-        <h4>Predmeti koje student pohađa</h4>
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Naziv predmeta</th>
-                    <th>Opis</th>
-                    <th>ECTS</th>
-                    <th>Semestar</th>
-                    <th>Ocjena</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var predmet in Model.Predmeti)
-                {
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h3>Predmeti koje student pohađa</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
                     <tr>
-                        <td>@predmet.Naziv</td>
-                        <td>@predmet.Opis</td>
-                        <td>@predmet.ECTS</td>
-                        <td>@predmet.Semestar</td>
-                        <td>
-                            @if (Model.Ocjene.ContainsKey(predmet.Id))
-                            {
-                                @Model.Ocjene[predmet.Id]
-                            }
-                            else
-                            {
-                                <span class="text-warning">Nema ocjene</span>
-                            }
-                        </td>
+                        <th>Naziv predmeta</th>
+                        <th>ECTS</th>
+                        <th>Semestar</th>
+                        <th>Ocjena</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var snp in Model.Student.StudentNaPredmetima)
+                    {
+                        var predmet = snp.Predmet;
+                        <tr>
+                            <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none">
+                            <td>@predmet.Naziv</td>
+                            </a>
+                            <td>@predmet.ECTS</td>
+                            <td>@predmet.Semestar</td>
+                            <td>
+                                @if (Model.Ocjene.TryGetValue(predmet.Id, out var ocjena))
+                                {
+                                    <span class="badge @(ocjena >= 8 ? "bg-success" : ocjena >= 6 ? "bg-warning" : "bg-danger")">
+                                        @ocjena
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-warning">Nema ocjene</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

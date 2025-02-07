@@ -1,23 +1,48 @@
-﻿@model List<StudentHub.ViewModels.StudentiGroupedByProgramViewModel>
+﻿@model IEnumerable<StudentHub.ViewModels.StudentGroupedByProgramViewModel>
 
 @{
-    ViewData["Title"] = "Lista studenata po studijskim programima";
+    ViewData["Title"] = "Studenti grupisani po studijskom programu";
 }
 
 <h2>@ViewData["Title"]</h2>
 
+<form asp-action="GroupedByProgram" method="get">
+    <div class="form-group">
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Pretraži studente" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary mt-3">Pretraži</button>
+    </div>
+</form>
+
 @foreach (var group in Model)
 {
-    <h5>@group.StudijskiProgram.Naziv</h5>
-    <table class="table table-bordered table-hover">
+    <h3>@group.StudijskiProgram.Naziv</h3>
+    <table class="table table-bordered table-hover mt-3">
         <thead>
             <tr>
-                <th>Ime</th>
-                <th>Prezime</th>
-                <th>Broj Indeksa</th>
-                <th>Godina Studija</th>
-                <th>Semestar</th>
-                <th>Predmet</th>
+                <th>
+                    <a asp-action="GroupedByProgram"
+                       asp-route-sortOrder="@ViewData["NameSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]">
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().Studenti.FirstOrDefault().Ime)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="GroupedByProgram"
+                       asp-route-sortOrder="@ViewData["SurnameSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]">
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().Studenti.FirstOrDefault().Prezime)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="GroupedByProgram"
+                       asp-route-sortOrder="@ViewData["IndexSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]">
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().Studenti.FirstOrDefault().BrojIndeksa)
+                    </a>
+                </th>
+                <th>Akcije</th>
             </tr>
         </thead>
         <tbody>
@@ -27,9 +52,11 @@
                     <td>@student.Ime</td>
                     <td>@student.Prezime</td>
                     <td>@student.BrojIndeksa</td>
-                    <td>@student.GodinaStudija</td>
-                    <td>@student.Semestar</td>
-                    <td>@(student.Predmet != null ? student.Predmet.Naziv : "N/A")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@student.Id" class="btn btn-info">Detalji</a>
+                        <a asp-action="Edit" asp-route-id="@student.Id" class="btn btn-warning">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-danger">Brisanje</a>
+                    </td>
                 </tr>
             }
         </tbody>

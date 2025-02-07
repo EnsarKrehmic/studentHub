@@ -21,5 +21,8 @@ namespace StudentHub.Models
         [ForeignKey("Predmet")]
         public long PredmetId { get; set; }
         public Predmet Predmet { get; set; }
+
+        [ForeignKey("AspNetUser")]
+        public string AspNetUserId { get; set; }
     }
 }

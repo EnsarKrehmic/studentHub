@@ -16,13 +16,12 @@
 <table class="table table-bordered table-hover mt-3">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().TipZahtjeva)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().StatusZahtjeva)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DatumPodnosenja)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DatumRjesavanja)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student.BrojIndeksa)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student.Ime)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student.Prezime)</th>
+            <th>Student</th>
+            <th>Broj indeksa</th>
+            <th>Tip zahtjeva</th>
+            <th>Status zahtjeva</th>
+            <th>Datum podnošenja</th>
+            <th>Datum rješavanja</th>
             @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
             {
                 <th>Akcije</th>
@@ -34,13 +33,12 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>@item.Student.Ime @item.Student.Prezime</td>
+                <td>@item.Student.BrojIndeksa</td>
                 <td>@Html.DisplayFor(modelItem => item.TipZahtjeva)</td>
                 <td>@Html.DisplayFor(modelItem => item.StatusZahtjeva)</td>
                 <td>@Html.DisplayFor(modelItem => item.DatumPodnosenja)</td>
                 <td>@Html.DisplayFor(modelItem => item.DatumRjesavanja)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.BrojIndeksa)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.Ime)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.Prezime)</td>
                 <td>
                     @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
                     {

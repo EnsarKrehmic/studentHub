@@ -29,7 +29,10 @@ namespace StudentHub.Controllers
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentStudijskiProgramId"] = studijskiProgramId;
 
-            var studentskesluzbequery = _context.StudentskeSluzbe.AsQueryable();
+            var studentskesluzbequery = _context.StudentskeSluzbe
+                .Include(s => s.StudentskaSluzbaStudijskiProgrami)
+                    .ThenInclude(ssp => ssp.StudijskiProgram)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -87,6 +90,8 @@ namespace StudentHub.Controllers
             }
 
             var studentskasluzba = await _context.StudentskeSluzbe
+                .Include(s => s.StudentskaSluzbaStudijskiProgrami)
+                    .ThenInclude(ssp => ssp.StudijskiProgram)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (studentskasluzba == null)
             {
@@ -112,11 +117,18 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
-            var studentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
+            var studentskaSluzba = await _context.StudentskeSluzbe
+                .Include(ss => ss.StudentskaSluzbaStudijskiProgrami)
+                .FirstOrDefaultAsync(ss => ss.Id == id);
+
             if (studentskaSluzba == null)
             {
                 return NotFound();
             }
+
+            var povezaniProgramiIds = studentskaSluzba.StudentskaSluzbaStudijskiProgrami
+                .Select(sp => sp.StudijskiProgramId)
+                .ToList();
 
             var model = new StudentskaSluzbaEditViewModel
             {
@@ -126,10 +138,10 @@ namespace StudentHub.Controllers
                 Prezime = studentskaSluzba.Prezime,
                 Email = studentskaSluzba.Email,
                 Uloga = studentskaSluzba.Uloga,
-                StudijskiProgramId = studentskaSluzba.StudijskiProgramId
+                StudijskiProgramiIds = povezaniProgramiIds
             };
 
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studentskaSluzba.StudijskiProgramId);
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
 
             return View(model);
@@ -148,28 +160,41 @@ namespace StudentHub.Controllers
 
             if (ModelState.IsValid)
             {
-                var studentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
+                var studentskaSluzba = await _context.StudentskeSluzbe
+                    .Include(ss => ss.StudentskaSluzbaStudijskiProgrami)
+                    .FirstOrDefaultAsync(ss => ss.Id == id);
+
                 if (studentskaSluzba == null)
                 {
                     return NotFound();
                 }
 
+                // Ažuriranje osnovnih podataka
                 studentskaSluzba.JMBG = model.JMBG;
                 studentskaSluzba.Ime = model.Ime;
                 studentskaSluzba.Prezime = model.Prezime;
                 studentskaSluzba.Email = model.Email;
                 studentskaSluzba.Uloga = model.Uloga;
-                studentskaSluzba.StudijskiProgramId = model.StudijskiProgramId;
 
-                // Lozinku ne menjamo!
-                _context.Update(studentskaSluzba);
+                // Brišemo postojeće veze sa studijskim programima
+                _context.StudentskaSluzbaStudijskiProgrami.RemoveRange(studentskaSluzba.StudentskaSluzbaStudijskiProgrami);
+
+                // Dodajemo nove veze iz ViewModel-a
+                foreach (var programId in model.StudijskiProgramiIds)
+                {
+                    _context.StudentskaSluzbaStudijskiProgrami.Add(new StudentskaSluzbaStudijskiProgram
+                    {
+                        StudentskaSluzbaId = studentskaSluzba.Id,
+                        StudijskiProgramId = programId
+                    });
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
             ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-
             return View(model);
         }
 
@@ -183,7 +208,10 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var studentskaSluzba = await _context.StudentskeSluzbe.FirstOrDefaultAsync(m => m.Id == id);
+            var studentskaSluzba = await _context.StudentskeSluzbe
+                .Include(ss => ss.StudentskaSluzbaStudijskiProgrami)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (studentskaSluzba == null)
             {
                 return NotFound();
@@ -198,17 +226,28 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var studentskaSluzba = await _context.StudentskeSluzbe.FindAsync(id);
+            var studentskaSluzba = await _context.StudentskeSluzbe
+                .Include(ss => ss.StudentskaSluzbaStudijskiProgrami)
+                .FirstOrDefaultAsync(ss => ss.Id == id);
+
             if (studentskaSluzba != null)
             {
+                // Prvo brišemo povezane studijske programe
+                _context.StudentskaSluzbaStudijskiProgrami.RemoveRange(studentskaSluzba.StudentskaSluzbaStudijskiProgrami);
+
+                // Brišemo studentsku službu
                 _context.StudentskeSluzbe.Remove(studentskaSluzba);
-                var korisnik = await _context.Korisnici.FindAsync(id);
+
+                // Ako korisnik postoji u AspNetUsers tabeli, brišemo i njega
+                var korisnik = await _context.Korisnici.FirstOrDefaultAsync(k => k.AspNetUserId == studentskaSluzba.Id.ToString());
                 if (korisnik != null)
                 {
                     _context.Korisnici.Remove(korisnik);
                 }
+
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

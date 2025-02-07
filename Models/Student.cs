@@ -27,9 +27,8 @@ namespace StudentHub.Models
         [Display(Name = "Nastavni plan")]
         public long? NastavniPlanId { get; set; }
         public NastavniPlan NastavniPlan { get; set; }
-
         public List<StudentStudijskiProgram> StudentStudijskiProgrami { get; set; } = new();
-
+        public List<StudentNaPredmetu> StudentNaPredmetima { get; set; } = new();
         public bool IsEnrolledInPredmet(long predmetId, ApplicationDbContext context)
         {
             return context.StudentiNaPredmetima.Any(snp => snp.StudentId == this.Id && snp.PredmetId == predmetId);

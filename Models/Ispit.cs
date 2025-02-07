@@ -22,7 +22,7 @@ namespace StudentHub.Models
 
         [Range(0, 100, ErrorMessage = "Broj bodova mora biti između 0 i 100.")]
         [DisplayName("Broj bodova")]
-        public int? BrojBodova { get; set; }
+        public int BrojBodova { get; set; }
 
         [Required(ErrorMessage = "Studijski program je obavezan.")]
         [DisplayName("Studijski program")]

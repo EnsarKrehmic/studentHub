@@ -1,4 +1,6 @@
-﻿@model StudentHub.ViewModels.PredmetDetailsViewModel
+﻿@using System.Security.Claims
+
+@model StudentHub.ViewModels.PredmetDetailsViewModel
 
 @{
     ViewData["Title"] = "Detalji predmeta";
@@ -76,7 +78,10 @@ else
                         <tr>
                             <th>Ime i prezime</th>
                             <th>Titula</th>
-                            <th>Akcije</th>
+                            @if (User.IsInRole("Studentska služba"))
+                            {
+                                <th>Akcije</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -87,11 +92,14 @@ else
                                 <tr>
                                     <td>@profesor.Profesor?.Ime @profesor.Profesor?.Prezime</td>
                                     <td>@profesor.Profesor?.ProfesorTitula</td>
-                                    <td>
-                                        <form asp-action="RemoveProfesorFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-profesorId="@profesor.ProfesorId" method="post">
-                                            <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
-                                        </form>
-                                    </td>
+                                    @if (User.IsInRole("Studentska služba"))
+                                    {
+                                        <td>
+                                            <form asp-action="RemoveProfesorFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-profesorId="@profesor.ProfesorId" method="post">
+                                                <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
+                                            </form>
+                                        </td>
+                                    }
                                 </tr>
                             }
                         }
@@ -103,14 +111,16 @@ else
                         }
                     </tbody>
                 </table>
-
-                <form asp-action="AddProfesorToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
-                    <div class="form-group">
-                        <label for="ProfesorId">Dodaj profesora:</label>
-                        <select asp-for="ProfesorId" asp-items="ViewBag.Profesori" class="form-control"></select>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">Dodaj profesora</button>
-                </form>
+                @if (User.IsInRole("Studentska služba"))
+                {
+                    <form asp-action="AddProfesorToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
+                        <div class="form-group">
+                            <label for="ProfesorId">Dodaj profesora:</label>
+                            <select asp-for="ProfesorId" asp-items="ViewBag.Profesori" class="form-control"></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Dodaj profesora</button>
+                    </form>
+                }
             </div>
         </div>
 
@@ -125,7 +135,10 @@ else
                         <tr>
                             <th>Ime i prezime</th>
                             <th>Titula</th>
-                            <th>Akcije</th>
+                            @if (User.IsInRole("Studentska služba"))
+                            {
+                                <th>Akcije</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -136,11 +149,14 @@ else
                                 <tr>
                                     <td>@asistent.Asistent?.Ime @asistent.Asistent?.Prezime</td>
                                     <td>@asistent.Asistent?.AsistentTitula</td>
-                                    <td>
-                                        <form asp-action="RemoveAsistentFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-asistentId="@asistent.AsistentId" method="post">
-                                            <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
-                                        </form>
-                                    </td>
+                                    @if (User.IsInRole("Studentska služba"))
+                                    {
+                                        <td>
+                                            <form asp-action="RemoveAsistentFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-asistentId="@asistent.AsistentId" method="post">
+                                                <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
+                                            </form>
+                                        </td>
+                                    }
                                 </tr>
                             }
                         }
@@ -152,14 +168,16 @@ else
                         }
                     </tbody>
                 </table>
-
-                <form asp-action="AddAsistentToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
-                    <div class="form-group">
-                        <label for="AsistentId">Dodaj asistenta:</label>
-                        <select asp-for="AsistentId" asp-items="ViewBag.Asistenti" class="form-control"></select>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">Dodaj asistenta</button>
-                </form>
+                @if (User.IsInRole("Studentska služba"))
+                {
+                    <form asp-action="AddAsistentToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
+                        <div class="form-group">
+                            <label for="AsistentId">Dodaj asistenta:</label>
+                            <select asp-for="AsistentId" asp-items="ViewBag.Asistenti" class="form-control"></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Dodaj asistenta</button>
+                    </form>
+                }
             </div>
         </div>
 
@@ -198,13 +216,36 @@ else
                                     }
                                     <td>@studentNaPredmetu.Student?.GodinaStudija</td>
                                     <td>
-                                        @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true)
+                                        @if (User.IsInRole("Student"))
                                         {
-                                            @Model.Ocjene[studentNaPredmetu.StudentId]
+                                            // Prikaži samo ocjenu za trenutnog studenta
+                                            if (studentNaPredmetu.Student.AspNetUserId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+                                            {
+                                                @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true)
+                                                {
+                                                    @Model.Ocjene[studentNaPredmetu.StudentId]
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-warning">Nema ocjene</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Ocjena nije dostupna</span>
+                                            }
                                         }
                                         else
                                         {
-                                            <span class="text-warning">Nema ocjene</span>
+                                            // Za sve ostale uloge prikaži sve ocjene
+                                            @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true)
+                                            {
+                                                @Model.Ocjene[studentNaPredmetu.StudentId]
+                                            }
+                                            else
+                                            {
+                                                <span class="text-warning">Nema ocjene</span>
+                                            }
                                         }
                                     </td>
                                     <td>

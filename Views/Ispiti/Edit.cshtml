@@ -1,4 +1,4 @@
-﻿@model StudentHub.Models.Ispit
+﻿@model StudentHub.ViewModels.IspitCreateViewModel
 
 @{
     ViewData["Title"] = "Izmjena podataka ispita";
@@ -6,19 +6,17 @@
 
 <h2>@ViewData["Title"]</h2>
 <form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
     <div class="form-group">
         <label asp-for="StudijskiProgramId" class="control-label"></label>
-        <select asp-for="StudijskiProgramId" asp-items="ViewBag.StudijskiProgramId" class="form-control">
+        <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgramId"></select>
             <option value="">Odaberite studijski program</option>
         </select>
         <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label for="NastavniPlanId">Nastavni plan</label>
         <label asp-for="NastavniPlanId" class="control-label"></label>
-        <select asp-for="NastavniPlanId" asp-items="ViewBag.NastavniPlanId" class="form-control">
+        <select asp-for="NastavniPlanId" class="form-control" asp-items="ViewBag.NastavniPlanId"></select>
             <option value="">Odaberite nastavni plan</option>
         </select>
         <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
@@ -26,7 +24,7 @@
 
     <div class="form-group">
         <label asp-for="PredmetId" class="control-label"></label>
-        <select asp-for="PredmetId" asp-items="ViewBag.PredmetId" class="form-control">
+        <select asp-for="PredmetId" class="form-control" asp-items="ViewBag.PredmetId"></select>
             <option value="">Odaberite predmet</option>
         </select>
         <span asp-validation-for="PredmetId" class="text-danger"></span>

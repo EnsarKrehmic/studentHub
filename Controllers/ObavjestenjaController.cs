@@ -21,7 +21,6 @@ namespace StudentHub.Controllers
             _context = context;
         }
 
-        [HttpGet("")]
         public async Task<IActionResult> Index(int? studijskiProgramId)
         {
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
@@ -30,13 +29,10 @@ namespace StudentHub.Controllers
                 .Include(o => o.ObavjestenjeStudijskiProgrami)
                     .ThenInclude(osp => osp.StudijskiProgram)
                 .Include(o => o.Korisnik)
-                .Include(o => o.StudentskaSluzba)
-                .Include(o => o.Profesor)
-                .Include(o => o.Asistent)
                 .OrderByDescending(o => o.DatumObjave)
                 .AsQueryable();
 
-            // Ako je proslijeđen `studijskiProgramId`, filtriraj obavještenja po tom studijskom programu
+            // Filtriraj po studijskom programu ako je definisan
             if (studijskiProgramId.HasValue)
             {
                 query = query.Where(o => o.ObavjestenjeStudijskiProgrami
@@ -53,17 +49,14 @@ namespace StudentHub.Controllers
                     StudijskiProgramNazivi = o.ObavjestenjeStudijskiProgrami
                         .Select(osp => osp.StudijskiProgram.Naziv)
                         .ToList(),
-                    AutorIme = o.Korisnik != null ? $"{o.Korisnik.Ime} {o.Korisnik.Prezime}" :
-                                o.StudentskaSluzba != null ? $"{o.StudentskaSluzba.Ime} {o.StudentskaSluzba.Prezime}" :
-                                o.Profesor != null ? $"{o.Profesor.Ime} {o.Profesor.Prezime}" :
-                                o.Asistent != null ? $"{o.Asistent.Ime} {o.Asistent.Prezime}" : "Nepoznato"
+                    AutorIme = o.Korisnik != null ? $"{o.Korisnik.Ime} {o.Korisnik.Prezime}" : "Nepoznato",
+                    KorisnikAspNetUserId = o.Korisnik.AspNetUserId
                 })
                 .ToListAsync();
 
             return View(obavjestenja);
         }
 
-        // GET: Obavjestenja/Details/{id}
         [HttpGet("Details/{id:long}")]
         [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Details(long? id)
@@ -73,13 +66,25 @@ namespace StudentHub.Controllers
             var obavjestenje = await _context.Obavjestenja
                 .Include(o => o.ObavjestenjeStudijskiProgrami)
                     .ThenInclude(osp => osp.StudijskiProgram)
-                .Include(o => o.Asistent)
-                .Include(o => o.Profesor)
-                .Include(o => o.StudentskaSluzba)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(o => o.Korisnik)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
             if (obavjestenje == null) return NotFound();
 
-            return View(obavjestenje);
+            var viewModel = new ObavjestenjeViewModel
+            {
+                Id = obavjestenje.Id,
+                Naslov = obavjestenje.Naslov,
+                Sadrzaj = obavjestenje.Sadrzaj,
+                DatumObjave = obavjestenje.DatumObjave,
+                StudijskiProgramNazivi = obavjestenje.ObavjestenjeStudijskiProgrami
+                    .Select(osp => osp.StudijskiProgram.Naziv)
+                    .ToList(),
+                AutorIme = obavjestenje.Korisnik != null ? $"{obavjestenje.Korisnik.Ime} {obavjestenje.Korisnik.Prezime}" : "Nepoznato",
+                AutorAspNetUserId = obavjestenje.Korisnik?.AspNetUserId
+            };
+
+            return View(viewModel);
         }
 
         // GET: Obavjestenja/Create
@@ -91,6 +96,7 @@ namespace StudentHub.Controllers
             return View();
         }
 
+        // POST: Obavjestenja/Create
         [HttpPost("Create")]
         [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Create(ObavjestenjeCreateViewModel dto)
@@ -107,25 +113,24 @@ namespace StudentHub.Controllers
                     return BadRequest("Jedan ili više ID-jeva studijskih programa nisu validni.");
                 }
 
-                var korisnickoIme = User.Identity?.Name;
-                var korisnik = await _context.Korisnici.FirstOrDefaultAsync(k => k.Email == korisnickoIme);
-                var studentskaSluzba = await _context.StudentskeSluzbe.FirstOrDefaultAsync(s => s.Email == korisnickoIme);
-                var profesor = await _context.Profesori.FirstOrDefaultAsync(p => p.Email == korisnickoIme);
-                var asistent = await _context.Asistenti.FirstOrDefaultAsync(a => a.Email == korisnickoIme);
+                var aspNetUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var korisnik = await _context.Korisnici.FirstOrDefaultAsync(k => k.AspNetUserId == aspNetUserId);
+
+                if (korisnik == null)
+                {
+                    return Unauthorized("Nije moguće pronaći prijavljenog korisnika.");
+                }
 
                 var obavjestenje = new Obavjestenje
                 {
                     Naslov = dto.Naslov,
                     Sadrzaj = dto.Sadrzaj,
                     DatumObjave = DateTime.Now,
-                    KorisnikId = korisnik?.Id,
-                    StudentskaSluzbaId = studentskaSluzba?.Id,
-                    ProfesorId = profesor?.Id,
-                    AsistentId = asistent?.Id
+                    KorisnikId = korisnik.Id
                 };
 
                 _context.Obavjestenja.Add(obavjestenje);
-                await _context.SaveChangesAsync(); // Prvo sačuvaj obavještenje da dobije ID
+                await _context.SaveChangesAsync();
 
                 var obavjestenjeStudijskiProgrami = validniProgrami
                     .Select(id => new ObavjestenjeStudijskiProgram
@@ -136,7 +141,7 @@ namespace StudentHub.Controllers
                     .ToList();
 
                 _context.ObavjestenjeStudijskiProgrami.AddRange(obavjestenjeStudijskiProgrami);
-                await _context.SaveChangesAsync(); // Sačuvaj povezane studijske programe
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -156,6 +161,12 @@ namespace StudentHub.Controllers
             if (obavjestenje == null)
             {
                 return NotFound();
+            }
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (obavjestenje.Korisnik.AspNetUserId != currentUserId)
+            {
+                return Forbid(); // Korisnik može uređivati samo svoja obavještenja
             }
 
             var viewModel = new ObavjestenjeCreateViewModel
@@ -190,6 +201,12 @@ namespace StudentHub.Controllers
             if (obavjestenje == null)
             {
                 return NotFound();
+            }
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (obavjestenje.Korisnik.AspNetUserId != currentUserId)
+            {
+                return Forbid();
             }
 
             // Ažuriranje osnovnih podataka
@@ -233,11 +250,15 @@ namespace StudentHub.Controllers
             var obavjestenje = await _context.Obavjestenja
                 .Include(o => o.ObavjestenjeStudijskiProgrami)
                     .ThenInclude(osp => osp.StudijskiProgram)
-                .Include(o => o.Asistent)
-                .Include(o => o.Profesor)
-                .Include(o => o.StudentskaSluzba)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (obavjestenje == null) return NotFound();
+
+            if (!await DaLiJeKreatorObavjestenjaAsync(obavjestenje))
+            {
+                return Forbid();
+            }
+
             return View(obavjestenje);
         }
 
@@ -248,41 +269,33 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var obavjestenje = await _context.Obavjestenja.FindAsync(id);
-            if (obavjestenje != null)
+            if (obavjestenje == null)
             {
-                _context.Obavjestenja.Remove(obavjestenje);
+                return NotFound();
             }
+
+            if (!await DaLiJeKreatorObavjestenjaAsync(obavjestenje))
+            {
+                return Forbid();
+            }
+
+            _context.Obavjestenja.Remove(obavjestenje);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // Pomoćna metoda za proveru vlasništva
+        private async Task<bool> DaLiJeKreatorObavjestenjaAsync(Obavjestenje obavjestenje)
+        {
+            var currentAspNetUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var kreator = await _context.Korisnici.FirstOrDefaultAsync(k => k.Id == obavjestenje.KorisnikId);
+
+            return kreator != null && kreator.AspNetUserId == currentAspNetUserId;
         }
 
         private bool ObavjestenjeExists(long id)
         {
             return _context.Obavjestenja.Any(e => e.Id == id);
-        }
-
-        // Pomoćna metoda za postavljanje korisničkih ID-ova i uloga
-        private void SetUserRoleIds(Obavjestenje obavjestenje)
-        {
-            Console.WriteLine("Postavljanje korisnika za obavještenje...");
-            if (User.IsInRole("StudentskaSluzba"))
-            {
-                obavjestenje.StudentskaSluzbaId = GetCurrentUserId();
-            }
-            else if (User.IsInRole("Profesor"))
-            {
-                obavjestenje.ProfesorId = GetCurrentUserId();
-            }
-            else if (User.IsInRole("Asistent"))
-            {
-                obavjestenje.AsistentId = GetCurrentUserId();
-            }
-        }
-
-        // Metoda za dohvaćanje trenutnog korisničkog ID-a
-        private long GetCurrentUserId()
-        {
-            return long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
     }
 }

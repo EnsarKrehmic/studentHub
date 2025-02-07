@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
 using StudentHub.ViewModels;
+using System.Security.Claims;
 using X.PagedList.Extensions;
 
 namespace StudentHub.Controllers
@@ -90,9 +91,24 @@ namespace StudentHub.Controllers
 
             var student = await _context.Studenti
                 .Include(s => s.StudentStudijskiProgrami)
-                .ThenInclude(ssp => ssp.StudijskiProgram)
-                .FirstOrDefaultAsync(m => m.Id == id)
+                    .ThenInclude(ssp => ssp.StudijskiProgram)
+                .Include(s => s.StudentNaPredmetima)
+                    .ThenInclude(snp => snp.Predmet)
+                .FirstOrDefaultAsync(s => s.Id == id)
                 ?? throw new InvalidOperationException("Student nije pronađen.");
+
+            // Provjera da li je prijavljeni korisnik Student
+            if (User.IsInRole("Student"))
+            {
+                // Dohvaćanje AspNetUserId prijavljenog korisnika
+                var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                // Provjera da li je prijavljeni student vlasnik podataka
+                if (student.AspNetUserId != loggedInUserId)
+                {
+                    return Forbid();
+                }
+            }
 
             // Uzmite prvi (ili glavni) studijski program ako postoji
             var studijskiProgram = student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram;
@@ -321,20 +337,53 @@ namespace StudentHub.Controllers
         }
 
         [HttpGet("GroupedByProgram")]
-        public async Task<IActionResult> GroupedByProgram()
+        public async Task<IActionResult> GroupedByProgram(string sortOrder, string searchString)
         {
-            var groupedStudents = await _context.Studenti
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["SurnameSortParm"] = sortOrder == "surname_asc" ? "surname_desc" : "surname_asc";
+            ViewData["IndexSortParm"] = sortOrder == "index_asc" ? "index_desc" : "index_asc";
+            ViewData["CurrentFilter"] = searchString;
+
+            var studentiQuery = _context.Studenti
                 .Include(s => s.StudentStudijskiProgrami)
                 .ThenInclude(ssp => ssp.StudijskiProgram)
-                .SelectMany(s => s.StudentStudijskiProgrami)
-                .GroupBy(ssp => ssp.StudijskiProgram)
-                .Select(g => new StudentiGroupedByProgramViewModel
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                studentiQuery = studentiQuery.Where(s => s.Ime.Contains(searchString) || s.Prezime.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    studentiQuery = studentiQuery.OrderByDescending(s => s.Ime);
+                    break;
+                case "surname_asc":
+                    studentiQuery = studentiQuery.OrderBy(s => s.Prezime);
+                    break;
+                case "surname_desc":
+                    studentiQuery = studentiQuery.OrderByDescending(s => s.Prezime);
+                    break;
+                case "index_asc":
+                    studentiQuery = studentiQuery.OrderBy(s => s.BrojIndeksa);
+                    break;
+                case "index_desc":
+                    studentiQuery = studentiQuery.OrderByDescending(s => s.BrojIndeksa);
+                    break;
+                default:
+                    studentiQuery = studentiQuery.OrderBy(s => s.Ime);
+                    break;
+            }
+
+            var groupedStudents = await studentiQuery
+                .GroupBy(s => s.StudentStudijskiProgrami.FirstOrDefault().StudijskiProgram)
+                .Select(g => new StudentGroupedByProgramViewModel
                 {
                     StudijskiProgram = g.Key,
-                    Studenti = g.Select(ssp => ssp.Student).ToList()
+                    Studenti = g.ToList()
                 })
                 .ToListAsync();
-
 
             return View(groupedStudents);
         }

@@ -1,4 +1,6 @@
-﻿@model StudentHub.Models.Obavjestenje
+﻿@using System.Security.Claims
+
+@model StudentHub.ViewModels.ObavjestenjeViewModel
 
 @{
     ViewData["Title"] = Model.Naslov;
@@ -12,23 +14,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted">
                     <i class="bi bi-person-circle"></i>
-                    <strong>Autor:</strong>
-                    @if (Model.Korisnik is StudentskaSluzba)
-                    {
-                        @(((StudentskaSluzba)Model.Korisnik).Ime) @: @(((StudentskaSluzba)Model.Korisnik).Prezime)
-                    }
-                    else if (Model.Korisnik is Profesor)
-                    {
-                        @( ((Profesor)Model.Korisnik).ProfesorTitula ) @: @( ((Profesor)Model.Korisnik).Ime ) + " " + @(((Profesor)Model.Korisnik).Prezime)
-                    }
-                    else if (Model.Korisnik is Asistent)
-                    {
-                        @(((Asistent)Model.Korisnik).AsistentTitula) @: @(((Asistent)Model.Korisnik).Ime) + " " + @(((Asistent)Model.Korisnik).Prezime)
-                    }
-                    else
-                    {
-                        <span class="text-danger">Nepoznato</span>
-                    }
+                    <strong>Autor:</strong> @Model.AutorIme
                 </span>
 
                 <span class="text-muted">
@@ -41,11 +27,11 @@
 
             <div class="mb-3">
                 <h5 class="text-primary">Studijski programi:</h5>
-                @if (Model.ObavjestenjeStudijskiProgrami != null && Model.ObavjestenjeStudijskiProgrami.Any())
+                @if (Model.StudijskiProgramNazivi != null && Model.StudijskiProgramNazivi.Any())
                 {
-                    @foreach (var osp in Model.ObavjestenjeStudijskiProgrami)
+                    @foreach (var naziv in Model.StudijskiProgramNazivi)
                     {
-                        <span class="badge bg-secondary me-1">@osp.StudijskiProgram.Naziv</span>
+                        <span class="badge bg-secondary me-1">@naziv</span>
                     }
                 }
                 else
@@ -62,7 +48,7 @@
             </div>
 
             <div class="d-flex justify-content-between">
-                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.AutorAspNetUserId)
                 {
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
                         <i class="bi bi-pencil-square"></i> Izmjena

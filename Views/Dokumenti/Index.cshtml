@@ -1,7 +1,7 @@
-﻿@model IEnumerable<StudentHub.Models.Dokument>
+﻿@model IEnumerable<StudentHub.ViewModels.DokumentGroupedByProgramViewModel>
 
 @{
-    ViewData["Title"] = "Lista dokumenata";
+    ViewData["Title"] = "Lista dokumenata grupisanih po studijskom programu";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -9,49 +9,83 @@
 <p>
     @if (User.IsInRole("Studentska služba"))
     {
-        <a asp-action="Create" class="btn btn-primary">Kreiraj novi dokument</a>
+        <a asp-action="Create" class="btn btn-primary">Dodaj novi dokument</a>
     }
 </p>
 
-<table class="table table-bordered table-hover mt-3">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Naziv)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Putanja)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student.BrojIndeksa)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student.Ime)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Student.Prezime)</th>
-            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-            {
-                <th>Akcije</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (User.IsInRole("Studentska služba"))
+{
+    <form asp-action="Index" method="get">
+        <div class="form-group">
+            <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Pretraži studenta" />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary mt-3">Pretraži</button>
+        </div>
+    </form>
+}
+
+@foreach (var group in Model)
+{
+    <h3 class="mt-3">@group.StudijskiProgram.Naziv</h3>
+    <table class="table table-bordered table-hover mt-3">
+        <thead>
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Naziv)</td>
-                <td>@Html.DisplayFor(modelItem => item.Putanja)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.BrojIndeksa)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.Ime)</td>
-                <td>@Html.DisplayFor(modelItem => item.Student.Prezime)</td>
-                <td>
-                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-                    {
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                    }
+                <th>
                     @if (User.IsInRole("Studentska služba"))
                     {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@ViewData["NameSortParm"]"
+                           asp-route-searchString="@ViewData["CurrentFilter"]">
+                            Student
+                        </a>
+                    } else {
+                        <dt class="col-sm-3">Student</dt>
                     }
-                </td>
+                </th>
+                <th>
+                    @if (User.IsInRole("Studentska služba"))
+                    {
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@ViewData["IndexSortParm"]"
+                           asp-route-searchString="@ViewData["CurrentFilter"]">
+                            Broj indeksa
+                        </a>
+                    }
+                    else
+                    {
+                        <dt class="col-sm-3">Broj indeksa</dt>
+                    }
+                </th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Dokumenti.FirstOrDefault().Naziv)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Dokumenti.FirstOrDefault().Putanja)</th>
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                {
+                    <th>Akcije</th>
+                }
             </tr>
-        }
-    </tbody>
-</table>
-
-<div>
-    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
-</div>
+        </thead>
+        <tbody>
+            @foreach (var dokument in group.Dokumenti)
+            {
+                <tr>
+                    <td>@dokument.Student.Ime @dokument.Student.Prezime</td>
+                    <td>@dokument.Student.BrojIndeksa</td>
+                    <td>@Html.DisplayFor(modelItem => dokument.Naziv)</td>
+                    <td>@Html.DisplayFor(modelItem => dokument.Putanja)</td>
+                    <td>
+                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                        {
+                            <a asp-action="Details" asp-route-id="@dokument.Id" class="btn btn-info">Detalji</a>
+                        }
+                        @if (User.IsInRole("Studentska služba"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@dokument.Id" class="btn btn-warning">Izmjena</a>
+                            <a asp-action="Delete" asp-route-id="@dokument.Id" class="btn btn-danger">Brisanje</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

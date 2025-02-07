@@ -19,6 +19,9 @@ namespace StudentHub.Models
         [Range(1, 30, ErrorMessage = "Broj ECTS bodova mora biti između 1 i 30.")]
         public int ECTS { get; set; }
 
+        [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
+        public int? Semestar { get; set; }
+
         [ForeignKey("Profesor")]
         public long? ProfesorId { get; set; }
         public Profesor Profesor { get; set; }
@@ -35,8 +38,9 @@ namespace StudentHub.Models
         public long? NastavniPlanId { get; set; }
         public NastavniPlan NastavniPlan { get; set; }
 
-        [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
-        public int? Semestar { get; set; }
+        public List<StudentNaPredmetu> StudentNaPredmetima { get; set; } = new();
+        public List<PredmetProfesor> PredmetProfesori { get; set; } = new();
+        public List<PredmetAsistent> PredmetAsistenti { get; set; } = new();
 
         public Predmet() { }
     }

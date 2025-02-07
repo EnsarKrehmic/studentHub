@@ -9,8 +9,8 @@ namespace StudentHub.ViewModels
         public string Sadrzaj { get; set; }
         public DateTime DatumObjave { get; set; }
         public string AutorIme { get; set; }
+        public string KorisnikAspNetUserId { get; set; }
+        public string AutorAspNetUserId { get; set; }
         public List<string> StudijskiProgramNazivi { get; set; } = new List<string>();
-        public List<ObavjestenjeStudijskiProgram> ObavjestenjeStudijskiProgrami { get; set; } = new();
     }
-
 }

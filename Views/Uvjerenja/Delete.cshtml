@@ -17,14 +17,17 @@
     </div>
     <div class="card-body">
         <dl class="row">
-            <dt class="col-sm-3">Ime:</dt>
-            <dd class="col-sm-9">@Model.Student.Ime</dd>
-
-            <dt class="col-sm-3">Prezime:</dt>
-            <dd class="col-sm-9">@Model.Student.Prezime</dd>
+            <dt class="col-sm-3">Student:</dt>
+            <dd class="col-sm-9">@Model.Student.Ime @Model.Student.Prezime</dd>
 
             <dt class="col-sm-3">Broj indeksa:</dt>
             <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
+
+            <dt class="col-sm-3">Studentska služba:</dt>
+            <dd class="col-sm-9">@Model.StudentskaSluzba.Ime @Model.StudentskaSluzba.Prezime</dd>
+
+            <dt class="col-sm-3">Vrsta:</dt>
+            <dd class="col-sm-9">@Model.Vrsta</dd>
 
             <dt class="col-sm-3">Namjena:</dt>
             <dd class="col-sm-9">@Model.Namjena</dd>

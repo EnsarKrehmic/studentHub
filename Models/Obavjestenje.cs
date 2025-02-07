@@ -34,7 +34,6 @@ namespace StudentHub.Models
         [ForeignKey("Asistent")]
         public long? AsistentId { get; set; }
         public Asistent Asistent { get; set; }
-
         public List<ObavjestenjeStudijskiProgram> ObavjestenjeStudijskiProgrami { get; set; }
         public Obavjestenje() { }
     }

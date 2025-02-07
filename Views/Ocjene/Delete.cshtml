@@ -18,7 +18,10 @@
     <div class="card-body">
         <dl class="row">
             <dt class="col-sm-3">Student:</dt>
-            <dd class="col-sm-9">@Model.Student.Id</dd>
+            <dd class="col-sm-9">@Model.Student.Ime @Model.Student.Prezime</dd>
+
+            <dt class="col-sm-3">Broj indeksa:</dt>
+            <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
 
             <dt class="col-sm-3">Predmet:</dt>
             <dd class="col-sm-9">@Model.Predmet.Id</dd>

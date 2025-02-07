@@ -6,28 +6,37 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>Podaci o dokumentu</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Naziv)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Naziv)</dd>
+<div class="card mt-3">
+    <div class="card-header">
+        <h4>Podaci o dokumentu</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Student</dt>
+            <dd class="col-sm-9">@Model.Student.Ime @Model.Student.Prezime</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Putanja)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Putanja)</dd>
+            <dt class="col-sm-3">Broj indeksa</dt>
+            <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.BrojIndeksa)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.BrojIndeksa)</dd>
+            <dt class="col-sm-3">Studentska služba</dt>
+            <dd class="col-sm-9">@Model.StudentskaSluzba.Ime @Model.StudentskaSluzba.Prezime</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.Ime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Ime)</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Naziv)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Naziv)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.Prezime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Prezime)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.StudentskaSluzba.Ime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.StudentskaSluzba.Ime)</dd>
-    </dl>
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Putanja)</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.Putanja))
+                {
+                    <a href="@Url.Content("~/uploads/" + Model.Putanja)" target="_blank">@Model.Putanja</a>
+                }
+                else
+                {
+                    <span>Nema datoteke</span>
+                }
+            </dd>
+        </dl>
+    </div>
 </div>
 
 <div class="mt-3">

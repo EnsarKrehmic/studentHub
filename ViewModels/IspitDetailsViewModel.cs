@@ -6,13 +6,15 @@ namespace StudentHub.ViewModels
     public class IspitDetailsViewModel
     {
         public long IspitId { get; set; }
-        public StudijskiProgram StudijskiProgram { get; set; }
-        public List<PredmetIspitViewModel> Predmeti { get; set; } = new List<PredmetIspitViewModel>();
-        public List<NastavniPlanIspitViewModel> NastavniPlanovi { get; set; } = new List<NastavniPlanIspitViewModel>();
+        public bool Prijavljen { get; set; }
         public string CurrentSort { get; set; }
         public string DateSortParm { get; set; }
         public string LocationSortParm { get; set; }
         public string PointsSortParm { get; set; }
+        public StudijskiProgram StudijskiProgram { get; set; }
+        public List<PredmetIspitViewModel> Predmeti { get; set; } = new List<PredmetIspitViewModel>();
+        public List<NastavniPlanIspitViewModel> NastavniPlanovi { get; set; } = new List<NastavniPlanIspitViewModel>();
+        public List<long> PrijavljeniIspitiIds { get; set; } = new List<long>();
     }
 
     public class NastavniPlanIspitViewModel

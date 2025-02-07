@@ -10,26 +10,23 @@
     <h4>Podaci o uvjerenju</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Namjena)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Namjena)</dd>
+        <dt class="col-sm-3">Student:</dt>
+        <dd class="col-sm-9">@Model.Student.Ime @Model.Student.Prezime</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DatumIzdavanja)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DatumIzdavanja)</dd>
+        <dt class="col-sm-3">Broj indeksa:</dt>
+        <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.BrojIndeksa)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.BrojIndeksa)</dd>
+        <dt class="col-sm-3">Studentska služba:</dt>
+        <dd class="col-sm-9">@Model.StudentskaSluzba.Ime @Model.StudentskaSluzba.Prezime</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.Ime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Ime)</dd>
+        <dt class="col-sm-3">Vrsta:</dt>
+        <dd class="col-sm-9">@Model.Vrsta</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.Prezime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Prezime)</dd>
+        <dt class="col-sm-3">Namjena:</dt>
+        <dd class="col-sm-9">@Model.Namjena</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.StudentskaSluzba.Ime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.StudentskaSluzba.Ime)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Vrsta)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Vrsta)</dd>
+        <dt class="col-sm-3">Datum izdavanja:</dt>
+        <dd class="col-sm-9">@Model.DatumIzdavanja</dd>
     </dl>
 </div>
 

@@ -10,6 +10,12 @@
     <h4>Podaci o zahtjevu</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-3">Student:</dt>
+        <dd class="col-sm-9">@Model.Student.Ime @Model.Student.Prezime</dd>
+
+        <dt class="col-sm-3">Broj indeksa:</dt>
+        <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
+
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.TipZahtjeva)</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.TipZahtjeva)</dd>
 
@@ -21,15 +27,6 @@
 
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DatumRjesavanja)</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.DatumRjesavanja)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.BrojIndeksa)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.BrojIndeksa)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.Ime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Ime)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student.Prezime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Prezime)</dd>
     </dl>
 </div>
 

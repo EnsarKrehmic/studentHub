@@ -1,4 +1,4 @@
-﻿@model StudentHub.Models.Ocjena
+﻿@model StudentHub.ViewModels.OcjenaViewModel
 
 @{
     ViewData["Title"] = "Detalji ocjene";
@@ -6,28 +6,55 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>Podaci o ocjeni</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Student)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Student.Id)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Predmet)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Predmet.Id)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Profesor)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Profesor.Id)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Vrijednost)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Vrijednost)</dd>
-    </dl>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h3>@Model.PredmetNaziv</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Informacije o studentu</h4>
+                <p><strong>Ime i prezime:</strong> @Model.StudentIme @Model.StudentPrezime</p>
+                <p><strong>Broj indeksa:</strong> @Model.StudentBrojIndeksa</p>
+                <p><strong>Studijski program:</strong> @Model.StudentStudijskiProgramNaziv</p>
+            </div>
+            <div class="col-md-6">
+                <h4>Informacije o profesoru</h4>
+                <p><strong>Titula:</strong> @Model.ProfesorTitula</p>
+                <p><strong>Ime i prezime:</strong> @Model.ProfesorIme @Model.ProfesorPrezime</p>
+                <p><strong>Studijski program:</strong> @Model.StudentStudijskiProgramNaziv</p>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Informacije o ocjeni</h4>
+                <p>
+                    <strong>Ocjena:</strong>
+                    <span class="badge @(Model.Vrijednost >= 8 ? "bg-success" : Model.Vrijednost >= 6 ? "bg-warning" : "bg-danger")">
+                        @Model.Vrijednost
+                    </span>
+                </p>
+                @if (User.IsInRole("Student") && Model.Vrijednost < 6)
+                {
+                    <p class="text-danger"><strong>Napomena:</strong> Ova ocjena je ispod prolaznog praga!</p>
+                }
+            </div>
+            <div class="col-md-6">
+                <h4>Informacije o predmetu</h4>
+                <p><strong>Naziv predmeta:</strong> @Model.PredmetNaziv</p>
+                <p><strong>Studijski program:</strong> @Model.StudentStudijskiProgramNaziv</p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    @if (User.IsInRole("Profesor"))
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Izmjena</a>
-    }    
+<div class="mt-3">
     <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

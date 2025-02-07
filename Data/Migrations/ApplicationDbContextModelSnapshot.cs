@@ -549,6 +549,10 @@ namespace StudentHub.Data.Migrations
                     b.Property<long>("AsistentId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("PredmetId")
                         .HasColumnType("bigint");
 
@@ -568,6 +572,10 @@ namespace StudentHub.Data.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("PredmetId")
                         .HasColumnType("bigint");
@@ -645,6 +653,10 @@ namespace StudentHub.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("PredmetId")
                         .HasColumnType("bigint");
@@ -835,9 +847,6 @@ namespace StudentHub.Data.Migrations
                     b.Property<long?>("NastavniPlanId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("PredmetId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("PrethodnoObrazovanje")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -845,14 +854,7 @@ namespace StudentHub.Data.Migrations
                     b.Property<int?>("Semestar")
                         .HasColumnType("int");
 
-                    b.Property<long>("StudijskiProgramId")
-                        .HasColumnType("bigint");
-
                     b.HasIndex("NastavniPlanId");
-
-                    b.HasIndex("PredmetId");
-
-                    b.HasIndex("StudijskiProgramId");
 
                     b.HasDiscriminator().HasValue(3);
                 });
@@ -860,17 +862,6 @@ namespace StudentHub.Data.Migrations
             modelBuilder.Entity("StudentHub.Models.StudentskaSluzba", b =>
                 {
                     b.HasBaseType("StudentHub.Models.Korisnik");
-
-                    b.Property<long>("StudijskiProgramId")
-                        .HasColumnType("bigint");
-
-                    b.HasIndex("StudijskiProgramId");
-
-                    b.ToTable("Korisnik", t =>
-                        {
-                            t.Property("StudijskiProgramId")
-                                .HasColumnName("StudentskaSluzba_StudijskiProgramId");
-                        });
 
                     b.HasDiscriminator().HasValue(2);
                 });
@@ -1093,7 +1084,7 @@ namespace StudentHub.Data.Migrations
                     b.HasOne("StudentHub.Models.Profesor", "Profesor")
                         .WithMany()
                         .HasForeignKey("ProfesorId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
                         .WithMany()
@@ -1117,7 +1108,7 @@ namespace StudentHub.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("StudentHub.Models.Predmet", "Predmet")
-                        .WithMany()
+                        .WithMany("PredmetAsistenti")
                         .HasForeignKey("PredmetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1130,7 +1121,7 @@ namespace StudentHub.Data.Migrations
             modelBuilder.Entity("StudentHub.Models.PredmetProfesor", b =>
                 {
                     b.HasOne("StudentHub.Models.Predmet", "Predmet")
-                        .WithMany()
+                        .WithMany("PredmetProfesori")
                         .HasForeignKey("PredmetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1187,13 +1178,13 @@ namespace StudentHub.Data.Migrations
             modelBuilder.Entity("StudentHub.Models.StudentNaPredmetu", b =>
                 {
                     b.HasOne("StudentHub.Models.Predmet", "Predmet")
-                        .WithMany()
+                        .WithMany("StudentNaPredmetima")
                         .HasForeignKey("PredmetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StudentHub.Models.Student", "Student")
-                        .WithMany()
+                        .WithMany("StudentNaPredmetima")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1302,22 +1293,7 @@ namespace StudentHub.Data.Migrations
                         .HasForeignKey("NastavniPlanId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("StudentHub.Models.Predmet", "Predmet")
-                        .WithMany()
-                        .HasForeignKey("PredmetId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
-                        .WithMany()
-                        .HasForeignKey("StudijskiProgramId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("NastavniPlan");
-
-                    b.Navigation("Predmet");
-
-                    b.Navigation("StudijskiProgram");
                 });
 
             modelBuilder.Entity("StudentHub.Models.StudentskaSluzba", b =>
@@ -1327,19 +1303,20 @@ namespace StudentHub.Data.Migrations
                         .HasForeignKey("StudentHub.Models.StudentskaSluzba", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
-                        .WithMany()
-                        .HasForeignKey("StudijskiProgramId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("StudijskiProgram");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Obavjestenje", b =>
                 {
                     b.Navigation("ObavjestenjeStudijskiProgrami");
+                });
+
+            modelBuilder.Entity("StudentHub.Models.Predmet", b =>
+                {
+                    b.Navigation("PredmetAsistenti");
+
+                    b.Navigation("PredmetProfesori");
+
+                    b.Navigation("StudentNaPredmetima");
                 });
 
             modelBuilder.Entity("StudentHub.Models.StudijskiProgram", b =>
@@ -1371,6 +1348,8 @@ namespace StudentHub.Data.Migrations
 
             modelBuilder.Entity("StudentHub.Models.Student", b =>
                 {
+                    b.Navigation("StudentNaPredmetima");
+
                     b.Navigation("StudentStudijskiProgrami");
                 });
 

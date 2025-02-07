@@ -6,6 +6,7 @@ using StudentHub.Data;
 using StudentHub.Models;
 using StudentHub.ViewModels;
 using System.Linq;
+using System.Security.Claims;
 
 namespace StudentHub.Controllers
 {
@@ -24,7 +25,21 @@ namespace StudentHub.Controllers
         [HttpGet("")]
         public IActionResult Index(long? studijskiProgramId)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var predmetiQuery = _context.Predmeti.AsQueryable();
+
+            if (User.IsInRole("Student"))
+            {
+                predmetiQuery = predmetiQuery.Where(p => p.StudentNaPredmetima.Any(snp => snp.Student.AspNetUserId == userId));
+            }
+            else if (User.IsInRole("Profesor"))
+            {
+                predmetiQuery = predmetiQuery.Where(p => p.Profesor.AspNetUserId == userId || p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId));
+            }
+            else if (User.IsInRole("Asistent"))
+            {
+                predmetiQuery = predmetiQuery.Where(p => p.Asistent.AspNetUserId == userId || p.PredmetAsistenti.Any(pa => pa.Asistent.AspNetUserId == userId));
+            }
 
             if (studijskiProgramId.HasValue)
             {
@@ -49,6 +64,8 @@ namespace StudentHub.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                 var predmet = _context.Predmeti
                     .Include(p => p.NastavniPlan)
                     .FirstOrDefault(p => p.Id == id);
@@ -97,6 +114,7 @@ namespace StudentHub.Controllers
 
                 var ocjene = _context.Ocjene
                     .Where(o => studentiNaPredmetu.Select(snp => snp.StudentId).Contains(o.StudentId) && o.PredmetId == id)
+                    .Include(o => o.Student)
                     .ToDictionary(o => o.StudentId, o => (float?)o.Vrijednost);
 
                 var viewModel = new PredmetDetailsViewModel
@@ -561,6 +579,7 @@ namespace StudentHub.Controllers
             {
                 PredmetId = predmetId,
                 StudentId = studentId,
+                AspNetUserId = student.AspNetUserId,
                 AkademskaGodina = DateTime.Now.Year.ToString()
             };
 
@@ -798,7 +817,12 @@ namespace StudentHub.Controllers
                 return View("Details", LoadViewModel(predmetId));
             }
 
-            _context.PredmetProfesori.Add(new PredmetProfesor { PredmetId = predmetId, ProfesorId = profesorId });
+            _context.PredmetProfesori.Add(new PredmetProfesor
+            {
+                PredmetId = predmetId,
+                ProfesorId = profesorId,
+                AspNetUserId = profesor.AspNetUserId
+            });
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = "Profesor je uspješno dodan na predmet.";

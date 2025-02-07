@@ -107,9 +107,10 @@ namespace StudentHub.Controllers
                 .Select(psp => psp.StudijskiProgram)
                 .ToListAsync();
 
+            // Dohvatanje predmeta koje asistent predaje
             var predmeti = await _context.PredmetAsistenti
-                .Where(pp => pp.AsistentId == id)
-                .Select(pp => pp.Predmet)
+                .Where(pa => pa.AsistentId == id)
+                .Select(pa => pa.Predmet)
                 .ToListAsync();
 
             var viewModel = new AsistentDetailsViewModel
@@ -283,14 +284,30 @@ namespace StudentHub.Controllers
             var asistent = await _context.Asistenti.FindAsync(id);
             if (asistent != null)
             {
-                _context.Asistenti.Remove(asistent);
+                // 1. Brisanje povezanih zapisa iz AsistentStudijskiProgram
+                var asistentStudijskiProgrami = _context.AsistentStudijskiProgrami
+                    .Where(asp => asp.AsistentId == asistent.Id);
+                _context.AsistentStudijskiProgrami.RemoveRange(asistentStudijskiProgrami);
+
+                // 2. Brisanje povezanih zapisa iz PredmetAsistenti
+                var predmetAsistenti = _context.PredmetAsistenti
+                    .Where(pa => pa.AsistentId == asistent.Id);
+                _context.PredmetAsistenti.RemoveRange(predmetAsistenti);
+
+                // 3. Brisanje asistenta iz korisnika ako postoji
                 var korisnik = await _context.Korisnici.FindAsync(id);
                 if (korisnik != null)
                 {
                     _context.Korisnici.Remove(korisnik);
                 }
+
+                // 4. Konačno brisanje asistenta
+                _context.Asistenti.Remove(asistent);
+
+                // 5. Čuvanje promjena u bazi
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

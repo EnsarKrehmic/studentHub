@@ -26,6 +26,7 @@ namespace StudentHub.Controllers
         // GET: localhost:port
         public async Task<IActionResult> Index()
         {
+            // Učitavanje najnovijih obavijesti
             var obavijesti = await _context.Obavjestenja
                 .Include(o => o.ObavjestenjeStudijskiProgrami).ThenInclude(os => os.StudijskiProgram)
                 .Include(o => o.Korisnik)
@@ -50,16 +51,22 @@ namespace StudentHub.Controllers
                 })
                 .ToListAsync();
 
+            // Učitavanje broja asistenata, profesora, studenata, i ispita
             var homeViewModel = new HomeViewModel
             {
                 NajnovijeObavijesti = obavijesti,
                 BrojAsistenata = await _context.Asistenti.CountAsync(),
                 BrojProfesora = await _context.Profesori.CountAsync(),
                 BrojStudenata = await _context.Studenti.CountAsync(),
-                AktivniIspiti = await _context.Ispiti.CountAsync()
+                AktivniIspiti = await _context.Ispiti.CountAsync(),
+
+                // Učitavanje svih studijskih programa za prikaz na početnoj stranici
+                StudijskiProgrami = await _context.StudijskiProgrami
+                    .OrderBy(sp => sp.Naziv)
+                    .ToListAsync()
             };
 
-            // User synchronization logic
+            // Sinhronizacija korisnika
             var claimsIdentity = User.Identity as ClaimsIdentity;
             if (claimsIdentity != null)
             {

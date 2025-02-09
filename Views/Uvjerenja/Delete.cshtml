@@ -4,9 +4,9 @@
     ViewData["Title"] = "Brisanje uvjerenja";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="text-danger">@ViewData["Title"]</h2>
 
-<div class="alert alert-warning" role="alert">
+<div class="alert alert-warning">
     <h4 class="alert-heading">Da li ste sigurni da želite obrisati ovo uvjerenje?</h4>
     <p>Ova akcija je nepovratna i trajno će ukloniti sve podatke o uvjerenju.</p>
 </div>
@@ -27,13 +27,13 @@
             <dd class="col-sm-9">@Model.StudentskaSluzba.Ime @Model.StudentskaSluzba.Prezime</dd>
 
             <dt class="col-sm-3">Vrsta:</dt>
-            <dd class="col-sm-9">@Model.Vrsta</dd>
+            <dd class="col-sm-9">@Model.VrstaUvjerenja</dd>
 
             <dt class="col-sm-3">Namjena:</dt>
             <dd class="col-sm-9">@Model.Namjena</dd>
 
             <dt class="col-sm-3">Datum izdavanja:</dt>
-            <dd class="col-sm-9">@Model.DatumIzdavanja</dd>
+            <dd class="col-sm-9">@Model.DatumIzdavanja.ToShortDateString()</dd>
         </dl>
     </div>
 </div>

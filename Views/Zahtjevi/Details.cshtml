@@ -10,11 +10,11 @@
     <h4>Podaci o zahtjevu</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-3">Student:</dt>
-        <dd class="col-sm-9">@Model.Student.Ime @Model.Student.Prezime</dd>
+        <dt class="col-sm-2">Student:</dt>
+        <dd class="col-sm-10">@Model.Student.Ime @Model.Student.Prezime</dd>
 
-        <dt class="col-sm-3">Broj indeksa:</dt>
-        <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
+        <dt class="col-sm-2">Broj indeksa:</dt>
+        <dd class="col-sm-10">@Model.Student.BrojIndeksa</dd>
 
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.TipZahtjeva)</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.TipZahtjeva)</dd>
@@ -26,7 +26,16 @@
         <dd class="col-sm-10">@Html.DisplayFor(model => model.DatumPodnosenja)</dd>
 
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DatumRjesavanja)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DatumRjesavanja)</dd>
+        <dd class="col-sm-10">
+            @if (Model.DatumRjesavanja.HasValue)
+            {
+                @Model.DatumRjesavanja.Value.ToString("dd.MM.yyyy")
+            }
+            else
+            {
+                <span>Zahtjev nije riješen</span>
+            }
+        </dd>
     </dl>
 </div>
 

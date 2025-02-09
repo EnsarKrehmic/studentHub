@@ -4,9 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - StudentHub</title>
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StudentHub.styles.css" asp-append-version="true" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
     <header>
@@ -40,9 +45,11 @@
                                 @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                 {
                                     <li><a class="dropdown-item" asp-controller="Ispiti" asp-action="Index">Ispiti</a></li>
+                                }
+                                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                                {
                                     <li><a class="dropdown-item" asp-controller="Ocjene" asp-action="Index">Ocjene</a></li>
                                 }
-
                                 <li><a class="dropdown-item" asp-controller="Predmeti" asp-action="Index">Predmeti</a></li>
                                 <li><a class="dropdown-item" asp-controller="NastavniPlanovi" asp-action="Index">Nastavni planovi</a></li>
                             </ul>
@@ -51,22 +58,25 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPrograms" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Studijski Programi
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownPrograms">
-                                <li><a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="1">Proizvodni biznis</a></li>
-                                <li><a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="2">Građevinarstvo</a></li>
-                                <li><a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="3">Softversko inženjerstvo</a></li>
-                            </ul>
+                            @await Component.InvokeAsync("StudijskiProgramiMenu")
                         </li>
-                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOther" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ostalo
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownOther">
+                                    <li><a class="dropdown-item" asp-controller="Zahtjevi" asp-action="Index" asp-route-id="1">Zahtjevi</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Uvjerenja" asp-action="Index" asp-route-id="1">Uvjerenja</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Dokumenti" asp-action="Index" asp-route-id="1">Dokumenti</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Obavjestenja" asp-action="Index">Obavještenja</a>
-                            </li>
-                        }
-                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Dokumenti" asp-action="Index">Dokumenti</a>
                             </li>
                         }
                     </ul>
@@ -75,21 +85,59 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted">
-        <div class="container d-flex justify-content-between">
-            <div>&copy; 2024 - StudentHub</div>
-            <div>Kontakt: info@studenthub.com | Telefon: +387-33-123-456</div>
+
+    <footer>
+        <div class="container footer-container">
+            <!-- Informacije u footeru -->
+            <div class="footer-info">
+                <p class="text-muted">&copy; 2024 - StudentHub</p>
+                <p class="text-muted">Kontakt: info@studenthub.com | Telefon: +387-33-123-456</p>
+            </div>
+
+            <!-- Mapa u footeru -->
+            <div class="footer-map">
+                <div id="map"></div>
+            </div>
         </div>
     </footer>
+
+    <!-- jQuery & Bootstrap -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        // Inicijalizacija mape
+        var map = L.map('map').setView([44.199135, 17.903445], 17); // Lokacija Mašinskog fakulteta Zenica
+
+        // Dodavanje OpenStreetMap ploča
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Dodavanje markera za Mašinski fakultet Zenica
+        var marker = L.marker([44.199135, 17.903445]).addTo(map)
+            .bindPopup('<b>Mašinski fakultet Zenica</b><br>Univerzitet u Zenici')
+            .openPopup();
+
+        // Popup događaj prilikom klika na mapu
+        function onMapClick(e) {
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent("Kliknuli ste na lokaciju: " + e.latlng.toString())
+                .openOn(map);
+        }
+
+        map.on('click', onMapClick);
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-

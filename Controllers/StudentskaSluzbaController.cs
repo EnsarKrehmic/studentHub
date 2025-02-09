@@ -89,24 +89,24 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            var studentskasluzba = await _context.StudentskeSluzbe
+            var studentskaSluzba = await _context.StudentskeSluzbe
                 .Include(s => s.StudentskaSluzbaStudijskiProgrami)
                     .ThenInclude(ssp => ssp.StudijskiProgram)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (studentskasluzba == null)
+
+            if (studentskaSluzba == null)
             {
                 return NotFound();
             }
 
-            var studijskiProgrami = await _context.StudentskaSluzbaStudijskiProgrami
-                .Where(psp => psp.StudentskaSluzbaId == id)
-                .Select(psp => psp.StudijskiProgram)
-                .ToListAsync();
+            var studijskiProgrami = studentskaSluzba.StudentskaSluzbaStudijskiProgrami
+                .Select(ssp => ssp.StudijskiProgram)
+                .ToList();
 
             var viewModel = new StudentskaSluzbaDetailsViewModel
             {
-                StudentskaSluzba = studentskasluzba,
-                StudijskiProgrami = studijskiProgrami,
+                StudentskaSluzba = studentskaSluzba,
+                StudijskiProgrami = studijskiProgrami
             };
 
             return View(viewModel);
@@ -185,7 +185,7 @@ namespace StudentHub.Controllers
                     _context.StudentskaSluzbaStudijskiProgrami.Add(new StudentskaSluzbaStudijskiProgram
                     {
                         StudentskaSluzbaId = studentskaSluzba.Id,
-                        StudijskiProgramId = programId
+                        StudijskiProgramId = programId,
                     });
                 }
 

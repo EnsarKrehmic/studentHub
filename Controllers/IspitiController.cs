@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using StudentHub.Data;
 using StudentHub.Models;
 using StudentHub.ViewModels;
+using Microsoft.AspNetCore.SignalR;
+using StudentHub.Hubs;
 
 namespace StudentHub.Controllers
 {
@@ -18,15 +20,18 @@ namespace StudentHub.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<IspitiController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IHubContext<ExamHub> _hubContext;
 
-        public IspitiController(ApplicationDbContext context, ILogger<IspitiController> logger, UserManager<IdentityUser> userManager)
+        public IspitiController(ApplicationDbContext context, ILogger<IspitiController> logger, UserManager<IdentityUser> userManager, IHubContext<ExamHub> hubContext)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         [HttpGet("")]
+        [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Index(string sortOrder)
         {
             var studijskiProgrami = await _context.StudijskiProgrami.ToListAsync();
@@ -89,6 +94,17 @@ namespace StudentHub.Controllers
             List<Ispit> ispiti,
             string sortOrder)
         {
+            var userId = _userManager.GetUserId(User);
+            var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
+            var ocjene = new Dictionary<long, Ocjena>();
+
+            if (student != null)
+            {
+                ocjene = await _context.Ocjene
+                    .Where(o => o.StudentId == student.Id)
+                    .ToDictionaryAsync(o => o.PredmetId, o => o);
+            }
+
             var viewModel = studijskiProgrami.Select(sp => new IspitDetailsViewModel
             {
                 StudijskiProgram = sp,
@@ -112,7 +128,8 @@ namespace StudentHub.Controllers
                 CurrentSort = sortOrder,
                 DateSortParm = string.IsNullOrEmpty(sortOrder) ? "date_desc" : "",
                 LocationSortParm = sortOrder == "Location" ? "location_desc" : "Location",
-                PointsSortParm = sortOrder == "Points" ? "points_desc" : "Points"
+                PointsSortParm = sortOrder == "Points" ? "points_desc" : "Points",
+                Ocjene = ocjene
             }).ToList();
 
             // Sortiranje ispita
@@ -162,19 +179,26 @@ namespace StudentHub.Controllers
             var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
             bool prijavljen = student != null && await _context.Prijave.AnyAsync(p => p.StudentId == student.Id && p.IspitId == ispit.Id);
 
+            // Dohvaćanje prijavljenih studenata
+            var prijavljeniStudenti = await _context.Prijave
+                .Where(p => p.IspitId == id)
+                .Select(p => p.Student)
+                .ToListAsync();
+
             var viewModel = new IspitDetailsViewModel
             {
                 IspitId = ispit.Id,
                 StudijskiProgram = ispit.StudijskiProgram,
                 Predmeti = new List<PredmetIspitViewModel>
-            {
+        {
             new PredmetIspitViewModel
             {
                 Predmet = ispit.Predmet,
                 Ispiti = new List<Ispit> { ispit }
             }
-            },
-                Prijavljen = prijavljen
+        },
+                Prijavljen = prijavljen,
+                PrijavljeniStudenti = prijavljeniStudenti
             };
 
             return View(viewModel);
@@ -374,6 +398,7 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> Prijavi(long id)
         {
             var ispit = await _context.Ispiti
+                .Include(i => i.Predmet)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ispit == null)
@@ -394,6 +419,14 @@ namespace StudentHub.Controllers
                 return BadRequest("Ne možete se prijaviti na ispit jer niste registrovani kao student.");
             }
 
+            var ocjena = await _context.Ocjene
+                .FirstOrDefaultAsync(o => o.StudentId == student.Id && o.PredmetId == ispit.PredmetId);
+
+            if (ocjena != null)
+            {
+                return BadRequest("Ne možete se prijaviti na ispit jer već imate ocjenu iz ovog predmeta.");
+            }
+
             bool alreadyRegistered = await _context.Prijave
                 .AnyAsync(p => p.StudentId == student.Id && p.IspitId == id);
 
@@ -411,6 +444,8 @@ namespace StudentHub.Controllers
 
             _context.Prijave.Add(prijava);
             await _context.SaveChangesAsync();
+
+            await _hubContext.Clients.All.SendAsync("UpdateRegisteredStudents", id);
 
             TempData["Message"] = "Uspješno ste prijavili ispit.";
 
@@ -454,6 +489,8 @@ namespace StudentHub.Controllers
             _context.Prijave.Remove(prijava);
             await _context.SaveChangesAsync();
 
+            await _hubContext.Clients.All.SendAsync("UpdateRegisteredStudents", id);
+
             TempData["Message"] = "Uspješno ste odjavili ispit.";
 
             return RedirectToAction("Details", new { id });
@@ -481,6 +518,22 @@ namespace StudentHub.Controllers
             return Json(predmeti);
         }
 
+        [HttpGet("GetRegisteredStudents/{examId}")]
+        public async Task<IActionResult> GetRegisteredStudents(long examId)
+        {
+            var students = await _context.Prijave
+                .Where(p => p.IspitId == examId)
+                .Select(p => new
+                {
+                    p.Student.Ime,
+                    p.Student.Prezime,
+                    p.Student.Email,
+                    p.Student.BrojIndeksa
+                })
+                .ToListAsync();
+
+            return Json(students);
+        }
         private bool UserBelongsToStudijskiProgramAndPredmet(long studentId, long? studijskiProgramId, long? predmetId)
         {
             var student = _context.Studenti

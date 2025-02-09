@@ -21,6 +21,9 @@ namespace StudentHub.Controllers
             _context = context;
         }
 
+        // GET: Obavjestenja
+        [HttpGet("")]
+        [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Index(int? studijskiProgramId)
         {
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
@@ -156,6 +159,7 @@ namespace StudentHub.Controllers
         {
             var obavjestenje = await _context.Obavjestenja
                 .Include(o => o.ObavjestenjeStudijskiProgrami)
+                .Include(o => o.Korisnik)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
             if (obavjestenje == null)
@@ -164,9 +168,10 @@ namespace StudentHub.Controllers
             }
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (obavjestenje.Korisnik.AspNetUserId != currentUserId)
+
+            if (obavjestenje.Korisnik == null || obavjestenje.Korisnik.AspNetUserId != currentUserId)
             {
-                return Forbid(); // Korisnik može uređivati samo svoja obavještenja
+                return Forbid();
             }
 
             var viewModel = new ObavjestenjeCreateViewModel
@@ -196,6 +201,7 @@ namespace StudentHub.Controllers
 
             var obavjestenje = await _context.Obavjestenja
                 .Include(o => o.ObavjestenjeStudijskiProgrami)
+                .Include(o => o.Korisnik)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
             if (obavjestenje == null)
@@ -204,7 +210,8 @@ namespace StudentHub.Controllers
             }
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (obavjestenje.Korisnik.AspNetUserId != currentUserId)
+
+            if (obavjestenje.Korisnik == null || obavjestenje.Korisnik.AspNetUserId != currentUserId)
             {
                 return Forbid();
             }

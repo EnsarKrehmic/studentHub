@@ -6,6 +6,10 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<p>
+    <a asp-action="Index" asp-controller="StudijskiProgrami" class="btn btn-info">Lista svih studijskih programa</a>
+</p>
+
 <div>
     <h4>@Model.StudijskiProgram.Naziv</h4>
     <p>@Model.StudijskiProgram.Opis</p>
@@ -64,5 +68,6 @@
     {
         <a asp-action="Create" class="btn btn-primary">Kreiraj novi studijski program</a>
     }
-    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu.</a>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
 </div>
+

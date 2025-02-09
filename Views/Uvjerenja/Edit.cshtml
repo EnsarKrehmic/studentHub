@@ -6,33 +6,34 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Edit">
-    <div class="form-group">
-        <label asp-for="StudentId" class="control-label"></label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti"></select>
-        <span asp-validation-for="StudentId" class="text-danger"></span>
+<h4>Uvjerenje</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="StudentId" class="control-label"></label>
+                <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti" required></select>
+                <span asp-validation-for="StudentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VrstaUvjerenja" class="control-label">Vrsta uvjerenja</label>
+                <select asp-for="VrstaUvjerenja" class="form-control" asp-items="Html.GetEnumSelectList<VrstaUvjerenja>()"></select>
+                <span asp-validation-for="VrstaUvjerenja" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Namjena" class="control-label">Namjena uvjerenja</label>
+                <input asp-for="Namjena" class="form-control" placeholder="Unesite namjenu uvjerenja" />
+                <span asp-validation-for="Namjena" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Sačuvaj" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="Vrsta" class="control-label"></label>
-        <select asp-for="Vrsta" class="form-control"></select>
-        <span asp-validation-for="Vrsta" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Namjena" class="control-label"></label>
-        <input asp-for="Namjena" class="form-control" />
-        <span asp-validation-for="Namjena" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="DatumIzdavanja" class="control-label"></label>
-        <input asp-for="DatumIzdavanja" class="form-control" />
-        <span asp-validation-for="DatumIzdavanja" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
-        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
-    </div>
-</form>
-
+</div>
 
 @section Scripts {
     @{

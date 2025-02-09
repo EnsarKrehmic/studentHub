@@ -12,6 +12,7 @@ namespace StudentHub.Data
         public DbSet<Asistent> Asistenti { get; set; }
         public DbSet<AsistentStudijskiProgram> AsistentStudijskiProgrami { get; set; }
         public DbSet<Dokument> Dokumenti { get; set; }
+        public DbSet<DokumentSlike> DokumentSlike { get; set; }
         public DbSet<Ispit> Ispiti { get; set; }
         public DbSet<Korisnik> Korisnici { get; set; }
         public DbSet<NastavniPlan> NastavniPlanovi { get; set; }
@@ -37,6 +38,7 @@ namespace StudentHub.Data
         {
             modelBuilder.Entity<AsistentStudijskiProgram>().ToTable("AsistentStudijskiProgram");
             modelBuilder.Entity<Dokument>().ToTable("Dokument");
+            modelBuilder.Entity<DokumentSlike>().ToTable("DokumentSlike");
             modelBuilder.Entity<Ispit>().ToTable("Ispit");
             modelBuilder.Entity<Korisnik>().ToTable("Korisnik");
             modelBuilder.Entity<NastavniPlan>().ToTable("NastavniPlan");
@@ -200,13 +202,6 @@ namespace StudentHub.Data
                 .HasForeignKey(osp => osp.StudijskiProgramId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Konfiguracija za Uvjerenje -> Zahtjev
-            modelBuilder.Entity<Uvjerenje>()
-                .HasOne(u => u.StudentskaSluzba)
-                .WithMany()
-                .HasForeignKey(u => u.StudentskaSluzbaId)
-                .OnDelete(DeleteBehavior.NoAction);
-
             // Konfiguracija za Predmet -> NastavniPlan
             modelBuilder.Entity<Predmet>()
                 .HasOne(p => p.NastavniPlan)
@@ -251,11 +246,18 @@ namespace StudentHub.Data
                 .HasForeignKey(z => z.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Konfiguracija za Zahtjev -> StudentskaSluzba
-            modelBuilder.Entity<Zahtjev>()
-                .HasOne(z => z.Student)
+            // Konfiguracija za Uvjerenje -> Student
+            modelBuilder.Entity<Uvjerenje>()
+                .HasOne(u => u.Student)
                 .WithMany()
-                .HasForeignKey(z => z.StudentId)
+                .HasForeignKey(u => u.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Konfiguracija za Uvjerenje -> StudentskaSluzba
+            modelBuilder.Entity<Uvjerenje>()
+                .HasOne(u => u.StudentskaSluzba)
+                .WithMany()
+                .HasForeignKey(u => u.StudentskaSluzbaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za StudentskaSluzba -> Korisnik
@@ -344,20 +346,6 @@ namespace StudentHub.Data
 
             // Konfiguracija za Dokument -> StudentskaSluzba
             modelBuilder.Entity<Dokument>()
-                .HasOne(d => d.StudentskaSluzba)
-                .WithMany()
-                .HasForeignKey(d => d.StudentskaSluzbaId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            // Konfiguracija za Uvjerenje -> Student
-            modelBuilder.Entity<Uvjerenje>()
-                .HasOne(d => d.Student)
-                .WithMany()
-                .HasForeignKey(d => d.StudentId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            // Konfiguracija za Uvjerenje -> StudentskaSluzba
-            modelBuilder.Entity<Uvjerenje>()
                 .HasOne(d => d.StudentskaSluzba)
                 .WithMany()
                 .HasForeignKey(d => d.StudentskaSluzbaId)

@@ -26,8 +26,25 @@
             <dt class="col-sm-3">Naziv:</dt>
             <dd class="col-sm-9">@Model.Naziv</dd>
 
-            <dt class="col-sm-3">Putanja:</dt>
-            <dd class="col-sm-9">@Model.Putanja</dd>
+            <dt class="col-sm-3">Priložene slike</dt>
+            <dd class="col-sm-9">
+                @if (Model.Slike != null && Model.Slike.Any())
+                {
+                    <div class="d-flex flex-wrap">
+                        @foreach (var slika in Model.Slike)
+                        {
+                            <a href="@Url.Content("~/uploads/" + slika.Putanja)" target="_blank">
+                                <img src="@Url.Content("~/uploads/" + slika.Putanja)" alt="Slika" class="img-thumbnail me-2"
+                                     style="width: 100px; height: 100px; object-fit: cover;">
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <span class="text-muted">Nema priloženih slika</span>
+                }
+            </dd>
         </dl>
     </div>
 </div>

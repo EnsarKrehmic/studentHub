@@ -6,37 +6,28 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="StudentId" class="control-label"></label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti"></select>
-        <span asp-validation-for="StudentId" class="text-danger"></span>
+<h4>Zahtjev</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div class="form-group">
+                <label asp-for="TipZahtjeva" class="control-label"></label>
+                <select asp-for="TipZahtjeva" class="form-control" asp-items="Html.GetEnumSelectList<TipZahtjeva>()"></select>
+                <span asp-validation-for="TipZahtjeva" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Napomena" class="control-label"></label>
+                <textarea asp-for="Napomena" class="form-control"></textarea>
+                <span asp-validation-for="Napomena" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Kreiraj" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="TipZahtjeva" class="control-label"></label>
-        <select asp-for="TipZahtjeva" class="form-control"></select>
-        <span asp-validation-for="TipZahtjeva" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="StatusZahtjeva" class="control-label"></label>
-        <select asp-for="StatusZahtjeva" class="form-control"></select>
-        <span asp-validation-for="StatusZahtjeva" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="DatumPodnosenja" class="control-label"></label>
-        <input asp-for="DatumPodnosenja" class="form-control" readonly />
-        <span asp-validation-for="DatumPodnosenja" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="DatumRjesavanja" class="control-label"></label>
-        <input asp-for="DatumRjesavanja" class="form-control" />
-        <span asp-validation-for="DatumRjesavanja" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />
-        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     @{

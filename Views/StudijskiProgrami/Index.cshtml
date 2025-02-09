@@ -4,35 +4,33 @@
     ViewData["Title"] = "Lista studijskih programa";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4">@ViewData["Title"]</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Kreiraj novi studijski program</a>
-</p>
-
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Naziv)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Opis)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().TrajanjeUGodinama)</th>
-            <th>Akcije</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Naziv)</td>
-                <td>@Html.DisplayFor(modelItem => item.Opis)</td>
-                <td>@Html.DisplayFor(modelItem => item.TrajanjeUGodinama)</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
-                </td>
-                }
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">@Html.DisplayFor(modelItem => item.Naziv)</h5>
+                    <p class="card-text"><strong>Opis:</strong> @Html.DisplayFor(modelItem => item.Opis)</p>
+                    <p class="card-text"><strong>Trajanje:</strong> @Html.DisplayFor(modelItem => item.TrajanjeUGodinama) godina</p>
+                </div>
+                <div class="card-footer bg-white text-end">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm fw-bold">
+                        <i class="bi bi-eye-fill"></i> Pregled
+                    </a>
+                    @if (User.IsInRole("Studentska služba"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm fw-bold">
+                            <i class="bi bi-pencil-fill"></i> Izmjena
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm fw-bold">
+                            <i class="bi bi-trash-fill"></i> Brisanje
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

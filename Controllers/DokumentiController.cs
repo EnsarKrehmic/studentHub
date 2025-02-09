@@ -27,7 +27,7 @@ namespace StudentHub.Controllers
         // GET: Dokumenti
         [HttpGet("")]
         [Authorize(Roles = "Student, Studentska služba")]
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? studijskiProgramId)
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["IndexSortParm"] = sortOrder == "index_asc" ? "index_desc" : "index_asc";
@@ -36,6 +36,7 @@ namespace StudentHub.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var dokumentiQuery = _context.Dokumenti
+                .Include(d => d.Slike)
                 .Include(d => d.Student)
                 .ThenInclude(s => s.StudentStudijskiProgrami)
                 .ThenInclude(ssp => ssp.StudijskiProgram)
@@ -47,13 +48,24 @@ namespace StudentHub.Controllers
                 dokumentiQuery = dokumentiQuery.Where(d => d.Student.AspNetUserId == userId);
             }
 
+            // Filtriranje po imenu/prezimenu studenta
             if (!string.IsNullOrEmpty(searchString))
             {
-                dokumentiQuery = dokumentiQuery.Where(d => d.Student.Ime.Contains(searchString) || d.Student.Prezime.Contains(searchString));
+                dokumentiQuery = dokumentiQuery.Where(d =>
+                    d.Student.Ime.Contains(searchString) ||
+                    d.Student.Prezime.Contains(searchString));
+            }
+
+            // Filtriranje po studijskom programu ako je odabran
+            if (studijskiProgramId.HasValue)
+            {
+                dokumentiQuery = dokumentiQuery.Where(d =>
+                    d.Student.StudentStudijskiProgrami.Any(ssp => ssp.StudijskiProgramId == studijskiProgramId.Value));
             }
 
             var dokumenti = await dokumentiQuery.ToListAsync();
 
+            // Sortiranje podataka
             switch (sortOrder)
             {
                 case "name_desc":
@@ -70,6 +82,7 @@ namespace StudentHub.Controllers
                     break;
             }
 
+            // Grupisanje dokumenata po studijskom programu
             var groupedDokumenti = dokumenti
                 .GroupBy(d => d.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram)
                 .Select(g => new DokumentGroupedByProgramViewModel
@@ -78,6 +91,9 @@ namespace StudentHub.Controllers
                     Dokumenti = g.ToList()
                 })
                 .ToList();
+
+            // Prosljeđivanje liste studijskih programa za filtriranje u ViewBag
+            ViewBag.StudijskiProgrami = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
 
             return View(groupedDokumenti);
         }
@@ -88,24 +104,23 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> Details(long id)
         {
             var dokument = await _context.Dokumenti
+                .Include(d => d.Slike)
                 .Include(d => d.StudentskaSluzba)
                 .Include(d => d.Student)
                 .ThenInclude(s => s.StudentStudijskiProgrami)
                 .ThenInclude(ssp => ssp.StudijskiProgram)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (dokument == null)
             {
                 return NotFound();
             }
 
-            // Provjera da li je prijavljeni korisnik Student
+            // Provjera da li je dokument validan i studenti imaju pravo pristupa
             if (User.IsInRole("Student"))
             {
-                // Dohvaćanje AspNetUserId prijavljenog korisnika
                 var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                // Provjera da li je prijavljeni student vlasnik dokumenta
-                if (dokument.Student.AspNetUserId != loggedInUserId)
+                if (dokument.Student == null || dokument.Student.AspNetUserId != loggedInUserId)
                 {
                     return Forbid();
                 }
@@ -132,33 +147,49 @@ namespace StudentHub.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = null;
-                if (model.Datoteka != null)
-                {
-                    string uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Datoteka.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    Directory.CreateDirectory(uploadsFolder);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await model.Datoteka.CopyToAsync(fileStream);
-                    }
-                }
-
                 var dokument = new Dokument
                 {
                     Naziv = model.Naziv,
-                    Putanja = uniqueFileName,
                     StudentId = model.StudentId,
                     StudentskaSluzbaId = model.StudentskaSluzbaId
                 };
 
                 _context.Dokumenti.Add(dokument);
                 await _context.SaveChangesAsync();
+
+                if (model.Slike != null && model.Slike.Count > 0)
+                {
+                    string uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+                    Directory.CreateDirectory(uploadsFolder);
+
+                    foreach (var slika in model.Slike)
+                    {
+                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + slika.FileName;
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await slika.CopyToAsync(fileStream);
+                        }
+
+                        var dokumentSlike = new DokumentSlike
+                        {
+                            DokumentId = dokument.Id,
+                            Putanja = uniqueFileName
+                        };
+
+                        _context.DokumentSlike.Add(dokumentSlike);
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewBag.Studenti = new SelectList(_context.Studenti.Select(s => new { Id = s.Id, ImePrezime = s.Ime + " " + s.Prezime }), "Id", "ImePrezime");
             ViewBag.StudentskeSluzbe = new SelectList(_context.Korisnici.Where(k => k.Uloga == Uloga.StudentskaSluzba).Select(k => new { Id = k.Id, ImePrezime = k.Ime + " " + k.Prezime }), "Id", "ImePrezime");
+
             return View(model);
         }
 
@@ -167,27 +198,39 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
-            var dokument = await _context.Dokumenti.FindAsync(id);
+            var dokument = await _context.Dokumenti
+                .Include(d => d.Slike) // Učitavamo povezane slike
+                .FirstOrDefaultAsync(d => d.Id == id);
+
             if (dokument == null)
             {
                 return NotFound();
             }
+
             var model = new DokumentEditViewModel
             {
                 Id = dokument.Id,
                 Naziv = dokument.Naziv,
-                StudentId = dokument.StudentId
+                StudentId = dokument.StudentId,
+                StudentskaSluzbaId = dokument.StudentskaSluzbaId,
+                PostojeceSlike = dokument.Slike.Select(s => new DokumentSlike { Id = s.Id, Putanja = s.Putanja }).ToList()
             };
-            ViewBag.Studenti = new SelectList(_context.Studenti.Select(s => new { Id = s.Id, ImePrezime = s.Ime + " " + s.Prezime }), "Id", "ImePrezime");
-            ViewBag.StudentskeSluzbe = new SelectList(_context.Korisnici.Where(k => k.Uloga == Uloga.StudentskaSluzba).Select(k => new { Id = k.Id, ImePrezime = k.Ime + " " + k.Prezime }), "Id", "ImePrezime");
+
+            ViewBag.Studenti = new SelectList(
+                _context.Studenti.Select(s => new { Id = s.Id, ImePrezime = s.Ime + " " + s.Prezime }), "Id", "ImePrezime");
+
+            ViewBag.StudentskeSluzbe = new SelectList(
+                _context.Korisnici.Where(k => k.Uloga == Uloga.StudentskaSluzba)
+                    .Select(k => new { Id = k.Id, ImePrezime = k.Ime + " " + k.Prezime }),
+                "Id", "ImePrezime");
+
             return View(model);
         }
 
-        // POST: Dokumenti/Edit/{id}
-        [HttpPost("Edit/{id:long}")]
+        [HttpPost("EditPost/{id:long}")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Studentska služba")]
-        public async Task<IActionResult> Edit(long id, DokumentEditViewModel model)
+        public async Task<IActionResult> EditPost(long id, DokumentEditViewModel model, [FromForm] List<long> ObrisiSlike)
         {
             if (id != model.Id)
             {
@@ -196,7 +239,10 @@ namespace StudentHub.Controllers
 
             if (ModelState.IsValid)
             {
-                var dokument = await _context.Dokumenti.FindAsync(id);
+                var dokument = await _context.Dokumenti
+                    .Include(d => d.Slike)
+                    .FirstOrDefaultAsync(d => d.Id == id);
+
                 if (dokument == null)
                 {
                     return NotFound();
@@ -205,50 +251,55 @@ namespace StudentHub.Controllers
                 dokument.Naziv = model.Naziv;
                 dokument.StudentId = model.StudentId;
 
-                if (model.Datoteka != null)
+                // Brisanje slika koje su označene
+                if (ObrisiSlike != null && ObrisiSlike.Count > 0)
                 {
-                    // Delete the existing file
-                    if (!string.IsNullOrEmpty(dokument.Putanja))
+                    foreach (var slikaId in ObrisiSlike)
                     {
-                        string existingFilePath = Path.Combine(_environment.WebRootPath, "uploads", dokument.Putanja);
-                        if (System.IO.File.Exists(existingFilePath))
+                        var slika = dokument.Slike.FirstOrDefault(s => s.Id == slikaId);
+                        if (slika != null)
                         {
-                            System.IO.File.Delete(existingFilePath);
+                            string filePath = Path.Combine(_environment.WebRootPath, "uploads", slika.Putanja);
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                System.IO.File.Delete(filePath);
+                            }
+
+                            _context.DokumentSlike.Remove(slika);
                         }
                     }
+                }
 
-                    // Upload the new file
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Datoteka.FileName;
+                // Dodavanje novih slika
+                if (model.NoveSlike != null && model.NoveSlike.Count > 0)
+                {
                     string uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                     Directory.CreateDirectory(uploadsFolder);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+
+                    foreach (var slika in model.NoveSlike)
                     {
-                        await model.Datoteka.CopyToAsync(fileStream);
+                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + slika.FileName;
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await slika.CopyToAsync(fileStream);
+                        }
+
+                        var dokumentSlike = new DokumentSlike
+                        {
+                            DokumentId = dokument.Id,
+                            Putanja = uniqueFileName
+                        };
+
+                        _context.DokumentSlike.Add(dokumentSlike);
                     }
-                    dokument.Putanja = uniqueFileName;
                 }
 
-                try
-                {
-                    _context.Update(dokument);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DokumentExists(dokument.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Studenti = new SelectList(_context.Studenti.Select(s => new { Id = s.Id, ImePrezime = s.Ime + " " + s.Prezime }), "Id", "ImePrezime");
-            ViewBag.StudentskeSluzbe = new SelectList(_context.Korisnici.Where(k => k.Uloga == Uloga.StudentskaSluzba).Select(k => new { Id = k.Id, ImePrezime = k.Ime + " " + k.Prezime }), "Id", "ImePrezime");
+
             return View(model);
         }
 
@@ -259,6 +310,7 @@ namespace StudentHub.Controllers
         {
             var dokument = await _context.Dokumenti
                 .Include(d => d.Student)
+                .Include(d => d.Slike)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dokument == null)
             {
@@ -274,13 +326,15 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var dokument = await _context.Dokumenti.FindAsync(id);
+            var dokument = await _context.Dokumenti
+                .Include(d => d.Slike)
+                .FirstOrDefaultAsync(d => d.Id == id);
             if (dokument != null)
             {
-                // Delete the file from the server
-                if (!string.IsNullOrEmpty(dokument.Putanja))
+                // Delete the files from the server
+                foreach (var slika in dokument.Slike)
                 {
-                    string filePath = Path.Combine(_environment.WebRootPath, "uploads", dokument.Putanja);
+                    string filePath = Path.Combine(_environment.WebRootPath, "uploads", slika.Putanja);
                     if (System.IO.File.Exists(filePath))
                     {
                         System.IO.File.Delete(filePath);

@@ -56,7 +56,7 @@
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item"><strong>📍 Lokacija:</strong> @ispit.Lokacija</li>
-                            <li class="list-group-item"><strong>📅 Datum:</strong> @ispit.DatumOdrzavanja.ToString("dd.MM.yyyy")</li>
+                            <li class="list-group-item"><strong>📅 Datum:</strong> @ispit.DatumOdrzavanja.ToString("dd.MM.yyyy HH:mm")</li>
                             <li class="list-group-item"><strong>💯 Bodovi:</strong> @ispit.BrojBodova</li>
                         </ul>
                     </div>
@@ -92,40 +92,100 @@
     </div>
 </div>
 
-<script>
-    function toggleExam(ispitId, prijavljen) {
-        let url = prijavljen ? "/Odjavi/" + ispitId : "/Prijavi/" + ispitId;
-        let method = "POST";
+@if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+{
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+        
+            <div class="mt-4">
+                <h4>Prijavljeni studenti</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th>Broj indeksa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in Model.PrijavljeniStudenti)
+                        {
+                            <tr>
+                                <td>@student.Ime @student.Prezime</td>
+                                <td>@student.Email</td>
+                                <td>@student.BrojIndeksa</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
 
-        fetch(url, {
-            method: method,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                let button = document.getElementById("examButton");
-                button.textContent = prijavljen ? "✅ Prijavi ispit" : "❌ Odjavi ispit";
-                button.classList.toggle("btn-success");
-                button.classList.toggle("btn-danger");
-                button.setAttribute("onclick", `toggleExam(${ispitId}, ${!prijavljen})`);
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script>
+        function toggleExam(ispitId, prijavljen) {
+            let url = prijavljen ? "/Odjavi/" + ispitId : "/Prijavi/" + ispitId;
+            let method = "POST";
 
-                let messageBox = document.getElementById("successMessage");
-                if (!messageBox) {
-                    messageBox = document.createElement("div");
-                    messageBox.classList.add("alert", "alert-success", "alert-dismissible", "fade", "show");
-                    messageBox.setAttribute("role", "alert");
-                    messageBox.setAttribute("id", "successMessage");
-                    document.querySelector(".container").prepend(messageBox);
+            fetch(url, {
+                method: method,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
                 }
-                messageBox.innerHTML = `${data.message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-            } else {
-                alert("Došlo je do greške.");
-            }
-        })
-        .catch(error => console.error("Greška:", error));
-    }
-</script>
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let button = document.getElementById("examButton");
+                    button.textContent = prijavljen ? "✅ Prijavi ispit" : "❌ Odjavi ispit";
+                    button.classList.toggle("btn-success");
+                    button.classList.toggle("btn-danger");
+                    button.setAttribute("onclick", `toggleExam(${ispitId}, ${!prijavljen})`);
+
+                    let messageBox = document.getElementById("successMessage");
+                    if (!messageBox) {
+                        messageBox = document.createElement("div");
+                        messageBox.classList.add("alert", "alert-success", "alert-dismissible", "fade", "show");
+                        messageBox.setAttribute("role", "alert");
+                        messageBox.setAttribute("id", "successMessage");
+                        document.querySelector(".container").prepend(messageBox);
+                    }
+                    messageBox.innerHTML = `${data.message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+                } else {
+                    alert("Došlo je do greške.");
+                }
+            })
+            .catch(error => console.error("Greška:", error));
+        }
+    </script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/examHub")
+            .build();
+
+        connection.on("UpdateRegisteredStudents", function (examId) {
+
+            fetch(`/Ispiti/GetRegisteredStudents/${examId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById("registeredStudents");
+                    tbody.innerHTML = "";
+                    data.forEach(student => {
+                        const row = `<tr>
+                            <td>${student.ime}</td>
+                            <td>${student.prezime}</td>
+                            <td>${student.email}</td>
+                            <td>${student.brojIndeksa}</td>
+                        </tr>`;
+                        tbody.innerHTML += row;
+                    });
+                });
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+    </script>
+}

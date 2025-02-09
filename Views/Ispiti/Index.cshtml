@@ -60,7 +60,7 @@
                                                             <strong>Bodovi:</strong> @ispit.BrojBodova<br />
                                                             <div class="mt-2">
                                                                 <a asp-action="Details" asp-route-id="@ispit.Id" class="btn btn-info btn-sm">Detalji</a>
-                                                                @if (User.IsInRole("Profesor"))
+                                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                                                 {
                                                                     <a asp-action="Edit" asp-route-id="@ispit.Id" class="btn btn-warning btn-sm">Izmjena</a>
                                                                     <a asp-action="Delete" asp-route-id="@ispit.Id" class="btn btn-danger btn-sm">Brisanje</a>
@@ -68,8 +68,9 @@
                                                                 @if (User.IsInRole("Student"))
                                                                 {
                                                                     var prijavljen = program.PrijavljeniIspitiIds.Contains(ispit.Id);
+                                                                    var imaOcjenu = program.Ocjene.ContainsKey(ispit.PredmetId);
 
-                                                                    @if (!prijavljen && ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now)
+                                                                    @if (!prijavljen && !imaOcjenu && ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now)
                                                                     {
                                                                         <form asp-action="Prijavi" asp-route-id="@ispit.Id" method="post" style="display:inline;">
                                                                             <button type="submit" class="btn btn-success btn-sm">✅ Prijavi se</button>
@@ -80,6 +81,10 @@
                                                                         <form asp-action="Odjavi" asp-route-id="@ispit.Id" method="post" style="display:inline;">
                                                                             <button type="submit" class="btn btn-danger btn-sm">❌ Odjavi se</button>
                                                                         </form>
+                                                                    }
+                                                                    else if (imaOcjenu)
+                                                                    {
+                                                                        <span class="text-muted">Već imate ocjenu iz ovog predmeta.</span>
                                                                     }
                                                                 }
                                                             </div>

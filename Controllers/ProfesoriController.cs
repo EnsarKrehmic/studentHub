@@ -225,7 +225,8 @@ namespace StudentHub.Controllers
                     _context.PredmetProfesori.Add(new PredmetProfesor
                     {
                         ProfesorId = profesor.Id,
-                        PredmetId = predmetId
+                        PredmetId = predmetId,
+                        AspNetUserId = profesor.AspNetUserId
                     });
                 }
 

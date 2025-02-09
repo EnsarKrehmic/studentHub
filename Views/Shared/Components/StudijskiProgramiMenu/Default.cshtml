@@ -1,0 +1,12 @@
+﻿@model IEnumerable<StudentHub.Models.StudijskiProgram>
+
+<ul class="dropdown-menu" aria-labelledby="navbarDropdownPrograms">
+    @foreach (var program in Model)
+    {
+        <li>
+            <a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@program.Id">
+                @program.Naziv
+            </a>
+        </li>
+    }
+</ul>

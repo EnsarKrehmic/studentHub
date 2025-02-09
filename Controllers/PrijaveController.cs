@@ -81,7 +81,7 @@ namespace StudentHub.Controllers
                 return View(prijava);
             }
 
-            // Check if the exam date is expired
+            // Provjera da li je istekao datum ispita
             if (ispit.DatumOdrzavanja < DateTime.Now)
             {
                 ModelState.AddModelError("IspitId", "Datum ispita je istekao.");
@@ -89,7 +89,7 @@ namespace StudentHub.Controllers
                 return View(prijava);
             }
 
-            // Check if the registration period is valid (3 days before the exam date)
+            // Provjera da li je istekao rok za prijavu ispita (3 dana prije ispita)
             if (ispit.DatumOdrzavanja.AddDays(-3) <= DateTime.Now)
             {
                 ModelState.AddModelError("IspitId", "Rok za prijavu ispita je istekao.");
@@ -99,7 +99,7 @@ namespace StudentHub.Controllers
 
             var studentId = prijava.StudentId;
 
-            // Check if the student is enrolled in the same study program, curriculum, and subject
+            // Provjera da li je student upisan u odgovarajući studijski program, tj. da li je upisan u predmet
             var student = await _context.Studenti
                 .Include(s => s.StudentStudijskiProgrami)
                 .ThenInclude(ssp => ssp.StudijskiProgram)

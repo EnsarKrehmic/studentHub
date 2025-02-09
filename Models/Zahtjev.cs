@@ -17,8 +17,8 @@ namespace StudentHub.Models
 
     public enum StatusZahtjeva
     {
-        [Display(Name = "Podnesen")]
-        Podnesen,
+        [Display(Name = "Podnešen")]
+        Podnešen,
         [Display(Name = "Primljen")]
         Primljen,
         [Display(Name = "Odbijen")]
@@ -34,22 +34,23 @@ namespace StudentHub.Models
 
         [Required(ErrorMessage = "Tip zahtjeva je obavezan.")]
         [EnumDataType(typeof(TipZahtjeva))]
+        [Display(Name = "Tip zahtjeva")]
         public TipZahtjeva TipZahtjeva { get; set; }
 
-        [Required(ErrorMessage = "Status zahtjeva je obavezan.")]
         [EnumDataType(typeof(StatusZahtjeva))]
+        [Display(Name = "Status zahtjeva")]
         public StatusZahtjeva StatusZahtjeva { get; set; }
 
-        [Required(ErrorMessage = "Datum podnošenja je obavezan.")]
+        [Display(Name = "Datum podnošenja")]
         public DateTime DatumPodnosenja { get; set; }
 
+        [Display(Name = "Datum rješavanja")]
         public DateTime? DatumRjesavanja { get; set; }
-        public string? Napomena;
+        public string? Napomena { get; set; }
 
-        [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]
         public long StudentId { get; set; }
-        public Student Student { get; set; }
+        public Student? Student { get; set; }
 
         public Zahtjev() { }
     }

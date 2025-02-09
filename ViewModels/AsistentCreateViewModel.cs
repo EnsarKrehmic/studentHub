@@ -24,6 +24,7 @@ namespace StudentHub.ViewModels
         public string Lozinka { get; set; }
 
         [Required(ErrorMessage = "Titula je obavezna.")]
+        [Display(Name = "Iitula")]
         public string AsistentTitula { get; set; }
 
         [Required(ErrorMessage = "Uloga je obavezna.")]

@@ -11,7 +11,7 @@ namespace StudentHub.ViewModels
         public string Naziv { get; set; }
 
         [Required(ErrorMessage = "Datoteka je obavezna.")]
-        public IFormFile Datoteka { get; set; }
+        public List<IFormFile> Slike { get; set; } = new List<IFormFile>();
 
         [Required(ErrorMessage = "Student je obavezan.")]
         public long StudentId { get; set; }
@@ -28,7 +28,9 @@ namespace StudentHub.ViewModels
         [MaxLength(200, ErrorMessage = "Naziv dokumenta ne smije biti duži od 200 karaktera.")]
         public string Naziv { get; set; }
 
-        public IFormFile? Datoteka { get; set; }
+        public List<IFormFile> NoveSlike { get; set; } = new List<IFormFile>();
+
+        public List<DokumentSlike> PostojeceSlike { get; set; } = new List<DokumentSlike>();
 
         [Required(ErrorMessage = "Student je obavezan.")]
         public long StudentId { get; set; }

@@ -7,44 +7,61 @@
 <h2>@ViewData["Title"]</h2>
 
 <div class="container mt-4">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h3>Podaci o adminu</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3>Podaci o članu studentske službe</h3>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Ime:</dt>
+                        <dd class="col-sm-8">@Model.StudentskaSluzba.Ime</dd>
+
+                        <dt class="col-sm-4">Prezime:</dt>
+                        <dd class="col-sm-8">@Model.StudentskaSluzba.Prezime</dd>
+
+                        @if (User.IsInRole("Studentska služba"))
+                        {
+                            <dt class="col-sm-4">JMBG:</dt>
+                            <dd class="col-sm-8">@Model.StudentskaSluzba.JMBG</dd>
+                        }
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.StudentskaSluzba.Email</dd>
+
+                        <dt class="col-sm-4">Uloga:</dt>
+                        <dd class="col-sm-8">@Model.StudentskaSluzba.Uloga</dd>
+                    </dl>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Ime:</dt>
-                <dd class="col-sm-9">@Model.StudentskaSluzba.Ime</dd>
 
-                <dt class="col-sm-3">Prezime:</dt>
-                <dd class="col-sm-9">@Model.StudentskaSluzba.Prezime</dd>
-
-                @if (User.IsInRole("Studentska služba"))
-                {
-                    <dt class="col-sm-3">JMBG:</dt>
-                    <dd class="col-sm-9">@Model.StudentskaSluzba.JMBG</dd>
-                }
-
-                <dt class="col-sm-3">Email:</dt>
-                <dd class="col-sm-9">@Model.StudentskaSluzba.Email</dd>
-
-                <dt class="col-sm-3">Uloga:</dt>
-                <dd class="col-sm-9">@Model.StudentskaSluzba.Uloga</dd>
-            </dl>
-        </div>
-    </div>
-
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h4>Studijski programi</h4>
-        </div>
-        <div class="card-body">
-            <ul>
-                @foreach (var studijskiProgram in Model.StudijskiProgrami)
-                {
-                    <li>@studijskiProgram.Naziv</li>
-                }
-            </ul>
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h4>Studijski programi</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.StudijskiProgrami.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var studijskiProgram in Model.StudijskiProgrami)
+                            {
+                                <li class="list-group-item">
+                                    <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@studijskiProgram.Id" class="text-decoration-none">
+                                        @studijskiProgram.Naziv
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Član studentske službe trenutno nije povezan ni s jednim studijskim programom.</p>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -53,5 +70,6 @@
     @if (User.IsInRole("Studentska služba"))
     {
         <a asp-action="Edit" asp-route-id="@Model.StudentskaSluzba.Id" class="btn btn-warning">Izmjena</a>
-    }    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
 </div>

@@ -23,9 +23,9 @@
                     <label asp-for="Input.Password" class="form-label">Lozinka</label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                <div class="form-check mb-3">
+                    <input class="form-check-input" asp-for="Input.RememberMe" id="rememberMeCheckbox" />
+                    <label asp-for="Input.RememberMe" class="form-check-label" for="rememberMeCheckbox">
                         Zapamti me
                     </label>
                 </div>

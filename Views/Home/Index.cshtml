@@ -13,21 +13,18 @@
     </div>
 
     <div class="row text-center mt-5">
-        <div class="col-md-4">
-            <h3>Proizvodni biznis</h3>
-            <p>Detalji o studijskom programu proizvodnog biznisa.</p>
-            <a href="@Url.Action("Details", "StudijskiProgrami", new { id = 1 })" class="btn btn-primary">Pogledaj detalje</a>
-        </div>
-        <div class="col-md-4">
-            <h3>Građevinarstvo</h3>
-            <p>Detalji o studijskom programu građevinarstva.</p>
-            <a href="@Url.Action("Details", "StudijskiProgrami", new { id = 2 })" class="btn btn-primary">Pogledaj detalje</a>
-        </div>
-        <div class="col-md-4">
-            <h3>Softversko inženjerstvo</h3>
-            <p>Detalji o studijskom programu softverskog inženjerstva.</p>
-            <a href="@Url.Action("Details", "StudijskiProgrami", new { id = 3 })" class="btn btn-primary">Pogledaj detalje</a>
-        </div>
+        @foreach (var program in Model.StudijskiProgrami)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@program.Naziv</h5>
+                        <p>Pogledajte više informacija o navedenom studijskom programu</p>
+                        <a href="@Url.Action("Details", "StudijskiProgrami", new { id = program.Id })" class="btn btn-primary">Pogledaj detalje</a>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
     <div class="mt-5">
@@ -57,5 +54,17 @@
                 }
             </tbody>
         </table>
+    </div>
+
+    <!-- YouTube video -->
+    <div class="mt-5 text-center">
+        <h2>Da li želite saznati više o nama?</h2>
+        <p>U ovom videu možete doči do osnovnih informacija o ovom fakultetu.</p>
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item"
+                    src="https://www.youtube.com/embed/fJhbTdVyZBI"
+                    allowfullscreen>
+            </iframe>
+        </div>
     </div>
 </div>

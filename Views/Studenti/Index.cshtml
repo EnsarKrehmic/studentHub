@@ -4,131 +4,139 @@
     ViewData["Title"] = "Lista svih studenata na fakultetu";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4">@ViewData["Title"]</h2>
 
-<p>
-    @if (User.IsInRole("Studentska služba"))
-    {
-        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Dodaj novog studenta</a>
-    }
-</p>
-
-<form asp-action="Index" method="get">
-    <div class="form-group">
-        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Pretraži studenta" />
-    </div>
-    <div class="form-group">
-        <label for="StudijskiProgramId">Filtrirajte studente prema studijskom programu</label>
-        <select id="StudijskiProgramId" name="studijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami">
-            <option value="">Svi programi</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary mt-3">Pretraži</button>
+<form method="get" class="mb-4">
+    <div class="row g-2">
+        <div class="col-md-4">
+            <input type="text" name="searchString" class="form-control" placeholder="Pretraga po imenu/prezimenu studenta..." value="@Context.Request.Query["searchString"]">
+        </div>
+        <div class="col-md-4">
+            <select name="studijskiProgramId" class="form-control">
+                <option value="">Svi studijski programi</option>
+                @foreach (var program in (SelectList)ViewBag.StudijskiProgrami)
+                {
+                    <option value="@program.Value" selected="@(Context.Request.Query["studijskiProgramId"] == program.Value ? "selected" : null)">@program.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-center">
+            <button type="submit" class="btn btn-primary me-2">Filtriraj</button>
+            <a asp-action="Index" class="btn btn-secondary">Reset</a>
+        </div>
     </div>
 </form>
 
-<table class="table table-bordered table-hover mt-3">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index"
-                   asp-route-sortOrder="@ViewData["NameSortParm"]"
-                   asp-route-searchString="@ViewData["CurrentFilter"]"
-                   asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Ime)
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index"
-                   asp-route-sortOrder="@ViewData["SurnameSortParm"]"
-                   asp-route-searchString="@ViewData["CurrentFilter"]"
-                   asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Prezime)
-                </a>
-            </th>
-            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-            {
-                <th>
-                    <a asp-action="Index"
-                       asp-route-sortOrder="@ViewData["JMBGSortParm"]"
-                       asp-route-searchString="@ViewData["CurrentFilter"]"
-                       asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().JMBG)
-                    </a>
-                </th>
-            }
-            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-            {
-                <th>
-                    <a asp-action="Index"
-                       asp-route-sortOrder="@ViewData["IndexSortParm"]"
-                       asp-route-searchString="@ViewData["CurrentFilter"]"
-                       asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().BrojIndeksa)
-                    </a>
-                </th>
-            }
-            <th>
-                <a asp-action="Index"
-                   asp-route-sortOrder="@ViewData["EmailSortParm"]"
-                   asp-route-searchString="@ViewData["CurrentFilter"]"
-                   asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
-                </a>
-            </th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Semestar)</th>
-            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().GodinaStudija)</th>
-            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-            {
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().PrethodnoObrazovanje)</th>
-            }
-            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-            {
-                <th>Akcije</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (User.IsInRole("Studentska služba"))
+{
+    <a class="btn btn-success mb-3" asp-area="Identity" asp-page="/Account/Register">
+        <i class="fas fa-user-plus"></i> Dodaj studenta
+    </a>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Ime)</td>
-                <td>@Html.DisplayFor(modelItem => item.Prezime)</td>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]"
+                       asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                        Ime <i class="fas fa-sort"></i>
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["SurnameSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]"
+                       asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                        Prezime <i class="fas fa-sort"></i>
+                    </a>
+                </th>
                 @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
                 {
-                    <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
-
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["JMBGSortParm"]"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                            JMBG <i class="fas fa-sort"></i>
+                        </a>
+                    </th>
+                }
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]"
+                       asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                        Email <i class="fas fa-sort"></i>
+                    </a>
+                </th>
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                {
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["IndexSortParm"]"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-studijskiProgramId="@ViewData["CurrentStudijskiProgramId"]">
+                            Broj indeksa <i class="fas fa-sort"></i>
+                        </a>
+                    </th>
+                }
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Semestar)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().GodinaStudija)</th>
+                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                {
+                    <th>@Html.DisplayNameFor(model => model.FirstOrDefault().PrethodnoObrazovanje)</th>
                 }
                 @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                 {
-                    <td>@Html.DisplayFor(modelItem => item.BrojIndeksa)</td>
-
+                    <th class="text-center">Akcije</th>
                 }
-                <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.Semestar)</td>
-                <td>@Html.DisplayFor(modelItem => item.GodinaStudija)</td>
-                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-                {
-                    <td>@Html.DisplayFor(modelItem => item.PrethodnoObrazovanje)</td>
-
-                }
-                <td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Ime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Prezime)</td>
+                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                    {
+                        <td>@Html.DisplayFor(modelItem => item.JMBG)</td>
+                    }
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
                     @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                     {
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
-                    }
-                    @if (User.IsInRole("Studentska služba"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        <td>@Html.DisplayFor(modelItem => item.BrojIndeksa)</td>
 
-<div>
-    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+                    }
+                    <td>@Html.DisplayFor(modelItem => item.Semestar)</td>
+                    <td>@Html.DisplayFor(modelItem => item.GodinaStudija)</td>
+                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                    {
+                        <td>@Html.DisplayFor(modelItem => item.PrethodnoObrazovanje)</td>
+
+                    }
+                    <td class="text-center">
+                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Detalji">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        }
+                        @if (User.IsInRole("Studentska služba"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Izmjena">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Brisanje">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+<a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
+    <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
+</a>

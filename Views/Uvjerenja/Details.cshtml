@@ -16,17 +16,20 @@
         <dt class="col-sm-3">Broj indeksa:</dt>
         <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
 
-        <dt class="col-sm-3">Studentska služba:</dt>
-        <dd class="col-sm-9">@Model.StudentskaSluzba.Ime @Model.StudentskaSluzba.Prezime</dd>
-
         <dt class="col-sm-3">Vrsta:</dt>
-        <dd class="col-sm-9">@Model.Vrsta</dd>
+        <dd class="col-sm-9">@Model.VrstaUvjerenja</dd>
 
         <dt class="col-sm-3">Namjena:</dt>
         <dd class="col-sm-9">@Model.Namjena</dd>
 
         <dt class="col-sm-3">Datum izdavanja:</dt>
-        <dd class="col-sm-9">@Model.DatumIzdavanja</dd>
+        <dd class="col-sm-9">@Model.DatumIzdavanja.ToString("dd.MM.yyyy HH:mm")</dd>
+
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <dt class="col-sm-3">Izdato od:</dt>
+            <dd class="col-sm-9">@Model.StudentskaSluzba.Ime @Model.StudentskaSluzba.Prezime</dd>
+        }
     </dl>
 </div>
 

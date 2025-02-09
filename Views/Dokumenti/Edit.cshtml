@@ -1,42 +1,67 @@
-﻿    @model StudentHub.ViewModels.DokumentEditViewModel
+﻿@model StudentHub.ViewModels.DokumentEditViewModel
 
 @{
-    ViewData["Title"] = "Izmijeni Dokument";
+    ViewData["Title"] = "Izmijeni dokument";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Edit" enctype="multipart/form-data">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Naziv" class="control-label"></label>
-        <input asp-for="Naziv" class="form-control" />
-        <span asp-validation-for="Naziv" class="text-danger"></span>
+<h4>Dokument</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditPost" asp-route-id="@Model.Id" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="Naziv" class="control-label"></label>
+                <input asp-for="Naziv" class="form-control" />
+                <span asp-validation-for="Naziv" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Postojeće slike</label>
+                <div>
+                    @foreach (var slika in Model.PostojeceSlike)
+                    {
+                        <div class="d-inline-block text-center m-2">
+                            <img src="~/uploads/@slika.Putanja" class="img-thumbnail" style="width: 100px; height: 100px;" />
+                            <br />
+                            <input type="checkbox" name="ObrisiSlike" value="@slika.Id" /> Obriši
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NoveSlike" class="control-label">Dodaj nove slike</label>
+                <input asp-for="NoveSlike" type="file" class="form-control" multiple />
+                <span asp-validation-for="NoveSlike" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StudentId" class="control-label">Student</label>
+                <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti">
+                    <option value="">-- Izaberite Studenta --</option>
+                </select>
+                <span asp-validation-for="StudentId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StudentskaSluzbaId" class="control-label">Studentska Služba</label>
+                <select asp-for="StudentskaSluzbaId" class="form-control" asp-items="ViewBag.StudentskeSluzbe">
+                    <option value="">-- Izaberite Studentsku Službu --</option>
+                </select>
+                <span asp-validation-for="StudentskaSluzbaId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Spremi" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Otkaži</a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="Datoteka" class="control-label">Nova Datoteka (ostavite prazno ako ne mijenjate)</label>
-        <input asp-for="Datoteka" type="file" class="form-control" />
-        <span asp-validation-for="Datoteka" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="StudentId" class="control-label">Student</label>
-        <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti">
-            <option value="">-- Izaberite Studenta --</option>
-        </select>
-        <span asp-validation-for="StudentId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="StudentskaSluzbaId" class="control-label">Studentska Služba</label>
-        <select asp-for="StudentskaSluzbaId" class="form-control" asp-items="ViewBag.StudentskeSluzbe">
-            <option value="">-- Izaberite Studentsku Službu --</option>
-        </select>
-        <span asp-validation-for="StudentskaSluzbaId" class="text-danger"></span>
-    </div>
-    <div class="form-group mt-3">
-        <input type="submit" value="Spremi" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Otkaži</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     @{

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<StudentHub.Models.Zahtjev>
+
+@{
+    ViewData["Title"] = "Moji zahtjevi";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tip zahtjeva</th>
+            <th>Status zahtjeva</th>
+            <th>Datum podnošenja</th>
+            <th>Datum rješavanja</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.TipZahtjeva)</td>
+                <td>@Html.DisplayFor(modelItem => item.StatusZahtjeva)</td>
+                <td>@Html.DisplayFor(modelItem => item.DatumPodnosenja)</td>
+                <td>@Html.DisplayFor(modelItem => item.DatumRjesavanja)</td>
+                <td>
+                    @if (item.StatusZahtjeva == StatusZahtjeva.Podnešen)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Izmjena</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Brisanje</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalji</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

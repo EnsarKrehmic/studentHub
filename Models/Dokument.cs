@@ -12,10 +12,6 @@ namespace StudentHub.Models
         [MaxLength(200, ErrorMessage = "Naziv dokumenta ne smije biti duži od 200 karaktera.")]
         public string Naziv { get; set; }
 
-        [Required(ErrorMessage = "Putanja dokumenta je obavezna.")]
-        [MaxLength(500, ErrorMessage = "Putanja ne smije biti duža od 500 karaktera.")]
-        public string Putanja { get; set; }
-
         [Required(ErrorMessage = "Student je obavezan.")]
         [ForeignKey("Student")]
         public long StudentId { get; set; }
@@ -25,6 +21,7 @@ namespace StudentHub.Models
         [ForeignKey("StudentskaSluzba")]
         public long StudentskaSluzbaId { get; set; }
         public StudentskaSluzba StudentskaSluzba { get; set; }
+        public List<DokumentSlike> Slike { get; set; }
 
         public Dokument() { }
     }

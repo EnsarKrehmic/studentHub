@@ -6,29 +6,35 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-    <div class="form-group">
-        <label asp-for="StudijskiProgramiIds" class="control-label">Studijski programi</label>
-        <select asp-for="StudijskiProgramiIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" multiple>
-        </select>
-        <span asp-validation-for="StudijskiProgramiIds" class="text-danger"></span>
+<h4>Nastavni plan</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="StudijskiProgramiIds" class="control-label">Studijski programi</label>
+                <select asp-for="StudijskiProgramiIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" multiple>
+                </select>
+                <span asp-validation-for="StudijskiProgramiIds" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Naslov" class="control-label"></label>
+                <input asp-for="Naslov" class="form-control" />
+                <span asp-validation-for="Naslov" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sadrzaj" class="control-label"></label>
+                <textarea asp-for="Sadrzaj" class="form-control"></textarea>
+                <span asp-validation-for="Sadrzaj" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />
+                <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="Naslov" class="control-label"></label>
-        <input asp-for="Naslov" class="form-control" />
-        <span asp-validation-for="Naslov" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Sadrzaj" class="control-label"></label>
-        <textarea asp-for="Sadrzaj" class="form-control"></textarea>
-        <span asp-validation-for="Sadrzaj" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />
-        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     @{

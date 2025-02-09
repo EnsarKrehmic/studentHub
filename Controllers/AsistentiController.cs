@@ -232,7 +232,8 @@ namespace StudentHub.Controllers
                     _context.PredmetAsistenti.Add(new PredmetAsistent
                     {
                         AsistentId = asistent.Id,
-                        PredmetId = predmetId
+                        PredmetId = predmetId,
+                        AspNetUserId = asistent.AspNetUserId
                     });
                 }
 

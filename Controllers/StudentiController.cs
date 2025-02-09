@@ -207,6 +207,7 @@ namespace StudentHub.Controllers
             return View(model);
         }
 
+        // POST: Studenti/Edit/{id}
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Studentska služba")]
@@ -267,7 +268,8 @@ namespace StudentHub.Controllers
                     {
                         StudentId = existingStudent.Id,
                         PredmetId = predmetId,
-                        AkademskaGodina = DateTime.Now.Year.ToString()
+                        AkademskaGodina = DateTime.Now.Year.ToString(),
+                        AspNetUserId = existingStudent.AspNetUserId
                     });
                 }
             }

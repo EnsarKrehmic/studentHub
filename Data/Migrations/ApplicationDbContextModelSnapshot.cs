@@ -260,11 +260,6 @@ namespace StudentHub.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Putanja")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<long>("StudentId")
                         .HasColumnType("bigint");
 
@@ -280,6 +275,28 @@ namespace StudentHub.Data.Migrations
                     b.ToTable("Dokument", (string)null);
                 });
 
+            modelBuilder.Entity("StudentHub.Models.DokumentSlike", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("DokumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Putanja")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DokumentId");
+
+                    b.ToTable("DokumentSlike", (string)null);
+                });
+
             modelBuilder.Entity("StudentHub.Models.Ispit", b =>
                 {
                     b.Property<long>("Id")
@@ -288,7 +305,7 @@ namespace StudentHub.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int?>("BrojBodova")
+                    b.Property<int>("BrojBodova")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DatumObjave")
@@ -757,7 +774,6 @@ namespace StudentHub.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Namjena")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -767,7 +783,7 @@ namespace StudentHub.Data.Migrations
                     b.Property<long>("StudentskaSluzbaId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("Vrsta")
+                    b.Property<int>("VrstaUvjerenja")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -792,6 +808,9 @@ namespace StudentHub.Data.Migrations
 
                     b.Property<DateTime?>("DatumRjesavanja")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Napomena")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StatusZahtjeva")
                         .HasColumnType("int");
@@ -953,6 +972,17 @@ namespace StudentHub.Data.Migrations
                     b.Navigation("Student");
 
                     b.Navigation("StudentskaSluzba");
+                });
+
+            modelBuilder.Entity("StudentHub.Models.DokumentSlike", b =>
+                {
+                    b.HasOne("StudentHub.Models.Dokument", "Dokument")
+                        .WithMany("Slike")
+                        .HasForeignKey("DokumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dokument");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Ispit", b =>
@@ -1237,13 +1267,13 @@ namespace StudentHub.Data.Migrations
                     b.HasOne("StudentHub.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("StudentHub.Models.StudentskaSluzba", "StudentskaSluzba")
                         .WithMany()
                         .HasForeignKey("StudentskaSluzbaId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Student");
@@ -1303,6 +1333,11 @@ namespace StudentHub.Data.Migrations
                         .HasForeignKey("StudentHub.Models.StudentskaSluzba", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("StudentHub.Models.Dokument", b =>
+                {
+                    b.Navigation("Slike");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Obavjestenje", b =>

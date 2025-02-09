@@ -21,18 +21,26 @@
             <dt class="col-sm-3">Studentska služba</dt>
             <dd class="col-sm-9">@Model.StudentskaSluzba.Ime @Model.StudentskaSluzba.Prezime</dd>
 
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Naziv)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Naziv)</dd>
+            <dt class="col-sm-3">Naziv dokumenta</dt>
+            <dd class="col-sm-9">@Model.Naziv</dd>
 
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Putanja)</dt>
+            <dt class="col-sm-3">Priložene slike</dt>
             <dd class="col-sm-9">
-                @if (!string.IsNullOrEmpty(Model.Putanja))
+                @if (Model.Slike != null && Model.Slike.Any())
                 {
-                    <a href="@Url.Content("~/uploads/" + Model.Putanja)" target="_blank">@Model.Putanja</a>
+                    <div class="d-flex flex-wrap">
+                        @foreach (var slika in Model.Slike)
+                        {
+                            <a href="@Url.Content("~/uploads/" + slika.Putanja)" target="_blank">
+                                <img src="@Url.Content("~/uploads/" + slika.Putanja)" alt="Slika" class="img-thumbnail me-2"
+                                     style="width: 100px; height: 100px; object-fit: cover;">
+                            </a>
+                        }
+                    </div>
                 }
                 else
                 {
-                    <span>Nema datoteke</span>
+                    <span class="text-muted">Nema priloženih slika</span>
                 }
             </dd>
         </dl>

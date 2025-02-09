@@ -35,6 +35,11 @@ builder.Services.AddSignalR();
 // Add controllers
 builder.Services.AddControllers();
 
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();

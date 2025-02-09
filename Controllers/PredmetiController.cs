@@ -618,20 +618,20 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Profesor")]
         public IActionResult AddGrade(long predmetId, long studentId, float ocjena)
         {
-            // Validate the grade
+            // Validacija ocjene
             if (ocjena < 5 || ocjena > 10)
             {
                 ModelState.AddModelError("Ocjena", "Ocjena mora biti između 5 i 10.");
             }
 
-            // Check if the student exists
+            // Provjeri da li student postoji
             var student = _context.Studenti.Find(studentId);
             if (student == null)
             {
                 ModelState.AddModelError("StudentId", "Odabrani student ne postoji.");
             }
 
-            // Check if the subject exists
+            // Provjeri da li predmet postoji
             var predmet = _context.Predmeti
                 .Include(p => p.NastavniPlan)
                 .FirstOrDefault(p => p.Id == predmetId);
@@ -649,7 +649,7 @@ namespace StudentHub.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Reload the ViewBag.Studenti for the dropdown list
+                // Osvježi ViewBag.Studenti za dropdown listu
                 ViewBag.Studenti = _context.Studenti
                     .Select(s => new SelectListItem
                     {
@@ -657,7 +657,7 @@ namespace StudentHub.Controllers
                         Text = $"{s.Ime} {s.Prezime} ({s.BrojIndeksa})"
                     }).ToList();
 
-                // Reload the view model
+                // Osvježi ViewModel
                 var profesori = _context.PredmetProfesori
                     .Where(pp => pp.PredmetId == predmetId)
                     .Include(pp => pp.Profesor)
@@ -691,7 +691,7 @@ namespace StudentHub.Controllers
                 return View("Details", viewModel);
             }
 
-            // Add the grade
+            // Dodaj ocjenu studentu
             var ocjenaEntity = new Ocjena
             {
                 PredmetId = predmetId,

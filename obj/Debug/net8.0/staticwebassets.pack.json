@@ -125,10 +125,6 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
-      "Id": "C:\\Users\\Me\\source\\repos\\studentHub\\wwwroot\\uploads\\d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg",
-      "PackagePath": "staticwebassets\\uploads\\d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg"
-    },
-    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.StudentHub.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },

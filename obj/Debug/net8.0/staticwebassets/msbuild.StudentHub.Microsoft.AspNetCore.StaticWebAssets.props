@@ -558,23 +558,5 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\StudentHub.1mp7n4vejp.bundle.scp.css'))</OriginalItemSpec>
     </StaticWebAsset>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg'))">
-      <SourceType>Package</SourceType>
-      <SourceId>StudentHub</SourceId>
-      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
-      <BasePath>_content/StudentHub</BasePath>
-      <RelativePath>uploads/d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg</RelativePath>
-      <AssetKind>All</AssetKind>
-      <AssetMode>All</AssetMode>
-      <AssetRole>Primary</AssetRole>
-      <RelatedAsset></RelatedAsset>
-      <AssetTraitName></AssetTraitName>
-      <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>g8nne3fz59</Fingerprint>
-      <Integrity>YD9VwVOwhXdwrnvK/CYMLippU//am4irQcP+7PrlpIM=</Integrity>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg'))</OriginalItemSpec>
-    </StaticWebAsset>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "pL71K/7CMQV+sA57uU7lhTSTrLQXR5NIPuEsEqs6wNE=",
+  "Hash": "xkV2GszJcCS3/nANtgMNqIQbKdnHrgN7IJjKD5vsPMk=",
   "Source": "StudentHub",
   "BasePath": "_content/StudentHub",
   "Mode": "Default",
@@ -1947,27 +1947,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
-    },
-    {
-      "Identity": "C:\\Users\\Me\\source\\repos\\studentHub\\wwwroot\\uploads\\d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg",
-      "SourceId": "StudentHub",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Me\\source\\repos\\studentHub\\wwwroot\\",
-      "BasePath": "_content/StudentHub",
-      "RelativePath": "uploads/d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica#[.{fingerprint}]?.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "Fingerprint": "g8nne3fz59",
-      "Integrity": "YD9VwVOwhXdwrnvK/CYMLippU//am4irQcP+7PrlpIM=",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg"
     }
   ],
   "Endpoints": [
@@ -6812,88 +6791,6 @@
         {
           "Name": "integrity",
           "Value": "sha256-lwtxZryIkVGW9Ix/XrcthAZZ61GAOXZ40r0QV68pMhQ="
-        }
-      ]
-    },
-    {
-      "Route": "uploads/d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.g8nne3fz59.jpg",
-      "AssetFile": "C:\\Users\\Me\\source\\repos\\studentHub\\wwwroot\\uploads\\d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "198059"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "image/jpeg"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"YD9VwVOwhXdwrnvK/CYMLippU//am4irQcP+7PrlpIM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 09 Feb 2025 04:24:46 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "g8nne3fz59"
-        },
-        {
-          "Name": "label",
-          "Value": "uploads/d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-YD9VwVOwhXdwrnvK/CYMLippU//am4irQcP+7PrlpIM="
-        }
-      ]
-    },
-    {
-      "Route": "uploads/d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg",
-      "AssetFile": "C:\\Users\\Me\\source\\repos\\studentHub\\wwwroot\\uploads\\d6193178-aa40-4613-9c32-636c0b6da127_indeks prva stranica.jpg",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "198059"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "image/jpeg"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"YD9VwVOwhXdwrnvK/CYMLippU//am4irQcP+7PrlpIM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 09 Feb 2025 04:24:46 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=3600, must-revalidate"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-YD9VwVOwhXdwrnvK/CYMLippU//am4irQcP+7PrlpIM="
         }
       ]
     }

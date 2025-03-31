@@ -57,7 +57,6 @@ namespace StudentHub.Controllers
             return View(predmeti);
         }
 
-        // GET: Predmet/Details{id}
         [HttpGet("Details/{id:long}")]
         [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public IActionResult Details(long id)
@@ -68,6 +67,7 @@ namespace StudentHub.Controllers
 
                 var predmet = _context.Predmeti
                     .Include(p => p.NastavniPlan)
+                    .Include(p => p.NastavneAktivnosti)
                     .FirstOrDefault(p => p.Id == id);
 
                 if (predmet == null)
@@ -112,10 +112,25 @@ namespace StudentHub.Controllers
                     .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = $"{a.AsistentTitula} {a.Ime} {a.Prezime}" })
                     .ToList();
 
+                // Popunjavamo ocjene za sve studente na predmetu
                 var ocjene = _context.Ocjene
-                    .Where(o => studentiNaPredmetu.Select(snp => snp.StudentId).Contains(o.StudentId) && o.PredmetId == id)
-                    .Include(o => o.Student)
+                    .Where(o => o.PredmetId == id)
                     .ToDictionary(o => o.StudentId, o => (float?)o.Vrijednost);
+
+                var sveOcjene = studentiNaPredmetu.ToDictionary(
+                    snp => snp.StudentId,
+                    snp => ocjene.ContainsKey(snp.StudentId) ? ocjene[snp.StudentId] : null
+                );
+
+                // Filtriranje nastavnih aktivnosti za studente ili postavljanje na praznu listu ako je null
+                var nastavneAktivnosti = predmet.NastavneAktivnosti != null
+                    ? predmet.NastavneAktivnosti.ToList()
+                    : new List<NastavnaAktivnost>();
+
+                if (User.IsInRole("Student"))
+                {
+                    nastavneAktivnosti = nastavneAktivnosti.Where(na => na.JeDostupno).ToList();
+                }
 
                 var viewModel = new PredmetDetailsViewModel
                 {
@@ -123,7 +138,8 @@ namespace StudentHub.Controllers
                     Profesori = profesori,
                     Asistenti = asistenti,
                     StudentiNaPredmetu = studentiNaPredmetu,
-                    Ocjene = ocjene
+                    Ocjene = sveOcjene,
+                    NastavneAktivnosti = nastavneAktivnosti
                 };
 
                 return View(viewModel);
@@ -593,27 +609,25 @@ namespace StudentHub.Controllers
 
         [HttpPost("RemoveStudentFromSubject")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Studentska služba, Profesor")]
-        public IActionResult RemoveStudentFromSubject(long predmetId, long studentId)
+        [Authorize(Roles = "Studentska služba,Profesor")]
+        public async Task<IActionResult> RemoveStudentFromSubject(long predmetId, long studentId)
         {
-            var studentNaPredmetu = _context.StudentiNaPredmetima
-                .FirstOrDefault(snp => snp.PredmetId == predmetId && snp.StudentId == studentId);
-
+            var studentNaPredmetu = await _context.StudentiNaPredmetima
+                .FirstOrDefaultAsync(snp => snp.PredmetId == predmetId && snp.StudentId == studentId);
             if (studentNaPredmetu == null)
             {
-                ModelState.AddModelError("", "Student nije pronađen na ovom predmetu.");
+                TempData["Error"] = "Student nije pronađen na predmetu.";
                 return RedirectToAction("Details", new { id = predmetId });
             }
 
             _context.StudentiNaPredmetima.Remove(studentNaPredmetu);
-            _context.SaveChanges();
-
-            TempData["SuccessMessage"] = "Student je uspješno uklonjen sa predmeta.";
-
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Student je uspješno uklonjen s predmeta.";
             return RedirectToAction("Details", new { id = predmetId });
         }
 
-        [HttpPost("AddGrade")]
+        [HttpPost]
+        [Route("Predmeti/AddGrade")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Profesor")]
         public IActionResult AddGrade(long predmetId, long studentId, float ocjena)
@@ -708,7 +722,8 @@ namespace StudentHub.Controllers
             return RedirectToAction("Details", new { id = predmetId });
         }
 
-        [HttpPost("EditGrade")]
+        [HttpPost]
+        [Route("Predmeti/EditGrade")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Profesor")]
         public IActionResult EditGrade(long predmetId, long studentId, float ocjena)
@@ -761,22 +776,19 @@ namespace StudentHub.Controllers
         [HttpPost("RemoveGrade")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Profesor")]
-        public IActionResult RemoveGrade(long predmetId, long studentId)
+        public async Task<IActionResult> RemoveGrade(long predmetId, long studentId)
         {
-            // Check if the grade exists
-            var ocjenaEntity = _context.Ocjene
-                .FirstOrDefault(o => o.PredmetId == predmetId && o.StudentId == studentId);
-            if (ocjenaEntity != null)
+            var ocjena = await _context.Ocjene
+                .FirstOrDefaultAsync(o => o.PredmetId == predmetId && o.StudentId == studentId);
+            if (ocjena == null)
             {
-                _context.Ocjene.Remove(ocjenaEntity);
-                _context.SaveChanges();
-                TempData["SuccessMessage"] = "Ocjena je uspješno uklonjena.";
-            }
-            else
-            {
-                ModelState.AddModelError("", "Ocjena nije pronađena.");
+                TempData["Error"] = "Ocjena nije pronađena.";
+                return RedirectToAction("Details", new { id = predmetId });
             }
 
+            _context.Ocjene.Remove(ocjena);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Ocjena je uspješno uklonjena.";
             return RedirectToAction("Details", new { id = predmetId });
         }
 
@@ -885,7 +897,11 @@ namespace StudentHub.Controllers
                 return View("Details", LoadViewModel(predmetId));
             }
 
-            _context.PredmetAsistenti.Add(new PredmetAsistent { PredmetId = predmetId, AsistentId = asistentId });
+            _context.PredmetAsistenti.Add(new PredmetAsistent { 
+                PredmetId = predmetId, 
+                AsistentId = asistentId,
+                AspNetUserId = asistent.AspNetUserId
+            });
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = "Asistent je uspješno dodan na predmet.";

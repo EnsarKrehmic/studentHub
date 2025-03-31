@@ -1,0 +1,62 @@
+﻿@model StudentHub.Models.NastavnaAktivnost
+
+@{
+    ViewData["Title"] = "Brisanje nastavne aktivnosti";
+}
+
+<div class="container">
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Da li ste sigurni da želite obrisati ovu aktivnost?</h4>
+        <p>Ova akcija je nepovratna i trajno će ukloniti sve povezane podatke (materijale, komentare i ocjene).</p>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h5>Podaci o aktivnosti</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Naziv:</dt>
+                <dd class="col-sm-9">@Model.Naziv</dd>
+
+                <dt class="col-sm-3">Tip:</dt>
+                <dd class="col-sm-9">@Model.Tip</dd>
+
+                <dt class="col-sm-3">Datum i vrijeme:</dt>
+                <dd class="col-sm-9">@Model.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                <dt class="col-sm-3">Status:</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @(Model.JeDostupno ? "badge-success" : "badge-secondary")">
+                        @(Model.JeDostupno ? "Dostupno" : "Zaključano")
+                    </span>
+                    @if (Model.ManuelnoOtkljucano)
+                    {
+                        <span class="badge badge-warning ml-2">Manuelno otključano</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Predmet:</dt>
+                <dd class="col-sm-9">@Model.Predmet.Naziv</dd>
+
+                <dt class="col-sm-3">Broj materijala:</dt>
+                <dd class="col-sm-9">@Model.NastavniMaterijali.Count</dd>
+
+                <dt class="col-sm-3">Broj komentara:</dt>
+                <dd class="col-sm-9">@Model.Komentari.Count</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Obriši
+            </button>
+            <a asp-action="Index" asp-route-predmetId="@Model.PredmetId" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Odustani
+            </a>
+        </div>
+    </form>
+</div>

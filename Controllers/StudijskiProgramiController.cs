@@ -41,6 +41,7 @@ namespace StudentHub.Controllers
 
             // Preuzimanje obavještenja povezanih sa studijskim programom
             var obavjestenja = await _context.Obavjestenja
+                .Include(o => o.Korisnik)
                 .Where(o => o.ObavjestenjeStudijskiProgrami.Any(osp => osp.StudijskiProgramId == id))
                 .Select(o => new ObavjestenjeDetailsViewModel
                 {
@@ -48,9 +49,7 @@ namespace StudentHub.Controllers
                     Naslov = o.Naslov,
                     Sadrzaj = o.Sadrzaj,
                     DatumObjave = o.DatumObjave,
-                    Kreirao = o.Profesor != null ? $"Profesor: {o.Profesor.Ime} {o.Profesor.Prezime}" :
-                              o.Asistent != null ? $"Asistent: {o.Asistent.Ime} {o.Asistent.Prezime}" :
-                              o.StudentskaSluzba != null ? "Studentska služba" : "Nepoznato"
+                    AutorIme = o.Korisnik != null ? $"{o.Korisnik.Ime} {o.Korisnik.Prezime}" : "Nepoznato"
                 })
                 .ToListAsync();
 

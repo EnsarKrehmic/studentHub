@@ -13,55 +13,69 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Password = new PasswordOptions
     {
-        options.SignIn.RequireConfirmedAccount = true;
-        options.Password = new PasswordOptions();
-        {
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequiredLength = 3;
-            options.User.RequireUniqueEmail = false;
-        };
-    })
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+        RequireDigit = false,
+        RequireLowercase = false,
+        RequireNonAlphanumeric = false,
+        RequireUppercase = false,
+        RequiredLength = 3
+    };
+    options.User.RequireUniqueEmail = false;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Eksplicitna registracija IWebHostEnvironment (opciono, ali korisno za jasnoću)
+builder.Services.AddSingleton<IWebHostEnvironment>(sp => builder.Environment);
+
 builder.Services.AddControllersWithViews();
-
-// Add SignalR services
 builder.Services.AddSignalR();
-
-// Add controllers
 builder.Services.AddControllers();
 
-// Configure logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentHub API v1");
+    options.RoutePrefix = "swagger";
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseDefaultFiles();
+app.UseStaticFiles(); // Omogućava posluživanje fajlova iz wwwroot
 
 app.UseRouting();
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/index.html")
+    {
+        context.Response.Redirect("/Home/Index");
+        return;
+    }
+    await next();
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -69,9 +83,18 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
 
-// Map SignalR hub
+app.MapRazorPages();
 app.MapHub<NotificationHub>("/notificationHub");
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/Home/Index");
+        return;
+    }
+    await next();
+});
 
 app.Run();

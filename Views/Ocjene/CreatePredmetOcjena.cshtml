@@ -1,0 +1,31 @@
+﻿@model StudentHub.Models.Ocjena
+
+@{
+    ViewData["Title"] = "Unos ocjene za nastavnu aktivnost";
+}
+
+<h2>Kreiraj ocjenu za @ViewBag.NastavnaAktivnostNaziv</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <input type="hidden" asp-for="Tip" value="NastavnaAktivnost" />
+            <input type="hidden" asp-for="NastavnaAktivnostId" value="@ViewBag.NastavnaAktivnostId" />
+            <div class="form-group">
+                <label asp-for="Vrijednost" class="control-label"></label>
+                <input asp-for="Vrijednost" class="form-control" placeholder="Unesite ocjenu (1-5)" />
+                <span asp-validation-for="Vrijednost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Ocjeni" class="btn btn-primary mt-3" />
+                <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

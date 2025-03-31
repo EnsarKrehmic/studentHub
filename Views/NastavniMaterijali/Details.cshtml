@@ -1,0 +1,8 @@
+﻿@model StudentHub.Models.NastavniMaterijal
+
+<h2>@Model.Naziv</h2>
+<p><strong>Nastavna aktivnost:</strong> @Model.NastavnaAktivnost.Naziv</p>
+<p><strong>Opis:</strong> @Model.Opis</p>
+<p><strong>Fajl:</strong> <a href="@Model.PutanjaDoFajla" target="_blank">Preuzmi</a></p>
+
+<a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@Model.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>

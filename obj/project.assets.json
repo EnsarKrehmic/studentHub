@@ -9817,11 +9817,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Me\\source\\repos\\studentHub\\StudentHub.csproj",
+      "projectUniqueName": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\StudentHub.csproj",
       "projectName": "StudentHub",
-      "projectPath": "C:\\Users\\Me\\source\\repos\\studentHub\\StudentHub.csproj",
+      "projectPath": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\StudentHub.csproj",
       "packagesPath": "C:\\Users\\Me\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Me\\source\\repos\\studentHub\\obj\\",
+      "outputPath": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -9855,7 +9855,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -9931,7 +9931,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,0 +1,15 @@
+﻿@model StudentHub.Models.Komentar
+
+<h2>Obriši komentar</h2>
+<h3>Jeste li sigurni da želite obrisati ovaj komentar?</h3>
+<div>
+    <p><strong>Sadržaj:</strong> @Model.Sadrzaj</p>
+    <p><strong>Student:</strong> @Model.StudentId</p> <!-- Zamijenite s pravim imenom studenta ako je dostupno -->
+    <p><strong>Datum i vrijeme:</strong> @Model.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</p>
+    <p><strong>Nastavna aktivnost:</strong> @Model.NastavnaAktivnost.Naziv</p>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Obriši</button>
+        <a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@Model.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>
+    </form>
+</div>

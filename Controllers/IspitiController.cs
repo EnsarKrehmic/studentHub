@@ -88,15 +88,15 @@ namespace StudentHub.Controllers
         }
 
         private async Task<List<IspitDetailsViewModel>> CreateViewModel(
-            List<StudijskiProgram> studijskiProgrami,
-            List<NastavniPlan> nastavniPlanovi,
-            List<Predmet> predmeti,
-            List<Ispit> ispiti,
-            string sortOrder)
+    List<StudijskiProgram> studijskiProgrami,
+    List<NastavniPlan> nastavniPlanovi,
+    List<Predmet> predmeti,
+    List<Ispit> ispiti,
+    string sortOrder)
         {
             var userId = _userManager.GetUserId(User);
             var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
-            var ocjene = new Dictionary<long, Ocjena>();
+            var ocjene = new Dictionary<long?, Ocjena>();
 
             if (student != null)
             {
@@ -174,16 +174,22 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            // Provjera da li je trenutni korisnik student i da li je prijavljen na ovaj ispit
+            // Dobavljanje trenutnog studenta
             var userId = _userManager.GetUserId(User);
             var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
-            bool prijavljen = student != null && await _context.Prijave.AnyAsync(p => p.StudentId == student.Id && p.IspitId == ispit.Id);
+            bool prijavljen = student != null && await _context.Prijave
+                .AnyAsync(p => p.StudentId == student.Id && p.IspitId == ispit.Id);
 
             // Dohvaćanje prijavljenih studenata
             var prijavljeniStudenti = await _context.Prijave
                 .Where(p => p.IspitId == id)
                 .Select(p => p.Student)
                 .ToListAsync();
+
+            // Dohvaćanje bodova studenta
+            var prijava = student != null ? await _context.Prijave
+                .FirstOrDefaultAsync(p => p.StudentId == student.Id && p.IspitId == ispit.Id) : null;
+            var bodovi = prijava?.Bodovi;
 
             var viewModel = new IspitDetailsViewModel
             {
@@ -197,9 +203,14 @@ namespace StudentHub.Controllers
                 Ispiti = new List<Ispit> { ispit }
             }
         },
+                BrojBodova = ispit.BrojBodova,
+                UslovZaPolaganje = ispit.UslovZaPolaganje,
                 Prijavljen = prijavljen,
-                PrijavljeniStudenti = prijavljeniStudenti
+                PrijavljeniStudenti = prijavljeniStudenti,
+                Bodovi = bodovi
             };
+
+            ViewBag.JePrijavljen = prijavljen;
 
             return View(viewModel);
         }
@@ -280,7 +291,8 @@ namespace StudentHub.Controllers
                 PredmetId = model.PredmetId,
                 DatumOdrzavanja = model.DatumOdrzavanja,
                 Lokacija = model.Lokacija,
-                BrojBodova = model.BrojBodova
+                BrojBodova = model.BrojBodova,
+                UslovZaPolaganje = model.UslovZaPolaganje
             };
 
             _context.Add(ispit);
@@ -315,7 +327,8 @@ namespace StudentHub.Controllers
                 PredmetId = ispit.PredmetId,
                 DatumOdrzavanja = ispit.DatumOdrzavanja,
                 Lokacija = ispit.Lokacija,
-                BrojBodova = ispit.BrojBodova
+                BrojBodova = ispit.BrojBodova,
+                UslovZaPolaganje = ispit.UslovZaPolaganje
             };
 
             ViewBag.StudijskiProgramId = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", ispit.StudijskiProgramId);
@@ -351,6 +364,7 @@ namespace StudentHub.Controllers
             ispit.DatumOdrzavanja = model.DatumOdrzavanja;
             ispit.Lokacija = model.Lokacija;
             ispit.BrojBodova = model.BrojBodova;
+            ispit.UslovZaPolaganje = model.UslovZaPolaganje;
 
             _context.Update(ispit);
             await _context.SaveChangesAsync();
@@ -385,11 +399,6 @@ namespace StudentHub.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool IspitExists(long id)
-        {
-            return _context.Ispiti.Any(e => e.Id == id);
         }
 
         [HttpPost("Prijavi/{id}")]
@@ -496,6 +505,68 @@ namespace StudentHub.Controllers
             return RedirectToAction("Details", new { id });
         }
 
+        [HttpPost("UnesiBodove")]
+        [Authorize(Roles = "Profesor, Asistent")]
+        public async Task<IActionResult> UnesiBodove([FromBody] UnosBodovaViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { success = false, message = "Neispravni podaci." });
+            }
+
+            var prijava = await _context.Prijave
+                .FirstOrDefaultAsync(p => p.IspitId == model.IspitId && p.StudentId == model.StudentId);
+
+            if (prijava == null)
+            {
+                return NotFound(new { success = false, message = "Prijava nije pronađena." });
+            }
+
+            prijava.Bodovi = model.Bodovi;
+            await _context.SaveChangesAsync();
+
+            // Ponovo dohvatiti podatke za ažuriranje prikaza
+            var bodovi = prijava.Bodovi;
+            var uslovZaPolaganje = await _context.Ispiti
+                .Where(i => i.Id == model.IspitId)
+                .Select(i => i.UslovZaPolaganje)
+                .FirstOrDefaultAsync();
+
+            bool polozen = bodovi.HasValue && bodovi >= uslovZaPolaganje;
+
+            return Ok(new
+            {
+                success = true,
+                bodovi = bodovi,
+                polozen = polozen
+            });
+        }
+
+        [HttpGet("PrikaziRezultate/{ispitId}")]
+        public IActionResult PrikaziRezultate(int ispitId)
+        {
+            var korisnikId = GetTrenutniKorisnikId();
+            var korisnikUloga = GetTrenutnaUloga();
+
+            var prijave = _context.Prijave
+                .Include(p => p.Ispit)
+                .Include(p => p.Student)
+                .Where(p => p.IspitId == ispitId &&
+                            (korisnikUloga == "Profesor, Asistent" || korisnikId == p.StudentId))
+                .Select(p => new
+                {
+                    StudentId = p.Student.Id,
+                    Ime = p.Student.Ime,
+                    Prezime = p.Student.Prezime,
+                    BrojIndeksa = p.Student.BrojIndeksa,
+                    Bodovi = p.Bodovi,
+                    Polozen = p.Bodovi.HasValue && p.Bodovi >= p.Ispit.UslovZaPolaganje
+                })
+                .ToList();
+
+            return Ok(prijave);
+        }
+
         [HttpGet("GetNastavniPlanoviByStudijskiProgram/{studijskiProgramId}")]
         public async Task<IActionResult> GetNastavniPlanoviByStudijskiProgram(long studijskiProgramId)
         {
@@ -534,6 +605,7 @@ namespace StudentHub.Controllers
 
             return Json(students);
         }
+
         private bool UserBelongsToStudijskiProgramAndPredmet(long studentId, long? studijskiProgramId, long? predmetId)
         {
             var student = _context.Studenti
@@ -550,6 +622,32 @@ namespace StudentHub.Controllers
                 .Any(ssp => ssp.StudijskiProgramId == studijskiProgramId);
 
             return belongsToStudijskiProgram && student.IsEnrolledInPredmet(predmetId.Value, _context);
+        }
+
+        private long GetTrenutniKorisnikId()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var student = _context.Studenti.FirstOrDefault(s => s.AspNetUserId == userId);
+            return student?.Id ?? 0;
+        }
+
+        private string GetTrenutnaUloga()
+        {
+            if (User.IsInRole("Profesor"))
+                return "Profesor";
+            if (User.IsInRole("Student"))
+                return "Student";
+            if (User.IsInRole("Asistent"))
+                return "Asistent";
+            if (User.IsInRole("Studentska služba"))
+                return "Studentska služba";
+
+            return "Nepoznata";
+        }
+
+        private bool IspitExists(long id)
+        {
+            return _context.Ispiti.Any(e => e.Id == id);
         }
     }
 }

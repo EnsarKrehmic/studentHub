@@ -3,7 +3,9 @@
     public class OcjenaViewModel
     {
         public long Id { get; set; }
+        public string Tip { get; set; }
         public string PredmetNaziv { get; set; }
+        public string NastavnaAktivnostNaziv { get; set; }
         public string StudentIme { get; set; }
         public string StudentPrezime { get; set; }
         public string StudentBrojIndeksa { get; set; }

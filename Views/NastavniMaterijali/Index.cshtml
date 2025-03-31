@@ -1,0 +1,40 @@
+﻿@model IEnumerable<StudentHub.Models.NastavniMaterijal>
+
+<h2>Nastavni materijali za @ViewBag.NastavnaAktivnostNaziv</h2>
+<p>
+    @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+    {
+        <a asp-action="Create" asp-route-nastavnaAktivnostId="@ViewBag.NastavnaAktivnostId" class="btn btn-primary">Dodaj novi materijal</a>
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Naziv</th>
+            <th>Opis</th>
+            <th>Fajl</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var materijal in Model)
+        {
+            <tr>
+                <td>@materijal.Naziv</td>
+                <td>@materijal.Opis</td>
+                <td><a href="@materijal.PutanjaDoFajla" target="_blank">Preuzmi</a></td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@materijal.Id">Detalji</a>
+                    @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                    {
+                        <span> | </span>
+                        <a asp-action="Edit" asp-route-id="@materijal.Id">Uredi</a>
+                        <span> | </span>
+                        <a asp-action="Delete" asp-route-id="@materijal.Id">Obriši</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@ViewBag.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>

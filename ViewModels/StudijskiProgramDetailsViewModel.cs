@@ -8,7 +8,7 @@ namespace StudentHub.ViewModels
         public string Naslov { get; set; }
         public string Sadrzaj { get; set; }
         public DateTime DatumObjave { get; set; }
-        public string Kreirao { get; set; }
+        public string AutorIme { get; set; }
     }
 
     public class StudijskiProgramDetailsViewModel

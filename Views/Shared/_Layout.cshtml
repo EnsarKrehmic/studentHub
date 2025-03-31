@@ -1,24 +1,64 @@
-﻿<!DOCTYPE html>
+﻿@using (Html.BeginForm("SomeAction", "SomeController", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+}
+
+<form id="__AjaxAntiForgeryForm" method="post">
+    @Html.AntiForgeryToken()
+</form>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - StudentHub</title>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <!-- Dodatni CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StudentHub.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Custom Styles -->
+    <style>
+        .badge {
+            font-size: 0.9em;
+            padding: 0.5em 0.75em;
+            vertical-align: middle;
+        }
+
+        dl.row dt {
+            font-weight: 500;
+            color: #6c757d;
+            white-space: nowrap;
+        }
+
+        .footer-map {
+            min-height: 200px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        [data-toggle="tooltip"] {
+            cursor: help;
+        }
+    </style>
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">StudentHub</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarContent">
@@ -27,7 +67,7 @@
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Početna</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
                                 Osoblje
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -38,7 +78,7 @@
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAcademic" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAcademic" role="button" data-toggle="dropdown" aria-expanded="false">
                                 Akademski podaci
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownAcademic">
@@ -55,7 +95,7 @@
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPrograms" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPrograms" role="button" data-toggle="dropdown" aria-expanded="false">
                                 Studijski Programi
                             </a>
                             @await Component.InvokeAsync("StudijskiProgramiMenu")
@@ -63,7 +103,7 @@
                         @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOther" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOther" role="button" data-toggle="dropdown" aria-expanded="false">
                                     Ostalo
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownOther">
@@ -107,37 +147,37 @@
         </div>
     </footer>
 
-    <!-- jQuery & Bootstrap -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Bootstrap 4 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
         // Inicijalizacija mape
-        var map = L.map('map').setView([44.199135, 17.903445], 17); // Lokacija Mašinskog fakulteta Zenica
+        $(document).ready(function() {
+            var map = L.map('map').setView([44.199135, 17.903445], 17);
 
-        // Dodavanje OpenStreetMap ploča
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        // Dodavanje markera za Mašinski fakultet Zenica
-        var marker = L.marker([44.199135, 17.903445]).addTo(map)
-            .bindPopup('<b>Mašinski fakultet Zenica</b><br>Univerzitet u Zenici')
-            .openPopup();
+            L.marker([44.199135, 17.903445]).addTo(map)
+                .bindPopup('<b>Mašinski fakultet Zenica</b><br>Univerzitet u Zenici')
+                .openPopup();
 
-        // Popup događaj prilikom klika na mapu
-        function onMapClick(e) {
-            L.popup()
-                .setLatLng(e.latlng)
-                .setContent("Kliknuli ste na lokaciju: " + e.latlng.toString())
-                .openOn(map);
-        }
-
-        map.on('click', onMapClick);
+            // Inicijalizacija tooltipova
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: 'hover',
+                placement: 'auto'
+            });
+        });
     </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

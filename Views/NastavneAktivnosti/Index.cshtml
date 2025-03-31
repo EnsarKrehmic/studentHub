@@ -1,0 +1,164 @@
+﻿@model IEnumerable<StudentHub.Models.NastavnaAktivnost>
+@using StudentHub.Models
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Nastavne aktivnosti za @ViewBag.PredmetNaziv</h2>
+        <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@ViewBag.PredmetId" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Nazad na predmet
+        </a>
+    </div>
+
+    @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+    {
+        <div class="mb-4">
+            <a asp-action="Create" asp-route-predmetId="@ViewBag.PredmetId" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Dodaj novu aktivnost
+            </a>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Predavanja -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-chalkboard-teacher"></i> Predavanja</h5>
+                </div>
+                <div class="card-body">
+                    @{
+                        var predavanja = Model.Where(a => a.Tip == TipNastavneAktivnosti.Predavanje).OrderBy(a => a.DatumVrijemeOdrzavanja);
+                    }
+                    @if (predavanja.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Naziv</th>
+                                        <th>Datum</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var aktivnost in predavanja)
+                                    {
+                                        <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
+                                            <td>@aktivnost.Naziv</td>
+                                            <td>@aktivnost.Tip</td>
+                                            <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td>
+                                                <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
+                                                    @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
+                                                {
+                                                    <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-info btn-sm">Detalji</a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="btn btn-sm btn-secondary disabled"
+                                                          data-toggle="tooltip"
+                                                          title="Aktivnost će biti dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
+                                                        Detalji
+                                                    </span>
+                                                }
+                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                                {
+                                                    <a asp-action="Edit" asp-route-id="@aktivnost.Id" class="btn btn-sm btn-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a asp-action="Delete" asp-route-id="@aktivnost.Id" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">Nema planiranih predavanja</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Vježbe -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-dumbbell"></i> Vježbe</h5>
+                </div>
+                <div class="card-body">
+                    @{
+                        var vjezbe = Model.Where(a => a.Tip == TipNastavneAktivnosti.Vjezba).OrderBy(a => a.DatumVrijemeOdrzavanja);
+                    }
+                    @if (vjezbe.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Naziv</th>
+                                        <th>Datum</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var aktivnost in vjezbe)
+                                    {
+                                        <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
+                                            <td>@aktivnost.Naziv</td>
+                                            <td>@aktivnost.Tip</td>
+                                            <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td>
+                                                <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
+                                                    @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
+                                                {
+                                                    <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-info btn-sm">Detalji</a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="btn btn-sm btn-secondary disabled"
+                                                          data-toggle="tooltip"
+                                                          title="Aktivnost će biti dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
+                                                        Detalji
+                                                    </span>
+                                                }
+                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                                {
+                                                    <a asp-action="Edit" asp-route-id="@aktivnost.Id" class="btn btn-sm btn-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a asp-action="Delete" asp-route-id="@aktivnost.Id" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">Nema planiranih vježbi</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

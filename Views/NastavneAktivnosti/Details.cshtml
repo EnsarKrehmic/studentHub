@@ -1,0 +1,221 @@
+﻿@model StudentHub.Models.NastavnaAktivnost
+@using StudentHub.Models
+
+<div class="container">
+    <!-- Header sekcija -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">@Model.Naziv</h2>
+            <small class="text-muted">Predmet: @Model.Predmet.Naziv</small>
+        </div>
+        <div>
+            <a asp-controller="Predmeti"
+               asp-action="Details"
+               asp-route-id="@Model.PredmetId"
+               class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Nazad na predmet
+            </a>
+            @if (!User.IsInRole("Student"))
+            {
+                <a asp-action="Index"
+                   asp-route-predmetId="@Model.PredmetId"
+                   class="btn btn-outline-primary ml-2">
+                    <i class="fas fa-list"></i> Sve aktivnosti
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Glavna kartica -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-info-circle"></i> Osnovne informacije</h5>
+            @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+            {
+                <div class="btn-group">
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Uredi
+                    </a>
+                    <form asp-action="ToggleLock" method="post" class="ml-2">
+                        <input type="hidden" asp-for="Id" />
+                        <button type="submit"
+                                class="btn btn-sm @GetLockButtonClass()"
+                                data-toggle="tooltip"
+                                title="@GetLockButtonTooltip()">
+                            <i class="@GetLockButtonIcon()"></i> @GetLockButtonText()
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 border-right">
+                    <dl class="row">
+                        <dt class="col-sm-4">Tip aktivnosti:</dt>
+                        <dd class="col-sm-8">@Model.Tip</dd>
+
+                        <dt class="col-sm-4">Datum i vrijeme:</dt>
+                        <dd class="col-sm-8">@Model.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-4">Status:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge @(Model.JeDostupno ? "badge-success" : "badge-secondary")">
+                                @(Model.JeDostupno ? "Dostupno" : "Zaključano")
+                            </span>
+                            @if (Model.ManuelnoOtkljucano)
+                            {
+                                <span class="badge badge-warning ml-2">Manuelno otključano</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Prosječna ocjena:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge badge-primary">
+                                @Model.ProsjecnaOcjena.ToString("F2")
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Materijala:</dt>
+                        <dd class="col-sm-8">@Model.NastavniMaterijali.Count</dd>
+
+                        <dt class="col-sm-4">Komentara:</dt>
+                        <dd class="col-sm-8">@Model.Komentari.Count</dd>
+                    </dl>
+                </div>
+            </div>
+
+            @if (Model.ManuelnoZakljucano)
+            {
+                <div class="alert alert-warning mt-4">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aktivnost je manuelno zaključana iako je vrijeme održavanja prošlo
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Sekcija za materijale -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-file-download"></i> Nastavni materijali</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.NastavniMaterijali.Any())
+            {
+                <div class="list-group">
+                    @foreach (var materijal in Model.NastavniMaterijali)
+                    {
+                        <a href="@materijal.PutanjaDoFajla" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>@materijal.Naziv</span>
+                                <span class="badge badge-primary badge-pill">
+                                    <i class="fas fa-download"></i>
+                                </span>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">Nema dostupnih materijala</div>
+            }
+
+            <div class="mt-3">
+                <a asp-controller="NastavniMaterijali"
+                   asp-action="Index"
+                   asp-route-nastavnaAktivnostId="@Model.Id"
+                   class="btn btn-outline-primary">
+                    <i class="fas fa-external-link-alt"></i> Upravljaj materijalima
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sekcija za komentare -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="fas fa-comments"></i> Komentari</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Komentari.Any())
+            {
+                foreach (var komentar in Model.Komentari)
+                {
+                    <div class="media mb-3">
+                        <div class="media-body">
+                            <h6 class="mt-0">@komentar.Student.Ime @komentar.Student.Prezime</h6>
+                            <p>@komentar.Sadrzaj</p>
+                            <small class="text-muted">@komentar.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</small>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">Nema komentara</div>
+            }
+
+            <div class="mt-3">
+                <a asp-controller="Komentari"
+                   asp-action="Index"
+                   asp-route-nastavnaAktivnostId="@Model.Id"
+                   class="btn btn-outline-info">
+                    <i class="fas fa-external-link-alt"></i> Upravljaj komentarima
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetLockButtonClass()
+    {
+        return Model.ManuelnoZakljucano ? "btn-danger" :
+               Model.ManuelnoOtkljucano ? "btn-warning" : "btn-success";
+    }
+
+    string GetLockButtonIcon()
+    {
+        return Model.ManuelnoZakljucano ? "fa-lock-open" :
+               Model.ManuelnoOtkljucano ? "fa-unlock" : "fa-lock";
+    }
+
+    string GetLockButtonText()
+    {
+        if (Model.DatumVrijemeOdrzavanja > DateTime.Now)
+        {
+            return Model.ManuelnoOtkljucano ? "Zaključaj" : "Otključaj";
+        }
+        return Model.ManuelnoZakljucano ? "Otključaj" : "Zaključaj";
+    }
+
+    string GetLockButtonTooltip()
+    {
+        if (Model.DatumVrijemeOdrzavanja > DateTime.Now)
+        {
+            return Model.ManuelnoOtkljucano ?
+                "Vrati automatsko zaključavanje" :
+                "Manuelno otključaj prije datuma";
+        }
+        return Model.ManuelnoZakljucano ?
+            "Dozvoli pristup iako je vrijeme prošlo" :
+            "Trajno zabrani pristup sadržaju";
+    }
+}
+
+@section Styles {
+    <style>
+        .card-header h5 { font-weight: 500; }
+        .list-group-item { transition: all 0.3s ease; }
+        .list-group-item:hover { transform: translateX(5px); }
+    </style>
+}

@@ -20,9 +20,14 @@ namespace StudentHub.Models
         [MaxLength(200, ErrorMessage = "Lokacija ne smije biti duža od 200 karaktera.")]
         public string? Lokacija { get; set; }
 
-        [Range(0, 100, ErrorMessage = "Broj bodova mora biti između 0 i 100.")]
-        [DisplayName("Broj bodova")]
-        public int BrojBodova { get; set; }
+        [Required(ErrorMessage = "Broj bodova je obavezan.")]
+        [Range(0, 100, ErrorMessage = "Ukupni broj bodova mora biti između 0 i 100.")]
+        [Display(Name = "Ukupni bodovi ispita")]
+        public decimal BrojBodova { get; set; }
+
+        [Range(0, 100, ErrorMessage = "Uslov za polaganje mora biti između 0 i 100.")]
+        [Display(Name = "Uslov za polaganje (minimalni broj bodova)")]
+        public decimal UslovZaPolaganje { get; set; }
 
         [Required(ErrorMessage = "Studijski program je obavezan.")]
         [DisplayName("Studijski program")]

@@ -52,7 +52,7 @@
                 <tr>
                     <td>@obavijest.Naslov</td>
                     <td>@(obavijest.Sadrzaj.Length > 150 ? obavijest.Sadrzaj.Substring(0, 150) + "..." : obavijest.Sadrzaj)</td>
-                    <td>@obavijest.Kreirao</td>
+                    <td>@obavijest.AutorIme</td>
                     <td>@obavijest.DatumObjave.ToString("dd.MM.yyyy")</td>
                     <td>
                         <a asp-controller="Obavjestenja" asp-action="Details" asp-route-id="@obavijest.Id" class="btn btn-info btn-sm">Detalji</a>

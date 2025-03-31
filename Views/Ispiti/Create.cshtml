@@ -49,8 +49,14 @@
 
             <div class="form-group">
                 <label asp-for="BrojBodova" class="control-label"></label>
-                <input asp-for="BrojBodova" class="form-control" />
+                <input asp-for="BrojBodova" class="form-control" type="number" step="1" />
                 <span asp-validation-for="BrojBodova" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UslovZaPolaganje" class="control-label"></label>
+                <input asp-for="UslovZaPolaganje" class="form-control" type="number" step="1" />
+                <span asp-validation-for="UslovZaPolaganje" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />

@@ -15,7 +15,10 @@ namespace StudentHub.Data
         public DbSet<DokumentSlike> DokumentSlike { get; set; }
         public DbSet<Ispit> Ispiti { get; set; }
         public DbSet<Korisnik> Korisnici { get; set; }
+        public DbSet<Komentar> Komentari { get; set; }
         public DbSet<NastavniPlan> NastavniPlanovi { get; set; }
+        public DbSet<NastavnaAktivnost> NastavneAktivnosti { get; set; }
+        public DbSet<NastavniMaterijal> NastavniMaterijali { get; set; }
         public DbSet<Obavjestenje> Obavjestenja { get; set; }
         public DbSet<ObavjestenjeStudijskiProgram> ObavjestenjeStudijskiProgrami { get; set; }
         public DbSet<Ocjena> Ocjene { get; set; }
@@ -41,7 +44,10 @@ namespace StudentHub.Data
             modelBuilder.Entity<DokumentSlike>().ToTable("DokumentSlike");
             modelBuilder.Entity<Ispit>().ToTable("Ispit");
             modelBuilder.Entity<Korisnik>().ToTable("Korisnik");
+            modelBuilder.Entity<Komentar>().ToTable("Komentar");
             modelBuilder.Entity<NastavniPlan>().ToTable("NastavniPlan");
+            modelBuilder.Entity<NastavnaAktivnost>().ToTable("NastavnaAktivnost");
+            modelBuilder.Entity<NastavniMaterijal>().ToTable("NastavniMaterijal");
             modelBuilder.Entity<Obavjestenje>().ToTable("Obavjestenje");
             modelBuilder.Entity<ObavjestenjeStudijskiProgram>().ToTable("ObavjestenjeStudijskiProgram");
             modelBuilder.Entity<Ocjena>().ToTable("Ocjena");
@@ -67,6 +73,18 @@ namespace StudentHub.Data
                 .HasValue<Student>(Uloga.Student)
                 .HasValue<Profesor>(Uloga.Profesor)
                 .HasValue<Asistent>(Uloga.Asistent);
+
+            modelBuilder.Entity<Ispit>()
+                .Property(i => i.BrojBodova)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Ispit>()
+                .Property(i => i.UslovZaPolaganje)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Prijava>()
+                .Property(p => p.Bodovi)
+                .HasPrecision(18, 2);
 
             // Konfiguracija za Predmet -> Profesor
             modelBuilder.Entity<Predmet>()
@@ -223,7 +241,8 @@ namespace StudentHub.Data
                 .HasOne(o => o.Predmet)
                 .WithMany()
                 .HasForeignKey(o => o.PredmetId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false); // PredmetId je opcionalan
 
             // Konfiguracija za Ocjena -> Student
             modelBuilder.Entity<Ocjena>()
@@ -237,6 +256,43 @@ namespace StudentHub.Data
                 .HasOne(o => o.Profesor)
                 .WithMany()
                 .HasForeignKey(o => o.ProfesorId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false); // ProfesorId je opcionalan
+
+            // Konfiguracija za Ocjena -> NastavnaAktivnost
+            modelBuilder.Entity<Ocjena>()
+                .HasOne(o => o.NastavnaAktivnost)
+                .WithMany(na => na.Ocjene)
+                .HasForeignKey(o => o.NastavnaAktivnostId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false); // NastavnaAktivnostId je opcionalan
+
+            // Konfiguracija za NastavnaAktivnost -> Predmet
+            modelBuilder.Entity<NastavnaAktivnost>()
+                .HasOne(na => na.Predmet)
+                .WithMany(p => p.NastavneAktivnosti)
+                .HasForeignKey(na => na.PredmetId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Konfiguracija za NastavniMaterijal -> NastavnaAktivnost
+            modelBuilder.Entity<NastavniMaterijal>()
+                .HasOne(nm => nm.NastavnaAktivnost)
+                .WithMany(na => na.NastavniMaterijali)
+                .HasForeignKey(nm => nm.NastavnaAktivnostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Konfiguracija za Komentar -> NastavnaAktivnost
+            modelBuilder.Entity<Komentar>()
+                .HasOne(k => k.NastavnaAktivnost)
+                .WithMany(na => na.Komentari)
+                .HasForeignKey(k => k.NastavnaAktivnostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Konfiguracija za Komentar -> Student
+            modelBuilder.Entity<Komentar>()
+                .HasOne(k => k.Student)
+                .WithMany()
+                .HasForeignKey(k => k.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Konfiguracija za Zahtjev -> Student

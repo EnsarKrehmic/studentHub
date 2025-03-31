@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Controllers",
+    "\\Data",
+    "\\Models"
   ],
-  "SelectedNode": "\\StudentHub.sln",
+  "SelectedNode": "\\Controllers\\OcjeneController.cs",
   "PreviewInSolutionExplorer": false
 }

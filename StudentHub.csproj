@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\bootstrap\dist\css\" />
-    <Folder Include="wwwroot\uploads\" />
+    <Folder Include="wwwroot\uploads\nastavni-materijali\" />
   </ItemGroup>
 
   <ItemGroup>

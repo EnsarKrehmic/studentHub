@@ -1,0 +1,9 @@
+﻿@model StudentHub.Models.Komentar
+
+<h2>Komentar</h2>
+<p><strong>Sadržaj:</strong> @Model.Sadrzaj</p>
+<p><strong>Student:</strong> @Model.Student.Ime @Model.Student.Prezime</p>
+<p><strong>Datum i vrijeme:</strong> @Model.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</p>
+<p><strong>Nastavna aktivnost:</strong> @Model.NastavnaAktivnost.Naziv</p>
+
+<a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@Model.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>

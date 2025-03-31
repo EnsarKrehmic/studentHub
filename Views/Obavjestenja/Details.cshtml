@@ -55,9 +55,21 @@
                     </a>
                 }
 
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Nazad na listu
-                </a>
+                @if (User.IsInRole("Student"))
+                {
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Lista svih obavještenja
+                    </a>
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
+                    </a>
+                }
             </div>
         </div>
     </div>

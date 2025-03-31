@@ -38,7 +38,8 @@ namespace StudentHub.Controllers
                 .ThenInclude(np => np.StudijskiProgram)
                 .Include(o => o.Student)
                 .ThenInclude(s => s.StudentStudijskiProgrami)
-                .Include(o => o.Profesor);
+                .Include(o => o.Profesor)
+                .Include(o => o.NastavnaAktivnost);
 
             List<OcjenaViewModel> ocjeneViewModel;
 
@@ -51,64 +52,60 @@ namespace StudentHub.Controllers
                 ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
                 {
                     Id = o.Id,
-                    PredmetId = o.Predmet.Id,
-                    PredmetNaziv = o.Predmet.Naziv,
+                    PredmetId = o.PredmetId ?? 0,
+                    PredmetNaziv = o.Predmet?.Naziv,
+                    NastavnaAktivnostNaziv = o.NastavnaAktivnost?.Naziv,
+                    Tip = o.Tip.ToString(),
                     StudentIme = o.Student.Ime,
                     StudentPrezime = o.Student.Prezime,
-                    ProfesorIme = o.Profesor.Ime,
-                    ProfesorPrezime = o.Profesor.Prezime,
-                    ProfesorTitula = o.Profesor.ProfesorTitula,
+                    ProfesorIme = o.Profesor?.Ime,
+                    ProfesorPrezime = o.Profesor?.Prezime,
+                    ProfesorTitula = o.Profesor?.ProfesorTitula,
                     Vrijednost = o.Vrijednost,
                     ProsjekOcjena = prosjekOcjena,
-                    StudentStudijskiProgramNaziv = (o.Predmet != null &&
-                        o.Predmet.NastavniPlan != null &&
-                        o.Predmet.NastavniPlan.StudijskiProgram != null)
-                        ? o.Predmet.NastavniPlan.StudijskiProgram.Naziv
-                        : o.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato",
+                    StudentStudijskiProgramNaziv = o.Predmet?.NastavniPlan?.StudijskiProgram?.Naziv ??
+                        o.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato",
                 }).ToList();
             }
             else if (User.IsInRole("Profesor"))
             {
-                ocjeneQuery = ocjeneQuery.Where(o => o.Profesor.AspNetUserId == userId);
+                ocjeneQuery = ocjeneQuery.Where(o => o.Profesor.AspNetUserId == userId && o.Tip == TipOcjene.Predmet);
                 var ocjene = await ocjeneQuery.ToListAsync();
 
                 var prosjekPoPredmetu = ocjene
-                    .GroupBy(o => o.Predmet.Id)
+                    .GroupBy(o => o.PredmetId)
                     .Select(g => new { PredmetId = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
                     .ToDictionary(x => x.PredmetId, x => x.Prosjek);
 
                 ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
                 {
                     Id = o.Id,
-                    PredmetId = o.Predmet.Id,
-                    PredmetNaziv = o.Predmet != null ? o.Predmet.Naziv : "Nepoznat predmet",
-                    StudijskiProgramId = (int)o.Predmet.NastavniPlan.StudijskiProgram.Id,
-                    StudentIme = o.Student != null ? o.Student.Ime : "Nepoznato",
-                    StudentPrezime = o.Student != null ? o.Student.Prezime : "Nepoznato",
-                    StudentBrojIndeksa = o.Student != null ? o.Student.BrojIndeksa : "Nepoznat",
-                    ProfesorIme = o.Profesor != null ? o.Profesor.Ime : "Nepoznato",
-                    ProfesorPrezime = o.Profesor != null ? o.Profesor.Prezime : "Nepoznato",
-                    ProfesorTitula = o.Profesor != null ? o.Profesor.ProfesorTitula : "Nepoznata titula",
+                    PredmetId = o.PredmetId ?? 0,
+                    PredmetNaziv = o.Predmet?.Naziv ?? "Nepoznat predmet",
+                    Tip = o.Tip.ToString(),
+                    StudentIme = o.Student?.Ime ?? "Nepoznato",
+                    StudentPrezime = o.Student?.Prezime ?? "Nepoznato",
+                    StudentBrojIndeksa = o.Student?.BrojIndeksa ?? "Nepoznat",
+                    ProfesorIme = o.Profesor?.Ime ?? "Nepoznato",
+                    ProfesorPrezime = o.Profesor?.Prezime ?? "Nepoznato",
+                    ProfesorTitula = o.Profesor?.ProfesorTitula ?? "Nepoznata titula",
                     Vrijednost = o.Vrijednost,
-                    ProsjekPoPredmetu = prosjekPoPredmetu.ContainsKey(o.Predmet.Id) ? prosjekPoPredmetu[o.Predmet.Id] : 0,
-                    StudentStudijskiProgramNaziv = (o.Predmet != null &&
-                        o.Predmet.NastavniPlan != null &&
-                        o.Predmet.NastavniPlan.StudijskiProgram != null)
-                        ? o.Predmet.NastavniPlan.StudijskiProgram.Naziv
-                        : o.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato",
+                    ProsjekPoPredmetu = prosjekPoPredmetu.ContainsKey(o.PredmetId ?? 0) ? prosjekPoPredmetu[o.PredmetId ?? 0] : 0,
+                    StudentStudijskiProgramNaziv = o.Predmet?.NastavniPlan?.StudijskiProgram?.Naziv ??
+                        o.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato",
                 }).ToList();
             }
             else if (User.IsInRole("Studentska služba"))
             {
                 var ocjene = await ocjeneQuery.ToListAsync();
 
-                var prosjekPoPredmetu = ocjene
-                    .GroupBy(o => o.Predmet.Naziv)
+                var prosjekPoPredmetu = ocjene.Where(o => o.Tip == TipOcjene.Predmet)
+                    .GroupBy(o => o.Predmet?.Naziv)
                     .Select(g => new { Predmet = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
                     .ToDictionary(x => x.Predmet, x => x.Prosjek);
 
                 var prosjekPoStudijskomProgramu = ocjene
-                    .Where(o => o.Student != null &&
+                    .Where(o => o.Tip == TipOcjene.Predmet && o.Student != null &&
                                 o.Student.StudentStudijskiProgrami != null &&
                                 o.Student.StudentStudijskiProgrami.Any() &&
                                 o.Student.StudentStudijskiProgrami.First().StudijskiProgram != null)
@@ -119,19 +116,20 @@ namespace StudentHub.Controllers
                 ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
                 {
                     Id = o.Id,
-                    PredmetId = o.Predmet.Id,
-                    PredmetNaziv = o.Predmet != null ? o.Predmet.Naziv : "Nepoznat predmet",
-                    StudijskiProgramId = (int)o.Predmet.NastavniPlan.StudijskiProgram.Id,
-                    StudentIme = o.Student != null ? o.Student.Ime : "Nepoznato",
-                    StudentPrezime = o.Student != null ? o.Student.Prezime : "Nepoznato",
-                    StudentBrojIndeksa = o.Student != null ? o.Student.BrojIndeksa : "Nepoznat",
-                    ProfesorIme = o.Profesor != null ? o.Profesor.Ime : "Nepoznato",
-                    ProfesorPrezime = o.Profesor != null ? o.Profesor.Prezime : "Nepoznato",
-                    ProfesorTitula = o.Profesor != null ? o.Profesor.ProfesorTitula : "Nepoznata titula",
+                    PredmetId = o.PredmetId ?? 0,
+                    PredmetNaziv = o.Predmet?.Naziv,
+                    NastavnaAktivnostNaziv = o.NastavnaAktivnost?.Naziv,
+                    Tip = o.Tip.ToString(),
+                    StudentIme = o.Student?.Ime ?? "Nepoznato",
+                    StudentPrezime = o.Student?.Prezime ?? "Nepoznato",
+                    StudentBrojIndeksa = o.Student?.BrojIndeksa ?? "Nepoznat",
+                    ProfesorIme = o.Profesor?.Ime ?? "Nepoznato",
+                    ProfesorPrezime = o.Profesor?.Prezime ?? "Nepoznato",
+                    ProfesorTitula = o.Profesor?.ProfesorTitula ?? "Nepoznata titula",
                     Vrijednost = o.Vrijednost,
 
-                    ProsjekPoPredmetu = (o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv))
-                        ? prosjekPoPredmetu[o.Predmet.Naziv] : 0,
+                    ProsjekPoPredmetu = (o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv)) 
+                    ? prosjekPoPredmetu[o.Predmet.Naziv] : 0,
 
                     ProsjekPoStudijskomProgramu = (o.Predmet != null &&
                         o.Predmet.NastavniPlan != null &&
@@ -200,6 +198,7 @@ namespace StudentHub.Controllers
                         .ThenInclude(np => np.StudijskiProgram)
                 .Include(o => o.Student)
                 .Include(o => o.Profesor)
+                .Include(o => o.NastavnaAktivnost)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ocjena == null)
@@ -221,17 +220,19 @@ namespace StudentHub.Controllers
             var ocjenaViewModel = new OcjenaViewModel
             {
                 Id = ocjena.Id,
-                PredmetId = ocjena.PredmetId,
-                PredmetNaziv = ocjena.Predmet.Naziv,
-                StudentIme = ocjena.Student.Ime,
-                StudentPrezime = ocjena.Student.Prezime,
-                StudentBrojIndeksa = ocjena.Student.BrojIndeksa,
-                ProfesorIme = ocjena.Profesor.Ime,
-                ProfesorPrezime = ocjena.Profesor.Prezime,
-                ProfesorTitula = ocjena.Profesor.ProfesorTitula,
+                PredmetId = ocjena.PredmetId ?? 0,
+                PredmetNaziv = ocjena.Predmet?.Naziv,
+                NastavnaAktivnostNaziv = ocjena.NastavnaAktivnost?.Naziv,
+                Tip = ocjena.Tip.ToString(),
+                StudentIme = ocjena.Student?.Ime,
+                StudentPrezime = ocjena.Student?.Prezime,
+                StudentBrojIndeksa = ocjena.Student?.BrojIndeksa,
+                ProfesorIme = ocjena.Profesor?.Ime,
+                ProfesorPrezime = ocjena.Profesor?.Prezime,
+                ProfesorTitula = ocjena.Profesor?.ProfesorTitula,
                 Vrijednost = ocjena.Vrijednost,
-                StudijskiProgramId = ocjena.Predmet.NastavniPlan?.StudijskiProgramId ?? 0,
-                StudentStudijskiProgramNaziv = ocjena.Predmet.NastavniPlan?.StudijskiProgram?.Naziv ?? "Nepoznato"
+                StudentStudijskiProgramNaziv = ocjena.Predmet?.NastavniPlan?.StudijskiProgram?.Naziv ??
+                    ocjena.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato"
             };
 
             return View(ocjenaViewModel);
@@ -239,69 +240,102 @@ namespace StudentHub.Controllers
 
         // GET: Ocjene/Create
         [HttpGet("Create")]
-        [Authorize(Roles = "Profesor")]
-        public IActionResult Create()
+        [Authorize(Roles = "Profesor,Student")]
+        public IActionResult Create(string tip, long? predmetId, long? nastavnaAktivnostId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            ViewBag.StudentId = new SelectList(_context.Studenti.Select(s => new
+            if (tip == "Predmet" && User.IsInRole("Profesor"))
             {
-                s.Id,
-                FullName = s.Ime + " " + s.Prezime
-            }), "Id", "FullName");
+                ViewBag.StudentId = new SelectList(_context.Studenti.Select(s => new
+                {
+                    s.Id,
+                    FullName = s.Ime + " " + s.Prezime
+                }), "Id", "FullName");
 
-            ViewBag.PredmetId = new SelectList(_context.Predmeti
-                .Where(p => p.Profesor.AspNetUserId == userId || p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId))
-                .Select(p => new
+                ViewBag.PredmetId = new SelectList(_context.Predmeti
+                    .Where(p => p.Profesor.AspNetUserId == userId || p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId))
+                    .Select(p => new { p.Id, p.Naziv }), "Id", "Naziv", predmetId);
+
+                ViewBag.ProfesorId = new SelectList(_context.Profesori.Select(p => new
                 {
                     p.Id,
-                    p.Naziv
-                }), "Id", "Naziv");
+                    FullName = p.ProfesorTitula + " " + p.Ime + " " + p.Prezime
+                }), "Id", "FullName");
 
-            ViewBag.ProfesorId = new SelectList(_context.Profesori.Select(p => new
+                return View("CreatePredmetOcjena");
+            }
+            else if (tip == "NastavnaAktivnost" && User.IsInRole("Student"))
             {
-                p.Id,
-                FullName = p.ProfesorTitula + " " + p.Ime + " " + p.Prezime
-            }), "Id", "FullName");
-
-            return View();
+                var aktivnost = _context.NastavneAktivnosti.Find(nastavnaAktivnostId);
+                if (aktivnost == null)
+                {
+                    TempData["Error"] = "Nastavna aktivnost nije pronađena.";
+                    return RedirectToAction("Index", "NastavneAktivnosti");
+                }
+                ViewBag.NastavnaAktivnostId = nastavnaAktivnostId;
+                ViewBag.NastavnaAktivnostNaziv = aktivnost.Naziv;
+                return View("CreateNastavnaAktivnostOcjena");
+            }
+            return Forbid();
         }
 
         // POST: Ocjene/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Profesor")]
-        public async Task<IActionResult> Create([Bind("Id,Vrijednost,PredmetId,StudentId,ProfesorId")] Ocjena ocjena)
+        [Authorize(Roles = "Profesor,Student")]
+        public async Task<IActionResult> Create([Bind("Tip,Vrijednost,PredmetId,StudentId,ProfesorId,NastavnaAktivnostId")] Ocjena ocjena)
         {
+            if (!ocjena.IsValid())
+            {
+                ModelState.AddModelError("Vrijednost", "Ocjena nije u dozvoljenom rasponu.");
+            }
+
             if (ModelState.IsValid)
             {
+                if (ocjena.Tip == TipOcjene.NastavnaAktivnost)
+                {
+                    var korisnikId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == korisnikId);
+                    ocjena.StudentId = student.Id;
+                    ocjena.ProfesorId = null; // Nije potreban za nastavne aktivnosti
+                }
+
                 _context.Add(ocjena);
                 await _context.SaveChangesAsync();
-                await UpdateAverageGrade(ocjena.PredmetId);
+                if (ocjena.PredmetId.HasValue)
+                    await UpdateAverageGrade(ocjena.PredmetId.Value);
                 return RedirectToAction(nameof(Index));
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            ViewBag.StudentId = new SelectList(_context.Studenti.Select(s => new
+            if (ocjena.Tip == TipOcjene.Predmet)
             {
-                s.Id,
-                FullName = s.Ime + " " + s.Prezime
-            }), "Id", "FullName", ocjena.StudentId);
+                ViewBag.StudentId = new SelectList(_context.Studenti.Select(s => new
+                {
+                    s.Id,
+                    FullName = s.Ime + " " + s.Prezime
+                }), "Id", "FullName", ocjena.StudentId);
 
-            ViewBag.PredmetId = new SelectList(_context.Predmeti
-                .Where(p => p.Profesor.AspNetUserId == userId || p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId))
-                .Select(p => new
+                ViewBag.PredmetId = new SelectList(_context.Predmeti
+                    .Where(p => p.Profesor.AspNetUserId == userId || p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId))
+                    .Select(p => new { p.Id, p.Naziv }), "Id", "Naziv", ocjena.PredmetId);
+
+                ViewBag.ProfesorId = new SelectList(_context.Profesori.Select(p => new
                 {
                     p.Id,
-                    p.Naziv
-                }), "Id", "Naziv", ocjena.PredmetId);
+                    FullName = p.ProfesorTitula + " " + p.Ime + " " + p.Prezime
+                }), "Id", "FullName", ocjena.ProfesorId);
 
-            ViewBag.ProfesorId = new SelectList(_context.Profesori.Select(p => new
+                return View("CreatePredmetOcjena", ocjena);
+            }
+            else if (ocjena.Tip == TipOcjene.NastavnaAktivnost)
             {
-                p.Id,
-                FullName = p.ProfesorTitula + " " + p.Ime + " " + p.Prezime
-            }), "Id", "FullName", ocjena.ProfesorId);
+                ViewBag.NastavnaAktivnostId = ocjena.NastavnaAktivnostId;
+                ViewBag.NastavnaAktivnostNaziv = _context.NastavneAktivnosti.Find(ocjena.NastavnaAktivnostId)?.Naziv;
+                return View("CreateNastavnaAktivnostOcjena", ocjena);
+            }
 
             return View(ocjena);
         }
@@ -317,7 +351,7 @@ namespace StudentHub.Controllers
             }
 
             var ocjena = await _context.Ocjene.FindAsync(id);
-            if (ocjena == null)
+            if (ocjena == null || ocjena.Tip != TipOcjene.Predmet)
             {
                 return NotFound();
             }
@@ -332,11 +366,7 @@ namespace StudentHub.Controllers
 
             ViewBag.PredmetId = new SelectList(_context.Predmeti
                 .Where(p => p.Profesor.AspNetUserId == userId || p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId))
-                .Select(p => new
-                {
-                    p.Id,
-                    p.Naziv
-                }), "Id", "Naziv", ocjena.PredmetId);
+                .Select(p => new { p.Id, p.Naziv }), "Id", "Naziv", ocjena.PredmetId);
 
             ViewBag.ProfesorId = new SelectList(_context.Profesori.Select(p => new
             {
@@ -351,11 +381,16 @@ namespace StudentHub.Controllers
         [HttpPost("Edit/{id:long}")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Profesor")]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Vrijednost,PredmetId,StudentId,ProfesorId")] Ocjena ocjena)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Tip,Vrijednost,PredmetId,StudentId,ProfesorId,NastavnaAktivnostId")] Ocjena ocjena)
         {
-            if (id != ocjena.Id)
+            if (id != ocjena.Id || ocjena.Tip != TipOcjene.Predmet)
             {
                 return NotFound();
+            }
+
+            if (!ocjena.IsValid())
+            {
+                ModelState.AddModelError("Vrijednost", "Ocjena nije u dozvoljenom rasponu.");
             }
 
             if (ModelState.IsValid)
@@ -364,7 +399,8 @@ namespace StudentHub.Controllers
                 {
                     _context.Update(ocjena);
                     await _context.SaveChangesAsync();
-                    await UpdateAverageGrade(ocjena.PredmetId);
+                    if (ocjena.PredmetId.HasValue)
+                        await UpdateAverageGrade(ocjena.PredmetId.Value);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -390,11 +426,7 @@ namespace StudentHub.Controllers
 
             ViewBag.PredmetId = new SelectList(_context.Predmeti
                 .Where(p => p.Profesor.AspNetUserId == userId || p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId))
-                .Select(p => new
-                {
-                    p.Id,
-                    p.Naziv
-                }), "Id", "Naziv", ocjena.PredmetId);
+                .Select(p => new { p.Id, p.Naziv }), "Id", "Naziv", ocjena.PredmetId);
 
             ViewBag.ProfesorId = new SelectList(_context.Profesori.Select(p => new
             {
@@ -419,9 +451,10 @@ namespace StudentHub.Controllers
                 .Include(o => o.Predmet)
                 .Include(o => o.Student)
                 .Include(o => o.Profesor)
+                .Include(o => o.NastavnaAktivnost)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (ocjena == null)
+            if (ocjena == null || ocjena.Tip != TipOcjene.Predmet)
             {
                 return NotFound();
             }
@@ -436,9 +469,15 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var ocjena = await _context.Ocjene.FindAsync(id);
+            if (ocjena == null || ocjena.Tip != TipOcjene.Predmet)
+            {
+                return NotFound();
+            }
+
             _context.Ocjene.Remove(ocjena);
             await _context.SaveChangesAsync();
-            await UpdateAverageGrade(ocjena.PredmetId);
+            if (ocjena.PredmetId.HasValue)
+                await UpdateAverageGrade(ocjena.PredmetId.Value);
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -83,6 +83,21 @@ footer {
 .footer-map {
     flex: 1;
     min-width: 300px;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+[data-toggle="tooltip"] {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.btn.disabled {
+    pointer-events: auto; /* Omogući tooltip na disabled dugmetu */
+    cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

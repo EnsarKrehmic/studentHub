@@ -1,0 +1,30 @@
+﻿@model IEnumerable<StudentHub.Models.Komentar>
+
+<h2>Komentari za @ViewBag.NastavnaAktivnostNaziv</h2>
+<p>
+    @if (User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Student"))
+    {
+        <a asp-action="Create" asp-route-nastavnaAktivnostId="@ViewBag.NastavnaAktivnostId" class="btn btn-primary">Dodaj novi komentar</a>
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sadrzaj</th>
+            <th>Student</th>
+            <th>Datum i vrijeme</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var komentar in Model)
+        {
+            <tr>
+                <td>@komentar.Sadrzaj</td>
+                <td>@komentar.Student</td>
+                <td>@komentar.DatumVrijeme</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@ViewBag.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>

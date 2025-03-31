@@ -10,6 +10,7 @@ namespace StudentHub.Models
 
         [Required(ErrorMessage = "Datum prijave je obavezan.")]
         public DateTime DatumPrijave { get; set; }
+        public decimal? Bodovi { get; set; }
 
         [Required(ErrorMessage = "Ispit je obavezan.")]
         [ForeignKey("Ispit")]

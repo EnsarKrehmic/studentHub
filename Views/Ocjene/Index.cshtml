@@ -10,32 +10,9 @@
 
     @if (Model.Any())
     {
-        @if (userRole == "Studentska služba")
-        {
-            var prosjekPoStudijskomProgramu = Model
-            .GroupBy(o => o.StudentStudijskiProgramNaziv)
-            .Select(g => new { StudijskiProgram = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
-            .ToList();
-
-            <div class="card bg-info text-white mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Prosjek po studijskim programima</h5>
-                    <ul class="list-group">
-                        @foreach (var item in prosjekPoStudijskomProgramu)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <strong>@item.StudijskiProgram</strong>
-                                <span class="badge bg-dark">@item.Prosjek.ToString("0.00")</span>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        }
-        else if (userRole == "Student")
+        @if (userRole == "Student")
         {
             var prosjekOcjena = Model.Average(o => o.Vrijednost);
-
             <div class="card bg-primary text-white mb-4">
                 <div class="card-body text-center">
                     <h5 class="card-title">Prosjek ocjena</h5>
@@ -45,7 +22,7 @@
         }
         else if (userRole == "Profesor")
         {
-            var prosjekPoPredmetu = Model
+            var prosjekPoPredmetu = Model.Where(o => o.Tip == "Predmet")
             .GroupBy(o => o.PredmetNaziv)
             .Select(g => new { Predmet = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
             .ToList();
@@ -70,7 +47,32 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            @await Html.PartialAsync("OcjenaCard", item)
+            @if (item.Tip == "Predmet")
+            {
+                @await Html.PartialAsync("OcjenaCard", item)
+            }
+            else if (item.Tip == "NastavnaAktivnost")
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">@item.NastavnaAktivnostNaziv</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Student:</strong> @item.StudentIme @item.StudentPrezime</p>
+                            <p>
+                                <strong>Ocjena:</strong>
+                                <span class="badge @(item.Vrijednost >= 4 ? "bg-success" : item.Vrijednost >= 2 ? "bg-warning" : "bg-danger")">
+                                    @item.Vrijednost
+                                </span>
+                            </p>
+                            <div class="text-end">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Detalji</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         }
     </div>
 

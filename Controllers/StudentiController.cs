@@ -120,8 +120,8 @@ namespace StudentHub.Controllers
                 .ToListAsync();
 
             var ocjene = await _context.Ocjene
-                .Where(o => o.StudentId == id)
-                .ToDictionaryAsync(o => o.PredmetId, o => (float?)o.Vrijednost);
+                    .Where(o => o.StudentId == student.Id)
+                    .ToDictionaryAsync(o => o.PredmetId, o => (float?)o.Vrijednost);
 
             var studentsQuery = _context.Studenti
                 .Include(s => s.StudentStudijskiProgrami)

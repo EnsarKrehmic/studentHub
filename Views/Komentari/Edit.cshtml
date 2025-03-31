@@ -1,0 +1,20 @@
+﻿@model StudentHub.Models.Komentar
+
+<h2>Uredi komentar za @ViewBag.NastavnaAktivnostNaziv</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="NastavnaAktivnostId" />
+    <input type="hidden" asp-for="StudentId" />
+    <input type="hidden" asp-for="DatumVrijeme" />
+    <div class="form-group">
+        <label asp-for="Sadrzaj"></label>
+        <textarea asp-for="Sadrzaj" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Sadrzaj" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Spremi</button>
+    <a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@Model.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

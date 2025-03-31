@@ -8,7 +8,7 @@ namespace StudentHub.ViewModels
         public Student Student { get; set; }
         public List<StudentiGroupedByProgramViewModel> GroupedStudents { get; set; }
         public List<Predmet> Predmeti { get; set; }
-        public Dictionary<long, float?> Ocjene { get; set; }
+        public Dictionary<long?, float?> Ocjene { get; set; }
         public string CurrentSort { get; set; }
         public string SearchString { get; set; }
         public long? StudijskiProgramId { get; set; }

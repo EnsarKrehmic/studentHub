@@ -1,0 +1,26 @@
+﻿@model StudentHub.Models.NastavniMaterijal
+
+<h2>Dodaj nastavni materijal za @ViewBag.NastavnaAktivnostNaziv</h2>
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="NastavnaAktivnostId" />
+    <div class="form-group">
+        <label asp-for="Naziv"></label>
+        <input asp-for="Naziv" class="form-control" />
+        <span asp-validation-for="Naziv" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Opis"></label>
+        <textarea asp-for="Opis" class="form-control"></textarea>
+        <span asp-validation-for="Opis" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="fajl">Fajl</label>
+        <input type="file" name="fajl" class="form-control-file" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Dodaj</button>
+    <a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@Model.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

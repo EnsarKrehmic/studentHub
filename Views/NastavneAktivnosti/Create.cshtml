@@ -1,0 +1,69 @@
+﻿@model StudentHub.ViewModels.NastavnaAktivnostCreateViewModel
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Kreiraj novu nastavnu aktivnost</h2>
+        <a asp-action="Index" asp-route-predmetId="@Model.PredmetId" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Lista svih nastavnih aktivnosti
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <input type="hidden" asp-for="PredmetId" />
+
+                <div class="form-group">
+                    <label asp-for="Naziv" class="font-weight-bold"></label>
+                    <input asp-for="Naziv" class="form-control" placeholder="Unesite naziv aktivnosti" />
+                    <span asp-validation-for="Naziv" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Opis" class="font-weight-bold"></label>
+                    <textarea asp-for="Opis" class="form-control" rows="3" 
+                              placeholder="Obavezan opis aktivnosti"></textarea>
+                    <span asp-validation-for="Opis" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Tip" class="font-weight-bold"></label>
+                    <select asp-for="Tip" class="form-control" 
+                            asp-items="Html.GetEnumSelectList<TipNastavneAktivnosti>()">
+                        <option value="">-- Odaberite tip aktivnosti --</option>
+                    </select>
+                    <span asp-validation-for="Tip" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DatumVrijemeOdrzavanja" class="font-weight-bold"></label>
+                    <input asp-for="DatumVrijemeOdrzavanja" 
+                           class="form-control" 
+                           type="datetime-local"
+                           step="60"
+                           min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"
+                           value="@Model.DatumVrijemeOdrzavanja.ToString("yyyy-MM-ddTHH:mm")" />
+                    <span asp-validation-for="DatumVrijemeOdrzavanja" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" asp-for="ManuelnoOtkljucano" />
+                    <label class="form-check-label font-weight-bold" asp-for="ManuelnoOtkljucano"></label>
+                    <small class="form-text text-muted">
+                        (Aktivnost će biti odmah dostupna studentima)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Kreiraj
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

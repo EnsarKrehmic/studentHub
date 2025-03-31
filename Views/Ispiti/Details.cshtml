@@ -8,7 +8,7 @@
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successMessage">
         @TempData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
@@ -57,7 +57,8 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item"><strong>📍 Lokacija:</strong> @ispit.Lokacija</li>
                             <li class="list-group-item"><strong>📅 Datum:</strong> @ispit.DatumOdrzavanja.ToString("dd.MM.yyyy HH:mm")</li>
-                            <li class="list-group-item"><strong>💯 Bodovi:</strong> @ispit.BrojBodova</li>
+                            <li class="list-group-item"><strong>💯 Ukupni bodovi ispita:</strong> @ispit.BrojBodova</li>
+                            <li class="list-group-item"><strong>Uslov za polaganje (minimalni broj bodova):</strong> @ispit.UslovZaPolaganje</li>
                         </ul>
                     </div>
                 </div>
@@ -70,13 +71,14 @@
             <div class="d-flex justify-content-between mt-4 align-items-center">
                 @if (User.IsInRole("Student"))
                 {
-                    @if (!Model.Prijavljen && Model.Predmeti.First().Ispiti.First().DatumOdrzavanja.AddDays(-3) > DateTime.Now)
+                    var datumIspita = Model.Predmeti.First().Ispiti.First().DatumOdrzavanja;
+                    if (!Model.Prijavljen && datumIspita.AddDays(-3) > DateTime.Now)
                     {
                         <form asp-action="Prijavi" asp-route-id="@Model.IspitId" method="post">
                             <button type="submit" class="btn btn-success">✅ Prijavi se</button>
                         </form>
                     }
-                    else if (Model.Prijavljen)
+                    else if (Model.Prijavljen && datumIspita.AddDays(-3) > DateTime.Now)
                     {
                         <form asp-action="Odjavi" asp-route-id="@Model.IspitId" method="post">
                             <button type="submit" class="btn btn-danger">❌ Odjavi se</button>
@@ -96,7 +98,7 @@
 {
     <div class="container mt-5">
         <div class="card shadow-lg p-4">
-        
+
             <div class="mt-4">
                 <h4>Prijavljeni studenti</h4>
                 <table class="table table-striped">
@@ -119,6 +121,95 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+}
+
+@if (User.IsInRole("Profesor") || (User.IsInRole("Asistent")))
+{
+    bool ispitProsao = Model.DatumIspita < DateTime.Now;
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+            <h4>Rezultati ispita</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Bodovi</th>
+                        <th>Status</th>
+                        <th>Akcija</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in Model.PrijavljeniStudenti)
+                    {
+                        var prijava = Model.Prijave.FirstOrDefault(p => p.StudentId == student.Id);
+                        var bodovi = prijava?.Bodovi;
+                        var polozen = bodovi.HasValue && bodovi >= Model.UslovZaPolaganje;
+                        <tr>
+                            <td>@student.Ime @student.Prezime [@student.BrojIndeksa]</td>
+                            <td>
+                                <input type="number" class="form-control" id="bodovi-@student.Id"
+                                       value="@(bodovi ?? 0)" min="0" max="100" @(ispitProsao ? "" : "disabled") />
+                            </td>
+                            <td>
+                                @if (bodovi.HasValue)
+                                {
+                                    <span class="badge @(polozen ? "bg-success" : "bg-danger")">
+                                        @(polozen ? "Položen" : "Nije položen")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">Nema bodova</span>
+                                }
+                            </td>
+                            <td>
+                                @if (ispitProsao)
+                                {
+                                    <button class="btn btn-primary" onclick="unesiBodove(@Model.IspitId, @student.Id)">
+                                        💾 Spasi bodove
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary" disabled>
+                                        ⏳ Čekanje ispita
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if (ViewBag.JePrijavljen == true)
+{
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+            <h4 class="mb-3">Vaš rezultat</h4>
+            @{
+                var prijava = Model.Prijave.FirstOrDefault(p => p.StudentId == Model.StudentId);
+                var bodovi = prijava?.Bodovi;
+                var polozen = bodovi.HasValue && bodovi >= Model.UslovZaPolaganje;
+            }
+            <p><strong>Bodovi:</strong> @(bodovi.HasValue ? bodovi.ToString() : "Nisu još uneseni")</p>
+            <p>
+                <strong>Status:</strong>
+                @if (bodovi.HasValue)
+                {
+                    <span class="badge @(polozen ? "bg-success" : "bg-danger")">
+                        @(polozen ? "Položen" : "Nije položen")
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">Rezultat nije objavljen</span>
+                }
+            </p>
         </div>
     </div>
 }
@@ -154,7 +245,7 @@
                         messageBox.setAttribute("id", "successMessage");
                         document.querySelector(".container").prepend(messageBox);
                     }
-                    messageBox.innerHTML = `${data.message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+                    messageBox.innerHTML = `${data.message} <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>`;
                 } else {
                     alert("Došlo je do greške.");
                 }
@@ -187,5 +278,50 @@
         });
 
         connection.start().catch(err => console.error(err.toString()));
+    </script>
+    <script>
+        function unesiBodove(ispitId, studentId) {
+            let bodoviInput = document.getElementById(`bodovi-${studentId}`);
+            let bodovi = parseFloat(bodoviInput.value);
+
+            fetch(`/Ispiti/UnesiBodove`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({
+                    IspitId: ispitId,
+                    StudentId: studentId,
+                    Bodovi: bodovi
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Ažuriraj prikaz bodova
+                    let statusElement = document.getElementById(`status-${studentId}`);
+                    if (data.bodovi != null) {
+                        bodoviInput.value = data.bodovi;
+                        bodoviInput.disabled = true; // Sprječavanje ponovnog unosa
+                        statusElement.innerHTML = `<span class="badge ${data.polozen ? 'bg-success' : 'bg-danger'}">
+                                                      ${data.polozen ? 'Položen' : 'Nije položen'}
+                                                   </span>`;
+                    }
+                } else {
+                    alert("Greška prilikom unosa bodova: " + data.message);
+                }
+            })
+            .catch(error => console.error("Greška:", error));
+        }
+    </script>
+    <script>
+        function omoguciUredjivanje(studentId) {
+            let bodoviInput = document.getElementById(`bodovi-${studentId}`);
+            let spasiButton = document.getElementById(`spasi-${studentId}`);
+
+            bodoviInput.disabled = false;  // Omogućava unos bodova
+            spasiButton.classList.remove("d-none");  // Prikazuje dugme "Spasi"
+        }
     </script>
 }

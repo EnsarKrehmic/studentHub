@@ -41,6 +41,7 @@ namespace StudentHub.Models
         public List<StudentNaPredmetu> StudentNaPredmetima { get; set; } = new();
         public List<PredmetProfesor> PredmetProfesori { get; set; } = new();
         public List<PredmetAsistent> PredmetAsistenti { get; set; } = new();
+        public List<NastavnaAktivnost> NastavneAktivnosti { get; set; } = new();
 
         public Predmet() { }
     }

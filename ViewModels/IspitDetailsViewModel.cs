@@ -11,12 +11,19 @@ namespace StudentHub.ViewModels
         public string DateSortParm { get; set; }
         public string LocationSortParm { get; set; }
         public string PointsSortParm { get; set; }
+        public decimal BrojBodova { get; set; }
+        public decimal UslovZaPolaganje { get; set; }
+        public decimal? Bodovi { get; set; }
+        public DateTime DatumIspita { get; set; }
+        public long? StudentId { get; set; }
         public StudijskiProgram StudijskiProgram { get; set; }
         public List<PredmetIspitViewModel> Predmeti { get; set; } = new List<PredmetIspitViewModel>();
         public List<NastavniPlanIspitViewModel> NastavniPlanovi { get; set; } = new List<NastavniPlanIspitViewModel>();
         public List<long> PrijavljeniIspitiIds { get; set; } = new List<long>();
-        public Dictionary<long, Ocjena> Ocjene { get; set; } = new Dictionary<long, Ocjena>();
+        public Dictionary<long?, Ocjena> Ocjene { get; set; } = new Dictionary<long?, Ocjena>(); // Promjena na long?
         public List<Student> PrijavljeniStudenti { get; set; } = new List<Student>();
+        public List<RezultatIspitaViewModel> RezultatiIspita { get; set; } = new List<RezultatIspitaViewModel>();
+        public List<Prijava> Prijave { get; set; } = new List<Prijava>();
     }
 
     public class NastavniPlanIspitViewModel

@@ -66,54 +66,6 @@ namespace StudentHub.Controllers
                     .ToListAsync()
             };
 
-            // Sinhronizacija korisnika
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            if (claimsIdentity != null)
-            {
-                var userIdClaim = claimsIdentity.Claims
-                    .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-
-                if (userIdClaim != null)
-                {
-                    var userId = userIdClaim.Value;
-                    var existingUser = await _context.Korisnici.FirstOrDefaultAsync(k => k.AspNetUserId == userId);
-
-                    if (existingUser == null)
-                    {
-                        // Dohvati usera iz Identity sistema
-                        var user = await _userManager.FindByIdAsync(userId);
-                        if (user != null)
-                        {
-                            // Dohvati uloge korisnika
-                            var roles = await _userManager.GetRolesAsync(user);
-                            var userRoleString = roles.FirstOrDefault() ?? "Osnovni";
-
-                            // Pravilno mapiranje stringa na enum
-                            if (!Enum.TryParse(userRoleString.Replace(" ", ""), true, out Uloga userRoleEnum))
-                            {
-                                userRoleEnum = Uloga.Osnovni; // Fallback na osnovnog korisnika ako nešto ne štima
-                            }
-
-                            // Lozinka (hashirana iz Identity sistema)
-                            var hashedPassword = user.PasswordHash;
-
-                            _context.Korisnici.Add(new Korisnik()
-                            {
-                                AspNetUserId = userId,
-                                JMBG = "",
-                                Ime = "",
-                                Prezime = "",
-                                Email = user.Email,
-                                Lozinka = hashedPassword,
-                                Uloga = userRoleEnum
-                            });
-
-                            await _context.SaveChangesAsync();
-                        }
-                    }
-                }
-            }
-
             // Vraćamo view nakon što je sve obavljeno
             return View(homeViewModel);
         }

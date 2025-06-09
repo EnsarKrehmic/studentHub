@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -32,6 +33,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 builder.Services.AddSingleton<IWebHostEnvironment>(sp => builder.Environment);
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // 100MB
+});
+
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 

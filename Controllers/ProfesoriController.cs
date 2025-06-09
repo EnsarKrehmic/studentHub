@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace StudentHub.Controllers
     public class ProfesoriController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProfesoriController(ApplicationDbContext context)
+        public ProfesoriController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Profesori
@@ -121,6 +124,125 @@ namespace StudentHub.Controllers
             };
 
             return View(viewModel);
+        }
+
+        // GET: Profesori/Create
+        [HttpGet("Create")]
+        [Authorize(Roles = "Studentska služba")]
+        public IActionResult Create()
+        {
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+            ViewBag.Predmeti = new SelectList(new List<SelectListItem>(), "Value", "Text"); // inicijalno prazno
+
+            return View();
+        }
+
+        // POST: Profesori/Create
+        [HttpPost("Create")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
+        public async Task<IActionResult> Create(ProfesorCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
+                ViewBag.Predmeti = model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any()
+                    ? new SelectList(
+                        _context.Predmeti
+                            .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                            .Select(p => new
+                            {
+                                Id = p.Id,
+                                Naziv = p.Naziv
+                            }).ToList(),
+                        "Id", "Naziv", model.PredmetIds)
+                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+                return View(model);
+            }
+
+            // 1. Kreiranje Identity User-a
+            var identityUser = new IdentityUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = true // može i false, po potrebi
+            };
+
+            var result = await _userManager.CreateAsync(identityUser, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
+                ViewBag.Predmeti = model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any()
+                    ? new SelectList(
+                        _context.Predmeti
+                            .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                            .Select(p => new
+                            {
+                                Id = p.Id,
+                                Naziv = p.Naziv
+                            }).ToList(),
+                        "Id", "Naziv", model.PredmetIds)
+                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+                return View(model);
+            }
+
+            // 2. Dodavanje u rolu "Profesor"
+            await _userManager.AddToRoleAsync(identityUser, "Profesor");
+
+            // 3. Kreiranje Profesora u bazi
+            var profesor = new Profesor
+            {
+                AspNetUserId = identityUser.Id,
+                JMBG = model.JMBG,
+                Ime = model.Ime,
+                Prezime = model.Prezime,
+                Email = model.Email,
+                ProfesorTitula = model.ProfesorTitula,
+                Uloga = Uloga.Profesor
+            };
+
+            _context.Profesori.Add(profesor);
+            await _context.SaveChangesAsync(); // da bismo imali Profesor.Id
+
+            // 4. Pomoćne tabele — Studijski programi
+            if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
+            {
+                foreach (var studijskiProgramId in model.StudijskiProgramIds)
+                {
+                    _context.ProfesorStudijskiProgrami.Add(new ProfesorStudijskiProgram
+                    {
+                        ProfesorId = profesor.Id,
+                        StudijskiProgramId = studijskiProgramId
+                    });
+                }
+            }
+
+            // 5. Pomoćne tabele — Predmeti
+            if (model.PredmetIds != null && model.PredmetIds.Any())
+            {
+                foreach (var predmetId in model.PredmetIds)
+                {
+                    _context.PredmetProfesori.Add(new PredmetProfesor
+                    {
+                        ProfesorId = profesor.Id,
+                        PredmetId = predmetId,
+                        AspNetUserId = identityUser.Id
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Gotovo → redirect na Index
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Profesori/Edit/{id}

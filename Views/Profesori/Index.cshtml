@@ -29,7 +29,7 @@
 
 @if (User.IsInRole("Studentska služba"))
 {
-    <a class="btn btn-success mb-3" asp-area="Identity" asp-page="/Account/Register">
+    <a class="btn btn-success mb-3" asp-controller="Profesori" asp-action="Create">
         <i class="fas fa-user-plus"></i> Dodaj profesora
     </a>
 }

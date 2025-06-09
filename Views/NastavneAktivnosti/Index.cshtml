@@ -46,7 +46,6 @@
                                     {
                                         <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
                                             <td>@aktivnost.Naziv</td>
-                                            <td>@aktivnost.Tip</td>
                                             <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
                                             <td>
                                                 <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
@@ -54,27 +53,31 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
-                                                {
-                                                    <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-info btn-sm">Detalji</a>
-                                                }
-                                                else
-                                                {
-                                                    <span class="btn btn-sm btn-secondary disabled"
-                                                          data-toggle="tooltip"
-                                                          title="Aktivnost će biti dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
-                                                        Detalji
-                                                    </span>
-                                                }
-                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-                                                {
-                                                    <a asp-action="Edit" asp-route-id="@aktivnost.Id" class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <a asp-action="Delete" asp-route-id="@aktivnost.Id" class="btn btn-sm btn-danger">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </a>
-                                                }
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
+                                                    {
+                                                        <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-info" title="Detalji">
+                                                            <i class="fas fa-info-circle"></i>
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-outline-secondary disabled" data-toggle="tooltip"
+                                                                title="Aktivnost će biti dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
+                                                            <i class="fas fa-info-circle"></i>
+                                                        </button>
+                                                    }
+
+                                                    @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                                    {
+                                                        <a asp-action="Edit" asp-route-id="@aktivnost.Id" class="btn btn-outline-warning" title="Uredi">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a asp-action="Delete" asp-route-id="@aktivnost.Id" class="btn btn-outline-danger" title="Obriši">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                                    }
+                                                </div>
                                             </td>
                                         </tr>
                                     }
@@ -125,27 +128,31 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
-                                                {
-                                                    <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-info btn-sm">Detalji</a>
-                                                }
-                                                else
-                                                {
-                                                    <span class="btn btn-sm btn-secondary disabled"
-                                                          data-toggle="tooltip"
-                                                          title="Aktivnost će biti dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
-                                                        Detalji
-                                                    </span>
-                                                }
-                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-                                                {
-                                                    <a asp-action="Edit" asp-route-id="@aktivnost.Id" class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <a asp-action="Delete" asp-route-id="@aktivnost.Id" class="btn btn-sm btn-danger">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </a>
-                                                }
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
+                                                    {
+                                                        <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-info" title="Detalji">
+                                                            <i class="fas fa-info-circle"></i>
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-outline-secondary disabled" data-toggle="tooltip"
+                                                                title="Aktivnost će biti dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
+                                                            <i class="fas fa-info-circle"></i>
+                                                        </button>
+                                                    }
+
+                                                    @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                                    {
+                                                        <a asp-action="Edit" asp-route-id="@aktivnost.Id" class="btn btn-outline-warning" title="Uredi">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a asp-action="Delete" asp-route-id="@aktivnost.Id" class="btn btn-outline-danger" title="Obriši">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                                    }
+                                                </div>
                                             </td>
                                         </tr>
                                     }

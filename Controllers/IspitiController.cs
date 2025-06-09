@@ -88,11 +88,11 @@ namespace StudentHub.Controllers
         }
 
         private async Task<List<IspitDetailsViewModel>> CreateViewModel(
-    List<StudijskiProgram> studijskiProgrami,
-    List<NastavniPlan> nastavniPlanovi,
-    List<Predmet> predmeti,
-    List<Ispit> ispiti,
-    string sortOrder)
+            List<StudijskiProgram> studijskiProgrami,
+            List<NastavniPlan> nastavniPlanovi,
+            List<Predmet> predmeti,
+            List<Ispit> ispiti,
+            string sortOrder)
         {
             var userId = _userManager.GetUserId(User);
             var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
@@ -167,6 +167,10 @@ namespace StudentHub.Controllers
             var ispit = await _context.Ispiti
                 .Include(i => i.Predmet)
                 .Include(i => i.StudijskiProgram)
+                .Include(i => i.Komentari)
+                    .ThenInclude(k => k.Korisnik)
+                .Include(i => i.Komentari)
+                    .ThenInclude(k => k.VidljivostKorisnici)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ispit == null)
@@ -606,6 +610,69 @@ namespace StudentHub.Controllers
             return Json(students);
         }
 
+        [HttpPost("DodajKomentar")]
+        [Authorize(Roles = "Student, Profesor, Asistent")]
+        public async Task<IActionResult> DodajKomentar(long ispitId, string sadrzaj, VidljivostKomentara vidljivost, List<long> odabraniKorisnici, IFormFile prilog)
+        {
+            var korisnikId = GetTrenutniKorisnikId();
+            var uloga = GetTrenutnaUloga();
+
+            var komentar = new Komentar
+            {
+                Sadrzaj = sadrzaj,
+                DatumVrijeme = DateTime.Now,
+                KorisnikId = korisnikId,
+                IspitId = ispitId,
+                Vidljivost = vidljivost
+            };
+
+            if (prilog != null && prilog.Length > 0)
+            {
+                var folder = Path.Combine("wwwroot", "prilozi", ispitId.ToString());
+                Directory.CreateDirectory(folder);
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(prilog.FileName);
+                var filePath = Path.Combine(folder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await prilog.CopyToAsync(stream);
+                }
+                komentar.PrilogPath = $"/prilozi/{ispitId}/{fileName}";
+            }
+
+            if (vidljivost == VidljivostKomentara.Privatno && odabraniKorisnici != null)
+            {
+                foreach (var odabraniKorisnikId in odabraniKorisnici) // Ispravka ovdje
+                {
+                    komentar.VidljivostKorisnici.Add(new KomentarVidljivost
+                    {
+                        KorisnikId = odabraniKorisnikId
+                    });
+                }
+            }
+
+            _context.Komentari.Add(komentar);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = ispitId });
+        }
+
+        [HttpGet("GetVidljiviKorisnici")]
+        public async Task<IActionResult> GetVidljiviKorisnici()
+        {
+            var korisnici = await _context.Korisnici
+                .Where(k => k.Uloga == Uloga.Student || k.Uloga == Uloga.Profesor || k.Uloga == Uloga.Asistent)
+                .Select(k => new
+                {
+                    Id = k.Id,
+                    Ime = k.Ime + " " + k.Prezime,
+                    Uloga = k.Uloga.ToString()
+                })
+                .ToListAsync();
+
+            return Json(korisnici);
+        }
+
         private bool UserBelongsToStudijskiProgramAndPredmet(long studentId, long? studijskiProgramId, long? predmetId)
         {
             var student = _context.Studenti
@@ -627,8 +694,8 @@ namespace StudentHub.Controllers
         private long GetTrenutniKorisnikId()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var student = _context.Studenti.FirstOrDefault(s => s.AspNetUserId == userId);
-            return student?.Id ?? 0;
+            var korisnik = _context.Korisnici.FirstOrDefault(s => s.AspNetUserId == userId);
+            return korisnik?.Id ?? 0;
         }
 
         private string GetTrenutnaUloga()

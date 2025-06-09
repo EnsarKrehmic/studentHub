@@ -3,6 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentHub.Models
 {
+    public enum TipPredmeta
+    {
+        Osnovni = 1,
+        Izborni = 2
+    }
+
     public class Predmet
     {
         [Key]
@@ -18,6 +24,9 @@ namespace StudentHub.Models
         [Required(ErrorMessage = "ECTS bodovi su obavezni.")]
         [Range(1, 30, ErrorMessage = "Broj ECTS bodova mora biti između 1 i 30.")]
         public int ECTS { get; set; }
+
+        [Required(ErrorMessage = "Tip predmeta je obavezan.")]
+        public TipPredmeta TipPredmeta { get; set; }
 
         [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
         public int? Semestar { get; set; }

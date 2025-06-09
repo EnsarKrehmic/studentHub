@@ -32,10 +32,61 @@
                         <strong>Studijski program:</strong>
                         @(Model.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram?.Naziv ?? "Nepoznato")
                     </p>
+                    <p>
+                        <strong>Status izbora izbornih predmeta:</strong>
+                        @if (Model.Student.IzborIzbornihPredmetaZakljucan)
+                        {
+                            <span class="badge badge-danger">Zaključano</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-success">Otključano</span>
+                        }
+                    </p>
                 </div>
             </div>
         </div>
     </div>
+
+    @if (User.IsInRole("Student"))
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h3>Mogućnosti studenta</h3>
+            </div>
+            <div class="card-body">
+                <p>Možete odabrati izborne predmete za trenutnu akademsku godinu:</p>
+                <a class="btn btn-primary btn-lg" asp-controller="Studenti" asp-action="BirajIzbornePredmete">
+                    <i class="fas fa-book-open"></i> Biraj izborne predmete
+                </a>
+            </div>
+        </div>
+    }
+
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h3>Administracija izbora izbornih predmeta</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Student.IzborIzbornihPredmetaZakljucan)
+                {
+                    <form asp-action="OtkjucajIzborIzbornihPredmeta" asp-route-id="@Model.Student.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-warning">Otključaj izbor izbornih predmeta</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="ZakljucajIzborIzbornihPredmeta" asp-route-id="@Model.Student.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success">Zaključaj izbor izbornih predmeta</button>
+                    </form>
+                }
+            </div>
+        </div>
+    }
 
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white">

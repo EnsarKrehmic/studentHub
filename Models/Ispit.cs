@@ -46,7 +46,7 @@ namespace StudentHub.Models
         [ForeignKey("Predmet")]
         public long PredmetId { get; set; }
         public Predmet Predmet { get; set; }
-
+        public ICollection<Komentar> Komentari { get; set; } = new List<Komentar>();
         public Ispit() { }
     }
 }

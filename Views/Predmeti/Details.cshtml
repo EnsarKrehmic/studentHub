@@ -37,6 +37,8 @@ else
                     <dt class="col-sm-3">ECTS bodovi:</dt>
                     <dd class="col-sm-9">@Model.Predmet?.ECTS</dd>
                     <dt class="col-sm-3">Nastavni plan:</dt>
+                    <dt class="col-sm-3">Tip predmeta:</dt>
+                    <dd class="col-sm-9">@Model.Predmet.TipPredmeta.ToString()</dd>
                     <dd class="col-sm-9">
                         @if (Model.Predmet?.NastavniPlan != null)
                         {

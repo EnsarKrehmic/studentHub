@@ -20,7 +20,7 @@
     <!-- Dodatni CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StudentHub.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -48,6 +48,75 @@
 
         [data-toggle="tooltip"] {
             cursor: help;
+        }
+
+        .preview-container {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            background-color: #f8f9fa;
+        }
+
+        .preview-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .preview-thumbnail {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+            .preview-thumbnail img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+            }
+
+        .preview-info {
+            flex: 1;
+        }
+
+        .file-name {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-details span {
+            display: block;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .fa-file-pdf {
+            color: #e74c3c;
+        }
+
+        .fa-file-word {
+            color: #2c3e50;
+        }
+
+        .fa-file-excel {
+            color: #27ae60;
+        }
+
+        .fa-file-powerpoint {
+            color: #e67e22;
+        }
+
+        .fa-file {
+            color: #7f8c8d;
+        }
+
+        .btn-group .btn + form {
+            margin-left: 0.5rem;
         }
     </style>
 
@@ -91,6 +160,14 @@
                                     <li><a class="dropdown-item" asp-controller="Ocjene" asp-action="Index">Ocjene</a></li>
                                 }
                                 <li><a class="dropdown-item" asp-controller="Predmeti" asp-action="Index">Predmeti</a></li>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li><a class="dropdown-item" asp-controller="StatistikaIzbornihPredmeta" asp-action="Index">Statistika izbornih predmeta</a></li>
+                                }
+                                @if (User.IsInRole("Studentska služba"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="StudijskiProgramIzborniLimiti" asp-action="Index">Limiti izbornih predmeta</a></li>
+                                }
                                 <li><a class="dropdown-item" asp-controller="NastavniPlanovi" asp-action="Index">Nastavni planovi</a></li>
                             </ul>
                         </li>

@@ -55,6 +55,7 @@
                                         <th>Naziv predmeta</th>
                                         <th>Opis</th>
                                         <th class="text-center">ECTS</th>
+                                        <th>Tip predmeta</th>
                                         <th>Profesor</th>
                                         <th>Asistent</th>
                                         @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
@@ -79,6 +80,7 @@
                                                 }
                                             </td>
                                             <td class="text-center">@predmet.ECTS</td>
+                                            <td>@predmet.TipPredmeta.ToString()</td>
                                             <td>
                                                 @if (predmet.Profesor != null)
                                                 {

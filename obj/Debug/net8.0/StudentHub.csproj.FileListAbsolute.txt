@@ -1215,14 +1215,9 @@ C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\scopedcss\Views\
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\scopedcss\bundle\StudentHub.styles.css
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\scopedcss\projectbundle\StudentHub.bundle.scp.css
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets\msbuild.StudentHub.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets\msbuild.StudentHub.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets\msbuild.build.StudentHub.props
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.StudentHub.props
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.StudentHub.props
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\StudentHub.csproj.Up2Date
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\StudentHub.dll

@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
 using StudentHub.ViewModels;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudentHub.Controllers
 {
@@ -12,10 +15,12 @@ namespace StudentHub.Controllers
     public class StudentskaSluzbaController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public StudentskaSluzbaController(ApplicationDbContext context)
+        public StudentskaSluzbaController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: StudentskaSluzba
@@ -110,6 +115,84 @@ namespace StudentHub.Controllers
             };
 
             return View(viewModel);
+        }
+
+        // GET: StudentskaSluzba/Create
+        [HttpGet("Create")]
+        [Authorize(Roles = "Studentska služba")]
+        public IActionResult Create()
+        {
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+            return View();
+        }
+
+        // POST: StudentskaSluzba/Create
+        [HttpPost("Create")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
+        public async Task<IActionResult> Create(StudentskaSluzbaCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
+                return View(model);
+            }
+
+            // 1. Kreiranje Identity User-a
+            var identityUser = new IdentityUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(identityUser, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
+                return View(model);
+            }
+
+            // 2. Dodavanje u rolu "Studentska služba"
+            await _userManager.AddToRoleAsync(identityUser, "Studentska služba");
+
+            // 3. Kreiranje Studentska služba u bazi
+            var studentskaSluzba = new StudentskaSluzba
+            {
+                AspNetUserId = identityUser.Id,
+                JMBG = model.JMBG,
+                Ime = model.Ime,
+                Prezime = model.Prezime,
+                Email = model.Email,
+                Uloga = Uloga.StudentskaSluzba
+            };
+
+            _context.StudentskeSluzbe.Add(studentskaSluzba);
+            await _context.SaveChangesAsync();
+
+            // 4. Pomoćne tabele — Studijski programi
+            if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
+            {
+                foreach (var studijskiProgramId in model.StudijskiProgramIds)
+                {
+                    _context.StudentskaSluzbaStudijskiProgrami.Add(new StudentskaSluzbaStudijskiProgram
+                    {
+                        StudentskaSluzbaId = studentskaSluzba.Id,
+                        StudijskiProgramId = studijskiProgramId
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Gotovo → redirect na Index
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: StudentskaSluzba/Edit/{id}

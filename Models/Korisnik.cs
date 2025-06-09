@@ -16,6 +16,7 @@ namespace StudentHub.Models
         [Display(Name = "Asistent")]
         Asistent = 5,
     }
+
     public class Korisnik
     {
         [Key]
@@ -36,9 +37,6 @@ namespace StudentHub.Models
 
         [EmailAddress(ErrorMessage = "Unesite validnu email adresu.")]
         public string? Email { get; set; }
-
-        [DataType(DataType.Password)]
-        public string? Lozinka { get; set; }
 
         [Required(ErrorMessage = "Uloga je obavezna.")]
         [EnumDataType(typeof(Uloga))]

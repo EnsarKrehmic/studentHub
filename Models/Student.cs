@@ -27,6 +27,7 @@ namespace StudentHub.Models
         [Display(Name = "Nastavni plan")]
         public long? NastavniPlanId { get; set; }
         public NastavniPlan NastavniPlan { get; set; }
+        public bool IzborIzbornihPredmetaZakljucan { get; set; } = false;
         public List<StudentStudijskiProgram> StudentStudijskiProgrami { get; set; } = new();
         public List<StudentNaPredmetu> StudentNaPredmetima { get; set; } = new();
         public bool IsEnrolledInPredmet(long predmetId, ApplicationDbContext context)

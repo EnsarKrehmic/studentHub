@@ -15,8 +15,9 @@ namespace StudentHub.Models
         [MaxLength(500, ErrorMessage = "Opis ne može biti duži od 500 karaktera.")]
         public string Opis { get; set; }
 
-        [Required(ErrorMessage = "Putanja do fajla je obavezna.")]
         public string PutanjaDoFajla { get; set; }
+
+        public string TipFajla { get; set; }
 
         [ForeignKey("NastavnaAktivnost")]
         public long NastavnaAktivnostId { get; set; }

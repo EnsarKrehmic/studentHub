@@ -4,38 +4,44 @@
     ViewData["Title"] = "Lista ispita po studijskim programima i predmetima";
 }
 
-<h1 class="text-center mt-4">@ViewData["Title"]</h1>
+<h1 class="text-center my-4">@ViewData["Title"]</h1>
 
 @if (TempData["Message"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         @TempData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
 }
 
-<p class="text-center text-muted">Rok za prijavu ispita je 3 dana prije ispitnog roka, ne računajući neradne dane i vikende.</p>
+<p class="text-center text-muted mb-4">
+    Rok za prijavu ispita je 3 dana prije ispitnog roka, ne računajući neradne dane i vikende.
+</p>
 
 @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
 {
     <div class="text-center mb-4">
-        <a asp-action="Create" class="btn btn-primary">Kreiraj novi ispit</a>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Kreiraj novi ispit
+        </a>
     </div>
 }
 
-<div class="container mt-4">
+<div class="container">
     @if (Model != null && Model.Any())
     {
         @foreach (var program in Model)
         {
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">@program.StudijskiProgram.Naziv</h2>
+                    <h4 class="mb-0">@program.StudijskiProgram.Naziv</h4>
                 </div>
                 <div class="card-body">
                     @foreach (var plan in program.NastavniPlanovi)
                     {
-                        <h4 class="text-secondary mt-3">Nastavni plan za @plan.NastavniPlan.GodinaStudija. godinu studija</h4>
+                        <h5 class="text-secondary mt-3">Nastavni plan za @plan.NastavniPlan.GodinaStudija. godinu</h5>
 
                         @if (plan.Predmeti.Any())
                         {
@@ -43,55 +49,82 @@
                                 @for (int i = 0; i < plan.Predmeti.Count; i++)
                                 {
                                     var predmet = plan.Predmeti[i];
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="heading-@i-@plan.NastavniPlan.Id">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@i-@plan.NastavniPlan.Id" aria-expanded="false">
-                                                @predmet.Predmet.Naziv
-                                            </button>
-                                        </h2>
-                                        <div id="collapse-@i-@plan.NastavniPlan.Id" class="accordion-collapse collapse" data-bs-parent="#predmetAccordion-@plan.NastavniPlan.Id">
-                                            <div class="accordion-body">
-                                                <ul class="list-group">
-                                                    @foreach (var ispit in predmet.Ispiti)
-                                                    {
-                                                        <li class="list-group-item">
-                                                            <strong>Datum:</strong> @ispit.DatumOdrzavanja.ToString("dd.MM.yyyy")<br />
-                                                            <strong>Lokacija:</strong> @ispit.Lokacija<br />
-                                                            <strong>Bodovi:</strong> @ispit.BrojBodova<br />
-                                                            <strong>Granica:</strong> @ispit.UslovZaPolaganje<br />
-                                                            <div class="mt-2">
-                                                                <a asp-action="Details" asp-route-id="@ispit.Id" class="btn btn-info btn-sm">Detalji</a>
+                                    <div class="card">
+                                        <div class="card-header" id="heading-@i-@plan.NastavniPlan.Id">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link collapsed" type="button"
+                                                        data-toggle="collapse"
+                                                        data-target="#collapse-@i-@plan.NastavniPlan.Id"
+                                                        aria-expanded="false">
+                                                    @predmet.Predmet.Naziv
+                                                </button>
+                                            </h5>
+                                        </div>
+                                        <div id="collapse-@i-@plan.NastavniPlan.Id"
+                                             class="collapse"
+                                             data-parent="#predmetAccordion-@plan.NastavniPlan.Id">
+                                            <div class="card-body">
+                                                @foreach (var ispit in predmet.Ispiti)
+                                                {
+                                                    <div class="card mb-3">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title text-primary mb-2">
+                                                                Datum održavanja: @ispit.DatumOdrzavanja.ToString("dd.MM.yyyy")
+                                                            </h6>
+                                                            <p class="mb-1"><strong>Lokacija:</strong> @ispit.Lokacija</p>
+                                                            <p class="mb-1"><strong>Broj bodova:</strong> @ispit.BrojBodova</p>
+                                                            <p class="mb-3"><strong>Uslov za polaganje:</strong> @ispit.UslovZaPolaganje</p>
+
+                                                            <div class="d-flex flex-wrap">
+                                                                <a asp-action="Details" asp-route-id="@ispit.Id"
+                                                                   class="btn btn-info btn-sm mr-2 mb-2">
+                                                                    <i class="fas fa-info-circle"></i> Detalji
+                                                                </a>
+
                                                                 @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                                                 {
-                                                                    <a asp-action="Edit" asp-route-id="@ispit.Id" class="btn btn-warning btn-sm">Izmjena</a>
-                                                                    <a asp-action="Delete" asp-route-id="@ispit.Id" class="btn btn-danger btn-sm">Brisanje</a>
+                                                                    <a asp-action="Edit" asp-route-id="@ispit.Id"
+                                                                       class="btn btn-warning btn-sm mr-2 mb-2">
+                                                                        <i class="fas fa-edit"></i> Izmjena
+                                                                    </a>
+                                                                    <a asp-action="Delete" asp-route-id="@ispit.Id"
+                                                                       class="btn btn-danger btn-sm mr-2 mb-2">
+                                                                        <i class="fas fa-trash-alt"></i> Brisanje
+                                                                    </a>
                                                                 }
+
                                                                 @if (User.IsInRole("Student"))
                                                                 {
                                                                     var prijavljen = program.PrijavljeniIspitiIds.Contains(ispit.Id);
                                                                     var imaOcjenu = program.Ocjene.ContainsKey(ispit.PredmetId);
 
-                                                                    @if (!prijavljen && !imaOcjenu && ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now)
+                                                                    if (!prijavljen && !imaOcjenu && ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now)
                                                                     {
-                                                                        <form asp-action="Prijavi" asp-route-id="@ispit.Id" method="post" style="display:inline;">
-                                                                            <button type="submit" class="btn btn-success btn-sm">✅ Prijavi se</button>
+                                                                        <form asp-action="Prijavi" asp-route-id="@ispit.Id" method="post" class="mr-2 mb-2">
+                                                                            <button type="submit" class="btn btn-success btn-sm">
+                                                                                <i class="fas fa-check"></i> Prijavi se
+                                                                            </button>
                                                                         </form>
                                                                     }
                                                                     else if (prijavljen)
                                                                     {
-                                                                        <form asp-action="Odjavi" asp-route-id="@ispit.Id" method="post" style="display:inline;">
-                                                                            <button type="submit" class="btn btn-danger btn-sm">❌ Odjavi se</button>
+                                                                        <form asp-action="Odjavi" asp-route-id="@ispit.Id" method="post" class="mr-2 mb-2">
+                                                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                                                <i class="fas fa-times"></i> Odjavi se
+                                                                            </button>
                                                                         </form>
                                                                     }
                                                                     else if (imaOcjenu)
                                                                     {
-                                                                        <span class="text-muted">Već imate ocjenu iz ovog predmeta.</span>
+                                                                        <span class="text-muted small align-self-center mr-2 mb-2">
+                                                                            Već imate ocjenu iz ovog predmeta
+                                                                        </span>
                                                                     }
                                                                 }
                                                             </div>
-                                                        </li>
-                                                    }
-                                                </ul>
+                                                        </div>
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -100,7 +133,7 @@
                         }
                         else
                         {
-                            <p class="text-muted">Nema dostupnih ispita za ovaj nastavni plan.</p>
+                            <p class="text-muted mt-2">Nema dostupnih ispita za ovaj nastavni plan.</p>
                         }
                     }
                 </div>
@@ -115,66 +148,54 @@
     }
 </div>
 
-<div class="text-center mt-4">
-    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+<div class="text-center mt-5">
+    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
+    </a>
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Funkcija za slanje AJAX zahtjeva
-            function sendAjaxRequest(url, ispitId, successMessage, button, newButtonHtml) {
-                fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "RequestVerificationToken": document.querySelector("input[name='__RequestVerificationToken']")?.value
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        button.outerHTML = newButtonHtml;
-                        showToast(successMessage);
-                    } else {
-                        showToast(data.message, "danger");
-                    }
-                })
-                .catch(error => showToast("Došlo je do greške!", "danger"));
-            }
-
-            // Prijava ispita
-            document.addEventListener("click", function (event) {
-                if (event.target.classList.contains("prijavi-ispit")) {
-                    let button = event.target;
-                    let ispitId = button.getAttribute("data-id");
-                    sendAjaxRequest(`/Ispiti/Prijavi/${ispitId}`, ispitId, "Uspješno ste prijavili ispit.", button,
-                        `<button class="btn btn-danger btn-sm odjavi-ispit" data-id="${ispitId}">❌ Odjavi se</button>`);
-                }
-            });
-
-            // Odjava ispita
-            document.addEventListener("click", function (event) {
-                if (event.target.classList.contains("odjavi-ispit")) {
-                    let button = event.target;
-                    let ispitId = button.getAttribute("data-id");
-                    sendAjaxRequest(`/Ispiti/Odjavi/${ispitId}`, ispitId, "Uspješno ste odjavili ispit.", button,
-                        `<button class="btn btn-success btn-sm prijavi-ispit" data-id="${ispitId}">✅ Prijavi se</button>`);
-                }
-            });
-
-            // Funkcija za prikaz poruka
-            function showToast(message, type = "success") {
-                let toast = document.createElement("div");
-                toast.className = `alert alert-${type} alert-dismissible fade show position-fixed bottom-0 end-0 m-3`;
-                toast.style.zIndex = "1050";
-                toast.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 4000);
-            }
+        // Inicijalizacija Bootstrap komponenti
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 }
+
+<style>
+    .btn-sm {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.75rem;
+    }
+
+    .card-header .btn-link {
+        color: #495057;
+        text-decoration: none;
+        width: 100%;
+        text-align: left;
+        position: relative;
+    }
+
+        .card-header .btn-link:after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .card-header .btn-link.collapsed:after {
+            content: '\f105';
+        }
+
+    .card-title {
+        font-weight: 600;
+    }
+
+    .accordion .card {
+        margin-bottom: 0.5rem;
+        border: 1px solid rgba(0,0,0,.125);
+    }
+</style>

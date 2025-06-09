@@ -1,0 +1,140 @@
+﻿@model StudentHub.ViewModels.BirajIzbornePredmeteViewModel
+
+@{
+    ViewData["Title"] = "Biraj izborne predmete";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p><strong>Student:</strong> @Model.ImePrezime</p>
+<p><strong>Studijski program:</strong> @Model.StudijskiProgramNaziv</p>
+<p><strong>Godina studija:</strong> @Model.GodinaStudija</p>
+<p><strong>Dozvoljeno izbornih predmeta:</strong> min @Model.MinIzborniPredmeti - max @Model.MaxIzborniPredmeti</p>
+
+@if (Model.IsLocked)
+{
+    <div class="alert alert-warning">
+        Vaš izbor izbornih predmeta je <strong>zaključan</strong>. Nije moguće vršiti izmjene.
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+@if (!Model.IsLocked)
+{
+    <form asp-action="BirajIzbornePredmete" method="post">
+        @Html.AntiForgeryToken()
+
+        <!-- Hidden polja -->
+        <input type="hidden" asp-for="StudentId" />
+        <input type="hidden" asp-for="GodinaStudija" />
+        <input type="hidden" asp-for="StudijskiProgramId" />
+        <input type="hidden" asp-for="StudijskiProgramNaziv" />
+        <input type="hidden" asp-for="MinIzborniPredmeti" />
+        <input type="hidden" asp-for="MaxIzborniPredmeti" />
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Odaberi</th>
+                    <th>Naziv predmeta</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Predmeti)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   name="SelectedPredmetiIds"
+                                   value="@p.PredmetId"
+                                   @(p.IsSelected ? "checked" : "") />
+                        </td>
+                        <td>@p.Naziv</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="alert alert-info mt-3" id="selectedCounter">
+            Odabrano: <span id="selectedCount">0</span> / @Model.MaxIzborniPredmeti
+        </div>
+
+        <button type="submit" class="btn btn-primary">Spremi izbor</button>
+        <a asp-controller="Studenti" asp-action="Details" asp-route-id="@Model.StudentId" class="btn btn-secondary">Odustani</a>
+    </form>
+}
+else
+{
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h5>Odabrani izborni predmeti</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Predmeti.Any(p => p.IsSelected))
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Naziv predmeta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Predmeti.Where(p => p.IsSelected))
+                        {
+                            <tr>
+                                <td>@p.Naziv</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">Niste odabrali nijedan izborni predmet.</p>
+            }
+        </div>
+    </div>
+
+    <a asp-controller="Studenti" asp-action="Details" asp-route-id="@Model.StudentId" class="btn btn-secondary mt-3">Nazad na detalje studenta</a>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            var maxIzborni = @Model.MaxIzborniPredmeti;
+
+            function updateCounter() {
+                var selectedCount = $('input[type="checkbox"][name="SelectedPredmetiIds"]:checked').length;
+                $('#selectedCount').text(selectedCount);
+            }
+
+            // Init counter on page load
+            updateCounter();
+
+            $('input[type="checkbox"][name="SelectedPredmetiIds"]').on('change', function () {
+                var selectedCount = $('input[type="checkbox"][name="SelectedPredmetiIds"]:checked').length;
+
+                if (selectedCount > maxIzborni) {
+                    // Deselect the checkbox
+                    this.checked = false;
+
+                    // Show warning
+                    alert(`Možete odabrati maksimalno ${maxIzborni} izbornih predmeta.`);
+                }
+
+                // Update counter every time
+                updateCounter();
+            });
+        });
+    </script>
+}

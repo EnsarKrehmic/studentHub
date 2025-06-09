@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,14 @@ namespace StudentHub.Controllers
     public class StudentiController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger<PredmetiController> _logger;
 
-        public StudentiController(ApplicationDbContext context)
+        public StudentiController(ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<PredmetiController> logger)
         {
             _context = context;
+            _userManager = userManager;
+            _logger = logger;
         }
 
         // GET: Studenti
@@ -154,6 +159,178 @@ namespace StudentHub.Controllers
             return View(viewModel);
         }
 
+        // GET: Studenti/Create
+        [HttpGet("Create")]
+        [Authorize(Roles = "Studentska služba")]
+        public IActionResult Create()
+        {
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+            ViewBag.NastavniPlanovi = new SelectList(new List<SelectListItem>(), "Value", "Text");
+            ViewBag.Predmeti = new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+            return View();
+        }
+
+        // POST: Studenti/Create
+        [HttpPost("Create")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
+        public async Task<IActionResult> Create(StudentCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                foreach (var entry in ModelState)
+                {
+                    foreach (var error in entry.Value.Errors)
+                    {
+                        Console.WriteLine($"Field: {entry.Key}, Error: {error.ErrorMessage}");
+                    }
+                }
+
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
+
+                ViewBag.NastavniPlanovi = model.StudijskiProgramId != 0
+                    ? new SelectList(
+                        _context.NastavniPlanovi
+                            .Where(np => np.StudijskiProgramId == model.StudijskiProgramId)
+                            .Select(np => new
+                            {
+                                Id = np.Id,
+                                Naziv = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godinu"
+                            }).ToList(),
+                        "Id", "Naziv", model.NastavniPlanId)
+                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+                ViewBag.Predmeti = model.StudijskiProgramId != 0
+                    ? new SelectList(
+                        _context.Predmeti
+                            .Where(p => p.NastavniPlan.StudijskiProgramId == model.StudijskiProgramId)
+                            .Select(p => new
+                            {
+                                Id = p.Id,
+                                Naziv = p.Naziv
+                            }).ToList(),
+                        "Id", "Naziv", model.PredmetIds)
+                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+                return View(model);
+            }
+
+            // 1. Kreiranje Identity User-a
+            var identityUser = new IdentityUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = true // ili false, po želji
+            };
+
+            var result = await _userManager.CreateAsync(identityUser, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
+
+                ViewBag.NastavniPlanovi = model.StudijskiProgramId != 0
+                    ? new SelectList(
+                        _context.NastavniPlanovi
+                            .Where(np => np.StudijskiProgramId == model.StudijskiProgramId)
+                            .Select(np => new
+                            {
+                                Id = np.Id,
+                                Naziv = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godinu"
+                            }).ToList(),
+                        "Id", "Naziv", model.NastavniPlanId)
+                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+                ViewBag.Predmeti = model.StudijskiProgramId != 0
+                    ? new SelectList(
+                        _context.Predmeti
+                            .Where(p => p.NastavniPlan.StudijskiProgramId == model.StudijskiProgramId)
+                            .Select(p => new
+                            {
+                                Id = p.Id,
+                                Naziv = p.Naziv
+                            }).ToList(),
+                        "Id", "Naziv", model.PredmetIds)
+                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+                return View(model);
+            }
+
+            // 2. Dodavanje u rolu "Student"
+            try
+            {
+                await _userManager.AddToRoleAsync(identityUser, "Student");
+                Console.WriteLine(">>> AddToRoleAsync prošao OK");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">>> ERROR u AddToRoleAsync: {ex.Message}");
+            }
+
+            // 3. Kreiranje Studenta u bazi
+            try
+            {
+                var student = new Student
+                {
+                    AspNetUserId = identityUser.Id,
+                    JMBG = model.JMBG,
+                    Ime = model.Ime,
+                    Prezime = model.Prezime,
+                    Email = model.Email,
+                    BrojIndeksa = model.BrojIndeksa,
+                    PrethodnoObrazovanje = model.PrethodnoObrazovanje,
+                    GodinaStudija = model.GodinaStudija,
+                    Semestar = model.Semestar,
+                    Uloga = Uloga.Student,
+                    NastavniPlanId = model.NastavniPlanId
+                };
+
+                _context.Studenti.Add(student);
+                await _context.SaveChangesAsync();
+                Console.WriteLine(">>> SaveChangesAsync za Student prošao OK");
+
+                // Upisivanje u pomoćne tabele
+                if (model.StudijskiProgramId != 0)
+                {
+                    _context.StudentStudijskiProgrami.Add(new StudentStudijskiProgram
+                    {
+                        StudentId = student.Id,
+                        StudijskiProgramId = model.StudijskiProgramId
+                    });
+                }
+
+                if (model.PredmetIds != null && model.PredmetIds.Any())
+                {
+                    foreach (var predmetId in model.PredmetIds)
+                    {
+                        _context.StudentiNaPredmetima.Add(new StudentNaPredmetu
+                        {
+                            StudentId = student.Id,
+                            PredmetId = predmetId,
+                            AkademskaGodina = DateTime.Now.Year.ToString(),
+                            AspNetUserId = identityUser.Id
+                        });
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                Console.WriteLine(">>> SaveChangesAsync za pomoćne tabele prošao OK");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">>> ERROR u SaveChangesAsync: {ex.Message}");
+            }
+
+            // Gotovo → redirect na Index
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Studenti/Edit/{id}
         [HttpGet("Edit/{id:long}")]
         [Authorize(Roles = "Studentska služba")]
@@ -180,6 +357,7 @@ namespace StudentHub.Controllers
                 Semestar = student.Semestar,
                 PrethodnoObrazovanje = student.PrethodnoObrazovanje,
                 Uloga = student.Uloga,
+                IzborIzbornihPredmetaZakljucan = student.IzborIzbornihPredmetaZakljucan,
                 PredmetIds = await _context.StudentiNaPredmetima
                     .Where(snp => snp.StudentId == student.Id)
                     .Select(snp => snp.PredmetId)
@@ -241,6 +419,8 @@ namespace StudentHub.Controllers
             existingStudent.GodinaStudija = model.GodinaStudija;
             existingStudent.Uloga = model.Uloga;
             existingStudent.Semestar = model.Semestar;
+
+            existingStudent.IzborIzbornihPredmetaZakljucan = model.IzborIzbornihPredmetaZakljucan;
 
             var nastavniPlan = await _context.NastavniPlanovi
                 .FirstOrDefaultAsync(np => np.StudijskiProgramId == model.StudijskiProgramId
@@ -420,5 +600,184 @@ namespace StudentHub.Controllers
             return Json(nastavaniPlanovi);
         }
 
+        [HttpGet("BirajIzbornePredmete")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> BirajIzbornePredmete()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var student = await _context.Studenti
+                .Include(s => s.StudentStudijskiProgrami).ThenInclude(ssp => ssp.StudijskiProgram)
+                .FirstOrDefaultAsync(s => s.AspNetUserId == userId);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            // Provjera da li je postavljena godina studija
+            if (student.GodinaStudija == null || student.GodinaStudija <= 0)
+            {
+                TempData["ErrorMessage"] = "Vašoj studentskoj evidenciji nedostaje godina studija. Molimo kontaktirajte Studentsku službu.";
+                return RedirectToAction("Details", "Studenti", new { id = student.Id });
+            }
+
+            var godinaStudija = student.GodinaStudija.Value;
+
+            var studijskiProgramId = student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgramId ?? 0;
+            var studijskiProgram = await _context.StudijskiProgrami.FirstOrDefaultAsync(sp => sp.Id == studijskiProgramId);
+
+            // Provjera postoji li limit za ovaj studijski program i godinu
+            var limit = await _context.StudijskiProgramIzborniLimiti
+                .FirstOrDefaultAsync(l => l.StudijskiProgramId == studijskiProgramId && l.GodinaStudija == godinaStudija);
+
+            if (limit == null)
+            {
+                TempData["ErrorMessage"] = "Za Vaš studijski program i godinu nije postavljen limit za izborne predmete. Molimo kontaktirajte Studentsku službu.";
+                return RedirectToAction("Details", "Studenti", new { id = student.Id });
+            }
+
+            // Dohvati izborne predmete
+            var izborniPredmeti = await _context.Predmeti
+                .Where(p => p.TipPredmeta == TipPredmeta.Izborni &&
+                            p.NastavniPlan.StudijskiProgramId == studijskiProgramId &&
+                            p.NastavniPlan.GodinaStudija == godinaStudija.ToString())
+                .ToListAsync();
+
+            if (!izborniPredmeti.Any())
+            {
+                TempData["ErrorMessage"] = "Trenutno nema dostupnih izbornih predmeta za Vaš studijski program i godinu.";
+                return RedirectToAction("Details", "Studenti", new { id = student.Id });
+            }
+
+            // Već odabrani predmeti
+            var odabraniPredmetIds = await _context.StudentiNaPredmetima
+                .Where(snp => snp.StudentId == student.Id && snp.Predmet.TipPredmeta == TipPredmeta.Izborni)
+                .Select(snp => snp.PredmetId)
+                .ToListAsync();
+
+            // Sastavljanje view modela
+            var model = new BirajIzbornePredmeteViewModel
+            {
+                StudentId = student.Id,
+                ImePrezime = $"{student.Ime} {student.Prezime}",
+                GodinaStudija = godinaStudija,
+                StudijskiProgramId = studijskiProgramId,
+                StudijskiProgramNaziv = studijskiProgram?.Naziv ?? "",
+                MinIzborniPredmeti = limit.MinIzborniPredmeti,
+                MaxIzborniPredmeti = limit.MaxIzborniPredmeti,
+                IsLocked = student.IzborIzbornihPredmetaZakljucan,
+                Predmeti = izborniPredmeti.Select(p => new PredmetCheckboxViewModel
+                {
+                    PredmetId = p.Id,
+                    Naziv = p.Naziv,
+                    IsSelected = odabraniPredmetIds.Contains(p.Id)
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost("BirajIzbornePredmete")]
+        [Authorize(Roles = "Student")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BirajIzbornePredmete(BirajIzbornePredmeteViewModel model)
+        {
+            _logger.LogInformation("POST BirajIzbornePredmete pozvan.");
+            _logger.LogInformation("SelectedPredmetiIds count: {Count}", model.SelectedPredmetiIds?.Count ?? 0);
+
+            // Validacija limita
+            if (model.SelectedPredmetiIds.Count < model.MinIzborniPredmeti)
+            {
+                TempData["ErrorMessage"] = $"Morate odabrati najmanje {model.MinIzborniPredmeti} izbornih predmeta.";
+                return RedirectToAction("BirajIzbornePredmete");
+            }
+
+            if (model.SelectedPredmetiIds.Count > model.MaxIzborniPredmeti)
+            {
+                TempData["ErrorMessage"] = $"Možete odabrati najviše {model.MaxIzborniPredmeti} izbornih predmeta.";
+                return RedirectToAction("BirajIzbornePredmete");
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            // 🛡️ Dodatna zaštita — ako je zaključano, nema POST-a
+            if (student.IzborIzbornihPredmetaZakljucan)
+            {
+                TempData["ErrorMessage"] = "Vaš izbor izbornih predmeta je zaključan i ne može se mijenjati.";
+                return RedirectToAction("BirajIzbornePredmete");
+            }
+
+            // Obrisi stare izborne predmete
+            var stariIzborniPredmeti = await _context.StudentiNaPredmetima
+                .Where(snp => snp.StudentId == student.Id && snp.Predmet.TipPredmeta == TipPredmeta.Izborni)
+                .ToListAsync();
+
+            _context.StudentiNaPredmetima.RemoveRange(stariIzborniPredmeti);
+
+            // Dodaj nove
+            if (model.SelectedPredmetiIds != null && model.SelectedPredmetiIds.Any())
+            {
+                foreach (var predmetId in model.SelectedPredmetiIds)
+                {
+                    _context.StudentiNaPredmetima.Add(new StudentNaPredmetu
+                    {
+                        StudentId = student.Id,
+                        PredmetId = predmetId,
+                        AkademskaGodina = DateTime.Now.Year.ToString(),
+                        AspNetUserId = student.AspNetUserId
+                    });
+                }
+            }
+
+            // 👉 Zaključaj izbor nakon spremanja
+            student.IzborIzbornihPredmetaZakljucan = true;
+
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Izbor izbornih predmeta je uspješno sačuvan i zaključan. Više nije moguće mijenjati izbor.";
+
+            return RedirectToAction("BirajIzbornePredmete");
+        }
+
+        [HttpPost("ZakljucajIzborIzbornihPredmeta")]
+        [Authorize(Roles = "Studentska služba")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ZakljucajIzborIzbornihPredmeta(long id)
+        {
+            var student = await _context.Studenti.FindAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            student.IzborIzbornihPredmetaZakljucan = true;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Izbor izbornih predmeta je uspješno zaključan.";
+            return RedirectToAction("Details", new { id });
+        }
+
+        [HttpPost("OtkjucajIzborIzbornihPredmeta")]
+        [Authorize(Roles = "Studentska služba")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OtkjucajIzborIzbornihPredmeta(long id)
+        {
+            var student = await _context.Studenti.FindAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            student.IzborIzbornihPredmetaZakljucan = false;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Izbor izbornih predmeta je uspješno otključan.";
+            return RedirectToAction("Details", new { id });
+        }
     }
 }

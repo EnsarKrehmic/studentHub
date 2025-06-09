@@ -151,7 +151,7 @@ namespace StudentHub.Controllers
             }
         }
 
-        // GET: Predmet/Create
+        // GET: Predmeti/Create
         [HttpGet("Create")]
         [Authorize(Roles = "Studentska služba")]
         public IActionResult Create()
@@ -189,7 +189,6 @@ namespace StudentHub.Controllers
             }
         }
 
-        // POST: Predmet/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Studentska služba")]
@@ -197,16 +196,31 @@ namespace StudentHub.Controllers
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Nevažeće stanje modela za kreiranje subjekta.");
-                ViewBag.Profesori = _context.Profesori.ToList();
-                ViewBag.Asistenti = _context.Asistenti.ToList();
+                _logger.LogWarning("Nevažeće stanje modela za kreiranje predmeta.");
+
+                // POPUNI ViewBag-ove jer ćeš vraćati View
+                ViewBag.Profesori = _context.Profesori
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.Id.ToString(),
+                        Text = $"{p.Ime} {p.Prezime}"
+                    }).ToList();
+
+                ViewBag.Asistenti = _context.Asistenti
+                    .Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(),
+                        Text = $"{a.Ime} {a.Prezime}"
+                    }).ToList();
+
                 ViewBag.NastavniPlanId = _context.NastavniPlanovi
+                    .Include(np => np.StudijskiProgram)
                     .Select(np => new SelectListItem
                     {
                         Value = np.Id.ToString(),
-                        Text = np.GodinaStudija.ToString()
-                    })
-                    .ToList();
+                        Text = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godina"
+                    }).ToList();
+
                 return View(model);
             }
 
@@ -217,10 +231,9 @@ namespace StudentHub.Controllers
                     Naziv = model.Naziv,
                     Opis = model.Opis,
                     ECTS = model.ECTS,
-                    ProfesorId = model.ProfesorId,
-                    AsistentId = model.AsistentId,
-                    NastavniPlanId = model.NastavniPlanId.GetValueOrDefault(),
-                    Semestar = model.Semestar
+                    TipPredmeta = model.TipPredmeta,
+                    Semestar = model.Semestar,
+                    NastavniPlanId = model.NastavniPlanId
                 };
 
                 _context.Predmeti.Add(predmet);
@@ -230,10 +243,13 @@ namespace StudentHub.Controllers
                 {
                     foreach (var profesorId in model.ProfesorIds)
                     {
+                        var profesor = _context.Profesori.FirstOrDefault(p => p.Id == profesorId);
+
                         _context.PredmetProfesori.Add(new PredmetProfesor
                         {
                             PredmetId = predmet.Id,
-                            ProfesorId = profesorId
+                            ProfesorId = profesorId,
+                            AspNetUserId = profesor?.AspNetUserId
                         });
                     }
 
@@ -244,10 +260,13 @@ namespace StudentHub.Controllers
                 {
                     foreach (var asistentId in model.AsistentIds)
                     {
+                        var asistent = _context.Asistenti.FirstOrDefault(a => a.Id == asistentId);
+
                         _context.PredmetAsistenti.Add(new PredmetAsistent
                         {
                             PredmetId = predmet.Id,
-                            AsistentId = asistentId
+                            AsistentId = asistentId,
+                            AspNetUserId = asistent?.AspNetUserId
                         });
                     }
 
@@ -255,12 +274,36 @@ namespace StudentHub.Controllers
                 }
 
                 _context.SaveChanges();
-                _logger.LogInformation("Subjekt sa ID-om {PredmetId} je uspješno kreiran.", predmet.Id);
+                _logger.LogInformation("Predmet sa ID-om {PredmetId} je uspješno kreiran.", predmet.Id);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Došlo je do greške prilikom kreiranja predmeta.");
+
+                // OPET POPUNI ViewBag-ove → jer ViewBag.Profesori ne postoji u catch bloku!
+                ViewBag.Profesori = _context.Profesori
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.Id.ToString(),
+                        Text = $"{p.Ime} {p.Prezime}"
+                    }).ToList();
+
+                ViewBag.Asistenti = _context.Asistenti
+                    .Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(),
+                        Text = $"{a.Ime} {a.Prezime}"
+                    }).ToList();
+
+                ViewBag.NastavniPlanId = _context.NastavniPlanovi
+                    .Include(np => np.StudijskiProgram)
+                    .Select(np => new SelectListItem
+                    {
+                        Value = np.Id.ToString(),
+                        Text = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godina"
+                    }).ToList();
+
                 ModelState.AddModelError("", "Došlo je do greške prilikom kreiranja. Molimo pokušajte ponovo.");
                 return View(model);
             }
@@ -276,7 +319,7 @@ namespace StudentHub.Controllers
                 var predmet = _context.Predmeti.Find(id);
                 if (predmet == null)
                 {
-                    _logger.LogWarning("Subjekt sa ID-om {PredmetId} nije pronađen.", id);
+                    _logger.LogWarning("Predmet sa ID-om {PredmetId} nije pronađen.", id);
                     return NotFound();
                 }
 
@@ -285,9 +328,11 @@ namespace StudentHub.Controllers
                     Naziv = predmet.Naziv,
                     Opis = predmet.Opis,
                     ECTS = predmet.ECTS,
+                    TipPredmeta = predmet.TipPredmeta,
                     ProfesorId = predmet.ProfesorId,
                     AsistentId = predmet.AsistentId,
                     NastavniPlanId = predmet.NastavniPlanId,
+                    Semestar = predmet.Semestar,
                     ProfesorIds = _context.PredmetProfesori
                         .Where(pp => pp.PredmetId == id)
                         .Select(pp => pp.ProfesorId)
@@ -319,7 +364,8 @@ namespace StudentHub.Controllers
                     .Select(np => new SelectListItem
                     {
                         Value = np.Id.ToString(),
-                        Text = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godina"
+                        Text = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godina",
+                        Selected = np.Id == model.NastavniPlanId
                     }).ToList();
 
                 return View(model);
@@ -340,6 +386,7 @@ namespace StudentHub.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Nevažeće stanje modela za uređivanje predmeta s ID-om {PredmetId}.", id);
+
                 ViewBag.Profesori = _context.Profesori
                     .Select(p => new SelectListItem
                     {
@@ -357,10 +404,11 @@ namespace StudentHub.Controllers
                     }).ToList();
 
                 ViewBag.NastavniPlanId = _context.NastavniPlanovi
+                    .Include(np => np.StudijskiProgram)
                     .Select(np => new SelectListItem
                     {
                         Value = np.Id.ToString(),
-                        Text = $"Nastavni plan za {np.GodinaStudija}. godinu",
+                        Text = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godina",
                         Selected = np.Id == model.NastavniPlanId
                     }).ToList();
 
@@ -372,7 +420,7 @@ namespace StudentHub.Controllers
                 var predmet = _context.Predmeti.Find(id);
                 if (predmet == null)
                 {
-                    _logger.LogWarning("Subjekt sa ID-om {PredmetId} nije pronađen.", id);
+                    _logger.LogWarning("Predmet sa ID-om {PredmetId} nije pronađen.", id);
                     return NotFound();
                 }
 
@@ -380,6 +428,7 @@ namespace StudentHub.Controllers
                 predmet.Opis = model.Opis;
                 predmet.ECTS = model.ECTS;
                 predmet.Semestar = model.Semestar;
+                predmet.TipPredmeta = model.TipPredmeta;
                 predmet.NastavniPlanId = model.NastavniPlanId.GetValueOrDefault();
 
                 using (var transaction = _context.Database.BeginTransaction())
@@ -389,28 +438,34 @@ namespace StudentHub.Controllers
                         _context.PredmetProfesori.RemoveRange(_context.PredmetProfesori.Where(pp => pp.PredmetId == id));
                         _context.PredmetAsistenti.RemoveRange(_context.PredmetAsistenti.Where(pa => pa.PredmetId == id));
 
-                        if (model.ProfesorIds != null)
+                        if (model.ProfesorIds != null && model.ProfesorIds.Any())
                         {
                             foreach (var profesorId in model.ProfesorIds)
                             {
+                                var profesor = _context.Profesori.FirstOrDefault(p => p.Id == profesorId);
+
                                 _context.PredmetProfesori.Add(new PredmetProfesor
                                 {
-                                    PredmetId = id,
-                                    ProfesorId = profesorId
+                                    PredmetId = predmet.Id,
+                                    ProfesorId = profesorId,
+                                    AspNetUserId = profesor?.AspNetUserId
                                 });
                             }
 
                             predmet.ProfesorId = model.ProfesorIds.First();
                         }
 
-                        if (model.AsistentIds != null)
+                        if (model.AsistentIds != null && model.AsistentIds.Any())
                         {
                             foreach (var asistentId in model.AsistentIds)
                             {
+                                var asistent = _context.Asistenti.FirstOrDefault(a => a.Id == asistentId);
+
                                 _context.PredmetAsistenti.Add(new PredmetAsistent
                                 {
-                                    PredmetId = id,
-                                    AsistentId = asistentId
+                                    PredmetId = predmet.Id,
+                                    AsistentId = asistentId,
+                                    AspNetUserId = asistent?.AspNetUserId
                                 });
                             }
 
@@ -427,6 +482,29 @@ namespace StudentHub.Controllers
                     {
                         transaction.Rollback();
                         _logger.LogError(ex, "Došlo je do greške prilikom ažuriranja predmeta s ID-om {PredmetId}.", id);
+
+                        ViewBag.Profesori = _context.Profesori
+                            .Select(p => new SelectListItem
+                            {
+                                Value = p.Id.ToString(),
+                                Text = $"{p.Ime} {p.Prezime}"
+                            }).ToList();
+
+                        ViewBag.Asistenti = _context.Asistenti
+                            .Select(a => new SelectListItem
+                            {
+                                Value = a.Id.ToString(),
+                                Text = $"{a.Ime} {a.Prezime}"
+                            }).ToList();
+
+                        ViewBag.NastavniPlanId = _context.NastavniPlanovi
+                            .Include(np => np.StudijskiProgram)
+                            .Select(np => new SelectListItem
+                            {
+                                Value = np.Id.ToString(),
+                                Text = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godina"
+                            }).ToList();
+
                         ModelState.AddModelError("", "Došlo je do greške prilikom ažuriranja. Molimo pokušajte ponovo.");
                         return View(model);
                     }

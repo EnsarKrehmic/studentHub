@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace StudentHub.Controllers
     public class AsistentiController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AsistentiController(ApplicationDbContext context)
+        public AsistentiController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Asistenti
@@ -121,6 +124,125 @@ namespace StudentHub.Controllers
             };
 
             return View(viewModel);
+        }
+
+        // GET: Asistenti/Create
+        [HttpGet("Create")]
+        [Authorize(Roles = "Studentska služba")]
+        public IActionResult Create()
+        {
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
+            ViewBag.Predmeti = new SelectList(new List<SelectListItem>(), "Value", "Text"); // inicijalno prazno
+
+            return View();
+        }
+
+        // POST: Asistenti/Create
+        [HttpPost("Create")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Studentska služba")]
+        public async Task<IActionResult> Create(AsistentCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
+                ViewBag.Predmeti = model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any()
+                    ? new SelectList(
+                        _context.Predmeti
+                            .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                            .Select(p => new
+                            {
+                                Id = p.Id,
+                                Naziv = p.Naziv
+                            }).ToList(),
+                        "Id", "Naziv", model.PredmetIds)
+                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+                return View(model);
+            }
+
+            // 1. Kreiranje Identity User-a
+            var identityUser = new IdentityUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(identityUser, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
+                ViewBag.Predmeti = model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any()
+                    ? new SelectList(
+                        _context.Predmeti
+                            .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                            .Select(p => new
+                            {
+                                Id = p.Id,
+                                Naziv = p.Naziv
+                            }).ToList(),
+                        "Id", "Naziv", model.PredmetIds)
+                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+
+                return View(model);
+            }
+
+            // 2. Dodavanje u rolu "Asistent"
+            await _userManager.AddToRoleAsync(identityUser, "Asistent");
+
+            // 3. Kreiranje Asistenta u bazi
+            var asistent = new Asistent
+            {
+                AspNetUserId = identityUser.Id,
+                JMBG = model.JMBG,
+                Ime = model.Ime,
+                Prezime = model.Prezime,
+                Email = model.Email,
+                AsistentTitula = model.AsistentTitula,
+                Uloga = Uloga.Asistent
+            };
+
+            _context.Asistenti.Add(asistent);
+            await _context.SaveChangesAsync();
+
+            // 4. Pomoćne tabele — Studijski programi
+            if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
+            {
+                foreach (var studijskiProgramId in model.StudijskiProgramIds)
+                {
+                    _context.AsistentStudijskiProgrami.Add(new AsistentStudijskiProgram
+                    {
+                        AsistentId = asistent.Id,
+                        StudijskiProgramId = studijskiProgramId
+                    });
+                }
+            }
+
+            // 5. Pomoćne tabele — Predmeti
+            if (model.PredmetIds != null && model.PredmetIds.Any())
+            {
+                foreach (var predmetId in model.PredmetIds)
+                {
+                    _context.PredmetAsistenti.Add(new PredmetAsistent
+                    {
+                        AsistentId = asistent.Id,
+                        PredmetId = predmetId,
+                        AspNetUserId = identityUser.Id
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Gotovo → redirect na Index
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Asistenti/Edit/{id}

@@ -1,8 +1,22 @@
 ﻿@model StudentHub.Models.NastavniMaterijal
 
-<h2>@Model.Naziv</h2>
-<p><strong>Nastavna aktivnost:</strong> @Model.NastavnaAktivnost.Naziv</p>
-<p><strong>Opis:</strong> @Model.Opis</p>
-<p><strong>Fajl:</strong> <a href="@Model.PutanjaDoFajla" target="_blank">Preuzmi</a></p>
+@{
+    ViewBag.Title = "Detalji Materijala";
+}
 
-<a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@Model.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>
+<h2>@Model.Naziv</h2>
+
+<div>
+    <h4>Opis</h4>
+    <p>@Model.Opis</p>
+</div>
+<div>
+    <h4>Tip Fajla</h4>
+    <p>@Model.TipFajla</p>
+</div>
+<div>
+    <h4>Fajl</h4>
+    <a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Preuzmi</a>
+</div>
+
+<a href="@Url.Action("Index", new { nastavnaAktivnostId = Model.NastavnaAktivnostId })" class="btn btn-secondary">Nazad</a>

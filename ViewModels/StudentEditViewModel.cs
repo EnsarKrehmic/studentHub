@@ -36,6 +36,7 @@ namespace StudentHub.ViewModels
         public long StudijskiProgramId { get; set; }
 
         public long? NastavniPlanId { get; set; }
+        public bool IzborIzbornihPredmetaZakljucan { get; set; }
 
         public List<long> PredmetIds { get; set; } = new List<long>();
 

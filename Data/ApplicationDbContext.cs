@@ -16,6 +16,7 @@ namespace StudentHub.Data
         public DbSet<Ispit> Ispiti { get; set; }
         public DbSet<Korisnik> Korisnici { get; set; }
         public DbSet<Komentar> Komentari { get; set; }
+        public DbSet<KomentarVidljivost> KomentarVidljivosti { get; set; }
         public DbSet<NastavniPlan> NastavniPlanovi { get; set; }
         public DbSet<NastavnaAktivnost> NastavneAktivnosti { get; set; }
         public DbSet<NastavniMaterijal> NastavniMaterijali { get; set; }
@@ -34,6 +35,7 @@ namespace StudentHub.Data
         public DbSet<StudentskaSluzba> StudentskeSluzbe { get; set; }
         public DbSet<StudentskaSluzbaStudijskiProgram> StudentskaSluzbaStudijskiProgrami { get; set; }
         public DbSet<StudijskiProgram> StudijskiProgrami { get; set; }
+        public DbSet<StudijskiProgramIzborniLimit> StudijskiProgramIzborniLimiti { get; set; }
         public DbSet<Uvjerenje> Uvjerenja { get; set; }
         public DbSet<Zahtjev> Zahtjevi { get; set; }
 
@@ -58,8 +60,9 @@ namespace StudentHub.Data
             modelBuilder.Entity<ProfesorStudijskiProgram>().ToTable("ProfesorStudijskiProgram");
             modelBuilder.Entity<StudentStudijskiProgram>().ToTable("StudentStudijskiProgram");
             modelBuilder.Entity<StudentNaPredmetu>().ToTable("StudentNaPredmetu");
-            modelBuilder.Entity<StudijskiProgram>().ToTable("StudijskiProgram");
             modelBuilder.Entity<StudentskaSluzbaStudijskiProgram>().ToTable("StudentskaSluzbaStudijskiProgram");
+            modelBuilder.Entity<StudijskiProgram>().ToTable("StudijskiProgram");
+            modelBuilder.Entity<StudijskiProgramIzborniLimit>().ToTable("StudijskiProgramIzborniLimit");
             modelBuilder.Entity<Uvjerenje>().ToTable("Uvjerenje");
             modelBuilder.Entity<Zahtjev>().ToTable("Zahtjev");
 
@@ -288,12 +291,29 @@ namespace StudentHub.Data
                 .HasForeignKey(k => k.NastavnaAktivnostId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Konfiguracija za Komentar -> Student
+            // Autor komentara (Korisnik)
+            modelBuilder.Entity<Komentar>()
+                .HasOne(k => k.Korisnik)
+                .WithMany()
+                .HasForeignKey(k => k.KorisnikId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Student na koga se komentar odnosi
             modelBuilder.Entity<Komentar>()
                 .HasOne(k => k.Student)
                 .WithMany()
                 .HasForeignKey(k => k.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Konfiguracija za KomentarVidljivost
+            modelBuilder.Entity<KomentarVidljivost>()
+                .HasKey(kv => new { kv.KomentarId, kv.KorisnikId });
+
+            modelBuilder.Entity<Komentar>()
+                .HasOne(k => k.Ispit)
+                .WithMany(i => i.Komentari)
+                .HasForeignKey(k => k.IspitId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Konfiguracija za Zahtjev -> Student
             modelBuilder.Entity<Zahtjev>()

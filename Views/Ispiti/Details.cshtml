@@ -214,6 +214,65 @@
     </div>
 }
 
+
+
+@* 
+<!-- Forma za komentar -->
+@if (User.IsInRole("Student") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+{
+    <div class="komentar-forma">
+        <form asp-action="DodajKomentar" enctype="multipart/form-data">
+            <input type="hidden" name="ispitId" value="@Model.Id" />
+
+            <textarea name="sadrzaj" placeholder="Unesite komentar..." required></textarea>
+
+            <input type="file" name="prilog" class="form-control-file" />
+
+            <select name="vidljivost" id="vidljivostSelect" class="form-control">
+                <option value="Javno">Javno</option>
+                <option value="Privatno">Privatno</option>
+            </select>
+
+            <div id="odabirKorisnika" style="display: none;">
+                <select name="odabraniKorisnici" multiple class="form-control"
+                        id="korisniciSelect"
+                        data-placeholder="Odaberite korisnike..."></select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Objavi</button>
+        </form>
+    </div>
+}
+
+<!-- Prikaz komentara -->
+<div class="komentari-lista">
+    @foreach (var komentar in Model.Komentari)
+    {
+        var mozeVidjeti = komentar.Vidljivost == VidljivostKomentara.Javno ||
+        (komentar.Vidljivost == VidljivostKomentara.Privatno &&
+        (komentar.KorisnikId == GetTrenutniKorisnikId() ||
+        komentar.VidljivostKorisnici.Any(vk => vk.KorisnikId == GetTrenutniKorisnikId())));
+
+        @if (mozeVidjeti)
+        {
+            <div class="komentar">
+                <div class="autor">@komentar.Korisnik.Ime @komentar.Korisnik.Prezime</div>
+                <div class="vrijeme">@komentar.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</div>
+                <div class="sadrzaj">@komentar.Sadrzaj</div>
+                @if (!string.IsNullOrEmpty(komentar.PrilogPath))
+                {
+                    <a href="@komentar.PrilogPath" class="prilog">Preuzmi prilog</a>
+                }
+                @if (komentar.Vidljivost == VidljivostKomentara.Privatno)
+                {
+                    <div class="privatno-oznaka">🔒 Privatni komentar</div>
+                }
+            </div>
+        }
+    }
+</div>
+*@
+
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
     <script>
@@ -323,5 +382,21 @@
             bodoviInput.disabled = false;  // Omogućava unos bodova
             spasiButton.classList.remove("d-none");  // Prikazuje dugme "Spasi"
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Dinamičko učitavanje korisnika
+            $.get('/Ispiti/GetVidljiviKorisnici', function(data) {
+                $('#korisniciSelect').select2({
+                    data: data,
+                    width: '100%'
+                });
+            });
+
+            // Promjena vidljivosti
+            $('#vidljivostSelect').change(function() {
+                $('#odabirKorisnika').toggle($(this).val() === 'Privatno');
+            });
+        });
     </script>
 }

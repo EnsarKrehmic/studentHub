@@ -16,8 +16,24 @@
 
         @if (uloge.Contains("Studentska služba"))
         {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Dodaj korisnika</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                    Dodaj korisnika
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li>
+                        <a class="dropdown-item" asp-controller="Studenti" asp-action="Create">Dodaj studenta</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="Profesori" asp-action="Create">Dodaj profesora</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="Asistenti" asp-action="Create">Dodaj asistenta</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="StudentskaSluzba" asp-action="Create">Dodaj člana studentske službe</a>
+                    </li>
+                </ul>
             </li>
         }
 

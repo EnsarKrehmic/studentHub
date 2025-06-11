@@ -1,0 +1,92 @@
+﻿@model StudentHub.Models.Komentar
+
+@{
+    ViewData["Title"] = "Uredi komentar";
+}
+
+<h1 class="text-center my-4">Uredi komentar</h1>
+
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <form asp-action="EditKomentar" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.IspitId)
+
+            <div class="form-group mb-3">
+                <label for="Sadrzaj">Sadržaj komentara</label>
+                <textarea asp-for="Sadrzaj" class="form-control" rows="4" required></textarea>
+                <span asp-validation-for="Sadrzaj" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="vidljivost">Vidljivost</label>
+                <select asp-for="Vidljivost" class="form-select" id="vidljivostSelect">
+                    <option value="Javno" selected="@(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Javno ? "selected" : null)">Javno</option>
+                    <option value="Privatno" selected="@(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno ? "selected" : null)">Privatno</option>
+                </select>
+            </div>
+
+            <div id="odabirKorisnika" class="mb-3" style="display: @(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno ? "block" : "none")">
+                <label for="korisniciSelect">Vidljivo korisnicima:</label>
+                <select name="odabraniKorisnici" multiple class="form-control" id="korisniciSelect">
+                    <!-- Ovdje će AJAX dinamički ubaciti korisnike -->
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Prilog (opciono - zamijeniti stari):</label>
+                <input type="file" name="prilog" class="form-control" />
+                @if (!string.IsNullOrEmpty(Model.PrilogPath))
+                {
+                    <p class="mt-2">
+                        Trenutni prilog:
+                        <a href="@Model.PrilogPath" target="_blank">📎 Preuzmi</a>
+                    </p>
+                }
+            </div>
+
+            <button type="submit" class="btn btn-primary">💾 Spasi izmjene</button>
+            <a asp-action="Details" asp-route-id="@Model.IspitId" class="btn btn-secondary ms-2">↩️ Nazad</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const ispitId = '@Model.IspitId';
+            const odabraniKorisniciIds = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.VidljivostKorisnici.Select(vk => vk.KorisnikId).ToList()));
+
+            function ucitajVidljiveKorisnike(oznaceniKorisnici = []) {
+                $.get('/Ispiti/GetVidljiviKorisnici/' + ispitId, function (data) {
+                    var korisniciSelect = $('#korisniciSelect');
+                    korisniciSelect.empty();
+                    data.forEach(function (k) {
+                        var option = new Option(k.ime + ' (' + k.uloga + ')', k.id);
+                        if (oznaceniKorisnici.includes(parseInt(k.id))) {
+                            option.selected = true;
+                        }
+                        korisniciSelect.append(option);
+                    });
+                });
+            }
+
+            // Na promjenu Vidljivost:
+            $('#vidljivostSelect').change(function () {
+                $('#odabirKorisnika').toggle($(this).val() === 'Privatno');
+
+                if ($(this).val() === 'Privatno') {
+                    // AKO promijeni na Privatno → ucitaj korisnike i označene
+                    ucitajVidljiveKorisnike(odabraniKorisniciIds);
+                }
+            });
+
+            // Ako je PRIVATNO na load → odmah učitaj korisnike + selektovane
+            if ($('#vidljivostSelect').val() === 'Privatno') {
+                $('#odabirKorisnika').show();
+                ucitajVidljiveKorisnike(odabraniKorisniciIds);
+            }
+        });
+    </script>
+}

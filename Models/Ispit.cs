@@ -28,6 +28,7 @@ namespace StudentHub.Models
         [Range(0, 100, ErrorMessage = "Uslov za polaganje mora biti između 0 i 100.")]
         [Display(Name = "Uslov za polaganje (minimalni broj bodova)")]
         public decimal UslovZaPolaganje { get; set; }
+        public bool Arhivirano { get; set; } = false;
 
         [Required(ErrorMessage = "Studijski program je obavezan.")]
         [DisplayName("Studijski program")]
@@ -47,6 +48,7 @@ namespace StudentHub.Models
         public long PredmetId { get; set; }
         public Predmet Predmet { get; set; }
         public ICollection<Komentar> Komentari { get; set; } = new List<Komentar>();
+        public ICollection<Prijava> Prijave { get; set; } = new List<Prijava>();
         public Ispit() { }
     }
 }

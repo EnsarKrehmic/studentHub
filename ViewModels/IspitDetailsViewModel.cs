@@ -24,6 +24,7 @@ namespace StudentHub.ViewModels
         public List<Student> PrijavljeniStudenti { get; set; } = new List<Student>();
         public List<RezultatIspitaViewModel> RezultatiIspita { get; set; } = new List<RezultatIspitaViewModel>();
         public List<Prijava> Prijave { get; set; } = new List<Prijava>();
+        public List<Komentar> Komentari { get; set; } = new List<Komentar>();
     }
 
     public class NastavniPlanIspitViewModel

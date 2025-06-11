@@ -43,10 +43,82 @@
                             <span class="badge badge-success">Otključano</span>
                         }
                     </p>
+
+                    @if (Model.StudijskiProgramIzborniLimit != null)
+                    {
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h3>Izborni predmeti - Pregled odabira</h3>
+                            </div>
+                            <div class="card-body">
+                                ...
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            Nije definisan limit za izborne predmete za ovaj studijski program i godinu studenta.
+                        </div>
+                    }
+
+                    @if (Model.StudijskiProgramIzborniLimit != null)
+                    {
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h3>Izborni predmeti - Pregled odabira</h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Limit za izborne predmete:</strong> min @Model.StudijskiProgramIzborniLimit.MinIzborniPredmeti / max @Model.StudijskiProgramIzborniLimit.MaxIzborniPredmeti</p>
+                                @if (Model.Student.StudentNaPredmetima.Any(snp => snp.Predmet.TipPredmeta == TipPredmeta.Izborni))
+                                {
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Naziv predmeta</th>
+                                                <th>ECTS</th>
+                                                <th>Semestar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var snp in Model.Student.StudentNaPredmetima
+                                                      .Where(snp => snp.Predmet.TipPredmeta == TipPredmeta.Izborni))
+                                            {
+                                                <tr>
+                                                    <td>@snp.Predmet.Naziv</td>
+                                                    <td>@snp.Predmet.ECTS</td>
+                                                    <td>@snp.Predmet.Semestar</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                    <p class="mt-2">
+                                        Ukupno odabranih izbornih predmeta: 
+                                        <strong>@Model.Student.StudentNaPredmetima.Count(snp => snp.Predmet.TipPredmeta == TipPredmeta.Izborni)</strong> / 
+                                        <strong>@Model.StudijskiProgramIzborniLimit.MaxIzborniPredmeti</strong>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-info">
+                                        Trenutno niste odabrali nijedan izborni predmet.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning mb-4">
+                            Nije definisan limit za izborne predmete za ovaj studijski program i godinu studenta.
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     @if (User.IsInRole("Student"))
     {
@@ -130,9 +202,7 @@
             </table>
         </div>
     </div>
-</div>
-
-<div class="mt-3">
+    <div class="mt-3">
     @if (User.IsInRole("Studentska služba"))
     {
         <a asp-action="Edit" asp-route-id="@Model.Student.Id" class="btn btn-warning">Izmjena</a>

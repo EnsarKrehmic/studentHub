@@ -12,6 +12,8 @@ namespace StudentHub.ViewModels
         public string StudijskiProgramNaziv { get; set; }
         public int MinIzborniPredmeti { get; set; }
         public int MaxIzborniPredmeti { get; set; }
+        public int BrojVecOdabranihPredmeta { get; set; }
+        public bool IsMaxLimitReached => BrojVecOdabranihPredmeta >= MaxIzborniPredmeti;
         public bool IsLocked { get; set; }
 
         public List<PredmetCheckboxViewModel> Predmeti { get; set; } = new();

@@ -6,6 +6,7 @@ namespace StudentHub.ViewModels
     public class StudentDetailsViewModel
     {
         public Student Student { get; set; }
+        public StudijskiProgramIzborniLimit? StudijskiProgramIzborniLimit { get; set; }
         public List<StudentiGroupedByProgramViewModel> GroupedStudents { get; set; }
         public List<Predmet> Predmeti { get; set; }
         public Dictionary<long?, float?> Ocjene { get; set; }

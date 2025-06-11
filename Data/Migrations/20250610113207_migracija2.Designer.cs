@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentHub.Data;
 
@@ -11,9 +12,11 @@ using StudentHub.Data;
 namespace StudentHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250610113207_migracija2")]
+    partial class migracija2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,9 +366,6 @@ namespace StudentHub.Data.Migrations
                     b.Property<long>("KorisnikId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("MentionedUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<long?>("NastavnaAktivnostId")
                         .HasColumnType("bigint");
 
@@ -387,8 +387,6 @@ namespace StudentHub.Data.Migrations
                     b.HasIndex("IspitId");
 
                     b.HasIndex("KorisnikId");
-
-                    b.HasIndex("MentionedUserId");
 
                     b.HasIndex("NastavnaAktivnostId");
 
@@ -1218,10 +1216,6 @@ namespace StudentHub.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "MentionedUser")
-                        .WithMany()
-                        .HasForeignKey("MentionedUserId");
-
                     b.HasOne("StudentHub.Models.NastavnaAktivnost", "NastavnaAktivnost")
                         .WithMany("Komentari")
                         .HasForeignKey("NastavnaAktivnostId")
@@ -1236,8 +1230,6 @@ namespace StudentHub.Data.Migrations
                     b.Navigation("Ispit");
 
                     b.Navigation("Korisnik");
-
-                    b.Navigation("MentionedUser");
 
                     b.Navigation("NastavnaAktivnost");
 

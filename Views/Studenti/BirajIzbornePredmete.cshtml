@@ -39,6 +39,7 @@
         <input type="hidden" asp-for="StudijskiProgramNaziv" />
         <input type="hidden" asp-for="MinIzborniPredmeti" />
         <input type="hidden" asp-for="MaxIzborniPredmeti" />
+        <input type="hidden" asp-for="BrojVecOdabranihPredmeta" />
 
         <table class="table table-bordered">
             <thead>
@@ -55,7 +56,8 @@
                             <input type="checkbox"
                                    name="SelectedPredmetiIds"
                                    value="@p.PredmetId"
-                                   @(p.IsSelected ? "checked" : "") />
+                                   @(p.IsSelected ? "checked" : "")
+                                   @(Model.IsMaxLimitReached && !p.IsSelected ? "disabled" : "") />
                         </td>
                         <td>@p.Naziv</td>
                     </tr>
@@ -64,10 +66,10 @@
         </table>
 
         <div class="alert alert-info mt-3" id="selectedCounter">
-            Odabrano: <span id="selectedCount">0</span> / @Model.MaxIzborniPredmeti
+            Odabrano: <span id="selectedCount">@Model.BrojVecOdabranihPredmeta</span> / @Model.MaxIzborniPredmeti
         </div>
 
-        <button type="submit" class="btn btn-primary">Spremi izbor</button>
+        <button type="submit" class="btn btn-primary" @(Model.IsMaxLimitReached ? "disabled" : "")>Spremi izbor</button>
         <a asp-controller="Studenti" asp-action="Details" asp-route-id="@Model.StudentId" class="btn btn-secondary">Odustani</a>
     </form>
 }
@@ -116,23 +118,21 @@ else
             function updateCounter() {
                 var selectedCount = $('input[type="checkbox"][name="SelectedPredmetiIds"]:checked').length;
                 $('#selectedCount').text(selectedCount);
+
+                // Disable other checkboxes if max reached
+                if (selectedCount >= maxIzborni) {
+                    $('input[type="checkbox"][name="SelectedPredmetiIds"]').not(':checked').attr('disabled', true);
+                    $('button[type="submit"]').attr('disabled', true);
+                } else {
+                    $('input[type="checkbox"][name="SelectedPredmetiIds"]').not(':checked').removeAttr('disabled');
+                    $('button[type="submit"]').removeAttr('disabled');
+                }
             }
 
             // Init counter on page load
             updateCounter();
 
             $('input[type="checkbox"][name="SelectedPredmetiIds"]').on('change', function () {
-                var selectedCount = $('input[type="checkbox"][name="SelectedPredmetiIds"]:checked').length;
-
-                if (selectedCount > maxIzborni) {
-                    // Deselect the checkbox
-                    this.checked = false;
-
-                    // Show warning
-                    alert(`Možete odabrati maksimalno ${maxIzborni} izbornih predmeta.`);
-                }
-
-                // Update counter every time
                 updateCounter();
             });
         });

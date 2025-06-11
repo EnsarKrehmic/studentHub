@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Lista ispita po studijskim programima i predmetima";
+    bool showArchivedParam = ViewBag.ShowArchived ?? false;
 }
 
 <h1 class="text-center my-4">@ViewData["Title"]</h1>
@@ -27,6 +28,34 @@
             <i class="fas fa-plus-circle"></i> Kreiraj novi ispit
         </a>
     </div>
+
+    <!-- FILTERI: showArchived, Sort, Search -->
+    <form method="get" class="text-center mb-4">
+
+        <div class="form-check form-switch d-inline-block me-4">
+            <input class="form-check-input" type="checkbox" id="showArchived" name="showArchived" value="true"
+                   @(showArchivedParam ? "checked" : "") onchange="this.form.submit()" />
+            <label class="form-check-label ms-2" for="showArchived">Prikaži arhivirane ispite</label>
+        </div>
+
+        <div class="form-group d-inline-block me-4">
+            <label for="sortOrder" class="me-2">Sortiraj po:</label>
+            <select name="sortOrder" id="sortOrder" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                <option value="">Datum rastuće</option>
+                <option value="date_desc" selected="@(Context.Request.Query["sortOrder"] == "date_desc" ? "selected" : null)">Datum opadajuće</option>
+                <option value="Location" selected="@(Context.Request.Query["sortOrder"] == "Location" ? "selected" : null)">Lokacija A-Z</option>
+                <option value="location_desc" selected="@(Context.Request.Query["sortOrder"] == "location_desc" ? "selected" : null)">Lokacija Z-A</option>
+                <option value="Points" selected="@(Context.Request.Query["sortOrder"] == "Points" ? "selected" : null)">Broj bodova rastuće</option>
+                <option value="points_desc" selected="@(Context.Request.Query["sortOrder"] == "points_desc" ? "selected" : null)">Broj bodova opadajuće</option>
+            </select>
+        </div>
+
+        <div class="form-group d-inline-block">
+            <input type="text" name="searchPredmet" value="@Context.Request.Query["searchPredmet"]"
+                   class="form-control d-inline-block w-auto" placeholder="Pretraži predmet..." onchange="this.form.submit()" />
+        </div>
+
+    </form>
 }
 
 <div class="container">
@@ -93,32 +122,91 @@
                                                                     </a>
                                                                 }
 
+                                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
+                                                                {
+                                                                    if (ispit.DatumOdrzavanja < DateTime.Now && !ispit.Arhivirano)
+                                                                    {
+                                                                        <form asp-action="Arhiviraj" asp-route-id="@ispit.Id" method="post" class="mr-2 mb-2">
+                                                                            @Html.AntiForgeryToken()
+                                                                            <button type="submit" class="btn btn-secondary btn-sm">
+                                                                                <i class="fas fa-archive"></i> Arhiviraj
+                                                                            </button>
+                                                                        </form>
+                                                                    }
+                                                                    else if (ispit.Arhivirano)
+                                                                    {
+                                                                        <form asp-action="VratiIzArhive" asp-route-id="@ispit.Id" method="post" class="mr-2 mb-2 d-inline-block">
+                                                                            @Html.AntiForgeryToken()
+                                                                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                                                <i class="fas fa-undo"></i> Vrati iz arhive
+                                                                            </button>
+                                                                        </form>
+                                                                    }
+                                                                }
+
                                                                 @if (User.IsInRole("Student"))
                                                                 {
                                                                     var prijavljen = program.PrijavljeniIspitiIds.Contains(ispit.Id);
                                                                     var imaOcjenu = program.Ocjene.ContainsKey(ispit.PredmetId);
+                                                                    var prijavaDozvoljena = ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now;
 
-                                                                    if (!prijavljen && !imaOcjenu && ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now)
-                                                                    {
-                                                                        <form asp-action="Prijavi" asp-route-id="@ispit.Id" method="post" class="mr-2 mb-2">
-                                                                            <button type="submit" class="btn btn-success btn-sm">
-                                                                                <i class="fas fa-check"></i> Prijavi se
-                                                                            </button>
-                                                                        </form>
-                                                                    }
-                                                                    else if (prijavljen)
-                                                                    {
-                                                                        <form asp-action="Odjavi" asp-route-id="@ispit.Id" method="post" class="mr-2 mb-2">
-                                                                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                                                <i class="fas fa-times"></i> Odjavi se
-                                                                            </button>
-                                                                        </form>
-                                                                    }
-                                                                    else if (imaOcjenu)
+                                                                    // DODANO: provjera da li je student upisan na ovaj predmet
+                                                                    var studentNaPredmetu = program.NastavniPlanovi
+                                                                    .SelectMany(np => np.Predmeti)
+                                                                    .Any(p => p.Predmet.Id == ispit.PredmetId);
+
+                                                                    // Ako NIJE student na predmetu — NE prikazuj ništa (dodajemo ovaj zaštitni sloj)
+                                                                    if (!studentNaPredmetu)
                                                                     {
                                                                         <span class="text-muted small align-self-center mr-2 mb-2">
-                                                                            Već imate ocjenu iz ovog predmeta
+                                                                            Niste upisani na ovaj predmet.
                                                                         </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        // Ako IMA OCJENU → tekst
+                                                                        if (imaOcjenu)
+                                                                        {
+                                                                            <span class="text-muted small align-self-center mr-2 mb-2">
+                                                                                Već imate ocjenu iz ovog predmeta
+                                                                            </span>
+                                                                        }
+                                                                        // Ako je PRIJAVLJEN → prikaz odjave
+                                                                        else if (prijavljen)
+                                                                        {
+                                                                            if (prijavaDozvoljena)
+                                                                            {
+                                                                                <form asp-action="Odjavi" asp-route-id="@ispit.Id" method="post" class="mr-2 mb-2">
+                                                                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                                                        <i class="fas fa-times"></i> Odjavi se
+                                                                                    </button>
+                                                                                </form>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="text-muted small align-self-center mr-2 mb-2">
+                                                                                    Rok za odjavu je istekao.
+                                                                                </span>
+                                                                            }
+                                                                        }
+                                                                        // Ako NIJE prijavljen → prikaz prijave
+                                                                        else
+                                                                        {
+                                                                            if (prijavaDozvoljena)
+                                                                            {
+                                                                                <form asp-action="Prijavi" asp-route-id="@ispit.Id" method="post" class="mr-2 mb-2">
+                                                                                    <button type="submit" class="btn btn-success btn-sm">
+                                                                                        <i class="fas fa-check"></i> Prijavi se
+                                                                                    </button>
+                                                                                </form>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="text-muted small align-self-center mr-2 mb-2">
+                                                                                    Rok za prijavu je istekao.
+                                                                                </span>
+                                                                            }
+                                                                        }
                                                                     }
                                                                 }
                                                             </div>

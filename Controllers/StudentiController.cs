@@ -117,17 +117,31 @@ namespace StudentHub.Controllers
 
             // Uzmite prvi (ili glavni) studijski program ako postoji
             var studijskiProgram = student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram;
+            var studijskiProgramIdForLimit = studijskiProgram?.Id ?? 0;
 
+            // Dohvati izborne predmete koje student pohađa
             var predmeti = await _context.StudentiNaPredmetima
                 .Include(snp => snp.Predmet)
                 .Where(snp => snp.StudentId == id)
                 .Select(snp => snp.Predmet)
                 .ToListAsync();
 
+            // Dohvati ocjene
             var ocjene = await _context.Ocjene
-                    .Where(o => o.StudentId == student.Id)
-                    .ToDictionaryAsync(o => o.PredmetId, o => (float?)o.Vrijednost);
+                .Where(o => o.StudentId == student.Id)
+                .ToDictionaryAsync(o => o.PredmetId, o => (float?)o.Vrijednost);
 
+            // Dohvati LIMIT za ovaj studijski program i godinu
+            StudijskiProgramIzborniLimit? limit = null;
+            if (student.GodinaStudija.HasValue && studijskiProgramIdForLimit > 0)
+            {
+                limit = await _context.StudijskiProgramIzborniLimiti
+                    .FirstOrDefaultAsync(l =>
+                        l.StudijskiProgramId == studijskiProgramIdForLimit &&
+                        l.GodinaStudija == student.GodinaStudija.Value);
+            }
+
+            // Filter za studentsQuery (možeš ostaviti kako jeste)
             var studentsQuery = _context.Studenti
                 .Include(s => s.StudentStudijskiProgrami)
                 .ThenInclude(ssp => ssp.StudijskiProgram)
@@ -144,6 +158,7 @@ namespace StudentHub.Controllers
                     .Where(s => s.StudentStudijskiProgrami.Any(ssp => ssp.StudijskiProgramId == studijskiProgramId.Value));
             }
 
+            // Kreiranje ViewModel-a
             var viewModel = new StudentDetailsViewModel
             {
                 Student = student,
@@ -151,7 +166,8 @@ namespace StudentHub.Controllers
                 SearchString = searchString,
                 StudijskiProgramId = studijskiProgramId,
                 Predmeti = predmeti,
-                Ocjene = ocjene
+                Ocjene = ocjene,
+                StudijskiProgramIzborniLimit = limit
             };
 
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studijskiProgramId);
@@ -615,7 +631,6 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            // Provjera da li je postavljena godina studija
             if (student.GodinaStudija == null || student.GodinaStudija <= 0)
             {
                 TempData["ErrorMessage"] = "Vašoj studentskoj evidenciji nedostaje godina studija. Molimo kontaktirajte Studentsku službu.";
@@ -623,11 +638,9 @@ namespace StudentHub.Controllers
             }
 
             var godinaStudija = student.GodinaStudija.Value;
-
             var studijskiProgramId = student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgramId ?? 0;
             var studijskiProgram = await _context.StudijskiProgrami.FirstOrDefaultAsync(sp => sp.Id == studijskiProgramId);
 
-            // Provjera postoji li limit za ovaj studijski program i godinu
             var limit = await _context.StudijskiProgramIzborniLimiti
                 .FirstOrDefaultAsync(l => l.StudijskiProgramId == studijskiProgramId && l.GodinaStudija == godinaStudija);
 
@@ -637,7 +650,6 @@ namespace StudentHub.Controllers
                 return RedirectToAction("Details", "Studenti", new { id = student.Id });
             }
 
-            // Dohvati izborne predmete
             var izborniPredmeti = await _context.Predmeti
                 .Where(p => p.TipPredmeta == TipPredmeta.Izborni &&
                             p.NastavniPlan.StudijskiProgramId == studijskiProgramId &&
@@ -650,13 +662,13 @@ namespace StudentHub.Controllers
                 return RedirectToAction("Details", "Studenti", new { id = student.Id });
             }
 
-            // Već odabrani predmeti
             var odabraniPredmetIds = await _context.StudentiNaPredmetima
                 .Where(snp => snp.StudentId == student.Id && snp.Predmet.TipPredmeta == TipPredmeta.Izborni)
                 .Select(snp => snp.PredmetId)
                 .ToListAsync();
 
-            // Sastavljanje view modela
+            var brojVecOdabranih = odabraniPredmetIds.Count;
+
             var model = new BirajIzbornePredmeteViewModel
             {
                 StudentId = student.Id,
@@ -666,7 +678,8 @@ namespace StudentHub.Controllers
                 StudijskiProgramNaziv = studijskiProgram?.Naziv ?? "",
                 MinIzborniPredmeti = limit.MinIzborniPredmeti,
                 MaxIzborniPredmeti = limit.MaxIzborniPredmeti,
-                IsLocked = student.IzborIzbornihPredmetaZakljucan,
+                BrojVecOdabranihPredmeta = brojVecOdabranih,
+                IsLocked = student.IzborIzbornihPredmetaZakljucan || brojVecOdabranih >= limit.MaxIzborniPredmeti,
                 Predmeti = izborniPredmeti.Select(p => new PredmetCheckboxViewModel
                 {
                     PredmetId = p.Id,
@@ -686,7 +699,6 @@ namespace StudentHub.Controllers
             _logger.LogInformation("POST BirajIzbornePredmete pozvan.");
             _logger.LogInformation("SelectedPredmetiIds count: {Count}", model.SelectedPredmetiIds?.Count ?? 0);
 
-            // Validacija limita
             if (model.SelectedPredmetiIds.Count < model.MinIzborniPredmeti)
             {
                 TempData["ErrorMessage"] = $"Morate odabrati najmanje {model.MinIzborniPredmeti} izbornih predmeta.";
@@ -706,21 +718,18 @@ namespace StudentHub.Controllers
                 return NotFound();
             }
 
-            // 🛡️ Dodatna zaštita — ako je zaključano, nema POST-a
             if (student.IzborIzbornihPredmetaZakljucan)
             {
                 TempData["ErrorMessage"] = "Vaš izbor izbornih predmeta je zaključan i ne može se mijenjati.";
                 return RedirectToAction("BirajIzbornePredmete");
             }
 
-            // Obrisi stare izborne predmete
             var stariIzborniPredmeti = await _context.StudentiNaPredmetima
                 .Where(snp => snp.StudentId == student.Id && snp.Predmet.TipPredmeta == TipPredmeta.Izborni)
                 .ToListAsync();
 
             _context.StudentiNaPredmetima.RemoveRange(stariIzborniPredmeti);
 
-            // Dodaj nove
             if (model.SelectedPredmetiIds != null && model.SelectedPredmetiIds.Any())
             {
                 foreach (var predmetId in model.SelectedPredmetiIds)
@@ -735,12 +744,18 @@ namespace StudentHub.Controllers
                 }
             }
 
-            // 👉 Zaključaj izbor nakon spremanja
-            student.IzborIzbornihPredmetaZakljucan = true;
+            // Zaključavamo SAMO AKO je odabrao tačno Max broj
+            if (model.SelectedPredmetiIds.Count == model.MaxIzborniPredmeti)
+            {
+                student.IzborIzbornihPredmetaZakljucan = true;
+                TempData["SuccessMessage"] = "Odabrali ste maksimalan broj izbornih predmeta. Vaš izbor je sada zaključan.";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Vaš izbor je sačuvan. Možete naknadno dodati još izbornih predmeta do maksimalnog limita.";
+            }
 
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Izbor izbornih predmeta je uspješno sačuvan i zaključan. Više nije moguće mijenjati izbor.";
-
             return RedirectToAction("BirajIzbornePredmete");
         }
 

@@ -28,3 +28,4 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\uploads\nastavni-materijali\0011191e-f165-4d37-b0d0-bd1ed99ba730_BH-TELECOM-DIREKCIJA-ZENICA-Masarykova-ulica-Zenica-4.jpg

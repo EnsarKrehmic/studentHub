@@ -56,7 +56,7 @@
                                                 <div class="btn-group btn-group-sm" role="group">
                                                     @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
                                                     {
-                                                        <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-info" title="Detalji">
+                                                        <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-info me-1" title="Detalji">
                                                             <i class="fas fa-info-circle"></i>
                                                         </a>
                                                     }
@@ -67,6 +67,10 @@
                                                             <i class="fas fa-info-circle"></i>
                                                         </button>
                                                     }
+
+                                                    <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-secondary" title="Komentari">
+                                                        <i class="fas fa-comments"></i>
+                                                    </a>
 
                                                     @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                                     {
@@ -120,7 +124,6 @@
                                     {
                                         <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
                                             <td>@aktivnost.Naziv</td>
-                                            <td>@aktivnost.Tip</td>
                                             <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
                                             <td>
                                                 <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
@@ -131,7 +134,7 @@
                                                 <div class="btn-group btn-group-sm" role="group">
                                                     @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
                                                     {
-                                                        <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-info" title="Detalji">
+                                                        <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-info me-1" title="Detalji">
                                                             <i class="fas fa-info-circle"></i>
                                                         </a>
                                                     }
@@ -142,6 +145,10 @@
                                                             <i class="fas fa-info-circle"></i>
                                                         </button>
                                                     }
+
+                                                    <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-secondary" title="Komentari">
+                                                        <i class="fas fa-comments"></i>
+                                                    </a>
 
                                                     @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                                     {

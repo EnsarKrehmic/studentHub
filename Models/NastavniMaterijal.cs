@@ -15,12 +15,11 @@ namespace StudentHub.Models
         [MaxLength(500, ErrorMessage = "Opis ne može biti duži od 500 karaktera.")]
         public string Opis { get; set; }
 
-        public string PutanjaDoFajla { get; set; }
-
-        public string TipFajla { get; set; }
-
         [ForeignKey("NastavnaAktivnost")]
         public long NastavnaAktivnostId { get; set; }
+
         public NastavnaAktivnost NastavnaAktivnost { get; set; }
+
+        public ICollection<NastavniMaterijalFajl> Fajlovi { get; set; } = new List<NastavniMaterijalFajl>();
     }
 }

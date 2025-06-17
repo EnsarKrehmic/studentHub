@@ -31,6 +31,15 @@ namespace StudentHub.Models
         [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
         public int? Semestar { get; set; }
 
+        [Range(0, 100)]
+        public int? PragPrisustvaPredavanja { get; set; } = 70;
+
+        [Range(0, 100)]
+        public int? PragPrisustvaVjezbe { get; set; } = 70;
+
+        [Range(0, 100)]
+        public int? PragPrisustvaUkupno { get; set; } = 70;
+
         [ForeignKey("Profesor")]
         public long? ProfesorId { get; set; }
         public Profesor Profesor { get; set; }

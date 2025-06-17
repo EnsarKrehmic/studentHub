@@ -37,6 +37,15 @@ namespace StudentHub.Models
         [DisplayName("Postavi kao nedostupno")]
         public bool ManuelnoZakljucano { get; set; } = false;
 
+        [DisplayName("Kod za prisustvo")]
+        public string? KodZaPrisustvo { get; set; }
+
+        [DisplayName("Vrijeme generisanja koda")]
+        public DateTime? VrijemeGenerisanjaKoda { get; set; }
+
+        [DisplayName("Kod važi do")]
+        public DateTime? KodAktivanDo { get; set; }
+
         [ForeignKey("Predmet")]
         public long PredmetId { get; set; }
         public Predmet Predmet { get; set; }
@@ -44,6 +53,7 @@ namespace StudentHub.Models
         public List<NastavniMaterijal> NastavniMaterijali { get; set; } = new();
         public List<Komentar> Komentari { get; set; } = new();
         public List<Ocjena> Ocjene { get; set; } = new();
+        public List<PrisustvoNaAktivnosti> Prisustva { get; set; } = new();
 
         // Svojstvo za prosječnu ocjenu
         public double ProsjecnaOcjena => Ocjene.Any() ? Ocjene.Average(o => o.Vrijednost) : 0;

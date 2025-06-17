@@ -23,45 +23,88 @@
 else
 {
     <div class="container mt-4">
-        <!-- Opšti podaci o predmetu -->
+        <!-- Podaci o predmetu + Statistika -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white">
-                <h3>Podaci o predmetu</h3>
+                <h3 class="mb-0">Informacije o predmetu</h3>
             </div>
             <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-3">Naziv predmeta:</dt>
-                    <dd class="col-sm-9">@Model.Predmet?.Naziv</dd>
-                    <dt class="col-sm-3">Opis:</dt>
-                    <dd class="col-sm-9">@Model.Predmet?.Opis</dd>
-                    <dt class="col-sm-3">ECTS bodovi:</dt>
-                    <dd class="col-sm-9">@Model.Predmet?.ECTS</dd>
-                    <dt class="col-sm-3">Nastavni plan:</dt>
-                    <dd class="col-sm-9">
-                        @if (Model.Predmet?.NastavniPlan != null)
-                        {
-                            <span>
-                                Predmet pripada nastavnom planu:
-                                @Model.Predmet.NastavniPlan.GodinaStudija. godina,
-                                @(Model.Predmet.Semestar == 1 ? "prvi" :
-                                    Model.Predmet.Semestar == 2 ? "drugi" :
-                                    Model.Predmet.Semestar == 3 ? "treći" :
-                                    Model.Predmet.Semestar == 4 ? "četvrti" :
-                                    Model.Predmet.Semestar == 5 ? "peti" :
-                                    Model.Predmet.Semestar == 6 ? "šesti" :
-                                    Model.Predmet.Semestar == 7 ? "sedmi" :
-                                    Model.Predmet.Semestar == 8 ? "osmi" :
-                                    Model.Predmet.Semestar + ".") semestar
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="text-warning">Nema dodijeljen nastavni plan.</span>
-                        }
-                    </dd>
-                    <dt class="col-sm-3">Tip predmeta:</dt>
-                    <dd class="col-sm-9">@Model.Predmet.TipPredmeta.ToString()</dd>
-                </dl>
+                <div class="row">
+                    <!-- Lijevi stupac: osnovne informacije -->
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-5">Naziv predmeta:</dt>
+                            <dd class="col-sm-7">@Model.Predmet?.Naziv</dd>
+
+                            <dt class="col-sm-5">ECTS bodovi:</dt>
+                            <dd class="col-sm-7">@Model.Predmet?.ECTS</dd>
+
+                            <dt class="col-sm-5">Tip predmeta:</dt>
+                            <dd class="col-sm-7">@Model.Predmet.TipPredmeta.ToString()</dd>
+
+                            <dt class="col-sm-5">Nastavni plan:</dt>
+                            <dd class="col-sm-7">
+                                @if (Model.Predmet?.NastavniPlan != null)
+                                {
+                                    <span>
+                                        @Model.Predmet.NastavniPlan.GodinaStudija. godina,
+                                        @(Model.Predmet.Semestar == 1 ? "prvi" :
+                                          Model.Predmet.Semestar == 2 ? "drugi" :
+                                          Model.Predmet.Semestar == 3 ? "treći" :
+                                          Model.Predmet.Semestar == 4 ? "četvrti" :
+                                          Model.Predmet.Semestar == 5 ? "peti" :
+                                          Model.Predmet.Semestar == 6 ? "šesti" :
+                                          Model.Predmet.Semestar == 7 ? "sedmi" :
+                                          Model.Predmet.Semestar == 8 ? "osmi" :
+                                          Model.Predmet.Semestar + ".") semestar
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-warning">Nema dodijeljen nastavni plan.</span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <!-- Desni stupac: statistike predmeta -->
+                    <div class="col-md-6 border-left">
+                        <dl class="row">
+                            <dt class="col-sm-6">Prosječna ocjena:</dt>
+                            <dd class="col-sm-6">
+                                @if (Model.ProsjecnaOcjena.HasValue)
+                                {
+                                    <span class="badge badge-info">@Model.ProsjecnaOcjena.Value.ToString("F2")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-6">Prosječno prisustvo:</dt>
+                            <dd class="col-sm-6">
+                                @if (Model.ProsjecnoPrisustvo.HasValue)
+                                {
+                                    <span class="badge badge-success">@Model.ProsjecnoPrisustvo.Value.ToString("F1")%</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-6">Ukupno aktivnosti:</dt>
+                            <dd class="col-sm-6">@Model.NastavneAktivnosti?.Count()</dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Opis (puni red) -->
+                <div class="mt-4">
+                    <h5>Opis predmeta:</h5>
+                    <p>@Model.Predmet?.Opis</p>
+                </div>
             </div>
         </div>
 
@@ -185,6 +228,12 @@ else
                 <h4>Studenti na predmetu</h4>
             </div>
             <div class="card-body">
+                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
+                {
+                    <a asp-action="Prisustvo" asp-route-id="@Model.Predmet.Id" class="btn btn-outline-info mb-3">
+                        <i class="fas fa-user-check me-1"></i> Pregled prisustva studenata
+                    </a>
+                }
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -398,51 +447,71 @@ else
                                     @foreach (var aktivnost in predavanja)
                                     {
                                         <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
-                                            <td>@aktivnost.Naziv</td>
-                                            <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
-                                            <td>
-                                                <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
-                                                    @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <!-- Detalji dugme -->
-                                                @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
-                                                {
-                                                    <a asp-controller="NastavneAktivnosti"
-                                                       asp-action="Details"
-                                                       asp-route-id="@aktivnost.Id"
-                                                       class="btn btn-sm btn-info">
-                                                        Detalji
-                                                    </a>
-                                                }
-                                                else
-                                                {
-                                                    <span class="btn btn-sm btn-secondary disabled"
-                                                          data-toggle="tooltip"
-                                                          title="Aktivnost će postati dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
-                                                        Detalji
-                                                    </span>
-                                                }
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <span>@aktivnost.Naziv</span>
 
-                                                <!-- Akcije za nastavno osoblje -->
-                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                                @if (!aktivnost.JeDostupno && User.IsInRole("Student"))
                                                 {
-                                                    <a asp-controller="NastavneAktivnosti"
-                                                       asp-action="Edit"
-                                                       asp-route-id="@aktivnost.Id"
-                                                       class="btn btn-sm btn-warning">
-                                                        Uredi
-                                                    </a>
-                                                    <a asp-controller="NastavneAktivnosti"
-                                                       asp-action="Delete"
-                                                       asp-route-id="@aktivnost.Id"
-                                                       class="btn btn-sm btn-danger">
-                                                        Obriši
-                                                    </a>
+                                                    var remaining = aktivnost.DatumVrijemeOdrzavanja - DateTime.Now;
+                                                    if (remaining.TotalSeconds > 0)
+                                                    {
+                                                        <span class="small mt-1 text-muted countdown-wrapper">
+                                                            <i class="fas fa-lock me-1"></i>
+                                                            Dostupno za:
+                                                            <span class="badge bg-warning text-dark countdown-timer"
+                                                                  data-countdown="@aktivnost.DatumVrijemeOdrzavanja.ToString("O")">
+                                                                Učitavanje...
+                                                            </span>
+                                                        </span>
+                                                    }
                                                 }
-                                            </td>
-                                        </tr>
+                                            </div>
+                                        </td>
+                                        <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>
+                                            <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
+                                                @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <!-- Detalji dugme -->
+                                            @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
+                                            {
+                                                <a asp-controller="NastavneAktivnosti"
+                                                   asp-action="Details"
+                                                   asp-route-id="@aktivnost.Id"
+                                                   class="btn btn-sm btn-info">
+                                                    Detalji
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-sm btn-secondary disabled"
+                                                      data-toggle="tooltip"
+                                                      title="Aktivnost će postati dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
+                                                    Detalji
+                                                </span>
+                                            }
+
+                                            <!-- Akcije za nastavno osoblje -->
+                                            @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                            {
+                                                <a asp-controller="NastavneAktivnosti"
+                                                   asp-action="Edit"
+                                                   asp-route-id="@aktivnost.Id"
+                                                   class="btn btn-sm btn-warning">
+                                                    Uredi
+                                                </a>
+                                                <a asp-controller="NastavneAktivnosti"
+                                                   asp-action="Delete"
+                                                   asp-route-id="@aktivnost.Id"
+                                                   class="btn btn-sm btn-danger">
+                                                    Obriši
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
                                     }
                                 </tbody>
                             </table>
@@ -481,7 +550,27 @@ else
                                     @foreach (var aktivnost in vjezbe)
                                     {
                                         <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
-                                            <td>@aktivnost.Naziv</td>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <span>@aktivnost.Naziv</span>
+
+                                                    @if (!aktivnost.JeDostupno && User.IsInRole("Student"))
+                                                    {
+                                                        var remaining = aktivnost.DatumVrijemeOdrzavanja - DateTime.Now;
+                                                        if (remaining.TotalSeconds > 0)
+                                                        {
+                                                            <span class="small mt-1 text-muted countdown-wrapper">
+                                                                <i class="fas fa-lock me-1"></i>
+                                                                Dostupno za:
+                                                                <span class="badge bg-warning text-dark countdown-timer"
+                                                                      data-countdown="@aktivnost.DatumVrijemeOdrzavanja.ToString("O")">
+                                                                    Učitavanje...
+                                                                </span>
+                                                            </span>
+                                                        }
+                                                    }
+                                                </div>
+                                            </td>
                                             <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
                                             <td>
                                                 <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
@@ -489,7 +578,6 @@ else
                                                 </span>
                                             </td>
                                             <td>
-                                                <!-- Detalji dugme -->
                                                 @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
                                                 {
                                                     <a asp-controller="NastavneAktivnosti"
@@ -508,7 +596,6 @@ else
                                                     </span>
                                                 }
 
-                                                <!-- Akcije za nastavno osoblje -->
                                                 @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                                 {
                                                     <a asp-controller="NastavneAktivnosti"
@@ -587,4 +674,45 @@ else
             }
         }
     </script>
+
+    <!-- JavaScript za countdown tajmer -->
+    <script>
+        function startCountdowns() {
+            document.querySelectorAll('.countdown-timer').forEach(el => {
+                const targetTime = new Date(el.dataset.countdown);
+                const interval = setInterval(() => {
+                    const now = new Date();
+                    const diff = targetTime - now;
+
+                    if (diff <= 0) {
+                        el.textContent = "Otključano!";
+                        el.classList.remove("bg-warning", "text-dark");
+                        el.classList.add("bg-success", "text-white");
+                        clearInterval(interval);
+                    } else {
+                        const h = Math.floor(diff / 3600000);
+                        const m = Math.floor((diff % 3600000) / 60000);
+                        const s = Math.floor((diff % 60000) / 1000);
+                        el.textContent = `${h}h ${m}m ${s}s`;
+                    }
+                }, 1000);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", startCountdowns);
+    </script>
+
+    <style>
+    .countdown-wrapper {
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .countdown-wrapper .badge {
+        font-weight: 500;
+        padding: 0.3em 0.6em;
+    }
+    </style>
 }

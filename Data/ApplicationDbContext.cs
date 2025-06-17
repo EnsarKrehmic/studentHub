@@ -20,6 +20,7 @@ namespace StudentHub.Data
         public DbSet<NastavniPlan> NastavniPlanovi { get; set; }
         public DbSet<NastavnaAktivnost> NastavneAktivnosti { get; set; }
         public DbSet<NastavniMaterijal> NastavniMaterijali { get; set; }
+        public DbSet<NastavniMaterijalFajl> NastavniMaterijalFajlovi { get; set; }
         public DbSet<Obavjestenje> Obavjestenja { get; set; }
         public DbSet<ObavjestenjeStudijskiProgram> ObavjestenjeStudijskiProgrami { get; set; }
         public DbSet<Ocjena> Ocjene { get; set; }
@@ -29,6 +30,7 @@ namespace StudentHub.Data
         public DbSet<Prijava> Prijave { get; set; }
         public DbSet<Profesor> Profesori { get; set; }
         public DbSet<ProfesorStudijskiProgram> ProfesorStudijskiProgrami { get; set; }
+        public DbSet<PrisustvoNaAktivnosti> PrisustvaNaAktivnostima { get; set; }
         public DbSet<Student> Studenti { get; set; }
         public DbSet<StudentStudijskiProgram> StudentStudijskiProgrami { get; set; }
         public DbSet<StudentNaPredmetu> StudentiNaPredmetima { get; set; }
@@ -38,6 +40,7 @@ namespace StudentHub.Data
         public DbSet<StudijskiProgramIzborniLimit> StudijskiProgramIzborniLimiti { get; set; }
         public DbSet<Uvjerenje> Uvjerenja { get; set; }
         public DbSet<Zahtjev> Zahtjevi { get; set; }
+        public DbSet<ZahtjevZaPrisustvo> ZahtjeviZaPrisustvo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +53,7 @@ namespace StudentHub.Data
             modelBuilder.Entity<NastavniPlan>().ToTable("NastavniPlan");
             modelBuilder.Entity<NastavnaAktivnost>().ToTable("NastavnaAktivnost");
             modelBuilder.Entity<NastavniMaterijal>().ToTable("NastavniMaterijal");
+            modelBuilder.Entity<NastavniMaterijalFajl>().ToTable("NastavniMaterijalFajl");
             modelBuilder.Entity<Obavjestenje>().ToTable("Obavjestenje");
             modelBuilder.Entity<ObavjestenjeStudijskiProgram>().ToTable("ObavjestenjeStudijskiProgram");
             modelBuilder.Entity<Ocjena>().ToTable("Ocjena");
@@ -58,6 +62,7 @@ namespace StudentHub.Data
             modelBuilder.Entity<PredmetProfesor>().ToTable("PredmetProfesor");
             modelBuilder.Entity<Prijava>().ToTable("Prijava");
             modelBuilder.Entity<ProfesorStudijskiProgram>().ToTable("ProfesorStudijskiProgram");
+            modelBuilder.Entity<PrisustvoNaAktivnosti>().ToTable("PrisustvoNaAktivnosti");
             modelBuilder.Entity<StudentStudijskiProgram>().ToTable("StudentStudijskiProgram");
             modelBuilder.Entity<StudentNaPredmetu>().ToTable("StudentNaPredmetu");
             modelBuilder.Entity<StudentskaSluzbaStudijskiProgram>().ToTable("StudentskaSluzbaStudijskiProgram");
@@ -65,6 +70,7 @@ namespace StudentHub.Data
             modelBuilder.Entity<StudijskiProgramIzborniLimit>().ToTable("StudijskiProgramIzborniLimit");
             modelBuilder.Entity<Uvjerenje>().ToTable("Uvjerenje");
             modelBuilder.Entity<Zahtjev>().ToTable("Zahtjev");
+            modelBuilder.Entity<ZahtjevZaPrisustvo>().ToTable("ZahtjevZaPrisustvo");
 
             modelBuilder.Entity<Korisnik>()
                 .HasKey(k => k.Id);

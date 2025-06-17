@@ -2,9 +2,24 @@
 
 @{
     var nastavnaAktivnost = ViewBag.NastavnaAktivnostNaziv as string;
+    ViewData["Title"] = "Dodaj novi materijal";
 }
 
 <h2>Dodaj novi materijal za @nastavnaAktivnost</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i> @TempData["Error"]
+    </div>
+}
+
 <form asp-action="Create" method="post" enctype="multipart/form-data" id="uploadForm">
     <input type="hidden" asp-for="NastavnaAktivnostId" />
 
@@ -21,35 +36,28 @@
     </div>
 
     <div class="form-group">
-        <label for="fajl">Izaberite fajl</label>
-        <input type="file" name="fajl" class="form-control-file" id="fileInput" required />
-        <span class="text-danger">@Html.ValidationMessage("fajl")</span>
+        <label for="fileInput">Izaberite fajlove</label>
+        <input type="file" name="fajlovi" id="fileInput" class="form-control" multiple required />
+        <span class="text-danger">@Html.ValidationMessage("fajlovi")</span>
         <small class="form-text text-muted">
-            Podržani formati: PDF, DOC/DOCX, XLS/XLSX, JPG/PNG (max 100MB)
+            Podržani formati: PDF, DOC/DOCX, XLS/XLSX, PPTX, JPG, PNG (max 100MB po fajlu). Možete izabrati više fajlova.
         </small>
-        <div id="filePreview" class="mt-3 preview-container">
-            <div class="preview-content">
-                <div id="previewThumbnail" class="preview-thumbnail"></div>
-                <div class="preview-info">
-                    <h5 class="file-name"></h5>
-                    <div class="file-details">
-                        <span class="file-type"></span>
-                        <span class="file-size"></span>
-                    </div>
-                </div>
-            </div>
+
+        <div id="filePreview" class="mt-3" style="display:none;">
+            <h5>Pregled odabranih fajlova:</h5>
+            <ul class="list-group" id="fileList"></ul>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mt-4">
         <button type="submit" class="btn btn-success">
-            <i class="fas fa-upload"></i> Uploaduj materijal
+            <i class="fas fa-upload me-1"></i> Uploaduj materijal
         </button>
         <a asp-controller="NastavneAktivnosti"
            asp-action="Details"
            asp-route-id="@Model.NastavnaAktivnostId"
-           class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Nazad
+           class="btn btn-outline-secondary ms-2">
+            <i class="fas fa-arrow-left me-1"></i> Nazad
         </a>
     </div>
 </form>
@@ -57,41 +65,39 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById('filePreview');
-            const thumbnail = document.getElementById('previewThumbnail');
-            const fileName = document.querySelector('.file-name');
-            const fileType = document.querySelector('.file-type');
-            const fileSize = document.querySelector('.file-size');
+        const input = document.getElementById('fileInput');
+        const preview = document.getElementById('filePreview');
+        const list = document.getElementById('fileList');
 
-            if (file) {
+        input.addEventListener('change', function () {
+            list.innerHTML = '';
+            if (input.files.length > 0) {
                 preview.style.display = 'block';
-                fileName.textContent = file.name;
-                fileType.textContent = `Tip: ${file.type}`;
-                fileSize.textContent = `Veličina: ${(file.size/1024/1024).toFixed(2)} MB`;
 
-                // Prikaz thumbnail-a za slike
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        thumbnail.innerHTML = `<img src="${e.target.result}" class="img-thumbnail">`;
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    // Ikone za ostale tipove fajlova
+                Array.from(input.files).forEach(file => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
                     const iconClass = {
-                        'application/pdf': 'far fa-file-pdf',
-                        'application/msword': 'far fa-file-word',
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'far fa-file-word',
-                        'application/vnd.ms-excel': 'far fa-file-excel',
-                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'far fa-file-excel',
-                        'application/vnd.ms-powerpoint': 'far fa-file-powerpoint',
-                        'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'far fa-file-powerpoint'
+                        'application/pdf': 'far fa-file-pdf text-danger',
+                        'application/msword': 'far fa-file-word text-primary',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'far fa-file-word text-primary',
+                        'application/vnd.ms-excel': 'far fa-file-excel text-success',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'far fa-file-excel text-success',
+                        'application/vnd.ms-powerpoint': 'far fa-file-powerpoint text-warning',
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'far fa-file-powerpoint text-warning',
+                        'image/jpeg': 'far fa-file-image text-info',
+                        'image/png': 'far fa-file-image text-info'
                     }[file.type] || 'far fa-file';
 
-                    thumbnail.innerHTML = `<i class="${iconClass} fa-4x"></i>`;
-                }
+                    li.innerHTML = `
+                        <div>
+                            <i class="${iconClass} me-2"></i> <strong>${file.name}</strong>
+                        </div>
+                        <span class="badge bg-light text-dark">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                    `;
+                    list.appendChild(li);
+                });
             } else {
                 preview.style.display = 'none';
             }

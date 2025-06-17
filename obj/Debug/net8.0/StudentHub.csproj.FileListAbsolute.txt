@@ -922,6 +922,7 @@ C:\Users\Me\source\repos\studentHub\Implementacija\obj\Debug\net8.0\StudentHub.p
 C:\Users\Me\source\repos\studentHub\Implementacija\obj\Debug\net8.0\StudentHub.genruntimeconfig.cache
 C:\Users\Me\source\repos\studentHub\Implementacija\obj\Debug\net8.0\ref\StudentHub.dll
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\StudentHub.csproj.AssemblyReference.cache
+C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\rpswa.dswa.cache.json
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\StudentHub.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\StudentHub.AssemblyInfoInputs.cache
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\StudentHub.AssemblyInfo.cs
@@ -1211,6 +1212,9 @@ C:\Users\Me\source\repos\studentHub\studentHub\bin\Debug\net8.0\runtimes\win\lib
 C:\Users\Me\source\repos\studentHub\studentHub\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\Users\Me\source\repos\studentHub\studentHub\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Me\source\repos\studentHub\studentHub\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
+C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\scopedcss\bundle\StudentHub.styles.css
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\scopedcss\projectbundle\StudentHub.bundle.scp.css
@@ -1225,7 +1229,3 @@ C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\refint\StudentHu
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\StudentHub.pdb
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\StudentHub.genruntimeconfig.cache
 C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\ref\StudentHub.dll
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\rpswa.dswa.cache.json
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\rjimswa.dswa.cache.json
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
-C:\Users\Me\source\repos\studentHub\studentHub\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json

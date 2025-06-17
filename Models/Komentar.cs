@@ -17,15 +17,15 @@ namespace StudentHub.Models
         // Veza sa korisnikom (Profesor/Asistent/Student) koji je autor
         [ForeignKey("Korisnik")]
         public long KorisnikId { get; set; }
-        public Korisnik Korisnik { get; set; }
+        public Korisnik? Korisnik { get; set; }
 
         [ForeignKey("Student")]
-        public long StudentId { get; set; }
-        public Student Student { get; set; }
+        public long? StudentId { get; set; }
+        public Student? Student { get; set; }
 
         [ForeignKey("Ispit")]
-        public long IspitId { get; set; }
-        public Ispit Ispit { get; set; }
+        public long? IspitId { get; set; }
+        public Ispit? Ispit { get; set; }
 
         public VidljivostKomentara Vidljivost { get; set; } = VidljivostKomentara.Javno;
 

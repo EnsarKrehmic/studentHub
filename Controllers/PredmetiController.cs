@@ -68,6 +68,7 @@ namespace StudentHub.Controllers
                 var predmet = _context.Predmeti
                     .Include(p => p.NastavniPlan)
                     .Include(p => p.NastavneAktivnosti)
+                        .ThenInclude(na => na.Prisustva)
                     .FirstOrDefault(p => p.Id == id);
 
                 if (predmet == null)
@@ -112,7 +113,7 @@ namespace StudentHub.Controllers
                     .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = $"{a.AsistentTitula} {a.Ime} {a.Prezime}" })
                     .ToList();
 
-                // Popunjavamo ocjene za sve studente na predmetu
+                // Ocjene
                 var ocjene = _context.Ocjene
                     .Where(o => o.PredmetId == id)
                     .ToDictionary(o => o.StudentId, o => (float?)o.Vrijednost);
@@ -122,15 +123,24 @@ namespace StudentHub.Controllers
                     snp => ocjene.ContainsKey(snp.StudentId) ? ocjene[snp.StudentId] : null
                 );
 
-                // Filtriranje nastavnih aktivnosti za studente ili postavljanje na praznu listu ako je null
+                // Nastavne aktivnosti – bez filtriranja zaključanih za studente
                 var nastavneAktivnosti = predmet.NastavneAktivnosti != null
-                    ? predmet.NastavneAktivnosti.ToList()
+                    ? predmet.NastavneAktivnosti.OrderBy(a => a.DatumVrijemeOdrzavanja).ToList()
                     : new List<NastavnaAktivnost>();
 
-                if (User.IsInRole("Student"))
+                // Statistika prisustva
+                var statistika = studentiNaPredmetu.Select(snp =>
                 {
-                    nastavneAktivnosti = nastavneAktivnosti.Where(na => na.JeDostupno).ToList();
-                }
+                    var prisustva = _context.PrisustvaNaAktivnostima
+                        .Count(p => p.StudentId == snp.StudentId && p.NastavnaAktivnost.PredmetId == id);
+
+                    return new StatistikaPrisustvaDTO
+                    {
+                        Student = snp.Student,
+                        BrojPrisustava = prisustva,
+                        UkupnoAktivnosti = nastavneAktivnosti.Count
+                    };
+                }).ToList();
 
                 var viewModel = new PredmetDetailsViewModel
                 {
@@ -139,7 +149,10 @@ namespace StudentHub.Controllers
                     Asistenti = asistenti,
                     StudentiNaPredmetu = studentiNaPredmetu,
                     Ocjene = sveOcjene,
-                    NastavneAktivnosti = nastavneAktivnosti
+                    NastavneAktivnosti = nastavneAktivnosti,
+                    StatistikaPrisustva = statistika,
+                    ProsjecnoPrisustvo = statistika.Count > 0 ? statistika.Average(s => s.Procenat) : null,
+                    ProsjecnaOcjena = sveOcjene.Values.Where(o => o.HasValue).Average(o => o) ?? 0
                 };
 
                 return View(viewModel);
@@ -1015,6 +1028,113 @@ namespace StudentHub.Controllers
                 .ToListAsync();
 
             return Json(predmeti);
+        }
+
+        [HttpGet("Prisustvo/{id:long}")]
+        [Authorize(Roles = "Profesor,Asistent,Studentska služba")]
+        public async Task<IActionResult> Prisustvo(long id)
+        {
+            var predmet = await _context.Predmeti
+                .Include(p => p.NastavneAktivnosti)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (predmet == null) return NotFound();
+
+            var aktivnosti = predmet.NastavneAktivnosti
+                .OrderBy(a => a.DatumVrijemeOdrzavanja)
+                .ToList();
+
+            var studenti = await _context.StudentiNaPredmetima
+                .Where(s => s.PredmetId == id)
+                .Include(s => s.Student)
+                .Select(s => s.Student)
+                .ToListAsync();
+
+            var prisustva = await _context.PrisustvaNaAktivnostima
+                .Where(p => p.NastavnaAktivnost.PredmetId == id)
+                .ToListAsync();
+
+            // 1. Statusi prisustva po aktivnosti
+            var statusi = new Dictionary<(long studentId, long aktivnostId), string>();
+            foreach (var student in studenti)
+            {
+                foreach (var aktivnost in aktivnosti)
+                {
+                    var key = (student.Id, aktivnost.Id);
+                    bool prisutan = prisustva.Any(p =>
+                        p.StudentId == student.Id && p.NastavnaAktivnostId == aktivnost.Id);
+                    statusi[key] = prisutan ? "Prisutan" : "Nije prisutan";
+                }
+            }
+
+            // 2. Grupisanje aktivnosti po tipu
+            var predavanja = aktivnosti.Where(a => a.Tip == TipNastavneAktivnosti.Predavanje).ToList();
+            var vjezbe = aktivnosti.Where(a => a.Tip == TipNastavneAktivnosti.Vjezba).ToList();
+
+            // 3. Statistika
+            List<StudentPrisustvoStatistika> IzracunajStatistiku(List<NastavnaAktivnost> listaAktivnosti)
+            {
+                return studenti.Select(student =>
+                {
+                    var brojPrisustava = listaAktivnosti.Count(a =>
+                        prisustva.Any(p => p.StudentId == student.Id && p.NastavnaAktivnostId == a.Id));
+
+                    return new StudentPrisustvoStatistika
+                    {
+                        Student = student,
+                        BrojPrisustava = brojPrisustava,
+                        UkupnoAktivnosti = listaAktivnosti.Count
+                    };
+                }).ToList();
+            }
+
+            var statistikaUkupno = IzracunajStatistiku(aktivnosti);
+            var statistikaPredavanja = IzracunajStatistiku(predavanja);
+            var statistikaVjezbi = IzracunajStatistiku(vjezbe);
+
+            var model = new PrisustvoPoPredmetuViewModel
+            {
+                Predmet = predmet,
+                Aktivnosti = aktivnosti,
+                Studenti = studenti,
+                StatusiPrisustva = statusi,
+                StatistikaUkupno = statistikaUkupno,
+                StatistikaPredavanja = statistikaPredavanja,
+                StatistikaVjezbe = statistikaVjezbi,
+                PragPrisustvaPredavanja = predmet.PragPrisustvaPredavanja ?? 70,
+                PragPrisustvaVjezbe = predmet.PragPrisustvaVjezbe ?? 70,
+                PragPrisustvaUkupno = predmet.PragPrisustvaUkupno ?? 70
+            };
+
+            return View("PrisustvoPoPredmetu", model);
+        }
+
+        [HttpPost]
+        [Route("Predmeti/PostaviPragovePrisustva")]
+        [Authorize(Roles = "Profesor,Asistent")]
+        public async Task<IActionResult> PostaviPragovePrisustva(long predmetId, int pragPredavanja, int pragVjezbe)
+        {
+            if (!Enumerable.Range(0, 101).Contains(pragPredavanja) || !Enumerable.Range(0, 101).Contains(pragVjezbe))
+            {
+                TempData["ErrorMessage"] = "Pragovi moraju biti između 0 i 100.";
+                return RedirectToAction("Prisustvo", new { id = predmetId });
+            }
+
+            var predmet = await _context.Predmeti.FindAsync(predmetId);
+            if (predmet == null)
+                return NotFound();
+
+            predmet.PragPrisustvaPredavanja = pragPredavanja;
+            predmet.PragPrisustvaVjezbe = pragVjezbe;
+
+            // Automatski izračun ukupnog praga
+            predmet.PragPrisustvaUkupno = (int)Math.Round((pragPredavanja + pragVjezbe) / 2.0);
+
+            await _context.SaveChangesAsync();
+
+            TempData["PragUpdateSuccess"] = $"Pragovi su uspješno ažurirani. Ukupni prag automatski postavljen na {predmet.PragPrisustvaUkupno}%.";
+
+            return RedirectToAction("Prisustvo", new { id = predmetId });
         }
 
         private void ReloadViewData(long predmetId)

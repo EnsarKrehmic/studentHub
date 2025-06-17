@@ -1,0 +1,154 @@
+﻿@model StudentHub.ViewModels.PrisustvoPoPredmetuViewModel
+
+<h3 class="mb-4">Prisustvo studenata za predmet: <strong>@Model.Predmet.Naziv</strong></h3>
+
+@if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+{
+    <form asp-controller="Predmeti" asp-action="PostaviPragovePrisustva" method="post" class="mb-4">
+        <input type="hidden" name="predmetId" value="@Model.Predmet.Id" />
+        <div class="row">
+            <div class="col-md-4">
+                <label for="pragPredavanja">Prag za predavanja (%)</label>
+                <input type="number" class="form-control" name="pragPredavanja" min="0" max="100" step="1" value="@Model.PragPrisustvaPredavanja" required />
+            </div>
+            <div class="col-md-4">
+                <label for="pragVjezbe">Prag za vježbe (%)</label>
+                <input type="number" class="form-control" name="pragVjezbe" min="0" max="100" step="1" value="@Model.PragPrisustvaVjezbe" required />
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-save me-2"></i> Spremi pragove
+                </button>
+            </div>
+        </div>
+    </form>
+
+    @if (TempData["PragUpdateSuccess"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i> @TempData["PragUpdateSuccess"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        Prag za predavanja: <strong>@Model.PragPrisustvaPredavanja %</strong>,
+        prag za vježbe: <strong>@Model.PragPrisustvaVjezbe %</strong>,
+        ukupni prag: <strong>@Model.PragPrisustvaUkupno %</strong>
+    </div>
+}
+
+<!-- 1. UKUPNO PRISUSTVO -->
+<div class="card mb-4">
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">Ukupno prisustvo</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered mb-0">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Prisutan na</th>
+                        <th>Ukupno aktivnosti</th>
+                        <th>Procenat</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.StatistikaUkupno)
+                    {
+                        var klasa = s.Procenat >= Model.PragPrisustvaUkupno ? "text-success" : s.Procenat >= 50 ? "text-warning" : "text-danger";
+                        var status = s.Procenat >= Model.PragPrisustvaUkupno ? "✅" : s.Procenat >= 50 ? "⚠" : "❌";
+                        <tr>
+                            <td>@s.Student.Ime @s.Student.Prezime</td>
+                            <td>@s.BrojPrisustava</td>
+                            <td>@s.UkupnoAktivnosti</td>
+                            <td>@s.Procenat.ToString("F1")%</td>
+                            <td class="@klasa">@status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 2. PRISUSTVO NA PREDAVANJIMA -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Prisustvo na predavanjima</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered mb-0">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Prisutan na</th>
+                        <th>Ukupno predavanja</th>
+                        <th>Procenat</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.StatistikaPredavanja)
+                    {
+                        var klasa = s.Procenat >= Model.PragPrisustvaPredavanja ? "text-success" : s.Procenat >= 50 ? "text-warning" : "text-danger";
+                        var status = s.Procenat >= Model.PragPrisustvaPredavanja ? "✅" : s.Procenat >= 50 ? "⚠" : "❌";
+                        <tr>
+                            <td>@s.Student.Ime @s.Student.Prezime</td>
+                            <td>@s.BrojPrisustava</td>
+                            <td>@s.UkupnoAktivnosti</td>
+                            <td>@s.Procenat.ToString("F1")%</td>
+                            <td class="@klasa">@status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 3. PRISUSTVO NA VJEŽBAMA -->
+<div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">Prisustvo na vježbama</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered mb-0">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Prisutan na</th>
+                        <th>Ukupno vježbi</th>
+                        <th>Procenat</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.StatistikaVjezbe)
+                    {
+                        var klasa = s.Procenat >= Model.PragPrisustvaVjezbe ? "text-success" : s.Procenat >= 50 ? "text-warning" : "text-danger";
+                        var status = s.Procenat >= Model.PragPrisustvaVjezbe ? "✅" : s.Procenat >= 50 ? "⚠" : "❌";
+                        <tr>
+                            <td>@s.Student.Ime @s.Student.Prezime</td>
+                            <td>@s.BrojPrisustava</td>
+                            <td>@s.UkupnoAktivnosti</td>
+                            <td>@s.Procenat.ToString("F1")%</td>
+                            <td class="@klasa">@status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

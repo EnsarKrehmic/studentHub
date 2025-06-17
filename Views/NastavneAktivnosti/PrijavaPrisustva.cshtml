@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Prijava prisustva";
+    var naziv = ViewBag.NazivAktivnosti;
+    var id = ViewBag.AktivnostId;
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Prijava prisustva za: <span class="text-primary">@naziv</span></h2>
+
+    <form asp-action="PrijavaPrisustva" asp-route-nastavnaAktivnostId="@id" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label for="kod">Unesite kod za prisustvo:</label>
+            <input type="text" name="kod" class="form-control" required placeholder="npr. A1B2C3" maxlength="10" />
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">
+            <i class="fas fa-sign-in-alt"></i> Pošalji zahtjev
+        </button>
+        <a asp-action="Details" asp-route-id="@id" class="btn btn-outline-secondary mt-3 ml-2">↩️ Nazad</a>
+    </form>
+</div>

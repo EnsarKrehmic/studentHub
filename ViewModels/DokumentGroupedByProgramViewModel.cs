@@ -1,10 +1,14 @@
 ﻿using StudentHub.Models;
+using System.Collections.Generic;
 
 namespace StudentHub.ViewModels
 {
-    public class DokumentGroupedByProgramViewModel
+    public class EvidencijaPrisustvaViewModel
     {
-        public StudijskiProgram StudijskiProgram { get; set; }
-        public List<Dokument> Dokumenti { get; set; }
+        public NastavnaAktivnost NastavnaAktivnost { get; set; }
+
+        public List<Student> Studenti { get; set; }
+
+        public List<long> PrisutniStudentiIds { get; set; } = new List<long>();
     }
 }

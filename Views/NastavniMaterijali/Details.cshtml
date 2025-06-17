@@ -1,22 +1,80 @@
 ﻿@model StudentHub.Models.NastavniMaterijal
+@using System.IO
 
 @{
-    ViewBag.Title = "Detalji Materijala";
+    ViewBag.Title = "Detalji materijala";
+
+    string GetIconClass(string ekstenzija) => ekstenzija?.ToLower() switch
+    {
+        ".pdf" => "far fa-file-pdf text-danger",
+        ".doc" or ".docx" => "far fa-file-word text-primary",
+        ".xls" or ".xlsx" => "far fa-file-excel text-success",
+        ".ppt" or ".pptx" => "far fa-file-powerpoint text-warning",
+        ".jpg" or ".jpeg" or ".png" => "far fa-file-image text-info",
+        _ => "far fa-file"
+    };
 }
 
-<h2>@Model.Naziv</h2>
+<div class="card shadow-sm">
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0"><i class="fas fa-file-alt me-2"></i> Detalji nastavnog materijala</h4>
+    </div>
 
-<div>
-    <h4>Opis</h4>
-    <p>@Model.Opis</p>
-</div>
-<div>
-    <h4>Tip Fajla</h4>
-    <p>@Model.TipFajla</p>
-</div>
-<div>
-    <h4>Fajl</h4>
-    <a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary">Preuzmi</a>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Naziv</dt>
+            <dd class="col-sm-9 fw-bold">@Model.Naziv</dd>
+
+            <dt class="col-sm-3">Opis</dt>
+            <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.Opis) ? Model.Opis : "-")</dd>
+
+            <dt class="col-sm-3">Fajlovi</dt>
+            <dd class="col-sm-9">
+                @if (Model.Fajlovi != null && Model.Fajlovi.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var fajl in Model.Fajlovi)
+                        {
+                            var fileName = @System.IO.Path.GetFileName(fajl.PutanjaDoFajla);
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <i class="@GetIconClass(fajl.TipFajla) me-2"></i>
+                                    <span class="text-truncate" style="max-width: 300px;">@fileName</span>
+                                </div>
+                                <a href="@Url.Action("Download", "NastavniMaterijali", new { id = fajl.Id })"
+                                   class="btn btn-outline-primary btn-sm"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="Preuzmi fajl">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span class="text-muted fst-italic">Nema dodanih fajlova.</span>
+                }
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer text-end">
+        <a asp-action="Index"
+           asp-route-nastavnaAktivnostId="@Model.NastavnaAktivnostId"
+           class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Nazad
+        </a>
+    </div>
 </div>
 
-<a href="@Url.Action("Index", new { nastavnaAktivnostId = Model.NastavnaAktivnostId })" class="btn btn-secondary">Nazad</a>
+@section Scripts {
+    <script>
+        // Bootstrap tooltip init
+        document.addEventListener('DOMContentLoaded', function () {
+            const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltips.forEach(t => new bootstrap.Tooltip(t));
+        });
+    </script>
+}

@@ -1,0 +1,58 @@
+﻿@model StudentHub.ViewModels.EvidencijaPrisustvaViewModel
+
+@{
+    ViewData["Title"] = "Evidentiraj prisustvo";
+    var nastavnaAktivnost = Model.NastavnaAktivnost;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Evidencija prisustva</h2>
+        <a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@nastavnaAktivnost.Id" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Nazad na aktivnost
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-check-square"></i> Odaberi prisutne studente</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="EvidentirajPrisustvo" method="post">
+                <input type="hidden" name="nastavnaAktivnostId" value="@nastavnaAktivnost.Id" />
+
+                @if (Model.Studenti.Any())
+                {
+                    <div class="form-group">
+                        <label>Studenti:</label>
+                        <div class="list-group mb-3">
+                            @foreach (var student in Model.Studenti)
+                            {
+                                var isChecked = Model.PrisutniStudentiIds.Contains(student.Id);
+                                <div class="list-group-item">
+                                    <input type="checkbox"
+                                           name="prisutniStudentiIds"
+                                           value="@student.Id"
+                                           id="student-@student.Id"
+                                           class="form-check-input me-2"
+                                           @(isChecked ? "checked" : "") />
+                                    <label class="form-check-label" for="student-@student.Id">
+                                        @student.Ime @student.Prezime (@student.BrojIndeksa)
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Spasi prisustvo
+                    </button>
+                }
+                else
+                {
+                    <div class="alert alert-warning">Nema studenata na predmetu.</div>
+                }
+            </form>
+        </div>
+    </div>
+</div>

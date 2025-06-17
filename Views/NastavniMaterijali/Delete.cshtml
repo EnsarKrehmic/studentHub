@@ -1,14 +1,72 @@
 ﻿@model StudentHub.Models.NastavniMaterijal
+@using System.IO
 
-<h2>Obriši nastavni materijal</h2>
-<h3>Jeste li sigurni da želite obrisati "@Model.Naziv"?</h3>
-<div>
-    <p><strong>Nastavna aktivnost:</strong> @Model.NastavnaAktivnost.Naziv</p>
-    <p><strong>Opis:</strong> @Model.Opis</p>
-    <p><strong>Fajl:</strong> <a href="@Model.PutanjaDoFajla" target="_blank">Preuzmi</a></p>
-    <form asp-action="Delete" method="post">
-        <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger">Obriši</button>
-        <a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@Model.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>
-    </form>
+@{
+    ViewBag.Title = "Brisanje materijala";
+
+    string GetIconClass(string ekstenzija) => ekstenzija?.ToLower() switch
+    {
+        ".pdf" => "far fa-file-pdf text-danger",
+        ".doc" or ".docx" => "far fa-file-word text-primary",
+        ".xls" or ".xlsx" => "far fa-file-excel text-success",
+        ".ppt" or ".pptx" => "far fa-file-powerpoint text-warning",
+        ".jpg" or ".jpeg" or ".png" => "far fa-file-image text-info",
+        _ => "far fa-file"
+    };
+}
+
+<div class="card shadow-sm border-danger">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0"><i class="fas fa-trash-alt me-2"></i>Potvrda brisanja</h4>
+    </div>
+
+    <div class="card-body">
+        <h5 class="text-danger">
+            Jeste li sigurni da želite obrisati materijal
+            <strong class="text-dark">"@Model.Naziv"</strong>?
+        </h5>
+
+        <dl class="row mt-4">
+            <dt class="col-sm-4">Nastavna aktivnost</dt>
+            <dd class="col-sm-8">@Model.NastavnaAktivnost?.Naziv</dd>
+
+            <dt class="col-sm-4">Opis</dt>
+            <dd class="col-sm-8">@Model.Opis</dd>
+
+            <dt class="col-sm-4">Fajlovi</dt>
+            <dd class="col-sm-8">
+                @if (Model.Fajlovi != null && Model.Fajlovi.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var fajl in Model.Fajlovi)
+                        {
+                            var fileName = @System.IO.Path.GetFileName(fajl.PutanjaDoFajla);
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="@GetIconClass(fajl.TipFajla) me-2"></i> @fileName
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span class="text-muted fst-italic">Nema dodanih fajlova.</span>
+                }
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer d-flex justify-content-between">
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash me-1"></i> Obriši
+            </button>
+        </form>
+        <a asp-controller="NastavneAktivnosti"
+           asp-action="Details"
+           asp-route-id="@Model.NastavnaAktivnostId"
+           class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Nazad
+        </a>
+    </div>
 </div>

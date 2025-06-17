@@ -1,5 +1,6 @@
 ﻿@model StudentHub.Models.NastavnaAktivnost
 @using StudentHub.Models
+@using System.Security.Claims
 
 <div class="container">
     <!-- Naslov i povratne navigacije -->
@@ -52,46 +53,115 @@
             }
         </div>
 
-        <div class="card-body">
-            <div class="row">
-                <!-- Lijevi stupac -->
-                <div class="col-md-6">
-                    <dl class="row">
-                        <dt class="col-sm-5">Tip aktivnosti:</dt>
-                        <dd class="col-sm-7">@Model.Tip</dd>
+    <div class="card-body">
+        <div class="row">
+            <!-- Lijevi stupac -->
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-5">Tip aktivnosti:</dt>
+                    <dd class="col-sm-7">@Model.Tip</dd>
 
-                        <dt class="col-sm-5">Datum i vrijeme:</dt>
-                        <dd class="col-sm-7">@Model.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</dd>
+                    <dt class="col-sm-5">Datum i vrijeme:</dt>
+                    <dd class="col-sm-7">@Model.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</dd>
 
-                        <dt class="col-sm-5">Status pristupa:</dt>
-                        <dd class="col-sm-7">
-                            <span class="badge @(Model.JeDostupno ? "badge-success" : "badge-secondary")">
-                                @(Model.JeDostupno ? "Dostupno" : "Zaključano")
-                            </span>
-                            @if (Model.ManuelnoOtkljucano)
-                            {
-                                <span class="badge badge-warning ml-1">Manuelno otključano</span>
-                            }
-                        </dd>
-                    </dl>
-                </div>
+                    <dt class="col-sm-5">Status pristupa:</dt>
+                    <dd class="col-sm-7">
+                        <span class="badge @(Model.JeDostupno ? "badge-success" : "badge-secondary")">
+                            @(Model.JeDostupno ? "Dostupno" : "Zaključano")
+                        </span>
+                        @if (Model.ManuelnoOtkljucano)
+                        {
+                            <span class="badge badge-warning ml-1">Manuelno otključano</span>
+                        }
+                    </dd>
 
-                <!-- Desni stupac -->
-                <div class="col-md-6 border-left">
-                    <dl class="row">
-                        <dt class="col-sm-5">Prosječna ocjena:</dt>
-                        <dd class="col-sm-7">
-                            <span class="badge badge-primary">@Model.ProsjecnaOcjena.ToString("F2")</span>
-                        </dd>
+                    @if (User.IsInRole("Student") && Model.JeDostupno)
+                    {
+                        var statusZahtjeva = TempData["StatusZahtjeva"]?.ToString();
+                        var prisustvoPotvrdjeno = ViewBag.PrisustvoPotvrđeno as bool? ?? false;
 
-                        <dt class="col-sm-5">Broj materijala:</dt>
-                        <dd class="col-sm-7">@Model.NastavniMaterijali.Count</dd>
+                        if (!prisustvoPotvrdjeno && (string.IsNullOrEmpty(statusZahtjeva) || statusZahtjeva.Contains("odbijen") || statusZahtjeva.Contains("istekao") || statusZahtjeva.Contains("neispravan")))
+                        {
+                            <div class="mt-3">
+                                <a asp-action="PrijavaPrisustva"
+                                    asp-route-nastavnaAktivnostId="@Model.Id"
+                                    class="btn btn-outline-success">
+                                    <i class="fas fa-qrcode"></i> Prijavi prisustvo
+                                </a>
+                            </div>
+                        }
 
-                        <dt class="col-sm-5">Broj komentara:</dt>
-                        <dd class="col-sm-7">@Model.Komentari.Count</dd>
-                    </dl>
-                </div>
+                        @if (!string.IsNullOrEmpty(statusZahtjeva) || prisustvoPotvrdjeno)
+                        {
+                            var poruka = prisustvoPotvrdjeno
+                                ? "Vaše prisustvo je potvrđeno."
+                                : statusZahtjeva;
+
+                            var klasa = prisustvoPotvrdjeno
+                                ? "alert-success"
+                                : poruka.Contains("odbijen") || poruka.Contains("istekao") || poruka.Contains("neispravan")
+                                    ? "alert-danger"
+                                    : poruka.Contains("ček") || poruka.Contains("poslan")
+                                        ? "alert-warning"
+                                        : "alert-success";
+
+                            <div class="alert @klasa mt-3 mb-0">
+                                <i class="fas fa-info-circle me-2"></i> @poruka
+                            </div>
+                        }
+                    }
+                </dl>
             </div>
+
+            <!-- Desni stupac -->
+            <div class="col-md-6 border-left">
+                <dl class="row">
+                    <dt class="col-sm-5">Broj prisutnih:</dt>
+                    <dd class="col-sm-7">@ViewBag.BrojPrisutnih / @ViewBag.BrojUkupnoStudenata</dd>
+
+                    <dt class="col-sm-5">Broj materijala:</dt>
+                    <dd class="col-sm-7">@Model.NastavniMaterijali.Count</dd>
+
+                    <dt class="col-sm-5">Broj komentara:</dt>
+                    <dd class="col-sm-7">@Model.Komentari.Count</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Kod za prisustvo -->
+        @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+        {
+            <div class="mt-4">
+                @if (!string.IsNullOrEmpty(Model.KodZaPrisustvo) && Model.KodAktivanDo > DateTime.Now)
+                {
+                    <div class="alert alert-success d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Kod za prisustvo:</strong> <code class="fs-5">@Model.KodZaPrisustvo</code><br />
+                            Važi do: <strong>@Model.KodAktivanDo?.ToString("HH:mm")</strong>
+                        </div>
+                        <form asp-action="GenerisiKodPrisustva"
+                              asp-route-aktivnostId="@Model.Id"
+                              method="post" class="mb-0">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="fas fa-redo-alt"></i> Generiši novi kod
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <form asp-action="GenerisiKodPrisustva"
+                          asp-route-aktivnostId="@Model.Id"
+                          method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-success">
+                            <i class="fas fa-key"></i> Generiši kod za prisustvo
+                        </button>
+                    </form>
+                }
+            </div>
+            }
 
             @if (Model.ManuelnoZakljucano)
             {
@@ -106,71 +176,272 @@
     <!-- Materijali -->
     <div class="card mb-4 shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="fas fa-file-download"></i> Nastavni materijali</h5>
+            <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i> Nastavni materijali</h5>
         </div>
         <div class="card-body">
-            @if (Model.NastavniMaterijali.Any())
+            @if (Model.NastavniMaterijali != null && Model.NastavniMaterijali.Any())
             {
                 <div class="list-group">
                     @foreach (var materijal in Model.NastavniMaterijali)
                     {
-                        <a href="@materijal.PutanjaDoFajla" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span>@materijal.Naziv</span>
-                            <i class="fas fa-download text-primary"></i>
-                        </a>
+                        var brojFajlova = materijal.Fajlovi?.Count() ?? 0;
+
+                        <div class="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>@materijal.Naziv</strong>
+                                @if (!string.IsNullOrWhiteSpace(materijal.Opis))
+                                {
+                                    <p class="text-muted small mb-1">@materijal.Opis</p>
+                                }
+
+                                <p class="mb-0 small text-muted">
+                                    <i class="fas fa-paperclip me-1"></i>
+                                    @brojFajlova @((brojFajlova == 1) ? "fajl" : "fajla")
+                                </p>
+                            </div>
+
+                            @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                            {
+                                <a asp-controller="NastavniMaterijali"
+                                   asp-action="Index"
+                                   asp-route-nastavnaAktivnostId="@Model.Id"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-cog me-1"></i> Upravljaj
+                                </a>
+                            }
+                            else if (brojFajlova > 0)
+                            {
+                                <a asp-controller="NastavniMaterijali"
+                                   asp-action="Index"
+                                   asp-route-nastavnaAktivnostId="@Model.Id"
+                                   class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-download me-1"></i> Pristupi
+                                </a>
+                            }
+                        </div>
                     }
                 </div>
             }
             else
             {
-                <div class="alert alert-info">Nema dostupnih materijala.</div>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Nema dostupnih nastavnih materijala.
+                </div>
             }
-
-            <div class="mt-3">
-                <a asp-controller="NastavniMaterijali"
-                   asp-action="Index"
-                   asp-route-nastavnaAktivnostId="@Model.Id"
-                   class="btn btn-outline-primary">
-                    <i class="fas fa-cog"></i> Upravljaj materijalima
-                </a>
-            </div>
         </div>
     </div>
 
     <!-- Komentari -->
     <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-info text-white">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="fas fa-comments"></i> Komentari</h5>
+            <a asp-controller="NastavneAktivnosti"
+               asp-action="AddComment"
+               asp-route-nastavnaAktivnostId="@Model.Id"
+               class="btn btn-success btn-sm">
+                <i class="fas fa-plus"></i> Dodaj komentar
+            </a>
         </div>
+
         <div class="card-body">
             @if (Model.Komentari.Any())
             {
-                foreach (var komentar in Model.Komentari)
+                var trenutniKorisnikId = (long)ViewBag.TrenutniKorisnikId;
+
+                foreach (var komentar in Model.Komentari.OrderByDescending(k => k.DatumVrijeme))
                 {
-                    <div class="media border-bottom pb-3 mb-3">
-                        <div class="media-body">
-                            <h6 class="mt-0">@komentar.Student.Ime @komentar.Student.Prezime</h6>
-                            <p>@komentar.Sadrzaj</p>
-                            <small class="text-muted">@komentar.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</small>
+                    var mozeVidjeti = komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Javno ||
+                        (komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno &&
+                        (komentar.KorisnikId == trenutniKorisnikId ||
+                         komentar.VidljivostKorisnici.Any(vk => vk.KorisnikId == trenutniKorisnikId)));
+
+                    if (mozeVidjeti)
+                    {
+                        <div class="media border-bottom pb-3 mb-4 pt-3">
+                            <div class="media-body">
+                                <!-- Autor komentara -->
+                                <h6 class="mt-0 mb-1">
+                                    @if (komentar.Student != null)
+                                    {
+                                        <i class="fas fa-user-graduate text-primary"></i>
+
+                                        <br />
+                                        <strong>@komentar.Student.Ime</strong>
+
+                                        <br />
+                                        <strong>@komentar.Student.Prezime</strong>
+
+                                        <br />
+                                        <small class="text-muted">Uloga: Student</small>
+                                    }
+                                    else if (komentar.Korisnik != null)
+                                    {
+                                        <i class="fas fa-user text-secondary"></i>
+
+                                        <br />
+                                        <strong>@komentar.Korisnik.Ime</strong>
+
+                                        <br />
+                                        <strong>@komentar.Korisnik.Prezime</strong>
+
+                                        <br />
+                                        <small class="text-muted">Uloga: @komentar.Korisnik.Uloga</small>
+                                    }
+                                    else
+                                    {
+                                        <em>Nepoznat autor</em>
+                                    }
+                                </h6>
+
+                                <!-- Sadržaj komentara -->
+                                <p class="mb-1">@komentar.Sadrzaj</p>
+
+                                <!-- Prilog -->
+                                @if (!string.IsNullOrEmpty(komentar.PrilogPath))
+                                {
+                                    <p class="mt-2">
+                                        📎 <a href="@komentar.PrilogPath" target="_blank">Preuzmi prilog</a>
+                                    </p>
+                                }
+
+                                <!-- Datum + Vidljivost -->
+                                <small class="text-muted">
+                                    @komentar.DatumVrijeme.ToString("dd.MM.yyyy HH:mm") |
+                                    Vidljivost: @(komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Javno ? "Javno" : "Privatno")
+                                </small>
+
+                                <!-- Akcije -->
+                                @if (komentar.Korisnik != null &&
+                                    (User.IsInRole("Studentska služba") ||
+                                     User.FindFirstValue(ClaimTypes.NameIdentifier) == komentar.Korisnik.AspNetUserId))
+                                {
+                                    <div class="mt-2">
+                                        <a asp-action="EditKomentar"
+                                           asp-route-id="@komentar.Id"
+                                           class="btn btn-sm btn-outline-warning me-2">
+                                            <i class="fas fa-edit"></i> Uredi
+                                        </a>
+
+                                        <form asp-action="DeleteKomentar"
+                                              asp-route-id="@komentar.Id"
+                                              method="post"
+                                              style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Da li ste sigurni da želite obrisati komentar?');">
+                                                <i class="fas fa-trash"></i> Obriši
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
             }
             else
             {
-                <div class="alert alert-info">Nema komentara.</div>
+                <div class="alert alert-info mb-0">Nema komentara.</div>
             }
-
-            <div class="mt-3">
-                <a asp-controller="Komentari"
-                   asp-action="Index"
-                   asp-route-nastavnaAktivnostId="@Model.Id"
-                   class="btn btn-outline-info">
-                    <i class="fas fa-cog"></i> Upravljaj komentarima
-                </a>
-            </div>
         </div>
     </div>
+
+    @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+    {
+        var statusi = ViewBag.StudentStatusi as List<(StudentHub.Models.Student student, string status, StudentHub.Models.ZahtjevZaPrisustvo zahtjev)>;
+
+        if (statusi != null && statusi.Any())
+        {
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-user-check"></i> Prisustvo studenata</h5>
+                    <a asp-action="EvidentirajPrisustvo"
+                       asp-route-nastavnaAktivnostId="@Model.Id"
+                       class="btn btn-outline-light btn-sm">
+                        <i class="fas fa-edit"></i> Evidentiraj sve
+                    </a>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ime i prezime</th>
+                                    <th>Broj indeksa</th>
+                                    <th>Status</th>
+                                    <th class="text-center">Akcija</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var entry in statusi)
+                                {
+                                    var student = entry.student;
+                                    var status = entry.status;
+                                    var zahtjev = entry.zahtjev;
+
+                                    <tr>
+                                        <td>@student.Ime @student.Prezime</td>
+                                        <td>@student.BrojIndeksa</td>
+                                        <td>
+                                            @if (status == "Prisutan")
+                                            {
+                                                <span class="badge bg-success">Prisutan</span>
+                                            }
+                                            else if (status == "Čeka potvrdu")
+                                            {
+                                                <span class="badge bg-warning text-dark">Čeka potvrdu</span><br />
+                                                <small>Kod: <code>@zahtjev.KodUnesen</code></small><br />
+                                                <small>@zahtjev.VrijemePodnosenja.ToString("HH:mm:ss")</small>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Nije prisutan</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (status == "Čeka potvrdu" && zahtjev != null)
+                                            {
+                                                <div class="btn-group">
+                                                    <form asp-action="PotvrdiPrisustvoStudentu"
+                                                          asp-route-zahtjevId="@zahtjev.Id"
+                                                          method="post" class="me-1">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-success btn-sm" title="Potvrdi prisustvo">
+                                                            ✅
+                                                        </button>
+                                                    </form>
+                                                    <form asp-action="OdbijPrisustvoStudentu"
+                                                          asp-route-zahtjevId="@zahtjev.Id"
+                                                          method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Odbij zahtjev">
+                                                            ❌
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">—</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                Nema dostupnih podataka o studentima za ovu aktivnost.
+            </div>
+        }
+    }
 </div>
 
 @functions {

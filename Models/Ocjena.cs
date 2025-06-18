@@ -39,7 +39,7 @@ namespace StudentHub.Models
         public Student Student { get; set; }
 
         [ForeignKey("Profesor")]
-        public long? ProfesorId { get; set; } // Opcionalno za nastavne aktivnosti
+        public long? ProfesorId { get; set; }
         public Profesor Profesor { get; set; }
 
         [ForeignKey("NastavnaAktivnost")]

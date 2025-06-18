@@ -51,24 +51,6 @@
                                 <h3>Izborni predmeti - Pregled odabira</h3>
                             </div>
                             <div class="card-body">
-                                ...
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning">
-                            Nije definisan limit za izborne predmete za ovaj studijski program i godinu studenta.
-                        </div>
-                    }
-
-                    @if (Model.StudijskiProgramIzborniLimit != null)
-                    {
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-header bg-info text-white">
-                                <h3>Izborni predmeti - Pregled odabira</h3>
-                            </div>
-                            <div class="card-body">
                                 <p><strong>Limit za izborne predmete:</strong> min @Model.StudijskiProgramIzborniLimit.MinIzborniPredmeti / max @Model.StudijskiProgramIzborniLimit.MaxIzborniPredmeti</p>
                                 @if (Model.Student.StudentNaPredmetima.Any(snp => snp.Predmet.TipPredmeta == TipPredmeta.Izborni))
                                 {
@@ -172,6 +154,7 @@
                         <th>ECTS</th>
                         <th>Semestar</th>
                         <th>Ocjena</th>
+                        <th>Akcije</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -179,9 +162,11 @@
                     {
                         var predmet = snp.Predmet;
                         <tr>
-                            <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none">
-                            <td>@predmet.Naziv</td>
-                            </a>
+                            <td>
+                                <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none">
+                                    @predmet.Naziv
+                                </a>
+                            </td>
                             <td>@predmet.ECTS</td>
                             <td>@predmet.Semestar</td>
                             <td>
@@ -195,6 +180,26 @@
                                 {
                                     <span class="text-warning">Nema ocjene</span>
                                 }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <!-- Detalji po predmetu za studenta -->
+                                    <a asp-controller="Predmeti" asp-action="StudentDetails"
+                                       asp-route-predmetId="@predmet.Id"
+                                       asp-route-studentId="@Model.Student.Id"
+                                       class="btn btn-outline-primary btn-sm"
+                                       title="Detalji o prisustvu i ocjenama za ovaj predmet">
+                                        <i class="fas fa-user-graduate me-1"></i> Detalji studenta
+                                    </a>
+
+                                    <!-- Link ka predmetu -->
+                                    <a asp-controller="Predmeti" asp-action="Details"
+                                       asp-route-id="@predmet.Id"
+                                       class="btn btn-outline-secondary btn-sm"
+                                       title="Pogledaj sve informacije o predmetu">
+                                        <i class="fas fa-book-open me-1"></i> Detalji predmeta
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }

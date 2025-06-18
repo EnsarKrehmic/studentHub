@@ -33,9 +33,16 @@
             {
                 <p>
                     <strong>Studijski program:</strong>
-                    <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@Model.StudijskiProgramId" class="text-decoration-none">
+                    @if (Model.StudijskiProgramId > 0)
+                    {
+                        <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@Model.StudijskiProgramId" class="text-decoration-none">
+                            @Model.StudentStudijskiProgramNaziv
+                        </a>
+                    }
+                    else
+                    {
                         @Model.StudentStudijskiProgramNaziv
-                    </a>
+                    }
                 </p>
             }
 

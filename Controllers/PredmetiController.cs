@@ -1137,6 +1137,58 @@ namespace StudentHub.Controllers
             return RedirectToAction("Prisustvo", new { id = predmetId });
         }
 
+        [HttpGet("StudentDetails")]
+        [Authorize(Roles = "Student, Profesor, Asistent, Studentska služba")]
+        public async Task<IActionResult> StudentDetails(long predmetId, long studentId)
+        {
+            var student = await _context.Studenti
+                .Include(s => s.StudentNaPredmetima)
+                .FirstOrDefaultAsync(s => s.Id == studentId);
+
+            var predmet = await _context.Predmeti
+                .Include(p => p.NastavneAktivnosti)
+                .FirstOrDefaultAsync(p => p.Id == predmetId);
+
+            if (student == null || predmet == null)
+                return NotFound();
+
+            var aktivnosti = predmet.NastavneAktivnosti.OrderBy(a => a.DatumVrijemeOdrzavanja).ToList();
+
+            var prisustva = await _context.PrisustvaNaAktivnostima
+                .Where(p => p.StudentId == studentId && aktivnosti.Select(a => a.Id).Contains(p.NastavnaAktivnostId))
+                .ToListAsync();
+
+            var ocjene = await _context.Ocjene
+                .Where(o => o.StudentId == studentId && o.PredmetId == predmetId)
+                .ToListAsync();
+
+            var ukupno = aktivnosti.Count;
+            var brojPrisustva = prisustva.Count;
+            var procUkupno = ukupno == 0 ? 0 : (float)brojPrisustva / ukupno * 100;
+
+            var jeVlasnik = student.AspNetUserId == User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jeNastavnik = User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba");
+
+            if (!jeVlasnik && !jeNastavnik)
+                return Forbid();
+
+            var model = new StudentNaPredmetuViewModel
+            {
+                Student = student,
+                Predmet = predmet,
+                Aktivnosti = aktivnosti,
+                Prisustva = prisustva,
+                Ocjene = ocjene,
+                ProcenatUkupno = procUkupno,
+                ProcenatPredavanja = IzracunajProcenat(aktivnosti, prisustva, TipNastavneAktivnosti.Predavanje, student.Id),
+                ProcenatVjezbi = IzracunajProcenat(aktivnosti, prisustva, TipNastavneAktivnosti.Vjezba, student.Id),
+                ZakljucnaOcjena = ocjene.FirstOrDefault(o => o.Tip == TipOcjene.Predmet)?.Vrijednost,
+                DozvoljenPristup = true
+            };
+
+            return View("StudentNaPredmetu", model);
+        }
+
         private void ReloadViewData(long predmetId)
         {
             ViewBag.Profesori = _context.Profesori
@@ -1148,6 +1200,15 @@ namespace StudentHub.Controllers
                 .Where(a => !_context.PredmetAsistenti.Any(pa => pa.PredmetId == predmetId && pa.AsistentId == a.Id))
                 .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = $"{a.Ime} {a.Prezime}" })
                 .ToList();
+        }
+
+        private float IzracunajProcenat(List<NastavnaAktivnost> sve, List<PrisustvoNaAktivnosti> prisustva, TipNastavneAktivnosti tip, long studentId)
+        {
+            var filtrirane = sve.Where(a => a.Tip == tip).ToList();
+            if (filtrirane.Count == 0) return 0;
+
+            var broj = filtrirane.Count(a => prisustva.Any(p => p.StudentId == studentId && p.NastavnaAktivnostId == a.Id));
+            return (float)broj / filtrirane.Count * 100;
         }
 
         private PredmetDetailsViewModel LoadViewModel(long predmetId)

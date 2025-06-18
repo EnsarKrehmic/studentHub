@@ -26,7 +26,6 @@ namespace StudentHub.Controllers
             _hubContext = hubContext;
         }
 
-        // GET: Ocjene
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
@@ -34,50 +33,51 @@ namespace StudentHub.Controllers
 
             IQueryable<Ocjena> ocjeneQuery = _context.Ocjene
                 .Include(o => o.Predmet)
-                .ThenInclude(p => p.NastavniPlan)
-                .ThenInclude(np => np.StudijskiProgram)
+                    .ThenInclude(p => p.NastavniPlan)
+                        .ThenInclude(np => np.StudijskiProgram)
                 .Include(o => o.Student)
-                .ThenInclude(s => s.StudentStudijskiProgrami)
+                    .ThenInclude(s => s.StudentStudijskiProgrami)
+                        .ThenInclude(ssp => ssp.StudijskiProgram)
                 .Include(o => o.Profesor)
                 .Include(o => o.NastavnaAktivnost);
 
-            List<OcjenaViewModel> ocjeneViewModel;
+            List<Ocjena> ocjene;
 
             if (User.IsInRole("Student"))
             {
-                ocjeneQuery = ocjeneQuery.Where(o => o.Student.AspNetUserId == userId);
-                var ocjene = await ocjeneQuery.ToListAsync();
+                ocjene = await ocjeneQuery.Where(o => o.Student.AspNetUserId == userId).ToListAsync();
+
                 double prosjekOcjena = ocjene.Any() ? ocjene.Average(o => o.Vrijednost) : 0;
 
-                ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
+                var ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
                 {
                     Id = o.Id,
                     PredmetId = o.PredmetId ?? 0,
                     PredmetNaziv = o.Predmet?.Naziv,
                     NastavnaAktivnostNaziv = o.NastavnaAktivnost?.Naziv,
                     Tip = o.Tip.ToString(),
-                    StudentIme = o.Student.Ime,
-                    StudentPrezime = o.Student.Prezime,
+                    StudentIme = o.Student?.Ime,
+                    StudentPrezime = o.Student?.Prezime,
                     ProfesorIme = o.Profesor?.Ime,
                     ProfesorPrezime = o.Profesor?.Prezime,
                     ProfesorTitula = o.Profesor?.ProfesorTitula,
                     Vrijednost = o.Vrijednost,
                     ProsjekOcjena = prosjekOcjena,
-                    StudentStudijskiProgramNaziv = o.Predmet?.NastavniPlan?.StudijskiProgram?.Naziv ??
-                        o.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato",
+                    StudentStudijskiProgramNaziv = GetStudijskiProgram(o)?.Naziv ?? "Nepoznato",
+                    StudijskiProgramId = GetStudijskiProgram(o)?.Id ?? 0
                 }).ToList();
+
+                return View(ocjeneViewModel);
             }
             else if (User.IsInRole("Profesor"))
             {
-                ocjeneQuery = ocjeneQuery.Where(o => o.Profesor.AspNetUserId == userId && o.Tip == TipOcjene.Predmet);
-                var ocjene = await ocjeneQuery.ToListAsync();
+                ocjene = await ocjeneQuery.Where(o => o.Profesor.AspNetUserId == userId && o.Tip == TipOcjene.Predmet).ToListAsync();
 
                 var prosjekPoPredmetu = ocjene
                     .GroupBy(o => o.PredmetId)
-                    .Select(g => new { PredmetId = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
-                    .ToDictionary(x => x.PredmetId, x => x.Prosjek);
+                    .ToDictionary(g => g.Key, g => g.Average(x => x.Vrijednost));
 
-                ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
+                var ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
                 {
                     Id = o.Id,
                     PredmetId = o.PredmetId ?? 0,
@@ -91,95 +91,66 @@ namespace StudentHub.Controllers
                     ProfesorTitula = o.Profesor?.ProfesorTitula ?? "Nepoznata titula",
                     Vrijednost = o.Vrijednost,
                     ProsjekPoPredmetu = prosjekPoPredmetu.ContainsKey(o.PredmetId ?? 0) ? prosjekPoPredmetu[o.PredmetId ?? 0] : 0,
-                    StudentStudijskiProgramNaziv = o.Predmet?.NastavniPlan?.StudijskiProgram?.Naziv ??
-                        o.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato",
+                    StudentStudijskiProgramNaziv = GetStudijskiProgram(o)?.Naziv ?? "Nepoznato",
+                    StudijskiProgramId = GetStudijskiProgram(o)?.Id ?? 0
                 }).ToList();
+
+                return View(ocjeneViewModel);
             }
             else if (User.IsInRole("Studentska služba"))
             {
-                var ocjene = await ocjeneQuery.ToListAsync();
+                ocjene = await ocjeneQuery.ToListAsync();
 
-                var prosjekPoPredmetu = ocjene.Where(o => o.Tip == TipOcjene.Predmet)
-                    .GroupBy(o => o.Predmet?.Naziv)
-                    .Select(g => new { Predmet = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
-                    .ToDictionary(x => x.Predmet, x => x.Prosjek);
+                var prosjekPoPredmetu = ocjene.Where(o => o.Tip == TipOcjene.Predmet && o.Predmet != null)
+                    .GroupBy(o => o.Predmet.Naziv)
+                    .ToDictionary(g => g.Key, g => g.Average(x => x.Vrijednost));
 
-                var prosjekPoStudijskomProgramu = ocjene
-                    .Where(o => o.Tip == TipOcjene.Predmet && o.Student != null &&
-                                o.Student.StudentStudijskiProgrami != null &&
-                                o.Student.StudentStudijskiProgrami.Any() &&
-                                o.Student.StudentStudijskiProgrami.First().StudijskiProgram != null)
-                    .GroupBy(o => o.Student.StudentStudijskiProgrami.First().StudijskiProgram.Naziv)
-                    .Select(g => new { StudijskiProgram = g.Key, Prosjek = g.Average(o => o.Vrijednost) })
-                    .ToDictionary(x => x.StudijskiProgram, x => x.Prosjek);
+                var prosjekPoStudijskomProgramu = ocjene.Where(o => o.Tip == TipOcjene.Predmet && GetStudijskiProgram(o) != null)
+                    .GroupBy(o => GetStudijskiProgram(o).Naziv)
+                    .ToDictionary(g => g.Key, g => g.Average(x => x.Vrijednost));
 
-                ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
+                var ocjeneViewModel = ocjene.Select(o =>
                 {
-                    Id = o.Id,
-                    PredmetId = o.PredmetId ?? 0,
-                    PredmetNaziv = o.Predmet?.Naziv,
-                    NastavnaAktivnostNaziv = o.NastavnaAktivnost?.Naziv,
-                    Tip = o.Tip.ToString(),
-                    StudentIme = o.Student?.Ime ?? "Nepoznato",
-                    StudentPrezime = o.Student?.Prezime ?? "Nepoznato",
-                    StudentBrojIndeksa = o.Student?.BrojIndeksa ?? "Nepoznat",
-                    ProfesorIme = o.Profesor?.Ime ?? "Nepoznato",
-                    ProfesorPrezime = o.Profesor?.Prezime ?? "Nepoznato",
-                    ProfesorTitula = o.Profesor?.ProfesorTitula ?? "Nepoznata titula",
-                    Vrijednost = o.Vrijednost,
+                    var studijskiProgram = GetStudijskiProgram(o);
+                    var studijskiProgramNaziv = studijskiProgram?.Naziv ?? "Nepoznato";
 
-                    ProsjekPoPredmetu = (o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv)) 
-                    ? prosjekPoPredmetu[o.Predmet.Naziv] : 0,
-
-                    ProsjekPoStudijskomProgramu = (o.Predmet != null &&
-                        o.Predmet.NastavniPlan != null &&
-                        o.Predmet.NastavniPlan.StudijskiProgram != null &&
-                        prosjekPoStudijskomProgramu.ContainsKey(o.Predmet.NastavniPlan.StudijskiProgram.Naziv))
-                        ? prosjekPoStudijskomProgramu[o.Predmet.NastavniPlan.StudijskiProgram.Naziv]
-                        : 0,
-
-                    ProsjekOcjena = (
-                        ((o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv)) ? prosjekPoPredmetu[o.Predmet.Naziv] : 0) +
-                        ((o.Predmet != null &&
-                        o.Predmet.NastavniPlan != null &&
-                        o.Predmet.NastavniPlan.StudijskiProgram != null &&
-                        prosjekPoStudijskomProgramu.ContainsKey(o.Predmet.NastavniPlan.StudijskiProgram.Naziv))
-                        ? prosjekPoStudijskomProgramu[o.Predmet.NastavniPlan.StudijskiProgram.Naziv]
-                        : 0)
-                    ) / 2,
-
-                    ProsjekPrikaz = $"Predmet '{(o.Predmet != null ? o.Predmet.Naziv : "Nepoznat predmet")}': " +
-                        $"{((o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv))
-                        ? prosjekPoPredmetu[o.Predmet.Naziv] : 0):0.00}, " +
-                        ((o.Predmet != null &&
-                        o.Predmet.NastavniPlan != null &&
-                        o.Predmet.NastavniPlan.StudijskiProgram != null)
-                            ? $"Studijski program '{o.Predmet.NastavniPlan.StudijskiProgram.Naziv}': " +
-                                $"{(prosjekPoStudijskomProgramu.ContainsKey(o.Predmet.NastavniPlan.StudijskiProgram.Naziv)
-                                ? prosjekPoStudijskomProgramu[o.Predmet.NastavniPlan.StudijskiProgram.Naziv] : 0):0.00}, "
-                            : "") +
-                        $"Ukupno: {(((o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv))
-                        ? prosjekPoPredmetu[o.Predmet.Naziv] : 0) +
-                        ((o.Predmet != null &&
-                        o.Predmet.NastavniPlan != null &&
-                        o.Predmet.NastavniPlan.StudijskiProgram != null &&
-                        prosjekPoStudijskomProgramu.ContainsKey(o.Predmet.NastavniPlan.StudijskiProgram.Naziv))
-                        ? prosjekPoStudijskomProgramu[o.Predmet.NastavniPlan.StudijskiProgram.Naziv] : 0)) / 2:0.00}",
-
-                    StudentStudijskiProgramNaziv = (o.Predmet != null &&
-                        o.Predmet.NastavniPlan != null &&
-                        o.Predmet.NastavniPlan.StudijskiProgram != null)
-                        ? o.Predmet.NastavniPlan.StudijskiProgram.Naziv
-                        : o.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato",
-
+                    return new OcjenaViewModel
+                    {
+                        Id = o.Id,
+                        PredmetId = o.PredmetId ?? 0,
+                        PredmetNaziv = o.Predmet?.Naziv,
+                        NastavnaAktivnostNaziv = o.NastavnaAktivnost?.Naziv,
+                        Tip = o.Tip.ToString(),
+                        StudentIme = o.Student?.Ime ?? "Nepoznato",
+                        StudentPrezime = o.Student?.Prezime ?? "Nepoznato",
+                        StudentBrojIndeksa = o.Student?.BrojIndeksa ?? "Nepoznat",
+                        ProfesorIme = o.Profesor?.Ime ?? "Nepoznato",
+                        ProfesorPrezime = o.Profesor?.Prezime ?? "Nepoznato",
+                        ProfesorTitula = o.Profesor?.ProfesorTitula ?? "Nepoznata titula",
+                        Vrijednost = o.Vrijednost,
+                        ProsjekPoPredmetu = o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv) ? prosjekPoPredmetu[o.Predmet.Naziv] : 0,
+                        ProsjekPoStudijskomProgramu = studijskiProgram != null && prosjekPoStudijskomProgramu.ContainsKey(studijskiProgramNaziv) ? prosjekPoStudijskomProgramu[studijskiProgramNaziv] : 0,
+                        ProsjekOcjena = ((o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv) ? prosjekPoPredmetu[o.Predmet.Naziv] : 0) +
+                                        (studijskiProgram != null && prosjekPoStudijskomProgramu.ContainsKey(studijskiProgramNaziv) ? prosjekPoStudijskomProgramu[studijskiProgramNaziv] : 0)) / 2,
+                        ProsjekPrikaz = $"Predmet '{(o.Predmet?.Naziv ?? "Nepoznat predmet")}': {(o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv) ? prosjekPoPredmetu[o.Predmet.Naziv] : 0):0.00}, " +
+                                        (studijskiProgram != null ? $"Studijski program '{studijskiProgramNaziv}': {(prosjekPoStudijskomProgramu.ContainsKey(studijskiProgramNaziv) ? prosjekPoStudijskomProgramu[studijskiProgramNaziv] : 0):0.00}, " : "") +
+                                        $"Ukupno: {(((o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv) ? prosjekPoPredmetu[o.Predmet.Naziv] : 0) + (studijskiProgram != null && prosjekPoStudijskomProgramu.ContainsKey(studijskiProgramNaziv) ? prosjekPoStudijskomProgramu[studijskiProgramNaziv] : 0)) / 2):0.00}",
+                        StudentStudijskiProgramNaziv = studijskiProgramNaziv,
+                        StudijskiProgramId = studijskiProgram?.Id ?? 0
+                    };
                 }).ToList();
-            }
-            else
-            {
-                return Forbid();
+
+                return View(ocjeneViewModel);
             }
 
-            return View(ocjeneViewModel);
+            return Forbid();
+        }
+
+        // Helper metoda za pronalaženje studijskog programa
+        private StudijskiProgram GetStudijskiProgram(Ocjena o)
+        {
+            return o.Predmet?.NastavniPlan?.StudijskiProgram
+                ?? o.Student?.StudentStudijskiProgrami?.OrderByDescending(s => s.Id).FirstOrDefault()?.StudijskiProgram;
         }
 
         // GET: Ocjene/Details/{id}
@@ -197,6 +168,8 @@ namespace StudentHub.Controllers
                     .ThenInclude(p => p.NastavniPlan)
                         .ThenInclude(np => np.StudijskiProgram)
                 .Include(o => o.Student)
+                    .ThenInclude(s => s.StudentStudijskiProgrami)
+                        .ThenInclude(ssp => ssp.StudijskiProgram)
                 .Include(o => o.Profesor)
                 .Include(o => o.NastavnaAktivnost)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -217,6 +190,17 @@ namespace StudentHub.Controllers
                 return Forbid();
             }
 
+            // Pronađi studijski program na temelju konteksta ocjene
+            var studijskiProgram = ocjena.Predmet?.NastavniPlan?.StudijskiProgram;
+
+            if (studijskiProgram == null)
+            {
+                // Ako nema predmeta, pokušaj preko studenta
+                studijskiProgram = ocjena.Student.StudentStudijskiProgrami
+                    .OrderByDescending(s => s.Id) // Uzmi zadnje upisani ako ih ima više
+                    .FirstOrDefault()?.StudijskiProgram;
+            }
+
             var ocjenaViewModel = new OcjenaViewModel
             {
                 Id = ocjena.Id,
@@ -231,8 +215,8 @@ namespace StudentHub.Controllers
                 ProfesorPrezime = ocjena.Profesor?.Prezime,
                 ProfesorTitula = ocjena.Profesor?.ProfesorTitula,
                 Vrijednost = ocjena.Vrijednost,
-                StudentStudijskiProgramNaziv = ocjena.Predmet?.NastavniPlan?.StudijskiProgram?.Naziv ??
-                    ocjena.Student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram.Naziv ?? "Nepoznato"
+                StudentStudijskiProgramNaziv = studijskiProgram?.Naziv ?? "Nepoznato",
+                StudijskiProgramId = studijskiProgram?.Id ?? 0
             };
 
             return View(ocjenaViewModel);

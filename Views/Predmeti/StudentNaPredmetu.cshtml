@@ -1,0 +1,193 @@
+﻿@model StudentHub.ViewModels.StudentNaPredmetuViewModel
+
+@{
+    ViewData["Title"] = "Detalji studenta na predmetu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-center">@ViewData["Title"]</h2>
+        </div>
+    </div>
+
+    <!-- Info kartica -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">Podaci o studentu</div>
+                <div class="card-body">
+                    <p><strong>Ime:</strong> @Model.Student.Ime @Model.Student.Prezime</p>
+                    <p><strong>Broj indeksa:</strong> @Model.Student.BrojIndeksa</p>
+                    <p><strong>Email:</strong> @Model.Student.Email</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-dark text-white">Informacije o predmetu</div>
+                <div class="card-body">
+                    <p><strong>Naziv:</strong> @Model.Predmet.Naziv</p>
+                    <p><strong>ECTS:</strong> @Model.Predmet.ECTS</p>
+                    <p><strong>Semestar:</strong> @Model.Predmet.Semestar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grafički prikaz prisustva -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">Grafički prikaz prisustva</div>
+                <div class="card-body">
+                    <canvas id="chartPrisustvo" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prisustva -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-dark">Evidencija prisustva</div>
+        <div class="card-body">
+            @if (Model.Aktivnosti.Any())
+            {
+                <table class="table table-bordered table-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Datum</th>
+                            <th>Aktivnost</th>
+                            <th>Tip</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var aktivnost in Model.Aktivnosti)
+                        {
+                            var prisutan = Model.Prisustva.Any(p => p.NastavnaAktivnostId == aktivnost.Id);
+                            <tr>
+                                <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>@aktivnost.Naziv</td>
+                                <td>@aktivnost.Tip</td>
+                                <td>
+                                    @if (prisutan)
+                                    {
+                                        <span class="badge bg-success">Prisutan</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Odsutan</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-warning">Nema nastavnih aktivnosti.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Ocjene -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">Ocjene</div>
+        <div class="card-body">
+            @if (Model.Ocjene.Any())
+            {
+                <table class="table table-sm table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tip</th>
+                            <th>Vrijednost</th>
+                            <th>Nastavna aktivnost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ocjena in Model.Ocjene)
+                        {
+                            <tr>
+                                <td>@ocjena.Tip</td>
+                                <td>@ocjena.Vrijednost</td>
+                                <td>@(ocjena.NastavnaAktivnost?.Naziv ?? "—")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <p>
+                    <strong>Zaključna ocjena:</strong>
+                    @if (Model.ZakljucnaOcjena.HasValue)
+                    {
+                        <span class="badge bg-success">@Model.ZakljucnaOcjena</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Nije unijeta</span>
+                    }
+                </p>
+            }
+            else
+            {
+                <div class="alert alert-info">Nema unesenih ocjena.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Navigacija -->
+    <div class="d-flex gap-2 mt-4">
+        <a asp-controller="Studenti" asp-action="Details"
+           asp-route-id="@Model.Student.Id"
+           class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Nazad na studenta
+        </a>
+
+        <a asp-controller="Predmeti" asp-action="Details"
+           asp-route-id="@Model.Predmet.Id"
+           class="btn btn-outline-secondary">
+            <i class="fas fa-book me-1"></i> Detalji predmeta
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('chartPrisustvo');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Prisustva', 'Izostanci'],
+                datasets: [{
+                    label: 'Prisustvo',
+                    data: [
+                        @Model.Prisustva.Count(),
+                        @Model.Aktivnosti.Count() - @Model.Prisustva.Count()
+                    ],
+                    backgroundColor: ['#28a745', '#dc3545']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = (value / total * 100).toFixed(1);
+                                return `${context.label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

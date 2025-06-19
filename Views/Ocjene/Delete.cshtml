@@ -8,36 +8,87 @@
 
 <div class="alert alert-warning" role="alert">
     <h4 class="alert-heading">Da li ste sigurni da želite obrisati ovu ocjenu?</h4>
-    <p>Ova akcija je nepovratna i trajno će ukloniti sve podatke o ocjeni.</p>
+    <p>
+        Ova akcija je nepovratna i trajno će ukloniti sve podatke o ocjeni.
+        @if (Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any())
+        {
+            <strong>Ova ocjena ima i parcijalne ocjene koje će također biti obrisane.</strong>
+        }
+    </p>
 </div>
 
-<div class="card mb-4">
+<div class="card mb-4 shadow-sm">
     <div class="card-header bg-danger text-white">
-        <h5>Podaci o ocjeni</h5>
+        <h5>Detalji ocjene</h5>
     </div>
     <div class="card-body">
         <dl class="row">
-            <dt class="col-sm-3">Student:</dt>
-            <dd class="col-sm-9">@Model.Student.Ime @Model.Student.Prezime</dd>
+            <dt class="col-sm-4">Student:</dt>
+            <dd class="col-sm-8">@Model.Student?.Ime @Model.Student?.Prezime (@Model.Student?.BrojIndeksa)</dd>
 
-            <dt class="col-sm-3">Broj indeksa:</dt>
-            <dd class="col-sm-9">@Model.Student.BrojIndeksa</dd>
+            <dt class="col-sm-4">Predmet:</dt>
+            <dd class="col-sm-8">@Model.Predmet?.Naziv</dd>
 
-            <dt class="col-sm-3">Predmet:</dt>
-            <dd class="col-sm-9">@Model.Predmet.Id</dd>
+            @if (Model.NastavnaAktivnost != null)
+            {
+                <dt class="col-sm-4">Nastavna aktivnost:</dt>
+                <dd class="col-sm-8">@Model.NastavnaAktivnost.Naziv</dd>
+            }
 
-            <dt class="col-sm-3">Profesor:</dt>
-            <dd class="col-sm-9">@Model.Profesor.Id</dd>
+            <dt class="col-sm-4">Profesor:</dt>
+            <dd class="col-sm-8">@Model.Profesor?.ProfesorTitula @Model.Profesor?.Ime @Model.Profesor?.Prezime</dd>
 
-            <dt class="col-sm-3">Vrijednost:</dt>
-            <dd class="col-sm-9">@Model.Vrijednost</dd>
+            <dt class="col-sm-4">Vrijednost ocjene:</dt>
+            <dd class="col-sm-8">@Model.Vrijednost</dd>
+
+            @if (Model.TezinaProcentualno.HasValue)
+            {
+                <dt class="col-sm-4">Težina (%):</dt>
+                <dd class="col-sm-8">@Model.TezinaProcentualno%</dd>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.Komentar))
+            {
+                <dt class="col-sm-4">Komentar:</dt>
+                <dd class="col-sm-8">@Model.Komentar</dd>
+            }
+
+            @if (Model.DatumUnosa != default)
+            {
+                <dt class="col-sm-4">Datum unosa:</dt>
+                <dd class="col-sm-8">@Model.DatumUnosa.ToString("dd.MM.yyyy")</dd>
+            }
         </dl>
+
+        @if (Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any())
+        {
+            <hr />
+            <h5>Parcijalne ocjene koje će biti obrisane</h5>
+            <ul class="list-group">
+                @foreach (var dj in Model.DjelimicneOcjene)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>
+                            <strong>@dj.Vrijednost</strong>
+                            @if (!string.IsNullOrWhiteSpace(dj.Komentar))
+                            {
+                                <span class="text-muted ms-2">(@dj.Komentar)</span>
+                            }
+                        </span>
+                        @if (dj.TezinaProcentualno.HasValue)
+                        {
+                            <span class="badge bg-secondary">@dj.TezinaProcentualno %</span>
+                        }
+                    </li>
+                }
+            </ul>
+        }
     </div>
 </div>
 
 <form asp-action="Delete">
     <input type="hidden" asp-for="Id" />
-    <div class="form-group">
+    <div class="form-group mt-3">
         <button type="submit" class="btn btn-danger">Obriši</button>
         <a asp-action="Index" class="btn btn-secondary">Odustani</a>
     </div>

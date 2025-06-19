@@ -7,6 +7,10 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<form style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
@@ -96,6 +100,11 @@ else
 
                             <dt class="col-sm-6">Ukupno aktivnosti:</dt>
                             <dd class="col-sm-6">@Model.NastavneAktivnosti?.Count()</dd>
+
+                            <dt class="col-sm-6">Status studenata:</dt>
+                            <dd class="col-sm-6">
+                                @Model.BrojPoloziliPredmet od @Model.UkupnoStudenata studenata položilo predmet
+                            </dd>
                         </dl>
                     </div>
                 </div>
@@ -294,86 +303,39 @@ else
                                         }
                                     </td>
                                     <td>
-                                        @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                                        @if (User.IsInRole("Profesor") || User.IsInRole("Studentska služba"))
                                         {
-                                            <div class="dropdown d-inline-block">
-                                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton_@studentNaPredmetu.StudentId" data-toggle="dropdown" aria-expanded="false">
-                                                    Akcije
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_@studentNaPredmetu.StudentId">
+                                            <div class="btn-group" role="group">
+                                                @if (Model?.OcjenaIds?.ContainsKey(studentNaPredmetu.StudentId) == true)
+                                                {
+                                                    var ocjenaId = Model.OcjenaIds[studentNaPredmetu.StudentId];
+                                                    <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjenaId" class="btn btn-info btn-sm">Detalji</a>
                                                     @if (User.IsInRole("Profesor"))
                                                     {
-                                                        @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true && Model.Ocjene[studentNaPredmetu.StudentId].HasValue)
-                                                        {
-                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editGradeModal_@studentNaPredmetu.StudentId">Izmijeni ocjenu</a>
-                                                            <a class="dropdown-item text-danger" href="#" onclick="confirmDelete('RemoveGrade', @Model.Predmet.Id, @studentNaPredmetu.StudentId, 'ocjenu')">Ukloni ocjenu</a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGradeModal_@studentNaPredmetu.StudentId">Dodaj ocjenu</a>
-                                                        }
+                                                        <a asp-controller="Ocjene" asp-action="EditPredmetOcjena" asp-route-id="@ocjenaId" class="btn btn-warning btn-sm">Izmjena</a>
+                                                        <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@ocjenaId" class="btn btn-danger btn-sm">Brisanje</a>
                                                     }
-                                                    @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
-                                                    {
-                                                        <a class="dropdown-item text-danger" href="#" onclick="confirmDelete('RemoveStudentFromSubject', @Model.Predmet.Id, @studentNaPredmetu.StudentId, 'studenta')">Ukloni studenta</a>
-                                                    }
-                                                </div>
-                                            </div>
+                                                }
+                                                else if (User.IsInRole("Profesor"))
+                                                {
+                                                    <a asp-controller="Predmeti"
+                                                       asp-action="StudentDetails"
+                                                       asp-route-predmetId="@Model.Predmet.Id"
+                                                       asp-route-studentId="@studentNaPredmetu.StudentId"
+                                                       class="btn btn-outline-info btn-sm">
+                                                        Detalji studenta
+                                                    </a>
+                                                }
 
-                                            <!-- Modal za dodavanje ocjene -->
-                                            <div class="modal fade" id="addGradeModal_@studentNaPredmetu.StudentId" tabindex="-1" role="dialog" aria-labelledby="addGradeModalLabel_@studentNaPredmetu.StudentId" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="addGradeModalLabel_@studentNaPredmetu.StudentId">Dodaj ocjenu za @studentNaPredmetu.Student.Ime @studentNaPredmetu.Student.Prezime</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <form asp-action="AddGrade" method="post">
-                                                            <div class="modal-body">
-                                                                <input type="hidden" name="predmetId" value="@Model.Predmet.Id" />
-                                                                <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
-                                                                <div class="form-group">
-                                                                    <label for="ocjena">Ocjena (5-10)</label>
-                                                                    <input type="number" name="ocjena" min="5" max="10" step="1" class="form-control" required />
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
-                                                                <button type="submit" class="btn btn-primary">Dodaj ocjenu</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Modal za izmjenu ocjene -->
-                                            <div class="modal fade" id="editGradeModal_@studentNaPredmetu.StudentId" tabindex="-1" role="dialog" aria-labelledby="editGradeModalLabel_@studentNaPredmetu.StudentId" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="editGradeModalLabel_@studentNaPredmetu.StudentId">Izmijeni ocjenu za @studentNaPredmetu.Student.Ime @studentNaPredmetu.Student.Prezime</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <form asp-action="EditGrade" method="post">
-                                                            <div class="modal-body">
-                                                                <input type="hidden" name="predmetId" value="@Model.Predmet.Id" />
-                                                                <input type="hidden" name="studentId" value="@studentNaPredmetu.StudentId" />
-                                                                <div class="form-group">
-                                                                    <label for="ocjena">Ocjena (5-10)</label>
-                                                                    <input type="number" name="ocjena" min="5" max="10" step="1" class="form-control" value="@(Model.Ocjene.ContainsKey(studentNaPredmetu.StudentId) && Model.Ocjene[studentNaPredmetu.StudentId].HasValue ? Model.Ocjene[studentNaPredmetu.StudentId] : null)" required />
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
-                                                                <button type="submit" class="btn btn-primary">Spremi promjene</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                                @* Dugme za uklanjanje studenta s predmeta *@
+                                                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                                                {
+                                                    <button type="button"
+                                                            class="btn btn-outline-danger btn-sm"
+                                                            onclick="confirmDelete('RemoveStudentFromSubject', '@Model.Predmet.Id', '@studentNaPredmetu.StudentId', '@($"{studentNaPredmetu.Student?.Ime} {studentNaPredmetu.Student?.Prezime}")')">
+                                                        Ukloni
+                                                    </button>
+                                                }
                                             </div>
                                         }
                                     </td>

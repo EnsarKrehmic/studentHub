@@ -199,60 +199,71 @@
     <div class="container mt-5">
         <div class="card shadow-lg p-4">
             <h4 class="mb-3">Komentari</h4>
+
             <input class="form-control mb-3" id="komentarSearch" onkeyup="filtrirajKomentare()" placeholder="Pretraga komentara..." />
 
-            <form asp-action="DodajKomentar" enctype="multipart/form-data" class="mb-4">
-                <input type="hidden" name="ispitId" value="@Model.IspitId" />
-                <textarea name="sadrzaj" class="form-control mb-2" placeholder="Unesite komentar..." required></textarea>
-                <input type="file" name="prilog" class="form-control mb-2" />
-                <select name="vidljivost" class="form-control mb-2" id="vidljivostSelect">
-                    <option value="Javno">Javno</option>
-                    <option value="Privatno">Privatno</option>
-                </select>
-                <div id="odabirKorisnika" style="display: none;">
-                    <select name="odabraniKorisnici" multiple class="form-control" id="korisniciSelect"></select>
+            @if (Model.Arhivirano)
+            {
+                <div class="alert alert-warning">
+                    Ispit je arhiviran. Dodavanje komentara nije moguće.
                 </div>
-                <button type="submit" class="btn btn-primary">Objavi komentar</button>
-            </form>
+            }
+            else
+            {
+                <form asp-action="DodajKomentar" enctype="multipart/form-data" class="mb-4">
+                    <input type="hidden" name="ispitId" value="@Model.IspitId" />
+                    <textarea name="sadrzaj" class="form-control mb-2" placeholder="Unesite komentar..." required></textarea>
+                    <input type="file" name="prilog" class="form-control mb-2" />
+                    <select name="vidljivost" class="form-control mb-2" id="vidljivostSelect">
+                        <option value="Javno">Javno</option>
+                        <option value="Privatno">Privatno</option>
+                    </select>
+                    <div id="odabirKorisnika" style="display: none;">
+                        <select name="odabraniKorisnici" multiple class="form-control" id="korisniciSelect"></select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Objavi komentar</button>
+                </form>
+            }
+        </div>
 
-            <div class="komentari-lista">
-                @foreach (var komentar in Model.Komentari)
+        <!-- Komentari -->
+        <div class="komentari-lista">
+            @foreach (var komentar in Model.Komentari)
+            {
+                var mozeVidjeti = komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Javno ||
+                (komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno &&
+                (komentar.KorisnikId == trenutniKorisnikId || komentar.VidljivostKorisnici.Any(vk => vk.KorisnikId == trenutniKorisnikId)));
+
+                @if (mozeVidjeti)
                 {
-                    var mozeVidjeti = komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Javno ||
-                    (komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno &&
-                    (komentar.KorisnikId == trenutniKorisnikId || komentar.VidljivostKorisnici.Any(vk => vk.KorisnikId == trenutniKorisnikId)));
+                    <div class="komentar border rounded p-2 mb-2">
+                        <div><strong>@komentar.Korisnik.Ime @komentar.Korisnik.Prezime</strong></div>
+                        <div class="text-muted">@komentar.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</div>
+                        <div class="mt-1 komentar-sadrzaj">@komentar.Sadrzaj</div>
+                        @if (!string.IsNullOrEmpty(komentar.PrilogPath))
+                        {
+                            <a class="btn btn-sm btn-link mt-1" href="@komentar.PrilogPath">📎 Prilog</a>
+                        }
+                        @if (komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno)
+                        {
+                            <span class="badge bg-warning">🔒 Privatni komentar</span>
+                        }
 
-                    @if (mozeVidjeti)
-                    {
-                        <div class="komentar border rounded p-2 mb-2">
-                            <div><strong>@komentar.Korisnik.Ime @komentar.Korisnik.Prezime</strong></div>
-                            <div class="text-muted">@komentar.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</div>
-                            <div class="mt-1 komentar-sadrzaj">@komentar.Sadrzaj</div>
-                            @if (!string.IsNullOrEmpty(komentar.PrilogPath))
-                            {
-                                <a class="btn btn-sm btn-link mt-1" href="@komentar.PrilogPath">📎 Prilog</a>
-                            }
-                            @if (komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno)
-                            {
-                                <span class="badge bg-warning">🔒 Privatni komentar</span>
-                            }
+                        <!-- DUGMAD Edit / Delete -->
+                        @if (komentar.KorisnikId == trenutniKorisnikId || User.IsInRole("Studentska služba"))
+                        {
+                            <div class="mt-2">
+                                <a asp-action="EditKomentar" asp-route-id="@komentar.Id" class="btn btn-sm btn-outline-secondary">✏️ Uredi</a>
 
-                            <!-- DUGMAD Edit / Delete -->
-                            @if (komentar.KorisnikId == trenutniKorisnikId || User.IsInRole("Studentska služba"))
-                            {
-                                <div class="mt-2">
-                                    <a asp-action="EditKomentar" asp-route-id="@komentar.Id" class="btn btn-sm btn-outline-secondary">✏️ Uredi</a>
-
-                                    <form asp-action="DeleteKomentar" asp-route-id="@komentar.Id" method="post" class="d-inline-block ms-2">
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Da li ste sigurni da želite obrisati komentar?');">🗑️ Obriši</button>
-                                    </form>
-                                </div>
-                            }
-                        </div>
-                    }
+                                <form asp-action="DeleteKomentar" asp-route-id="@komentar.Id" method="post" class="d-inline-block ms-2">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Da li ste sigurni da želite obrisati komentar?');">🗑️ Obriši</button>
+                                </form>
+                            </div>
+                        }
+                    </div>
                 }
-            </div>
+            }
         </div>
     </div>
 }

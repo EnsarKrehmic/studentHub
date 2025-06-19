@@ -1,0 +1,134 @@
+﻿@model StudentHub.ViewModels.OcjenaViewModel
+
+<div class="col-md-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">
+                <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@Model.PredmetId" class="text-white text-decoration-none">
+                    @Model.PredmetNaziv
+                </a>
+            </h5>
+        </div>
+        <div class="card-body">
+
+            @if (Model.ParentOcjenaId.HasValue)
+            {
+                <div class="alert alert-info">
+                    <h6>Parcijalna ocjena</h6>
+                    <p>
+                        <strong>Glavna ocjena:</strong>
+                        <a asp-action="Details" asp-route-id="@Model.ParentOcjenaId" class="text-decoration-underline">@Model.ParentNaziv</a>
+                    </p>
+                </div>
+            }
+
+            <p><strong>Student:</strong> @Model.StudentIme @Model.StudentPrezime</p>
+            <p><strong>Profesor:</strong> @Model.ProfesorTitula @Model.ProfesorIme @Model.ProfesorPrezime</p>
+
+            <p>
+                <strong>Ocjena:</strong>
+                <span class="badge @(Model.Vrijednost >= 8 ? "bg-success" : Model.Vrijednost >= 6 ? "bg-warning" : "bg-danger")">
+                    @Model.Vrijednost
+                </span>
+            </p>
+
+            @if (Model.PonderisanaVrijednost.HasValue)
+            {
+                <p>
+                    <strong>Ponderisana vrijednost:</strong>
+                    <span class="badge bg-info">@Model.PonderisanaVrijednost.Value.ToString("0.00")</span>
+                </p>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.Komentar))
+            {
+                <p><strong>Komentar:</strong> @Model.Komentar</p>
+            }
+
+            @if (Model.TezinaProcentualno.HasValue)
+            {
+                <p><strong>Težina:</strong> @Model.TezinaProcentualno %</p>
+            }
+
+            @if (Model.DatumDodjele.HasValue)
+            {
+                <p><strong>Datum unosa:</strong> @Model.DatumDodjele.Value.ToString("dd.MM.yyyy")</p>
+            }
+
+            @if (User.IsInRole("Student") && Model.Vrijednost < 6)
+            {
+                <p class="text-danger"><strong>Napomena:</strong> Ova ocjena je ispod prolaznog praga!</p>
+            }
+
+            <p>
+                <strong>Studijski program:</strong>
+                @if (Model.StudijskiProgramId > 0)
+                {
+                    <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@Model.StudijskiProgramId" class="text-decoration-none">
+                        @Model.StudentStudijskiProgramNaziv
+                    </a>
+                }
+                else
+                {
+                    @Model.StudentStudijskiProgramNaziv
+                }
+            </p>
+
+            @if (Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any())
+            {
+                <hr />
+                <h6 class="text-muted">Parcijalne ocjene</h6>
+                <ul class="list-group mb-2">
+                    @foreach (var dj in Model.DjelimicneOcjene)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                <strong>@dj.Vrijednost</strong>
+                                @if (!string.IsNullOrWhiteSpace(dj.Komentar))
+                                {
+                                    <small class="text-muted ms-2">(@dj.Komentar)</small>
+                                }
+                            </span>
+                            @if (dj.TezinaProcentualno.HasValue)
+                            {
+                                <span class="badge bg-secondary">@dj.TezinaProcentualno %</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+
+            @if (Model.BodoviSaIspita.Any())
+            {
+                <hr />
+                <h6 class="text-muted">Rezultati ispita</h6>
+                <ul class="list-group mb-2">
+                    @foreach (var ispit in Model.BodoviSaIspita.OrderBy(i => i.Datum))
+                    {
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>@ispit.IspitNaziv (@ispit.Datum.ToString("dd.MM.yyyy"))</span>
+                            <span class="badge bg-primary">@ispit.Bodovi</span>
+                        </li>
+                    }
+                </ul>
+            }
+
+            <hr />
+            <p><strong>Prisustvo:</strong></p>
+            <ul class="list-group">
+                <li class="list-group-item">Ukupno: <strong>@Model.ProcenatPrisustvaUkupno.ToString("0.0")%</strong></li>
+                <li class="list-group-item">Predavanja: <strong>@Model.ProcenatPrisustvaPredavanja.ToString("0.0")%</strong></li>
+                <li class="list-group-item">Vježbe: <strong>@Model.ProcenatPrisustvaVjezbi.ToString("0.0")%</strong></li>
+            </ul>
+
+            <div class="text-end mt-3">
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info btn-sm">Detalji</a>
+                @if (User.IsInRole("Profesor"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Izmjena</a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">Brisanje</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

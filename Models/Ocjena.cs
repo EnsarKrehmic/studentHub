@@ -20,6 +20,17 @@ namespace StudentHub.Models
         [Required(ErrorMessage = "Ocjena je obavezna.")]
         public float Vrijednost { get; set; }
 
+        [Display(Name = "Datum unosa")]
+        public DateTime DatumUnosa { get; set; } = DateTime.Now;
+
+        [MaxLength(200)]
+        [Display(Name = "Komentar ili opis")]
+        public string? Komentar { get; set; }
+
+        [Range(0, 100)]
+        [Display(Name = "Težina (%)")]
+        public int? TezinaProcentualno { get; set; }
+
         // Validacija raspona ovisno o tipu ocjene
         public bool IsValid()
         {
@@ -30,22 +41,25 @@ namespace StudentHub.Models
             return true;
         }
 
-        [ForeignKey("Predmet")]
         public long? PredmetId { get; set; }
-        public Predmet Predmet { get; set; }
+        public virtual Predmet? Predmet { get; set; }
 
-        [ForeignKey("Student")]
         public long StudentId { get; set; }
-        public Student Student { get; set; }
+        public virtual Student? Student { get; set; }
 
-        [ForeignKey("Profesor")]
         public long? ProfesorId { get; set; }
-        public Profesor Profesor { get; set; }
+        public virtual Profesor? Profesor { get; set; }
 
-        [ForeignKey("NastavnaAktivnost")]
         public long? NastavnaAktivnostId { get; set; }
-        public NastavnaAktivnost NastavnaAktivnost { get; set; }
+        public virtual NastavnaAktivnost? NastavnaAktivnost { get; set; }
+        
+        public long? IspitId { get; set; }
+        public virtual Ispit? Ispit { get; set; }
 
+        public long? ParentOcjenaId { get; set; }
+        public virtual Ocjena? ParentOcjena { get; set; }
+
+        public virtual ICollection<Ocjena> DjelimicneOcjene { get; set; } = new List<Ocjena>();
         public Ocjena() { }
     }
 }

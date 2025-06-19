@@ -255,6 +255,7 @@ namespace StudentHub.Controllers
             var viewModel = new IspitDetailsViewModel
             {
                 IspitId = ispit.Id,
+                Arhivirano = ispit.Arhivirano,
                 StudijskiProgram = ispit.StudijskiProgram,
                 Predmeti = new List<PredmetIspitViewModel>
                 {
@@ -619,33 +620,7 @@ namespace StudentHub.Controllers
 
             bool polozen = bodovi.HasValue && bodovi >= uslovZaPolaganje;
 
-            // Automatski unos Ocjene ako je položen
-            if (polozen)
-            {
-                // Provjeri da li već postoji Ocjena za ovaj predmet i studenta
-                var existingGrade = await _context.Ocjene
-                    .FirstOrDefaultAsync(o => o.StudentId == prijava.StudentId &&
-                                              o.PredmetId == prijava.Ispit.PredmetId &&
-                                              o.Tip == TipOcjene.Predmet);
-
-                if (existingGrade == null)
-                {
-                    // Preuzmi ID trenutnog profesora/asistenta koji unosi bodove
-                    var profesorId = GetTrenutniProfesorIliAsistentId();
-
-                    var novaOcjena = new Ocjena
-                    {
-                        Tip = TipOcjene.Predmet,
-                        Vrijednost = MapirajBodoveUBrojOcjenu(bodovi.Value, ispit.BrojBodova),
-                        PredmetId = prijava.Ispit.PredmetId,
-                        StudentId = prijava.StudentId,
-                        ProfesorId = profesorId
-                    };
-
-                    _context.Ocjene.Add(novaOcjena);
-                    await _context.SaveChangesAsync();
-                }
-            }
+            _logger.LogInformation($"Uneseno {bodovi} bodova za studenta {prijava.StudentId} na ispitu {model.IspitId}. Položen: {polozen}");
 
             return Ok(new
             {
@@ -757,6 +732,16 @@ namespace StudentHub.Controllers
         {
             var korisnikId = GetTrenutniKorisnikId();
 
+            var ispit = await _context.Ispiti.FindAsync(ispitId);
+            if (ispit == null)
+                return NotFound();
+
+            if (ispit.Arhivirano)
+            {
+                TempData["Error"] = "Nije moguće dodati komentar na arhivirani ispit.";
+                return RedirectToAction("Details", new { id = ispitId });
+            }
+
             var komentar = new Komentar
             {
                 Sadrzaj = sadrzaj,
@@ -778,6 +763,7 @@ namespace StudentHub.Controllers
                 {
                     await prilog.CopyToAsync(stream);
                 }
+
                 komentar.PrilogPath = $"/prilozi/{ispitId}/{fileName}";
             }
 
@@ -814,6 +800,12 @@ namespace StudentHub.Controllers
             }
 
             var korisnikId = GetTrenutniKorisnikId();
+
+            if (_context.Ispiti.Any(i => i.Id == komentar.IspitId && i.Arhivirano))
+            {
+                TempData["Error"] = "Ispit je arhiviran. Nije moguće uređivati komentar.";
+                return RedirectToAction("Details", new { id = komentar.IspitId });
+            }
 
             if (komentar.KorisnikId != korisnikId && !User.IsInRole("Studentska služba"))
             {
@@ -891,6 +883,12 @@ namespace StudentHub.Controllers
 
             var korisnikId = GetTrenutniKorisnikId();
 
+            if (_context.Ispiti.Any(i => i.Id == komentar.IspitId && i.Arhivirano))
+            {
+                TempData["Error"] = "Ispit je arhiviran. Nije moguće uređivati komentar.";
+                return RedirectToAction("Details", new { id = komentar.IspitId });
+            }
+
             if (komentar.KorisnikId != korisnikId && !User.IsInRole("Studentska služba"))
             {
                 return Forbid();
@@ -938,6 +936,12 @@ namespace StudentHub.Controllers
             }
 
             var korisnikId = GetTrenutniKorisnikId();
+
+            if (_context.Ispiti.Any(i => i.Id == komentar.IspitId && i.Arhivirano))
+            {
+                TempData["Error"] = "Ispit je arhiviran. Nije moguće uređivati komentar.";
+                return RedirectToAction("Details", new { id = komentar.IspitId });
+            }
 
             if (komentar.KorisnikId != korisnikId && !User.IsInRole("Studentska služba"))
             {

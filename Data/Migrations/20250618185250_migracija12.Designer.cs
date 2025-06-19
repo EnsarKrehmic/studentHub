@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentHub.Data;
 
@@ -11,9 +12,11 @@ using StudentHub.Data;
 namespace StudentHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250618185250_migracija12")]
+    partial class migracija12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -660,9 +663,6 @@ namespace StudentHub.Data.Migrations
                     b.Property<DateTime>("DatumUnosa")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("IspitId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Komentar")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -693,11 +693,7 @@ namespace StudentHub.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IspitId");
-
                     b.HasIndex("NastavnaAktivnostId");
-
-                    b.HasIndex("ParentOcjenaId");
 
                     b.HasIndex("PredmetId");
 
@@ -1471,18 +1467,10 @@ namespace StudentHub.Data.Migrations
 
             modelBuilder.Entity("StudentHub.Models.Ocjena", b =>
                 {
-                    b.HasOne("StudentHub.Models.Ispit", "Ispit")
-                        .WithMany()
-                        .HasForeignKey("IspitId");
-
                     b.HasOne("StudentHub.Models.NastavnaAktivnost", "NastavnaAktivnost")
                         .WithMany("Ocjene")
                         .HasForeignKey("NastavnaAktivnostId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("StudentHub.Models.Ocjena", "ParentOcjena")
-                        .WithMany("DjelimicneOcjene")
-                        .HasForeignKey("ParentOcjenaId");
 
                     b.HasOne("StudentHub.Models.Predmet", "Predmet")
                         .WithMany()
@@ -1500,11 +1488,7 @@ namespace StudentHub.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Ispit");
-
                     b.Navigation("NastavnaAktivnost");
-
-                    b.Navigation("ParentOcjena");
 
                     b.Navigation("Predmet");
 
@@ -1834,11 +1818,6 @@ namespace StudentHub.Data.Migrations
             modelBuilder.Entity("StudentHub.Models.Obavjestenje", b =>
                 {
                     b.Navigation("ObavjestenjeStudijskiProgrami");
-                });
-
-            modelBuilder.Entity("StudentHub.Models.Ocjena", b =>
-                {
-                    b.Navigation("DjelimicneOcjene");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Predmet", b =>

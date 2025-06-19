@@ -162,25 +162,29 @@
                     {
                         var predmet = snp.Predmet;
                         <tr>
-                            <td>
-                                <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none">
-                                    @predmet.Naziv
-                                </a>
-                            </td>
-                            <td>@predmet.ECTS</td>
-                            <td>@predmet.Semestar</td>
-                            <td>
-                                @if (Model.Ocjene.TryGetValue(predmet.Id, out var ocjena))
-                                {
-                                    <span class="badge @(ocjena >= 8 ? "bg-success" : ocjena >= 6 ? "bg-warning" : "bg-danger")">
-                                        @ocjena
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="text-warning">Nema ocjene</span>
-                                }
-                            </td>
+                        <td>
+                            <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none">
+                                @predmet.Naziv
+                            </a>
+                        </td>
+                        <td>@predmet.Semestar</td>
+                        <td>@predmet.ECTS</td>
+                        <td>
+                            @{
+                                var ocjenaVM = Model.OcjenePredmeta.FirstOrDefault(o => o.PredmetId == predmet.Id && o.Tip == "Predmet");
+                            }
+
+                            @if (ocjenaVM != null)
+                            {
+                                <span class="badge @(ocjenaVM.Vrijednost >= 8 ? "bg-success" : ocjenaVM.Vrijednost >= 6 ? "bg-warning" : "bg-danger")">
+                                    @ocjenaVM.Vrijednost
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-warning">Nema ocjene</span>
+                            }
+                        </td>
                             <td>
                                 <div class="btn-group" role="group">
                                     <!-- Detalji po predmetu za studenta -->

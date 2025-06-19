@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentHub.Data;
 
@@ -11,9 +12,11 @@ using StudentHub.Data;
 namespace StudentHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250618161802_migracija11")]
+    partial class migracija11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -660,9 +663,6 @@ namespace StudentHub.Data.Migrations
                     b.Property<DateTime>("DatumUnosa")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("IspitId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Komentar")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -692,8 +692,6 @@ namespace StudentHub.Data.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IspitId");
 
                     b.HasIndex("NastavnaAktivnostId");
 
@@ -1471,10 +1469,6 @@ namespace StudentHub.Data.Migrations
 
             modelBuilder.Entity("StudentHub.Models.Ocjena", b =>
                 {
-                    b.HasOne("StudentHub.Models.Ispit", "Ispit")
-                        .WithMany()
-                        .HasForeignKey("IspitId");
-
                     b.HasOne("StudentHub.Models.NastavnaAktivnost", "NastavnaAktivnost")
                         .WithMany("Ocjene")
                         .HasForeignKey("NastavnaAktivnostId")
@@ -1499,8 +1493,6 @@ namespace StudentHub.Data.Migrations
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Ispit");
 
                     b.Navigation("NastavnaAktivnost");
 

@@ -7,6 +7,7 @@ namespace StudentHub.ViewModels
     {
         public long IspitId { get; set; }
         public bool Prijavljen { get; set; }
+        public bool Arhivirano { get; set; }
         public string CurrentSort { get; set; }
         public string DateSortParm { get; set; }
         public string LocationSortParm { get; set; }

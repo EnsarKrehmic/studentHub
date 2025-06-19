@@ -113,15 +113,19 @@ namespace StudentHub.Controllers
                     .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = $"{a.AsistentTitula} {a.Ime} {a.Prezime}" })
                     .ToList();
 
-                // Ocjene
+                // Ocjene tipa Predmet
                 var ocjene = _context.Ocjene
-                    .Where(o => o.PredmetId == id)
-                    .ToDictionary(o => o.StudentId, o => (float?)o.Vrijednost);
+                    .Where(o => o.PredmetId == id && o.Tip == TipOcjene.Predmet)
+                    .ToList();
 
                 var sveOcjene = studentiNaPredmetu.ToDictionary(
                     snp => snp.StudentId,
-                    snp => ocjene.ContainsKey(snp.StudentId) ? ocjene[snp.StudentId] : null
+                    snp => ocjene.FirstOrDefault(o => o.StudentId == snp.StudentId)?.Vrijednost
                 );
+
+                var ocjenaIds = ocjene
+                    .GroupBy(o => o.StudentId)
+                    .ToDictionary(g => g.Key, g => g.OrderByDescending(o => o.DatumUnosa).First().Id);
 
                 // Nastavne aktivnosti – bez filtriranja zaključanih za studente
                 var nastavneAktivnosti = predmet.NastavneAktivnosti != null
@@ -142,17 +146,23 @@ namespace StudentHub.Controllers
                     };
                 }).ToList();
 
+                int ukupnoStudenata = studentiNaPredmetu.Count;
+                int brojPolozili = ocjene.Count(o => o.Vrijednost >= 6);
+
                 var viewModel = new PredmetDetailsViewModel
                 {
                     Predmet = predmet,
                     Profesori = profesori,
                     Asistenti = asistenti,
                     StudentiNaPredmetu = studentiNaPredmetu,
-                    Ocjene = sveOcjene,
+                    Ocjene = sveOcjene.ToDictionary(kv => kv.Key, kv => (float?)kv.Value),
+                    OcjenaIds = ocjenaIds,
                     NastavneAktivnosti = nastavneAktivnosti,
                     StatistikaPrisustva = statistika,
+                    UkupnoStudenata = ukupnoStudenata,
+                    BrojPoloziliPredmet = brojPolozili,
                     ProsjecnoPrisustvo = statistika.Count > 0 ? statistika.Average(s => s.Procenat) : null,
-                    ProsjecnaOcjena = sveOcjene.Values.Where(o => o.HasValue).Average(o => o) ?? 0
+                    ProsjecnaOcjena = sveOcjene.Values.Where(v => v.HasValue).Average(v => v) ?? 0
                 };
 
                 return View(viewModel);
@@ -718,172 +728,6 @@ namespace StudentHub.Controllers
         }
 
         [HttpPost]
-        [Route("Predmeti/AddGrade")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Profesor")]
-        public IActionResult AddGrade(long predmetId, long studentId, float ocjena)
-        {
-            // Validacija ocjene
-            if (ocjena < 5 || ocjena > 10)
-            {
-                ModelState.AddModelError("Ocjena", "Ocjena mora biti između 5 i 10.");
-            }
-
-            // Provjeri da li student postoji
-            var student = _context.Studenti.Find(studentId);
-            if (student == null)
-            {
-                ModelState.AddModelError("StudentId", "Odabrani student ne postoji.");
-            }
-
-            // Provjeri da li predmet postoji
-            var predmet = _context.Predmeti
-                .Include(p => p.NastavniPlan)
-                .FirstOrDefault(p => p.Id == predmetId);
-            if (predmet == null)
-            {
-                ModelState.AddModelError("PredmetId", "Odabrani predmet ne postoji.");
-            }
-
-            // Check if the professor exists
-            var profesor = _context.Profesori.FirstOrDefault(p => p.Id == predmet.ProfesorId);
-            if (profesor == null)
-            {
-                ModelState.AddModelError("ProfesorId", "Odabrani profesor ne postoji.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                // Osvježi ViewBag.Studenti za dropdown listu
-                ViewBag.Studenti = _context.Studenti
-                    .Select(s => new SelectListItem
-                    {
-                        Value = s.Id.ToString(),
-                        Text = $"{s.Ime} {s.Prezime} ({s.BrojIndeksa})"
-                    }).ToList();
-
-                // Osvježi ViewModel
-                var profesori = _context.PredmetProfesori
-                    .Where(pp => pp.PredmetId == predmetId)
-                    .Include(pp => pp.Profesor)
-                    .Where(pp => pp.Profesor.Uloga == Uloga.Profesor)
-                    .ToList();
-
-                var asistenti = _context.PredmetAsistenti
-                    .Where(pa => pa.PredmetId == predmetId)
-                    .Include(pa => pa.Asistent)
-                    .Where(pa => pa.Asistent.Uloga == Uloga.Asistent)
-                    .ToList();
-
-                var studentiNaPredmetu = _context.StudentiNaPredmetima
-                    .Where(snp => snp.PredmetId == predmetId)
-                    .Include(snp => snp.Student)
-                    .ToList();
-
-                var ocjene = _context.Ocjene
-                    .Where(o => studentiNaPredmetu.Select(snp => snp.StudentId).Contains(o.StudentId) && o.PredmetId == predmetId)
-                    .ToDictionary(o => o.StudentId, o => (float?)o.Vrijednost);
-
-                var viewModel = new PredmetDetailsViewModel
-                {
-                    Predmet = predmet,
-                    Profesori = profesori,
-                    Asistenti = asistenti,
-                    StudentiNaPredmetu = studentiNaPredmetu,
-                    Ocjene = ocjene
-                };
-
-                return View("Details", viewModel);
-            }
-
-            // Dodaj ocjenu studentu
-            var ocjenaEntity = new Ocjena
-            {
-                PredmetId = predmetId,
-                StudentId = studentId,
-                ProfesorId = profesor.Id,
-                Vrijednost = ocjena
-            };
-
-            _context.Ocjene.Add(ocjenaEntity);
-            _context.SaveChanges();
-
-            TempData["SuccessMessage"] = "Ocjena je uspješno dodana.";
-
-            return RedirectToAction("Details", new { id = predmetId });
-        }
-
-        [HttpPost]
-        [Route("Predmeti/EditGrade")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Profesor")]
-        public IActionResult EditGrade(long predmetId, long studentId, float ocjena)
-        {
-            // Validate the grade
-            if (ocjena < 5 || ocjena > 10)
-            {
-                ModelState.AddModelError("Ocjena", "Ocjena mora biti između 5 i 10.");
-            }
-
-            // Check if the student exists
-            var student = _context.Studenti.Find(studentId);
-            if (student == null)
-            {
-                ModelState.AddModelError("StudentId", "Odabrani student ne postoji.");
-            }
-
-            // Check if the subject exists
-            var predmet = _context.Predmeti
-                .Include(p => p.NastavniPlan)
-                .FirstOrDefault(p => p.Id == predmetId);
-            if (predmet == null)
-            {
-                ModelState.AddModelError("PredmetId", "Odabrani predmet ne postoji.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Details", new { id = predmetId });
-            }
-
-            // Update the grade
-            var ocjenaEntity = _context.Ocjene
-                .FirstOrDefault(o => o.PredmetId == predmetId && o.StudentId == studentId);
-            if (ocjenaEntity != null)
-            {
-                ocjenaEntity.Vrijednost = ocjena;
-                _context.Ocjene.Update(ocjenaEntity);
-                _context.SaveChanges();
-                TempData["SuccessMessage"] = "Ocjena je uspješno ažurirana.";
-            }
-            else
-            {
-                ModelState.AddModelError("", "Ocjena nije pronađena.");
-            }
-
-            return RedirectToAction("Details", new { id = predmetId });
-        }
-
-        [HttpPost("RemoveGrade")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Profesor")]
-        public async Task<IActionResult> RemoveGrade(long predmetId, long studentId)
-        {
-            var ocjena = await _context.Ocjene
-                .FirstOrDefaultAsync(o => o.PredmetId == predmetId && o.StudentId == studentId);
-            if (ocjena == null)
-            {
-                TempData["Error"] = "Ocjena nije pronađena.";
-                return RedirectToAction("Details", new { id = predmetId });
-            }
-
-            _context.Ocjene.Remove(ocjena);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Ocjena je uspješno uklonjena.";
-            return RedirectToAction("Details", new { id = predmetId });
-        }
-
-        [HttpPost]
         [Route("Predmeti/AddProfesorToSubject")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Studentska služba")]
@@ -1152,15 +996,47 @@ namespace StudentHub.Controllers
             if (student == null || predmet == null)
                 return NotFound();
 
-            var aktivnosti = predmet.NastavneAktivnosti.OrderBy(a => a.DatumVrijemeOdrzavanja).ToList();
+            var aktivnosti = predmet.NastavneAktivnosti
+                .OrderBy(a => a.DatumVrijemeOdrzavanja)
+                .ToList();
 
             var prisustva = await _context.PrisustvaNaAktivnostima
                 .Where(p => p.StudentId == studentId && aktivnosti.Select(a => a.Id).Contains(p.NastavnaAktivnostId))
                 .ToListAsync();
 
-            var ocjene = await _context.Ocjene
+            var sveOcjene = await _context.Ocjene
+                .Include(o => o.NastavnaAktivnost)
+                .Include(o => o.Profesor)
                 .Where(o => o.StudentId == studentId && o.PredmetId == predmetId)
                 .ToListAsync();
+
+            var glavneOcjene = sveOcjene.Where(o => o.ParentOcjenaId == null).ToList();
+            var parcijalne = sveOcjene.Where(o => o.ParentOcjenaId != null).ToList();
+
+            var grupisaneParcijalne = parcijalne
+                .GroupBy(p => p.ParentOcjenaId!.Value)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // Novo: Prisustvo po aktivnosti
+            var prisustvoPoAktivnosti = aktivnosti.ToDictionary(
+                a => a.Id,
+                a => prisustva.Any(p => p.NastavnaAktivnostId == a.Id)
+            );
+
+            // Novo: Ocjena po aktivnosti
+            var ocjenePoAktivnosti = sveOcjene
+                .Where(o => o.NastavnaAktivnostId.HasValue)
+                .GroupBy(o => o.NastavnaAktivnostId!.Value)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(o => o.DatumUnosa).FirstOrDefault());
+
+            // Novo: Profesor po aktivnosti
+            var profesorPoAktivnosti = ocjenePoAktivnosti
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value?.Profesor != null
+                        ? $"{kvp.Value.Profesor.ProfesorTitula} {kvp.Value.Profesor.Ime} {kvp.Value.Profesor.Prezime}"
+                        : "Nepoznato"
+                );
 
             var ukupno = aktivnosti.Count;
             var brojPrisustva = prisustva.Count;
@@ -1172,18 +1048,51 @@ namespace StudentHub.Controllers
             if (!jeVlasnik && !jeNastavnik)
                 return Forbid();
 
+            // Učitaj sve prijave na ispite tog predmeta za datog studenta
+            var prijave = await _context.Prijave
+                .Include(p => p.Ispit)
+                .Where(p => p.StudentId == studentId && p.Ispit.PredmetId == predmetId)
+                .ToListAsync();
+
+            // Opcionalno: Uslov za prolazak ako postoji bar jedan ispit
+            var uslovZaPolaganje = prijave
+                .Select(p => p.Ispit.UslovZaPolaganje)
+                .FirstOrDefault();
+
+            // Ponderisana ocjena (ako postoji zaključna)
+            float? ponderisana = null;
+            var predmetnaOcjena = glavneOcjene.FirstOrDefault(o => o.Tip == TipOcjene.Predmet);
+
+            if (predmetnaOcjena != null && grupisaneParcijalne.TryGetValue(predmetnaOcjena.Id, out var djelimicne))
+            {
+                var ukupnaTezina = djelimicne.Sum(d => d.TezinaProcentualno ?? 0);
+                if (ukupnaTezina > 0)
+                {
+                    var suma = djelimicne.Sum(d => d.Vrijednost * ((d.TezinaProcentualno ?? 0) / 100f));
+                    ponderisana = suma;
+                }
+            }
+
             var model = new StudentNaPredmetuViewModel
             {
                 Student = student,
                 Predmet = predmet,
                 Aktivnosti = aktivnosti,
                 Prisustva = prisustva,
-                Ocjene = ocjene,
+                Ocjene = glavneOcjene,
+                ParcijalneOcjene = grupisaneParcijalne,
                 ProcenatUkupno = procUkupno,
                 ProcenatPredavanja = IzracunajProcenat(aktivnosti, prisustva, TipNastavneAktivnosti.Predavanje, student.Id),
                 ProcenatVjezbi = IzracunajProcenat(aktivnosti, prisustva, TipNastavneAktivnosti.Vjezba, student.Id),
-                ZakljucnaOcjena = ocjene.FirstOrDefault(o => o.Tip == TipOcjene.Predmet)?.Vrijednost,
-                DozvoljenPristup = true
+                ZakljucnaOcjena = predmetnaOcjena?.Vrijednost,
+                PonderisanaOcjena = ponderisana,
+                DozvoljenPristup = true,
+
+                PrisustvoPoAktivnosti = prisustvoPoAktivnosti,
+                OcjenaPoAktivnosti = ocjenePoAktivnosti,
+                ProfesorPoAktivnosti = profesorPoAktivnosti,
+                Prijave = prijave,
+                UslovZaPolaganje = uslovZaPolaganje
             };
 
             return View("StudentNaPredmetu", model);

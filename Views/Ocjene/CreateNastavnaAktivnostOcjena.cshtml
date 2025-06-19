@@ -1,39 +1,57 @@
 ﻿@model StudentHub.Models.Ocjena
 
 @{
-    ViewData["Title"] = "Unos nove ocjene";
+    ViewData["Title"] = "Ocjeni nastavnu aktivnost";
 }
 
-<h2>@ViewData["Title"]</h2>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
-<h4>Ocjena</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<h2 class="mb-4">Ocjena za aktivnost: <strong>@ViewBag.NastavnaAktivnostNaziv</strong></h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="CreateNastavnaAktivnostOcjena" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="Tip" value="NastavnaAktivnost" />
+            <input type="hidden" asp-for="NastavnaAktivnostId" value="@ViewBag.NastavnaAktivnostId" />
+
             <div class="form-group">
-                <label asp-for="PredmetId" class="control-label"></label>
-                <select asp-for="PredmetId" class="form-control" asp-items="ViewBag.PredmetId"></select>
-                <span asp-validation-for="PredmetId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StudentId" class="control-label"></label>
-                <select asp-for="StudentId" class="form-control" asp-items="ViewBag.StudentId"></select>
-                <span asp-validation-for="StudentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProfesorId" class="control-label">Profesor</label>
-                <select asp-for="ProfesorId" class="form-control" asp-items="ViewBag.ProfesorId"></select>
-                <span asp-validation-for="ProfesorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vrijednost" class="control-label"></label>
-                <input asp-for="Vrijednost" class="form-control" />
+                <label asp-for="Vrijednost">Ocjena (1–5)</label>
+                <input asp-for="Vrijednost" class="form-control" type="number" min="1" max="5" step="1" />
                 <span asp-validation-for="Vrijednost" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />
-                <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
+
+            <div class="form-group mt-3">
+                <label asp-for="TezinaProcentualno">Težina (%)</label>
+                <input asp-for="TezinaProcentualno" class="form-control" type="number" min="0" max="100" />
+                <span asp-validation-for="TezinaProcentualno" class="text-danger"></span>
+                <div class="form-text">Opcionalno: koristi se ako ocjena ulazi u ponderaciju zaključne ocjene.</div>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Komentar">Komentar ili opis</label>
+                <textarea asp-for="Komentar" class="form-control" maxlength="200" placeholder="Npr. Kvalitet prezentacije, učešće, angažman..."></textarea>
+                <span asp-validation-for="Komentar" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="DatumUnosa">Datum unosa</label>
+                <input asp-for="DatumUnosa" class="form-control" type="date" value="@Model.DatumUnosa.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="DatumUnosa" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary">Spremi ocjenu</button>
+                <a asp-action="Index" class="btn btn-secondary">Nazad</a>
             </div>
         </form>
     </div>

@@ -2,50 +2,163 @@
 
 @{
     ViewData["Title"] = "Detalji ocjene";
+    var jeGlavna = Model.ParentOcjenaId == null && Model.Tip == "Predmet";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4">@ViewData["Title"]</h2>
 
-<div class="card mb-4">
+<div class="card mb-4 shadow-sm">
     <div class="card-header bg-primary text-white">
         <h3>@Model.PredmetNaziv</h3>
     </div>
     <div class="card-body">
+
+        @if (!jeGlavna && Model.ParentOcjena != null)
+        {
+            <div class="alert alert-info d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-2">Ova ocjena je dio zaključne ocjene</h5>
+                    <p><strong>Glavna ocjena:</strong> @Model.ParentOcjena.Vrijednost</p>
+                </div>
+                @if (User.IsInRole("Profesor"))
+                {
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@Model.ParentOcjena.Id" class="btn btn-outline-secondary btn-sm">Detalji</a>
+                        <a asp-controller="Ocjene" asp-action="Edit" asp-route-id="@Model.ParentOcjena.Id" class="btn btn-outline-warning btn-sm">Izmijeni</a>
+                        <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@Model.ParentOcjena.Id" class="btn btn-outline-danger btn-sm">Obriši</a>
+                    </div>
+                }
+            </div>
+        }
+
         <div class="row">
             <div class="col-md-6">
-                <h4>Informacije o studentu</h4>
+                <h4>Student</h4>
                 <p><strong>Ime i prezime:</strong> @Model.StudentIme @Model.StudentPrezime</p>
                 <p><strong>Broj indeksa:</strong> @Model.StudentBrojIndeksa</p>
                 <p><strong>Studijski program:</strong> @Model.StudentStudijskiProgramNaziv</p>
             </div>
             <div class="col-md-6">
-                <h4>Informacije o profesoru</h4>
+                <h4>Profesor</h4>
                 <p><strong>Titula:</strong> @Model.ProfesorTitula</p>
                 <p><strong>Ime i prezime:</strong> @Model.ProfesorIme @Model.ProfesorPrezime</p>
-                <p><strong>Studijski program:</strong> @Model.StudentStudijskiProgramNaziv</p>
             </div>
         </div>
+
         <hr />
+
         <div class="row">
             <div class="col-md-6">
-                <h4>Informacije o ocjeni</h4>
+                <h4>Ocjena</h4>
                 <p>
-                    <strong>Ocjena:</strong>
+                    <strong>Vrijednost:</strong>
                     <span class="badge @(Model.Vrijednost >= 8 ? "bg-success" : Model.Vrijednost >= 6 ? "bg-warning" : "bg-danger")">
                         @Model.Vrijednost
                     </span>
                 </p>
-                @if (User.IsInRole("Student") && Model.Vrijednost < 6)
+                @if (!string.IsNullOrWhiteSpace(Model.Komentar))
                 {
-                    <p class="text-danger"><strong>Napomena:</strong> Ova ocjena je ispod prolaznog praga!</p>
+                    <p><strong>Komentar:</strong> @Model.Komentar</p>
+                }
+                @if (Model.TezinaProcentualno.HasValue)
+                {
+                    <p><strong>Težina:</strong> @Model.TezinaProcentualno %</p>
+                }
+                @if (Model.DatumDodjele.HasValue)
+                {
+                    <p><strong>Datum unosa:</strong> @Model.DatumDodjele.Value.ToString("dd.MM.yyyy")</p>
                 }
             </div>
             <div class="col-md-6">
-                <h4>Informacije o predmetu</h4>
+                <h4>Predmet</h4>
                 <p><strong>Naziv predmeta:</strong> @Model.PredmetNaziv</p>
-                <p><strong>Studijski program:</strong> @Model.StudentStudijskiProgramNaziv</p>
+                @if (!string.IsNullOrEmpty(Model.NastavnaAktivnostNaziv))
+                {
+                    <p><strong>Aktivnost:</strong> @Model.NastavnaAktivnostNaziv</p>
+                }
             </div>
         </div>
+
+        @if (jeGlavna && Model.DjelimicneOcjene?.Any() == true)
+        {
+            <hr />
+            <h4>Parcijalne ocjene</h4>
+            <ul class="list-group mb-3">
+                @foreach (var d in Model.DjelimicneOcjene)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@d.Vrijednost</strong>
+                            @if (!string.IsNullOrWhiteSpace(d.Komentar))
+                            {
+                                <span class="text-muted ms-2">(@d.Komentar)</span>
+                            }
+                        </div>
+                        <div class="d-flex gap-2">
+                            @if (d.TezinaProcentualno.HasValue)
+                            {
+                                <span class="badge bg-info">@d.TezinaProcentualno %</span>
+                            }
+                            @if (User.IsInRole("Profesor"))
+                            {
+                                <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@d.Id" class="btn btn-sm btn-outline-secondary">Detalji</a>
+                                <a asp-controller="Ocjene" asp-action="Edit" asp-route-id="@d.Id" class="btn btn-sm btn-outline-warning">Izmjena</a>
+                                <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@d.Id" class="btn btn-sm btn-outline-danger">Brisanje</a>
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+            @if (User.IsInRole("Profesor"))
+            {
+                <a asp-controller="Ocjene"
+                   asp-action="Create"
+                   asp-route-tip="Predmet"
+                   asp-route-predmetId="@Model.PredmetId"
+                   asp-route-studentId="@Model.StudentId"
+                   asp-route-parentOcjenaId="@Model.Id"
+                   class="btn btn-outline-primary">
+                    Dodaj parcijalnu ocjenu
+                </a>
+            }
+        }
+
+        @if (jeGlavna && Model.BodoviSaIspita.Any())
+        {
+            <hr />
+            <h4>Bodovi sa ispita</h4>
+            <ul class="list-group mb-3">
+                @foreach (var ispit in Model.BodoviSaIspita.OrderBy(i => i.Datum))
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <a asp-controller="Ispiti" asp-action="Details" asp-route-id="@ispit.IspitId">@ispit.IspitNaziv</a>
+                        </span>
+                        <span class="badge bg-primary">@ispit.Bodovi</span>
+                    </li>
+                }
+            </ul>
+        }
+
+        @if (jeGlavna)
+        {
+            <hr />
+            <h4>Prisustvo na aktivnostima</h4>
+            <ul class="list-group mb-3">
+                <li class="list-group-item">Ukupno: <strong>@Model.ProcenatPrisustvaUkupno.ToString("0.0")%</strong></li>
+                <li class="list-group-item">Predavanja: <strong>@Model.ProcenatPrisustvaPredavanja.ToString("0.0")%</strong></li>
+                <li class="list-group-item">Vježbe: <strong>@Model.ProcenatPrisustvaVjezbi.ToString("0.0")%</strong></li>
+            </ul>
+
+            <a asp-controller="Predmeti"
+               asp-action="StudentDetails"
+               asp-route-predmetId="@Model.PredmetId"
+               asp-route-studentId="@Model.StudentId"
+               class="btn btn-outline-secondary">
+                <i class="fas fa-user-check me-1"></i> Detaljna evidencija prisustva
+            </a>
+        }
+
     </div>
 </div>
 

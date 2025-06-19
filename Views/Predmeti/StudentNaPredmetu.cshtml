@@ -36,21 +36,9 @@
         </div>
     </div>
 
-    <!-- Grafički prikaz prisustva -->
-    <div class="row mb-4">
-        <div class="col-md-6 offset-md-3">
-            <div class="card shadow-sm">
-                <div class="card-header bg-info text-white">Grafički prikaz prisustva</div>
-                <div class="card-body">
-                    <canvas id="chartPrisustvo" width="400" height="400"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Prisustva -->
+    <!-- Evidencija aktivnosti sa prisustvom i ocjenom -->
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-warning text-dark">Evidencija prisustva</div>
+        <div class="card-header bg-warning text-dark">Evidencija aktivnosti</div>
         <div class="card-body">
             @if (Model.Aktivnosti.Any())
             {
@@ -58,15 +46,21 @@
                     <thead class="table-light">
                         <tr>
                             <th>Datum</th>
-                            <th>Aktivnost</th>
+                            <th>Naziv</th>
                             <th>Tip</th>
-                            <th>Status</th>
+                            <th>Prisustvo</th>
+                            <th>Ocjena</th>
+                            <th>Unio</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var aktivnost in Model.Aktivnosti)
                         {
                             var prisutan = Model.Prisustva.Any(p => p.NastavnaAktivnostId == aktivnost.Id);
+                            var ocjena = Model.OcjenaPoAktivnosti.ContainsKey(aktivnost.Id)
+                            ? Model.OcjenaPoAktivnosti[aktivnost.Id]
+                            : null;
+
                             <tr>
                                 <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
                                 <td>@aktivnost.Naziv</td>
@@ -81,6 +75,19 @@
                                         <span class="badge bg-danger">Odsutan</span>
                                     }
                                 </td>
+                                <td>
+                                    @if (ocjena != null)
+                                    {
+                                        <span class="badge @(ocjena.Vrijednost >= 4 ? "bg-success" : ocjena.Vrijednost >= 2 ? "bg-warning" : "bg-danger")">
+                                            @ocjena.Vrijednost
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td>@(Model.ProfesorPoAktivnosti.ContainsKey(aktivnost.Id) ? Model.ProfesorPoAktivnosti[aktivnost.Id] : "—")</td>
                             </tr>
                         }
                     </tbody>
@@ -93,49 +100,190 @@
         </div>
     </div>
 
-    <!-- Ocjene -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-success text-white">Ocjene</div>
-        <div class="card-body">
-            @if (Model.Ocjene.Any())
-            {
-                <table class="table table-sm table-hover">
+    <!-- Rezultati ispita -->
+    @if (Model.Prijave?.Any() == true)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">Rezultati ispita</div>
+            <div class="card-body">
+                <table class="table table-sm table-bordered">
                     <thead class="table-light">
                         <tr>
-                            <th>Tip</th>
-                            <th>Vrijednost</th>
-                            <th>Nastavna aktivnost</th>
+                            <th>Datum ispita</th>
+                            <th>Lokacija</th>
+                            <th>Osvojeni bodovi</th>
+                            <th>Ukupno bodova</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var ocjena in Model.Ocjene)
+                        @foreach (var prijava in Model.Prijave.OrderByDescending(p => p.Ispit.DatumOdrzavanja))
                         {
+                            var bodovi = prijava.Bodovi;
+                            var prag = prijava.Ispit.UslovZaPolaganje;
+                            var polozen = bodovi.HasValue && bodovi >= prag;
+
                             <tr>
-                                <td>@ocjena.Tip</td>
-                                <td>@ocjena.Vrijednost</td>
-                                <td>@(ocjena.NastavnaAktivnost?.Naziv ?? "—")</td>
+                                <td>@prijava.Ispit.DatumOdrzavanja.ToString("dd.MM.yyyy")</td>
+                                <td>@(string.IsNullOrEmpty(prijava.Ispit.Lokacija) ? "—" : prijava.Ispit.Lokacija)</td>
+                                <td>
+                                    @if (bodovi.HasValue)
+                                    {
+                                        <span>@bodovi.Value</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Nije ocijenjeno</span>
+                                    }
+                                </td>
+                                <td>@prijava.Ispit.BrojBodova</td>
+                                <td>
+                                    @if (!bodovi.HasValue)
+                                    {
+                                        <span class="badge bg-secondary">N/A</span>
+                                    }
+                                    else if (polozen)
+                                    {
+                                        <span class="badge bg-success">Položen</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Nije položen</span>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>
                 </table>
+            </div>
+        </div>
+    }
+
+    <!-- Zaključna ocjena -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">Zaključna ocjena</div>
+        <div class="card-body">
+            <p>
+                <strong>Zaključna ocjena:</strong>
+                @if (Model.ZakljucnaOcjena.HasValue)
+                {
+                    <span class="badge bg-primary fs-5">@Model.ZakljucnaOcjena</span>
+                }
+                else
+                {
+                    <span class="text-muted">Nije unijeta</span>
+                }
+            </p>
+
+            @if (Model.PonderisanaOcjena.HasValue)
+            {
                 <p>
-                    <strong>Zaključna ocjena:</strong>
-                    @if (Model.ZakljucnaOcjena.HasValue)
-                    {
-                        <span class="badge bg-success">@Model.ZakljucnaOcjena</span>
-                    }
-                    else
-                    {
-                        <span class="text-muted">Nije unijeta</span>
-                    }
+                    <strong>Ponderisana ocjena (iz parcijalnih):</strong>
+                    <span class="badge bg-secondary fs-5">@Model.PonderisanaOcjena.Value.ToString("0.00")</span>
                 </p>
             }
-            else
+
+            @if (Model.Ocjene.FirstOrDefault(o => o.Tip == TipOcjene.Predmet) is var glavnaOcjena && glavnaOcjena != null)
             {
-                <div class="alert alert-info">Nema unesenih ocjena.</div>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <a asp-controller="Ocjene"
+                       asp-action="Details"
+                       asp-route-id="@glavnaOcjena.Id"
+                       class="btn btn-outline-secondary">
+                        Detalji zaključne ocjene
+                    </a>
+
+                    @if (User.IsInRole("Profesor"))
+                    {
+                        <a asp-controller="Ocjene"
+                           asp-action="EditPredmetOcjena"
+                           asp-route-id="@glavnaOcjena.Id"
+                           class="btn btn-outline-warning">
+                            Izmijeni zaključnu ocjenu
+                        </a>
+
+                        <a asp-controller="Ocjene"
+                           asp-action="Create"
+                           asp-route-tip="Predmet"
+                           asp-route-predmetId="@Model.Predmet.Id"
+                           asp-route-studentId="@Model.Student.Id"
+                           asp-route-parentOcjenaId="@glavnaOcjena.Id"
+                           class="btn btn-outline-info">
+                            Dodaj parcijalnu ocjenu
+                        </a>
+                    }
+                </div>
+            }
+            else if (User.IsInRole("Profesor"))
+            {
+                <a asp-controller="Ocjene"
+                   asp-action="Create"
+                   asp-route-tip="Predmet"
+                   asp-route-predmetId="@Model.Predmet.Id"
+                   asp-route-studentId="@Model.Student.Id"
+                   class="btn btn-outline-dark mt-3">
+                    Dodaj zaključnu ocjenu
+                </a>
             }
         </div>
     </div>
+
+    <!-- Parcijalne ocjene -->
+    @if (Model.ParcijalneOcjene?.Any() == true)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <span>Parcijalne ocjene</span>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    @foreach (var grupisano in Model.ParcijalneOcjene)
+                    {
+                        foreach (var ocjena in grupisano.Value)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Vrijednost:</strong> @ocjena.Vrijednost
+                                    @if (!string.IsNullOrWhiteSpace(ocjena.Komentar))
+                                    {
+                                        <span class="text-muted ms-2">(@ocjena.Komentar)</span>
+                                    }
+
+                                    @if (ocjena.DatumUnosa != default)
+                                    {
+                                        <div><small class="text-muted">(@ocjena.DatumUnosa.ToString("dd.MM.yyyy"))</small></div>
+                                    }
+                                </div>
+
+                                <div class="d-flex gap-2 align-items-center">
+                                    @if (ocjena.TezinaProcentualno.HasValue)
+                                    {
+                                        <span class="badge bg-info">@ocjena.TezinaProcentualno %</span>
+                                    }
+
+                                    @if (User.IsInRole("Profesor"))
+                                    {
+                                        <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjena.Id"
+                                           class="btn btn-outline-secondary btn-sm" title="Detalji">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
+                                        <a asp-controller="Ocjene" asp-action="Edit" asp-route-id="@ocjena.Id"
+                                           class="btn btn-outline-warning btn-sm" title="Izmijeni">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@ocjena.Id"
+                                           class="btn btn-outline-danger btn-sm" title="Obriši">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    }
 
     <!-- Navigacija -->
     <div class="d-flex gap-2 mt-4">

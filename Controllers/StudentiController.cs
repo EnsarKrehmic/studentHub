@@ -90,9 +90,7 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> Details(long? id, string sortOrder, string searchString, long? studijskiProgramId)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var student = await _context.Studenti
                 .Include(s => s.StudentStudijskiProgrami)
@@ -102,36 +100,82 @@ namespace StudentHub.Controllers
                 .FirstOrDefaultAsync(s => s.Id == id)
                 ?? throw new InvalidOperationException("Student nije pronađen.");
 
-            // Provjera da li je prijavljeni korisnik Student
+            // Provjera vlasništva ako je Student
             if (User.IsInRole("Student"))
             {
-                // Dohvaćanje AspNetUserId prijavljenog korisnika
                 var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                // Provjera da li je prijavljeni student vlasnik podataka
                 if (student.AspNetUserId != loggedInUserId)
-                {
                     return Forbid();
-                }
             }
 
-            // Uzmite prvi (ili glavni) studijski program ako postoji
             var studijskiProgram = student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgram;
             var studijskiProgramIdForLimit = studijskiProgram?.Id ?? 0;
 
-            // Dohvati izborne predmete koje student pohađa
+            // Predmeti koje pohađa
             var predmeti = await _context.StudentiNaPredmetima
                 .Include(snp => snp.Predmet)
                 .Where(snp => snp.StudentId == id)
                 .Select(snp => snp.Predmet)
                 .ToListAsync();
 
-            // Dohvati ocjene
-            var ocjene = await _context.Ocjene
-                .Where(o => o.StudentId == student.Id)
-                .ToDictionaryAsync(o => o.PredmetId, o => (float?)o.Vrijednost);
+            // Sve ocjene (predmetne)
+            var sveOcjene = await _context.Ocjene
+                .Include(o => o.Predmet)
+                .Include(o => o.Profesor)
+                .Where(o => o.StudentId == student.Id && o.Tip == TipOcjene.Predmet)
+                .ToListAsync();
 
-            // Dohvati LIMIT za ovaj studijski program i godinu
+            var glavne = sveOcjene.Where(o => o.ParentOcjenaId == null).ToList();
+            var parcijalne = sveOcjene.Where(o => o.ParentOcjenaId != null).ToList();
+
+            var grupisaneParcijalne = parcijalne
+                .GroupBy(o => o.ParentOcjenaId!.Value)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            var ocjeneViewModels = glavne.Select(o =>
+            {
+                float? ponderisana = null;
+
+                if (grupisaneParcijalne.TryGetValue(o.Id, out var parcijalneZaOvu) && parcijalneZaOvu.Any(p => p.TezinaProcentualno.HasValue))
+                {
+                    var suma = parcijalneZaOvu.Sum(p => p.Vrijednost * ((p.TezinaProcentualno ?? 0) / 100f));
+                    ponderisana = suma;
+                }
+
+                return new OcjenaViewModel
+                {
+                    Id = o.Id,
+                    Tip = o.Tip.ToString(),
+                    PredmetId = o.PredmetId ?? 0,
+                    PredmetNaziv = o.Predmet?.Naziv ?? "",
+                    StudentIme = student.Ime,
+                    StudentPrezime = student.Prezime,
+                    StudentBrojIndeksa = student.BrojIndeksa,
+                    StudentStudijskiProgramNaziv = studijskiProgram?.Naziv ?? "",
+                    ProfesorIme = o.Profesor?.Ime ?? "",
+                    ProfesorPrezime = o.Profesor?.Prezime ?? "",
+                    ProfesorTitula = o.Profesor?.ProfesorTitula ?? "",
+                    Vrijednost = o.Vrijednost,
+                    TezinaProcentualno = o.TezinaProcentualno,
+                    Komentar = o.Komentar,
+                    DatumDodjele = o.DatumUnosa,
+                    DjelimicneOcjene = grupisaneParcijalne.ContainsKey(o.Id)
+                        ? grupisaneParcijalne[o.Id].Select(p => new OcjenaViewModel
+                        {
+                            Vrijednost = p.Vrijednost,
+                            TezinaProcentualno = p.TezinaProcentualno,
+                            Komentar = p.Komentar,
+                            DatumDodjele = p.DatumUnosa
+                        }).ToList()
+                        : new List<OcjenaViewModel>(),
+                    StudentId = student.Id,
+                    ProfesorId = o.ProfesorId,
+                    StudijskiProgramId = studijskiProgramIdForLimit,
+                    ProsjekPrikaz = ponderisana.HasValue ? ponderisana.Value.ToString("0.00") : null
+                };
+            }).ToList();
+
+            // Dohvati LIMIT ako postoji
             StudijskiProgramIzborniLimit? limit = null;
             if (student.GodinaStudija.HasValue && studijskiProgramIdForLimit > 0)
             {
@@ -141,24 +185,7 @@ namespace StudentHub.Controllers
                         l.GodinaStudija == student.GodinaStudija.Value);
             }
 
-            // Filter za studentsQuery (možeš ostaviti kako jeste)
-            var studentsQuery = _context.Studenti
-                .Include(s => s.StudentStudijskiProgrami)
-                .ThenInclude(ssp => ssp.StudijskiProgram)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                studentsQuery = studentsQuery.Where(s => s.Ime.Contains(searchString) || s.Prezime.Contains(searchString));
-            }
-
-            if (studijskiProgramId.HasValue)
-            {
-                studentsQuery = studentsQuery
-                    .Where(s => s.StudentStudijskiProgrami.Any(ssp => ssp.StudijskiProgramId == studijskiProgramId.Value));
-            }
-
-            // Kreiranje ViewModel-a
+            // Kreiraj view model
             var viewModel = new StudentDetailsViewModel
             {
                 Student = student,
@@ -166,12 +193,11 @@ namespace StudentHub.Controllers
                 SearchString = searchString,
                 StudijskiProgramId = studijskiProgramId,
                 Predmeti = predmeti,
-                Ocjene = ocjene,
+                OcjenePredmeta = ocjeneViewModels,
                 StudijskiProgramIzborniLimit = limit
             };
 
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", studijskiProgramId);
-
             return View(viewModel);
         }
 

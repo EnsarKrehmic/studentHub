@@ -1,0 +1,84 @@
+﻿@model StudentHub.ViewModels.MojiPodaciIndexViewModel
+
+@{
+    ViewData["Title"] = "Moji podaci";
+}
+
+<h2 class="mb-4"><i class="fas fa-user-circle text-primary"></i> Moji podaci</h2>
+
+<!-- Osnovna kartica o korisniku -->
+<div class="card shadow-sm border-start border-4 border-primary mb-4">
+    <div class="card-body">
+        <h5 class="card-title text-primary">
+            <i class="fas fa-user-tag"></i> Trenutna uloga: <strong>@Model.Uloga</strong>
+        </h5>
+        <p class="card-text">
+            Ovdje možete pregledati informacije, rasporede i zahtjeve koji se odnose direktno na vas.
+        </p>
+    </div>
+</div>
+
+@if (Model.Uloga == "Student")
+{
+    <div class="card shadow-sm border-start border-4 border-success mb-3">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Moj raspored</h5>
+            <p class="card-text">Prikaz termina za vaš studijski program.</p>
+            <a asp-action="Raspored" class="btn btn-success">
+                <i class="fas fa-calendar-week"></i> Pogledaj raspored
+            </a>
+        </div>
+    </div>
+}
+else if (Model.Uloga == "Profesor" || Model.Uloga == "Asistent")
+{
+    <div class="card shadow-sm border-start border-4 border-info mb-3">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-chalkboard-teacher"></i> Lični raspored</h5>
+            <p class="card-text">Termini nastave za predmete na kojima predajete.</p>
+            <a asp-action="Raspored" class="btn btn-info">
+                <i class="fas fa-calendar-check"></i> Prikaži raspored
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-start border-4 border-warning mb-3">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-user-clock"></i> Zahtjevi za priznavanje prisustva</h5>
+            @if (Model.BrojZahtjevaZaPrisustvo > 0)
+            {
+                <p class="card-text text-danger">
+                    Imate <strong>@Model.BrojZahtjevaZaPrisustvo</strong> zahtjeva koji čekaju vašu obradu.
+                </p>
+                <a asp-action="ZahtjeviZaPrisustvo" class="btn btn-warning">
+                    <i class="fas fa-tasks"></i> Pregled zahtjeva
+                </a>
+            }
+            else
+            {
+                <p class="card-text text-success">Trenutno nema zahtjeva za obradu.</p>
+            }
+        </div>
+    </div>
+}
+else if (Model.Uloga == "Studentska služba")
+{
+    <div class="card shadow-sm border-start border-4 border-danger mb-3">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-envelope-open-text"></i> Zahtjevi studenata</h5>
+            @if (Model.BrojNerijesenihZahtjeva > 0)
+            {
+                <p class="card-text text-danger">
+                    Imate <strong>@Model.BrojNerijesenihZahtjeva</strong> neriješenih zahtjeva.
+                </p>
+                <a asp-controller="Zahtjevi" asp-action="Index" class="btn btn-danger">
+                    <i class="fas fa-inbox"></i> Pregled zahtjeva
+                </a>
+            }
+            else
+            {
+                <p class="card-text text-success">Trenutno nema neriješenih zahtjeva.</p>
+            }
+        </div>
+    </div>
+}

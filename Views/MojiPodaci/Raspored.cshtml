@@ -1,0 +1,145 @@
+﻿@model StudentHub.ViewModels.MojRasporedViewModel
+
+@{
+    ViewData["Title"] = "Moj raspored";
+
+    var daniBosanski = new List<(DayOfWeek dan, string naziv, int redoslijed)>
+    {
+        (DayOfWeek.Monday, "Ponedjeljak", 0),
+        (DayOfWeek.Tuesday, "Utorak", 1),
+        (DayOfWeek.Wednesday, "Srijeda", 2),
+        (DayOfWeek.Thursday, "Četvrtak", 3),
+        (DayOfWeek.Friday, "Petak", 4),
+        (DayOfWeek.Saturday, "Subota", 5),
+        (DayOfWeek.Sunday, "Nedjelja", 6)
+    };
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.3.1/css/rowGroup.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css" />
+
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-calendar-check text-primary"></i> Moj raspored</h2>
+
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <a asp-controller="MojiPodaci" asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Nazad na Moje podatke
+        </a>
+    </div>
+
+    @if (!Model.Termini.Any())
+    {
+        <div class="alert alert-info shadow-sm">
+            <strong>Trenutno nemate raspoređenih termina.</strong><br />
+            Raspored nije još dodijeljen za vaš program ili predmet(e).
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive shadow-sm">
+            <table id="rasporedTable" class="table table-hover table-bordered align-middle w-100">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>📘 Predmet</th>
+                        <th>📚 Vrsta</th>
+                        <th style="display:none;">DanRedoslijed</th>
+                        <th>📅 Dan</th>
+                        <th>⏰ Vrijeme</th>
+                        <th>🏫 Lokacija</th>
+                        @if (Model.Uloga == "Profesor" || Model.Uloga == "Asistent")
+                        {
+                            <th>🎓 Studijski program</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.Termini)
+                    {
+                        // Tražimo redoslijed i naziv za trenutni dan
+                        var danInfo = daniBosanski.FirstOrDefault(d => d.dan == t.Dan);
+                        var nazivDana = danInfo.naziv;
+                        var redoslijedDana = danInfo.redoslijed;
+
+                        var vrstaKlasa = t.Vrsta.ToString().ToLower() switch
+                        {
+                            "predavanje" => "text-primary",
+                            "vježbe" => "text-success",
+                            "tutorijal" => "text-warning",
+                            "seminar" => "text-danger",
+                            _ => "text-muted"
+                        };
+                        <tr>
+                            <td>@t.Predmet?.Naziv</td>
+                            <td class="@vrstaKlasa fw-bold">@t.Vrsta</td>
+                            <td style="display:none;">@redoslijedDana</td>
+                            <td class="text-center">@nazivDana</td>
+                            <td class="text-center">
+                                @t.VrijemeOd.ToString("hh\\:mm") - @t.VrijemeDo.ToString("hh\\:mm")
+                            </td>
+                            <td>@t.Lokacija</td>
+                            @if (Model.Uloga == "Profesor" || Model.Uloga == "Asistent")
+                            {
+                                <td>@t.Raspored?.StudijskiProgram?.Naziv</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.3.1/js/dataTables.rowGroup.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
+    <script>
+        // JS mapa za prikaz dana na bosanskom
+        const daniBosanskiJS = {
+            0: "Ponedjeljak",
+            1: "Utorak",
+            2: "Srijeda",
+            3: "Četvrtak",
+            4: "Petak",
+            5: "Subota",
+            6: "Nedjelja"
+        };
+
+        $(document).ready(function () {
+            $('#rasporedTable').DataTable({
+                responsive: true,
+                autoWidth: false,
+                paging: true,
+                searching: true,
+                ordering: true,
+                order: [[2, 'asc']], // Po redoslijedu dana u sedmici
+                lengthMenu: [5, 10, 25, 50],
+                columnDefs: [
+                    { targets: 2, visible: false, searchable: false }, // Skrivena kolona DanRedoslijed
+                    { targets: 3, orderData: 2 }
+                ],
+                rowGroup: {
+                    dataSrc: 2,
+                    startRender: function (rows, group) {
+                        return `<span class="fw-bold text-primary fs-5"><i class="fas fa-calendar-day"></i> ${daniBosanskiJS[group]}</span>`;
+                    }
+                },
+                language: {
+                    search: "Pretraži:",
+                    lengthMenu: "Prikaži _MENU_ redova",
+                    info: "Prikazujem _START_ do _END_ od ukupno _TOTAL_ termina",
+                    paginate: {
+                        first: "Prvi",
+                        last: "Posljednji",
+                        next: "Sljedeći",
+                        previous: "Prethodni"
+                    },
+                    zeroRecords: "Nema rezultata za prikaz"
+                }
+            });
+        });
+    </script>
+}

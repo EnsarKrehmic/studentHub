@@ -1,0 +1,68 @@
+﻿@model IEnumerable<StudentHub.Models.Raspored>
+
+@{
+    ViewData["Title"] = "Rasporedi";
+    var jeSlužba = User.IsInRole("Studentska služba");
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-calendar-alt text-primary"></i> Rasporedi po studijskim programima</h2>
+
+    @if (jeSlužba)
+    {
+        <a asp-action="Create" class="btn btn-success mb-3">
+            <i class="fas fa-plus-circle"></i> Dodaj novi raspored
+        </a>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Trenutno nema definisanih rasporeda.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive shadow-sm">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>📘 Studijski program</th>
+                        <th>🎓 Godina studija</th>
+                        <th>📆 Semestar</th>
+                        <th>📅 Akademska godina</th>
+                        <th>⚙️ Akcije</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var raspored in Model)
+                    {
+                        <tr>
+                            <td>@raspored.StudijskiProgram?.Naziv</td>
+                            <td class="text-center">@raspored.GodinaStudija</td>
+                            <td class="text-center">
+                                @(raspored.Semestar == 1 ? "Zimski" :
+                                                        raspored.Semestar == 2 ? "Ljetni" : $"Semestar {raspored.Semestar}")
+                    </td>
+                    <td class="text-center">@raspored.AkademskaGodina</td>
+                    <td class="text-nowrap text-center">
+                        <a asp-action="Details" asp-route-id="@raspored.Id" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        @if (jeSlužba)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@raspored.Id" class="btn btn-sm btn-outline-warning me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@raspored.Id" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

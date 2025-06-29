@@ -3,108 +3,136 @@
   "WorkspaceRootPath": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\predmeti\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\predmeti\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\rasporedi\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\rasporedi\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ispiti\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ispiti\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\rasporedicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\rasporedicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\predmeticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\predmeticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\rasporedi\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\rasporedi\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\predmetdetailsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\predmetdetailsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\termininastave\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\termininastave\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\ispiticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\ispiticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\termininastave\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\termininastave\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\ispitdetailsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\ispitdetailsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\rasporedi\\generisitermine.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\rasporedi\\generisitermine.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\ispit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\ispit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\rasporeddetailsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\rasporeddetailsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ocjene\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ocjene\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\generisanjeterminaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\generisanjeterminaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\ocjenecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\ocjenecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\rasporedi\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\rasporedi\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ocjene\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ocjene\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\predmeti\\studentnapredmetu.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\predmeti\\studentnapredmetu.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\nastavneaktivnosticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\nastavneaktivnosticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ocjene\\_ocjenacard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ocjene\\_ocjenacard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\termininastavecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\termininastavecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\ocjenaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\ocjenaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\rasporedi\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\rasporedi\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ocjene\\editnastavnaaktivnostocjena.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ocjene\\editnastavnaaktivnostocjena.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\mojipodaci\\raspored.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\mojipodaci\\raspored.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ocjene\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ocjene\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\mojipodaci\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\mojipodaci\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ocjene\\editpredmetocjena.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ocjene\\editpredmetocjena.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ocjene\\createnastavnaaktivnostocjena.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ocjene\\createnastavnaaktivnostocjena.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\mojipodacicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\mojipodacicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\ocjene\\createpredmetocjena.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\ocjene\\createpredmetocjena.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\terminnastave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\terminnastave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\mojrasporedviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\mojrasporedviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\raspored.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\raspored.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\mojipodaciindexviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\mojipodaciindexviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\mojipodaci\\zahtjevizaprisustvo.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\mojipodaci\\zahtjevizaprisustvo.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\zahtjevizaprisustvocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\zahtjevizaprisustvocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\termininastave\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\termininastave\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\nastavniplan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\nastavniplan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\predmet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\predmet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\zahtjevzaprisustvo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\zahtjevzaprisustvo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\ocjena.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\ocjena.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\studenti\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\studenti\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\nastavnaaktivnost.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\nastavnaaktivnost.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\studentnapredmetuviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\studentnapredmetuviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\vrstanastave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\vrstanastave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\prijava.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\prijava.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\prisustvopopredmetuviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\prisustvopopredmetuviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\unosbodovaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\unosbodovaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\studentdetailsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\studentdetailsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\studenticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\studenticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\studijskiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\studijskiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -114,8 +142,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 821,
-          "SelectedChildIndex": 26,
+          "SelectedChildIndex": 20,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAO8AAAAAAAAAAAAYwA4BAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-19T12:17:00.485Z",
+              "IsPinned": true
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
@@ -137,346 +178,401 @@
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Rasporedi\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Rasporedi\\Edit.cshtml",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAWwC0AAABnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-29T00:57:49.62Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "IspitDetailsViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\IspitDetailsViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\IspitDetailsViewModel.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\IspitDetailsViewModel.cs",
-              "RelativeToolTip": "ViewModels\\IspitDetailsViewModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAwAkAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-19T01:17:46.588Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ispiti\\Details.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ispiti\\Details.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ispiti\\Details.cshtml",
-              "RelativeToolTip": "Views\\Ispiti\\Details.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAOIAAAAOAAAAAAAAAA==",
+              "Title": "GenerisiTermine.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\GenerisiTermine.cshtml",
+              "RelativeDocumentMoniker": "Views\\Rasporedi\\GenerisiTermine.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\GenerisiTermine.cshtml",
+              "RelativeToolTip": "Views\\Rasporedi\\GenerisiTermine.cshtml",
+              "ViewState": "AgIAACwAAAAAAAAAAAAgwEsAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-19T01:13:39.945Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "PrisustvoPoPredmetuViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\PrisustvoPoPredmetuViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\PrisustvoPoPredmetuViewModel.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\PrisustvoPoPredmetuViewModel.cs",
-              "RelativeToolTip": "ViewModels\\PrisustvoPoPredmetuViewModel.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAAwDQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T21:35:07.829Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "UnosBodovaViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\UnosBodovaViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\UnosBodovaViewModel.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\UnosBodovaViewModel.cs",
-              "RelativeToolTip": "ViewModels\\UnosBodovaViewModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T21:32:44.409Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Studenti\\Details.cshtml",
-              "RelativeDocumentMoniker": "Views\\Studenti\\Details.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Studenti\\Details.cshtml",
-              "RelativeToolTip": "Views\\Studenti\\Details.cshtml",
-              "ViewState": "AgIAAJEAAAAAAAAAAAAiwKQAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T17:25:28.495Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "StudentDetailsViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\StudentDetailsViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\StudentDetailsViewModel.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\StudentDetailsViewModel.cs",
-              "RelativeToolTip": "ViewModels\\StudentDetailsViewModel.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAA6wB8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T17:23:17.868Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "StudentiController.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\StudentiController.cs",
-              "RelativeDocumentMoniker": "Controllers\\StudentiController.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\StudentiController.cs",
-              "RelativeToolTip": "Controllers\\StudentiController.cs",
-              "ViewState": "AgIAALAAAAAAAAAAAAAwwMkAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T17:21:22.376Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "StudentNaPredmetuViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\StudentNaPredmetuViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\StudentNaPredmetuViewModel.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\StudentNaPredmetuViewModel.cs",
-              "RelativeToolTip": "ViewModels\\StudentNaPredmetuViewModel.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAA+wBwAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T17:13:59.091Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "StudentNaPredmetu.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Predmeti\\StudentNaPredmetu.cshtml",
-              "RelativeDocumentMoniker": "Views\\Predmeti\\StudentNaPredmetu.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Predmeti\\StudentNaPredmetu.cshtml",
-              "RelativeToolTip": "Views\\Predmeti\\StudentNaPredmetu.cshtml",
-              "ViewState": "AgIAALQAAAAAAAAAAAAgwOQAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T17:12:30.743Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "PredmetDetailsViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\PredmetDetailsViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\PredmetDetailsViewModel.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\PredmetDetailsViewModel.cs",
-              "RelativeToolTip": "ViewModels\\PredmetDetailsViewModel.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAqwB8AAAA0AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T17:08:16.42Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Delete.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\Delete.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ocjene\\Delete.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\Delete.cshtml",
-              "RelativeToolTip": "Views\\Ocjene\\Delete.cshtml",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAcwEMAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T17:05:30.164Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "EditNastavnaAktivnostOcjena.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\EditNastavnaAktivnostOcjena.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ocjene\\EditNastavnaAktivnostOcjena.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\EditNastavnaAktivnostOcjena.cshtml",
-              "RelativeToolTip": "Views\\Ocjene\\EditNastavnaAktivnostOcjena.cshtml",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABEAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T16:43:59.49Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "EditPredmetOcjena.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\EditPredmetOcjena.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ocjene\\EditPredmetOcjena.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\EditPredmetOcjena.cshtml",
-              "RelativeToolTip": "Views\\Ocjene\\EditPredmetOcjena.cshtml",
-              "ViewState": "AgIAADYAAAAAAAAAAAAcwEYAAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T16:44:00.403Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "CreateNastavnaAktivnostOcjena.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\CreateNastavnaAktivnostOcjena.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ocjene\\CreateNastavnaAktivnostOcjena.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\CreateNastavnaAktivnostOcjena.cshtml",
-              "RelativeToolTip": "Views\\Ocjene\\CreateNastavnaAktivnostOcjena.cshtml",
-              "ViewState": "AgIAACwAAAAAAAAAAAAcwDkAAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T16:43:03.842Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "OcjenaViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\OcjenaViewModel.cs",
-              "RelativeDocumentMoniker": "ViewModels\\OcjenaViewModel.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\OcjenaViewModel.cs",
-              "RelativeToolTip": "ViewModels\\OcjenaViewModel.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAiwB8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T16:32:13.044Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "CreatePredmetOcjena.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\CreatePredmetOcjena.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ocjene\\CreatePredmetOcjena.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\CreatePredmetOcjena.cshtml",
-              "RelativeToolTip": "Views\\Ocjene\\CreatePredmetOcjena.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T16:25:42.894Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "IspitiController.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\IspitiController.cs",
-              "RelativeDocumentMoniker": "Controllers\\IspitiController.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\IspitiController.cs",
-              "RelativeToolTip": "Controllers\\IspitiController.cs",
-              "ViewState": "AgIAAPAAAAAAAAAAAAAcwAEBAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T16:23:09.322Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "Prijava.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Prijava.cs",
-              "RelativeDocumentMoniker": "Models\\Prijava.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Prijava.cs",
-              "RelativeToolTip": "Models\\Prijava.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAYwAkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T16:22:45.087Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Ispit.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Ispit.cs",
-              "RelativeDocumentMoniker": "Models\\Ispit.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Ispit.cs",
-              "RelativeToolTip": "Models\\Ispit.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAzwDUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T16:22:41.306Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PredmetiController.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\PredmetiController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PredmetiController.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\PredmetiController.cs",
-              "RelativeToolTip": "Controllers\\PredmetiController.cs",
-              "ViewState": "AgIAAI0AAAAAAAAAAAAqwJUAAABIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T16:10:26.616Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Predmeti\\Details.cshtml",
-              "RelativeDocumentMoniker": "Views\\Predmeti\\Details.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Predmeti\\Details.cshtml",
-              "RelativeToolTip": "Views\\Predmeti\\Details.cshtml",
-              "ViewState": "AgIAAFcAAAAAAAAAAAAAAGgAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T16:09:59.405Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "_OcjenaCard.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\_OcjenaCard.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ocjene\\_OcjenaCard.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\_OcjenaCard.cshtml",
-              "RelativeToolTip": "Views\\Ocjene\\_OcjenaCard.cshtml",
-              "ViewState": "AgIAAFAAAAAAAAAAAAAQwFkAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T16:09:41.47Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\Details.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ocjene\\Details.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\Details.cshtml",
-              "RelativeToolTip": "Views\\Ocjene\\Details.cshtml",
-              "ViewState": "AgIAAIUAAAAAAAAAAAAkwK0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T16:09:33.219Z",
+              "WhenOpened": "2025-06-29T00:32:48.825Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Ocjene\\Index.cshtml",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Ocjene\\Index.cshtml",
-              "RelativeToolTip": "Views\\Ocjene\\Index.cshtml",
-              "ViewState": "AgIAAHcAAAAAAAAAAAAiwI8AAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-18T16:09:23.558Z",
+              "Title": "GenerisanjeTerminaViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\GenerisanjeTerminaViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\GenerisanjeTerminaViewModel.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\GenerisanjeTerminaViewModel.cs",
+              "RelativeToolTip": "ViewModels\\GenerisanjeTerminaViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-29T00:30:28.379Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "ZahtjeviZaPrisustvoController.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\ZahtjeviZaPrisustvoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ZahtjeviZaPrisustvoController.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\ZahtjeviZaPrisustvoController.cs",
+              "RelativeToolTip": "Controllers\\ZahtjeviZaPrisustvoController.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAuwFIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-28T17:02:21.631Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "NastavneAktivnostiController.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\NastavneAktivnostiController.cs",
+              "RelativeDocumentMoniker": "Controllers\\NastavneAktivnostiController.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\NastavneAktivnostiController.cs",
+              "RelativeToolTip": "Controllers\\NastavneAktivnostiController.cs",
+              "ViewState": "AgIAAPMAAAAAAAAAAAAIwAQBAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-28T16:53:31.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "MojiPodaciController.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\MojiPodaciController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MojiPodaciController.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\MojiPodaciController.cs",
+              "RelativeToolTip": "Controllers\\MojiPodaciController.cs",
+              "ViewState": "AgIAAGQAAAAAAAAAAAAowG4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-28T16:52:30.534Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "OcjeneController.cs",
-              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\OcjeneController.cs",
-              "RelativeDocumentMoniker": "Controllers\\OcjeneController.cs",
-              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\OcjeneController.cs",
-              "RelativeToolTip": "Controllers\\OcjeneController.cs",
-              "ViewState": "AgIAAJQAAAAAAAAAAAAIwKgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T16:07:37.556Z",
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Rasporedi\\Details.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\Details.cshtml",
+              "RelativeToolTip": "Views\\Rasporedi\\Details.cshtml",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAAAG4AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-28T01:10:52.148Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 4,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\TerminiNastave\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\TerminiNastave\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\TerminiNastave\\Delete.cshtml",
+              "RelativeToolTip": "Views\\TerminiNastave\\Delete.cshtml",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAmwBQAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-28T01:04:54.3Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\TerminiNastave\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\TerminiNastave\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\TerminiNastave\\Edit.cshtml",
+              "RelativeToolTip": "Views\\TerminiNastave\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-28T01:03:41.373Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAgwEQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-28T00:11:03.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-27T23:39:25.961Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Rasporedi\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\Index.cshtml",
+              "RelativeToolTip": "Views\\Rasporedi\\Index.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-27T22:42:09.676Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\TerminiNastave\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\TerminiNastave\\Create.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\TerminiNastave\\Create.cshtml",
+              "RelativeToolTip": "Views\\TerminiNastave\\Create.cshtml",
+              "ViewState": "AgIAAAsAAAAAAAAAAADwv38AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-19T14:40:43.634Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "TerminiNastaveController.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\TerminiNastaveController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TerminiNastaveController.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\TerminiNastaveController.cs",
+              "RelativeToolTip": "Controllers\\TerminiNastaveController.cs",
+              "ViewState": "AgIAAOcAAAAAAAAAAAAkwO0AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T14:39:37.813Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Rasporedi\\Create.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Rasporedi\\Create.cshtml",
+              "RelativeToolTip": "Views\\Rasporedi\\Create.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-19T14:28:28.187Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "ZahtjevZaPrisustvo.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\ZahtjevZaPrisustvo.cs",
+              "RelativeDocumentMoniker": "Models\\ZahtjevZaPrisustvo.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\ZahtjevZaPrisustvo.cs",
+              "RelativeToolTip": "Models\\ZahtjevZaPrisustvo.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAiwBIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T14:17:33.074Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
               "Title": "Ocjena.cs",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Ocjena.cs",
               "RelativeDocumentMoniker": "Models\\Ocjena.cs",
               "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Ocjena.cs",
               "RelativeToolTip": "Models\\Ocjena.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAuwC0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACMAAAAAAAAAAAAUwEAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T15:59:57.737Z",
+              "WhenOpened": "2025-06-19T14:16:31.892Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RasporediController.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\RasporediController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RasporediController.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\RasporediController.cs",
+              "RelativeToolTip": "Controllers\\RasporediController.cs",
+              "ViewState": "AgIAAIIAAAAAAAAAAAAqwJUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T14:11:47.414Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ZahtjeviZaPrisustvo.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\MojiPodaci\\ZahtjeviZaPrisustvo.cshtml",
+              "RelativeDocumentMoniker": "Views\\MojiPodaci\\ZahtjeviZaPrisustvo.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\MojiPodaci\\ZahtjeviZaPrisustvo.cshtml",
+              "RelativeToolTip": "Views\\MojiPodaci\\ZahtjeviZaPrisustvo.cshtml",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAAAHYAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-19T13:14:46.368Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\MojiPodaci\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\MojiPodaci\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\MojiPodaci\\Index.cshtml",
+              "RelativeToolTip": "Views\\MojiPodaci\\Index.cshtml",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-19T12:28:00.635Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "MojiPodaciIndexViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\MojiPodaciIndexViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\MojiPodaciIndexViewModel.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\MojiPodaciIndexViewModel.cs",
+              "RelativeToolTip": "ViewModels\\MojiPodaciIndexViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T12:27:34.903Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Raspored.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\MojiPodaci\\Raspored.cshtml",
+              "RelativeDocumentMoniker": "Views\\MojiPodaci\\Raspored.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\MojiPodaci\\Raspored.cshtml",
+              "RelativeToolTip": "Views\\MojiPodaci\\Raspored.cshtml",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAmwJAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-19T12:24:12.886Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "MojRasporedViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\MojRasporedViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\MojRasporedViewModel.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\MojRasporedViewModel.cs",
+              "RelativeToolTip": "ViewModels\\MojRasporedViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T12:22:44.673Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RasporedDetailsViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\RasporedDetailsViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\RasporedDetailsViewModel.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\RasporedDetailsViewModel.cs",
+              "RelativeToolTip": "ViewModels\\RasporedDetailsViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:44:12.383Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAKUBAAAAAAAAAAAswLwBAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:33:44.22Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Raspored.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Raspored.cs",
+              "RelativeDocumentMoniker": "Models\\Raspored.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Raspored.cs",
+              "RelativeToolTip": "Models\\Raspored.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:33:29.038Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "TerminNastave.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\TerminNastave.cs",
+              "RelativeDocumentMoniker": "Models\\TerminNastave.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\TerminNastave.cs",
+              "RelativeToolTip": "Models\\TerminNastave.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAqwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:33:12.954Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "VrstaNastave.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\VrstaNastave.cs",
+              "RelativeDocumentMoniker": "Models\\VrstaNastave.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\VrstaNastave.cs",
+              "RelativeToolTip": "Models\\VrstaNastave.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:32:55.028Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "NastavniPlan.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\NastavniPlan.cs",
+              "RelativeDocumentMoniker": "Models\\NastavniPlan.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\NastavniPlan.cs",
+              "RelativeToolTip": "Models\\NastavniPlan.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:31:08.289Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "NastavnaAktivnost.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\NastavnaAktivnost.cs",
+              "RelativeDocumentMoniker": "Models\\NastavnaAktivnost.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\NastavnaAktivnost.cs",
+              "RelativeToolTip": "Models\\NastavnaAktivnost.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAYwDQAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:30:54.716Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "StudijskiProgram.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\StudijskiProgram.cs",
+              "RelativeDocumentMoniker": "Models\\StudijskiProgram.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\StudijskiProgram.cs",
+              "RelativeToolTip": "Models\\StudijskiProgram.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:29:39.438Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Predmet.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Predmet.cs",
+              "RelativeDocumentMoniker": "Models\\Predmet.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\Predmet.cs",
+              "RelativeToolTip": "Models\\Predmet.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAADwvxYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-19T11:29:35.653Z"
             }
           ]
         },

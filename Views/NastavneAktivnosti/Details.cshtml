@@ -394,6 +394,11 @@
                                                 <span class="badge bg-warning text-dark">Čeka potvrdu</span><br />
                                                 <small>Kod: <code>@zahtjev.KodUnesen</code></small><br />
                                                 <small>@zahtjev.VrijemePodnosenja.ToString("HH:mm:ss")</small>
+
+                                                @if (!string.IsNullOrEmpty(zahtjev.Napomena))
+                                                {
+                                                    <small class="text-muted">Napomena: @zahtjev.Napomena</small>
+                                                }
                                             }
                                             else
                                             {

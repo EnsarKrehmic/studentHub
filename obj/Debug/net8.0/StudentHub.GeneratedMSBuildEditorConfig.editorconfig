@@ -184,6 +184,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS29tZW50YXJpXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/MojiPodaci/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9qaVBvZGFjaVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/MojiPodaci/Raspored.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9qaVBvZGFjaVxSYXNwb3JlZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/MojiPodaci/ZahtjeviZaPrisustvo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9qaVBvZGFjaVxaYWh0amV2aVphUHJpc3VzdHZvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/NastavneAktivnosti/AddComment.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmFzdGF2bmVBa3Rpdm5vc3RpXEFkZENvbW1lbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -380,6 +392,30 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmVzb3JpXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Rasporedi/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFzcG9yZWRpXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Rasporedi/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFzcG9yZWRpXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Rasporedi/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFzcG9yZWRpXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Rasporedi/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFzcG9yZWRpXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Rasporedi/GenerisiTermine.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFzcG9yZWRpXEdlbmVyaXNpVGVybWluZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Rasporedi/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFzcG9yZWRpXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/Shared/Components/StudijskiProgramiMenu/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcU3R1ZGlqc2tpUHJvZ3JhbWlNZW51XERlZmF1bHQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -486,6 +522,18 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/StudijskiProgrami/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGlqc2tpUHJvZ3JhbWlcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/TerminiNastave/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVybWluaU5hc3RhdmVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/TerminiNastave/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVybWluaU5hc3RhdmVcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/TerminiNastave/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVybWluaU5hc3RhdmVcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/Uvjerenja/Create.cshtml]

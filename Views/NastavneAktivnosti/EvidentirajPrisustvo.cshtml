@@ -19,6 +19,7 @@
         </div>
         <div class="card-body">
             <form asp-action="EvidentirajPrisustvo" method="post">
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="nastavnaAktivnostId" value="@nastavnaAktivnost.Id" />
 
                 @if (Model.Studenti.Any())

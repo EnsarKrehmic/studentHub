@@ -31,6 +31,7 @@ namespace StudentHub.Data
         public DbSet<Profesor> Profesori { get; set; }
         public DbSet<ProfesorStudijskiProgram> ProfesorStudijskiProgrami { get; set; }
         public DbSet<PrisustvoNaAktivnosti> PrisustvaNaAktivnostima { get; set; }
+        public DbSet<Raspored> Rasporedi { get; set; }
         public DbSet<Student> Studenti { get; set; }
         public DbSet<StudentStudijskiProgram> StudentStudijskiProgrami { get; set; }
         public DbSet<StudentNaPredmetu> StudentiNaPredmetima { get; set; }
@@ -38,6 +39,7 @@ namespace StudentHub.Data
         public DbSet<StudentskaSluzbaStudijskiProgram> StudentskaSluzbaStudijskiProgrami { get; set; }
         public DbSet<StudijskiProgram> StudijskiProgrami { get; set; }
         public DbSet<StudijskiProgramIzborniLimit> StudijskiProgramIzborniLimiti { get; set; }
+        public DbSet<TerminNastave> TerminiNastave { get; set; }
         public DbSet<Uvjerenje> Uvjerenja { get; set; }
         public DbSet<Zahtjev> Zahtjevi { get; set; }
         public DbSet<ZahtjevZaPrisustvo> ZahtjeviZaPrisustvo { get; set; }
@@ -63,11 +65,13 @@ namespace StudentHub.Data
             modelBuilder.Entity<Prijava>().ToTable("Prijava");
             modelBuilder.Entity<ProfesorStudijskiProgram>().ToTable("ProfesorStudijskiProgram");
             modelBuilder.Entity<PrisustvoNaAktivnosti>().ToTable("PrisustvoNaAktivnosti");
+            modelBuilder.Entity<Raspored>().ToTable("Raspored");
             modelBuilder.Entity<StudentStudijskiProgram>().ToTable("StudentStudijskiProgram");
             modelBuilder.Entity<StudentNaPredmetu>().ToTable("StudentNaPredmetu");
             modelBuilder.Entity<StudentskaSluzbaStudijskiProgram>().ToTable("StudentskaSluzbaStudijskiProgram");
             modelBuilder.Entity<StudijskiProgram>().ToTable("StudijskiProgram");
             modelBuilder.Entity<StudijskiProgramIzborniLimit>().ToTable("StudijskiProgramIzborniLimit");
+            modelBuilder.Entity<TerminNastave>().ToTable("TerminNastave");
             modelBuilder.Entity<Uvjerenje>().ToTable("Uvjerenje");
             modelBuilder.Entity<Zahtjev>().ToTable("Zahtjev");
             modelBuilder.Entity<ZahtjevZaPrisustvo>().ToTable("ZahtjevZaPrisustvo");
@@ -432,6 +436,13 @@ namespace StudentHub.Data
                 .WithMany()
                 .HasForeignKey(d => d.StudentskaSluzbaId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // Konfiguracija za Raspored -> TerminiNastave
+            modelBuilder.Entity<TerminNastave>()
+                .HasOne(t => t.Raspored)
+                .WithMany(r => r.Termini)
+                .HasForeignKey(t => t.RasporedId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

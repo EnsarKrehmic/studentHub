@@ -1,0 +1,66 @@
+﻿@model StudentHub.Models.TerminNastave
+
+@{
+    ViewData["Title"] = "Brisanje termina";
+}
+
+@functions {
+    public string DanNaBosanskom(DayOfWeek dan)
+    {
+        return dan switch
+        {
+            DayOfWeek.Monday => "Ponedjeljak",
+            DayOfWeek.Tuesday => "Utorak",
+            DayOfWeek.Wednesday => "Srijeda",
+            DayOfWeek.Thursday => "Četvrtak",
+            DayOfWeek.Friday => "Petak",
+            DayOfWeek.Saturday => "Subota",
+            DayOfWeek.Sunday => "Nedjelja",
+            _ => dan.ToString()
+        };
+    }
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-danger"><i class="fas fa-trash-alt"></i> Potvrda brisanja termina</h2>
+
+    <div class="alert alert-danger d-flex align-items-center">
+        <i class="fas fa-exclamation-triangle fa-lg me-2"></i>
+        <div>
+            <strong>Upozorenje:</strong> Brisanjem ovog termina on trajno nestaje iz rasporeda i više neće biti vidljiv studentima, profesorima ni asistentima.
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4 border-left-danger">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4">📘 Predmet:</dt>
+                <dd class="col-sm-8">@Model.Predmet?.Naziv</dd>
+
+                <dt class="col-sm-4">📌 Vrsta nastave:</dt>
+                <dd class="col-sm-8">@Model.Vrsta</dd>
+
+                <dt class="col-sm-4">📅 Dan:</dt>
+                <dd class="col-sm-8">@DanNaBosanskom(Model.Dan)</dd>
+
+                <dt class="col-sm-4">⏰ Vrijeme:</dt>
+                <dd class="col-sm-8">@Model.VrijemeOd.ToString(@"hh\:mm") - @Model.VrijemeDo.ToString(@"hh\:mm")</dd>
+
+                <dt class="col-sm-4">🏫 Lokacija:</dt>
+                <dd class="col-sm-8">@Model.Lokacija</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Obriši termin
+            </button>
+            <a asp-controller="Rasporedi" asp-action="Details" asp-route-id="@Model.RasporedId" class="btn btn-outline-secondary">
+                <i class="fas fa-times"></i> Odustani
+            </a>
+        </div>
+    </form>
+</div>

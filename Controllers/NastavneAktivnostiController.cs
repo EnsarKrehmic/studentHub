@@ -53,8 +53,7 @@ namespace StudentHub.Controllers
 
             var nastavnaAktivnost = await _context.NastavneAktivnosti
                 .Include(n => n.Predmet)
-                .Include(n => n.NastavniMaterijali)
-                        .ThenInclude(m => m.Fajlovi)
+                .Include(n => n.NastavniMaterijali).ThenInclude(m => m.Fajlovi)
                 .Include(n => n.Komentari).ThenInclude(k => k.Student)
                 .Include(n => n.Komentari).ThenInclude(k => k.Korisnik)
                 .Include(n => n.Komentari).ThenInclude(k => k.VidljivostKorisnici)
@@ -64,31 +63,31 @@ namespace StudentHub.Controllers
 
             if (nastavnaAktivnost == null) return NotFound();
 
-            // Studentima zabrani pristup nedostupnoj aktivnosti
             if (!nastavnaAktivnost.JeDostupno && User.IsInRole("Student"))
             {
                 TempData["Error"] = "Ova aktivnost još nije dostupna";
                 return RedirectToAction("Details", "Predmet", new { id = nastavnaAktivnost.PredmetId });
             }
 
-            // Svi studenti na predmetu
+            // Studenti na predmetu
             var sviStudenti = await _context.StudentiNaPredmetima
                 .Where(x => x.PredmetId == nastavnaAktivnost.PredmetId)
                 .Include(x => x.Student)
                 .Select(x => x.Student)
                 .ToListAsync();
 
-            // Prisustva i zahtjevi
+            // Prisustva
             var prisustva = nastavnaAktivnost.Prisustva.Select(p => p.StudentId).ToHashSet();
 
+            // Aktivni zahtjevi (neobrađeni)
             var zahtjevi = await _context.ZahtjeviZaPrisustvo
                 .Include(z => z.Student)
-                .Where(z => z.NastavnaAktivnostId == nastavnaAktivnost.Id && !z.Odbijen)
+                .Where(z => z.NastavnaAktivnostId == nastavnaAktivnost.Id && !z.Obradjen)
                 .ToListAsync();
 
             var zahtjeviMap = zahtjevi.ToDictionary(z => z.StudentId, z => z);
 
-            // Priprema statusa za sve studente
+            // Priprema liste statusa po studentu
             var studentiSaStatusima = sviStudenti.Select(s =>
             {
                 if (prisustva.Contains(s.Id))
@@ -103,26 +102,38 @@ namespace StudentHub.Controllers
             ViewBag.BrojPrisutnih = prisustva.Count;
             ViewBag.StudentStatusi = studentiSaStatusima;
 
-            // Status zahtjeva za trenutnog studenta
+            // Za trenutno prijavljenog studenta
             if (User.IsInRole("Student"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
 
-                // ... unutar if (User.IsInRole("Student"))
                 if (student != null)
                 {
-                    var prijavljen = await _context.ZahtjeviZaPrisustvo
+                    var zahtjev = await _context.ZahtjeviZaPrisustvo
                         .Where(z => z.StudentId == student.Id && z.NastavnaAktivnostId == nastavnaAktivnost.Id)
                         .OrderByDescending(z => z.VrijemePodnosenja)
                         .FirstOrDefaultAsync();
 
-                    if (prijavljen != null)
+                    if (zahtjev != null)
                     {
-                        ViewBag.StatusZahtjeva = prijavljen.Odbijen
-                            ? "Vaš prethodni zahtjev je odbijen. Možete ponovo poslati zahtjev."
-                            : "Vaš zahtjev je već poslan i čeka potvrdu.";
-                        ViewBag.PrisustvoPotvrđeno = false;
+                        if (!zahtjev.Obradjen)
+                        {
+                            ViewBag.StatusZahtjeva = "Vaš zahtjev je poslan i čeka obradu.";
+                        }
+                        else if (zahtjev.Obradjen && zahtjev.Odbijen == true)
+                        {
+                            ViewBag.StatusZahtjeva = "Vaš prethodni zahtjev je odbijen. Možete ponovo pokušati.";
+                        }
+                        else if (zahtjev.Obradjen && zahtjev.Odbijen == false)
+                        {
+                            ViewBag.StatusZahtjeva = "Vaše prisustvo je prihvaćeno.";
+                            ViewBag.PrisustvoPotvrđeno = true;
+                        }
+                        else
+                        {
+                            ViewBag.StatusZahtjeva = null;
+                        }
                     }
                     else if (prisustva.Contains(student.Id))
                     {
@@ -131,6 +142,7 @@ namespace StudentHub.Controllers
                     }
                     else
                     {
+                        ViewBag.StatusZahtjeva = null;
                         ViewBag.PrisustvoPotvrđeno = false;
                     }
                 }
@@ -724,7 +736,6 @@ namespace StudentHub.Controllers
             if (aktivnost == null || !aktivnost.JeDostupno)
                 return NotFound();
 
-            // Provjera ispravnosti i trajanja koda
             if (string.IsNullOrEmpty(aktivnost.KodZaPrisustvo) || aktivnost.KodAktivanDo < DateTime.Now || kod != aktivnost.KodZaPrisustvo)
             {
                 TempData["StatusZahtjeva"] = "Neispravan ili istekao kod.";
@@ -738,31 +749,35 @@ namespace StudentHub.Controllers
             var postojećiZahtjev = await _context.ZahtjeviZaPrisustvo
                 .FirstOrDefaultAsync(z => z.StudentId == student.Id && z.NastavnaAktivnostId == nastavnaAktivnostId);
 
-            // Ako postoji aktivan zahtjev (nije odbijen) – ne dozvoljavamo ponovni unos
-            if (postojećiZahtjev != null && !postojećiZahtjev.Odbijen)
+            if (postojećiZahtjev != null)
             {
-                TempData["StatusZahtjeva"] = "Vaš zahtjev za prisustvo je već poslan i čeka potvrdu.";
-                return RedirectToAction("Details", new { id = nastavnaAktivnostId });
+                if (!postojećiZahtjev.Obradjen)
+                {
+                    TempData["StatusZahtjeva"] = "Već ste poslali zahtjev koji čeka obradu.";
+                    return RedirectToAction("Details", new { id = nastavnaAktivnostId });
+                }
+
+                if (postojećiZahtjev.Obradjen && postojećiZahtjev.Odbijen == false)
+                {
+                    TempData["StatusZahtjeva"] = "Prisustvo vam je već priznato.";
+                    return RedirectToAction("Details", new { id = nastavnaAktivnostId });
+                }
             }
 
-            // Ako je prethodni zahtjev odbijen – brišemo ga i unosimo novi
-            if (postojećiZahtjev != null && postojećiZahtjev.Odbijen)
-            {
-                _context.ZahtjeviZaPrisustvo.Remove(postojećiZahtjev);
-            }
-
-            _context.ZahtjeviZaPrisustvo.Add(new ZahtjevZaPrisustvo
+            var noviZahtjev = new ZahtjevZaPrisustvo
             {
                 StudentId = student.Id,
                 NastavnaAktivnostId = nastavnaAktivnostId,
                 KodUnesen = kod,
                 VrijemePodnosenja = DateTime.Now,
-                Odbijen = false
-            });
+                Obradjen = false,
+                Odbijen = null
+            };
 
+            _context.ZahtjeviZaPrisustvo.Add(noviZahtjev);
             await _context.SaveChangesAsync();
 
-            TempData["StatusZahtjeva"] = "Zahtjev za evidenciju prisustva je uspješno poslan i čeka potvrdu.";
+            TempData["StatusZahtjeva"] = "Zahtjev je uspješno poslan i čeka potvrdu.";
 
             return RedirectToAction("Details", new { id = nastavnaAktivnostId });
         }
@@ -776,7 +791,7 @@ namespace StudentHub.Controllers
                 .Include(z => z.Student)
                 .FirstOrDefaultAsync(z => z.Id == zahtjevId);
 
-            if (zahtjev == null) return NotFound();
+            if (zahtjev == null || zahtjev.Obradjen) return NotFound();
 
             var postoji = await _context.PrisustvaNaAktivnostima.AnyAsync(p =>
                 p.NastavnaAktivnostId == zahtjev.NastavnaAktivnostId &&
@@ -792,7 +807,8 @@ namespace StudentHub.Controllers
                 });
             }
 
-            _context.ZahtjeviZaPrisustvo.Remove(zahtjev); // izbriši jer je potvrđen
+            zahtjev.Obradjen = true;
+            zahtjev.Odbijen = false;
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = zahtjev.NastavnaAktivnostId });
@@ -804,8 +820,9 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> OdbijPrisustvoStudentu(long zahtjevId)
         {
             var zahtjev = await _context.ZahtjeviZaPrisustvo.FindAsync(zahtjevId);
-            if (zahtjev == null) return NotFound();
+            if (zahtjev == null || zahtjev.Obradjen) return NotFound();
 
+            zahtjev.Obradjen = true;
             zahtjev.Odbijen = true;
             await _context.SaveChangesAsync();
 

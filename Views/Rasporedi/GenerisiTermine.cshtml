@@ -1,0 +1,93 @@
+﻿@model StudentHub.ViewModels.GenerisanjeTerminaViewModel
+
+@{
+    ViewData["Title"] = "Automatsko generisanje termina";
+    var daniBosanski = new List<(DayOfWeek dan, string naziv)> {
+        (DayOfWeek.Monday, "Ponedjeljak"),
+        (DayOfWeek.Tuesday, "Utorak"),
+        (DayOfWeek.Wednesday, "Srijeda"),
+        (DayOfWeek.Thursday, "Četvrtak"),
+        (DayOfWeek.Friday, "Petak"),
+        (DayOfWeek.Saturday, "Subota"),
+    };
+}
+
+<div class="container mt-4">
+    <h3 class="mb-3"><i class="fas fa-magic"></i> Automatsko generisanje termina</h3>
+    <form asp-action="GenerisiTermine" asp-route-id="@Model.RasporedId" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="RasporedId" />
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Dani u sedmici:</label>
+            <div class="row">
+                @foreach (var dan in daniBosanski)
+                {
+                    <div class="col-auto">
+                        <input type="checkbox"
+                               name="Dani"
+                               value="@dan.dan"
+                               class="form-check-input"
+                               id="dan_@dan.dan"
+                               @(Model.Dani.Contains(dan.dan) ? "checked" : null) />
+                        <label class="form-check-label" for="dan_@dan.dan">@dan.naziv</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label">Početni sat:</label>
+                <input asp-for="SatOd" type="number" class="form-control" min="6" max="20" />
+                <span asp-validation-for="SatOd" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Zadnji sat:</label>
+                <input asp-for="SatDo" type="number" class="form-control" min="7" max="22" />
+                <span asp-validation-for="SatDo" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Trajanje termina (min):</label>
+                <input asp-for="TrajanjeMin" type="number" class="form-control" min="30" max="120" />
+                <span asp-validation-for="TrajanjeMin" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Pauza (min):</label>
+                <input asp-for="PauzaMin" type="number" class="form-control" min="0" max="60" />
+                <span asp-validation-for="PauzaMin" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Dostupne učionice:</label>
+            <div class="row">
+                @foreach (var lokacija in Model.SveLokacije)
+                {
+                    <div class="col-auto">
+                        <input type="checkbox"
+                               name="OdabraneLokacije"
+                               value="@lokacija"
+                               class="form-check-input"
+                               id="lok_@lokacija"
+                               @(Model.OdabraneLokacije.Contains(lokacija) ? "checked" : null) />
+                        <label class="form-check-label" for="lok_@lokacija">@lokacija</label>
+                    </div>
+                }
+            </div>
+            <span asp-validation-for="OdabraneLokacije" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-2">
+            <input asp-for="NeRasporedjujPetkomPopodne" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" asp-for="NeRasporedjujPetkomPopodne">Ne raspoređuj petkom poslije 14h</label>
+        </div>
+        <div class="form-check mb-2">
+            <input asp-for="IzbjegavajUzastopneTermine" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" asp-for="IzbjegavajUzastopneTermine">Izbjegavaj uzastopne termine istom nastavniku</label>
+        </div>
+
+        <button type="submit" class="btn btn-warning mt-3"><i class="fas fa-magic"></i> Generiši termine</button>
+        <a asp-action="Details" asp-route-id="@Model.RasporedId" class="btn btn-outline-secondary mt-3">Nazad</a>
+    </form>
+</div>

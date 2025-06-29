@@ -167,6 +167,7 @@
                                 @if (User.IsInRole("Studentska služba"))
                                 {
                                     <li><a class="dropdown-item" asp-controller="StudijskiProgramIzborniLimiti" asp-action="Index">Limiti izbornih predmeta</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Rasporedi" asp-action="Index">Rasporedi</a></li>
                                 }
                                 <li><a class="dropdown-item" asp-controller="NastavniPlanovi" asp-action="Index">Nastavni planovi</a></li>
                             </ul>
@@ -194,6 +195,12 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Obavjestenja" asp-action="Index">Obavještenja</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Student") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="MojiPodaci" asp-action="Index">Moji podaci</a>
                             </li>
                         }
                     </ul>
@@ -226,6 +233,10 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>

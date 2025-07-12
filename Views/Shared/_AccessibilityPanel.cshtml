@@ -1,0 +1,226 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    var currentLang = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+    var isBs = currentLang.StartsWith("bs");
+    var isEn = currentLang.StartsWith("en");
+}
+
+<!-- Floating Accessibility Button -->
+<button id="accessibilityFab" aria-label="@Localizer["Accessibility"]" class="accessibility-fab" type="button">
+    <i class="fas fa-universal-access"></i>
+</button>
+
+<!-- Accessibility Panel (hidden by default) -->
+<div id="accessibilityPanel" class="accessibility-panel d-none" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="accessibility-panel-content">
+
+        <button id="accessibilityPanelClose" aria-label="Zatvori" class="accessibility-close-btn" type="button">&times;</button>
+        <h4 class="mb-2">@Localizer["Accessibility"]</h4>
+        <p class="mb-3">@Localizer["AccessibilityPanelDesc"]</p>
+
+        <!-- 1. JEZIK / LANGUAGE SWITCHER -->
+        <div class="mb-3">
+            <label for="languageSelect" class="font-weight-bold">@Localizer["ChooseLanguage"]:</label>
+            <select id="languageSelect" class="form-control form-control-sm" style="width: 180px; display: inline-block;">
+                <option value="bs" selected="@(isBs)">@Localizer["Bosnian"]</option>
+                <option value="en" selected="@(isEn)">@Localizer["English"]</option>
+            </select>
+        </div>
+
+        <!-- 2. RESET / STATEMENT / HIDE -->
+        <div class="mb-3 d-flex flex-wrap gap-2">
+            <button id="resetAccessibilitySettings" class="btn btn-secondary btn-sm" type="button">@Localizer["ResetSettings"]</button>
+            <button id="accessibilityStatement" class="btn btn-outline-info btn-sm" type="button">@Localizer["Statement"]</button>
+            <button id="hideAccessibilityPanel" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["HideInterface"]</button>
+        </div>
+
+        <hr />
+
+        <!-- 3. PROFILI PRISTUPAČNOSTI -->
+        <div class="mb-4">
+            <label class="font-weight-bold mb-1">@Localizer["ProfileTitle"]:</label>
+            <div class="d-flex flex-wrap gap-2">
+                <div class="form-check form-switch mr-2">
+                    <input class="form-check-input" type="checkbox" id="seizureSafeProfile">
+                    <label class="form-check-label" for="seizureSafeProfile">@Localizer["SeizureSafe"]</label>
+                </div>
+                <div class="form-check form-switch mr-2">
+                    <input class="form-check-input" type="checkbox" id="visionImpairedProfile">
+                    <label class="form-check-label" for="visionImpairedProfile">@Localizer["VisionImpaired"]</label>
+                </div>
+                <div class="form-check form-switch mr-2">
+                    <input class="form-check-input" type="checkbox" id="adhdFriendlyProfile">
+                    <label class="form-check-label" for="adhdFriendlyProfile">@Localizer["ADHDFriendly"]</label>
+                </div>
+                <div class="form-check form-switch mr-2">
+                    <input class="form-check-input" type="checkbox" id="cognitiveDisabilityProfile">
+                    <label class="form-check-label" for="cognitiveDisabilityProfile">@Localizer["CognitiveDisability"]</label>
+                </div>
+                <div class="form-check form-switch mr-2">
+                    <input class="form-check-input" type="checkbox" id="keyboardNavigationProfile">
+                    <label class="form-check-label" for="keyboardNavigationProfile">@Localizer["KeyboardNavigation"]</label>
+                </div>
+                <div class="form-check form-switch mr-2">
+                    <input class="form-check-input" type="checkbox" id="blindUsersProfile">
+                    <label class="form-check-label" for="blindUsersProfile">@Localizer["BlindUsers"]</label>
+                </div>
+                <div class="form-check form-switch mr-2">
+                    <input class="form-check-input" type="checkbox" id="dyslexiaProfile">
+                    <label class="form-check-label" for="dyslexiaProfile">@Localizer["DyslexiaProfile"]</label>
+                </div>
+                <div class="form-check form-switch mr-2">
+                    <input class="form-check-input" type="checkbox" id="highContrastProfile">
+                    <label class="form-check-label" for="highContrastProfile">@Localizer["HighContrast"]</label>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- 4. PODEŠAVANJE SADRŽAJA -->
+        <div class="mb-4">
+            <label class="font-weight-bold mb-1">@Localizer["ContentScaling"]:</label>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <button id="contentScaleDown" class="btn btn-outline-secondary btn-sm" type="button">-</button>
+                <span id="contentScaleValue" style="min-width:40px; text-align:center;">100%</span>
+                <button id="contentScaleUp" class="btn btn-outline-secondary btn-sm" type="button">+</button>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="readableFont">
+                <label class="form-check-label" for="readableFont">@Localizer["ReadableFont"]</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="highlightTitles">
+                <label class="form-check-label" for="highlightTitles">@Localizer["HighlightTitles"]</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="highlightLinks">
+                <label class="form-check-label" for="highlightLinks">@Localizer["HighlightLinks"]</label>
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span>@Localizer["AdjustFontSize"]:</span>
+                <button id="fontSizeDown" class="btn btn-outline-secondary btn-sm" type="button">-</button>
+                <span id="fontSizeValue" style="min-width:40px; text-align:center;">16px</span>
+                <button id="fontSizeUp" class="btn btn-outline-secondary btn-sm" type="button">+</button>
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span>@Localizer["AdjustLineHeight"]:</span>
+                <button id="lineHeightDown" class="btn btn-outline-secondary btn-sm" type="button">-</button>
+                <span id="lineHeightValue" style="min-width:40px; text-align:center;">1.5</span>
+                <button id="lineHeightUp" class="btn btn-outline-secondary btn-sm" type="button">+</button>
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span>@Localizer["AdjustLetterSpacing"]:</span>
+                <button id="letterSpacingDown" class="btn btn-outline-secondary btn-sm" type="button">-</button>
+                <span id="letterSpacingValue" style="min-width:40px; text-align:center;">normal</span>
+                <button id="letterSpacingUp" class="btn btn-outline-secondary btn-sm" type="button">+</button>
+            </div>
+            <div class="d-flex gap-2 mb-2">
+                <button id="alignLeft" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["AlignLeft"]</button>
+                <button id="alignCenter" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["AlignCenter"]</button>
+                <button id="alignRight" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["AlignRight"]</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- 5. PODEŠAVANJE BOJA -->
+        <div class="mb-4">
+            <label class="font-weight-bold mb-1">@Localizer["ColorAdjustments"]:</label>
+            <div class="d-flex flex-wrap gap-2 mb-2">
+                <button id="darkContrast" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["DarkContrast"]</button>
+                <button id="lightContrast" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["LightContrast"]</button>
+                <button id="highContrastBtn" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["HighContrast"]</button>
+                <button id="highSaturation" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["HighSaturation"]</button>
+                <button id="monochrome" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["Monochrome"]</button>
+                <button id="lowSaturation" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["LowSaturation"]</button>
+            </div>
+            <div class="mb-2">
+                <label class="font-weight-bold">@Localizer["AdjustTextColors"]:</label>
+                <div class="d-flex gap-2 mb-2">
+                    <button class="color-btn btn btn-sm" style="background:#111;color:#fff;" data-type="text" data-color="#111"></button>
+                    <button class="color-btn btn btn-sm" style="background:#333;color:#fff;" data-type="text" data-color="#333"></button>
+                    <button class="color-btn btn btn-sm" style="background:#007bff;color:#fff;" data-type="text" data-color="#007bff"></button>
+                    <button class="color-btn btn btn-sm" style="background:#e83e8c;color:#fff;" data-type="text" data-color="#e83e8c"></button>
+                    <button class="color-btn btn btn-sm" style="background:#28a745;color:#fff;" data-type="text" data-color="#28a745"></button>
+                    <button class="color-btn btn btn-sm" style="background:#ffc107;color:#333;" data-type="text" data-color="#ffc107"></button>
+                </div>
+                <button id="cancelTextColor" class="btn btn-outline-secondary btn-sm" type="button">Cancel</button>
+            </div>
+            <div class="mb-2">
+                <label class="font-weight-bold">@Localizer["AdjustTitleColors"]:</label>
+                <div class="d-flex gap-2 mb-2">
+                    <button class="color-btn btn btn-sm" style="background:#d7263d;color:#fff;" data-type="title" data-color="#d7263d"></button>
+                    <button class="color-btn btn btn-sm" style="background:#1b998b;color:#fff;" data-type="title" data-color="#1b998b"></button>
+                    <button class="color-btn btn btn-sm" style="background:#edc988;color:#333;" data-type="title" data-color="#edc988"></button>
+                    <button class="color-btn btn btn-sm" style="background:#3f88c5;color:#fff;" data-type="title" data-color="#3f88c5"></button>
+                    <button class="color-btn btn btn-sm" style="background:#f49d37;color:#fff;" data-type="title" data-color="#f49d37"></button>
+                    <button class="color-btn btn btn-sm" style="background:#0f4c81;color:#fff;" data-type="title" data-color="#0f4c81"></button>
+                </div>
+                <button id="cancelTitleColor" class="btn btn-outline-secondary btn-sm" type="button">Cancel</button>
+            </div>
+            <div class="mb-2">
+                <label class="font-weight-bold">@Localizer["AdjustBackgroundColors"]:</label>
+                <div class="d-flex gap-2 mb-2">
+                    <button class="color-btn btn btn-sm" style="background:#fff;color:#333;" data-type="background" data-color="#fff"></button>
+                    <button class="color-btn btn btn-sm" style="background:#fafafa;color:#333;" data-type="background" data-color="#fafafa"></button>
+                    <button class="color-btn btn btn-sm" style="background:#111;color:#fff;" data-type="background" data-color="#111"></button>
+                    <button class="color-btn btn btn-sm" style="background:#e9ecef;color:#333;" data-type="background" data-color="#e9ecef"></button>
+                    <button class="color-btn btn btn-sm" style="background:#f8f9fa;color:#333;" data-type="background" data-color="#f8f9fa"></button>
+                    <button class="color-btn btn btn-sm" style="background:#343a40;color:#fff;" data-type="background" data-color="#343a40"></button>
+                </div>
+                <button id="cancelBackgroundColor" class="btn btn-outline-secondary btn-sm" type="button">Cancel</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- 6. PODEŠAVANJE ORIJENTACIJE -->
+        <div class="mb-4">
+            <label class="font-weight-bold mb-1">@Localizer["OrientationAdjustments"]:</label>
+            <div class="d-flex flex-wrap gap-2 mb-2">
+                <button id="muteSounds" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["MuteSounds"]</button>
+                <button id="hideImages" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["HideImages"]</button>
+                <button id="usefulLinks" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["UsefulLinks"]</button>
+                <div id="usefulLinksPanel" class="mb-3" style="display:none;">
+                    <label class="font-weight-bold">@Localizer["UsefulLinks"]:</label>
+                    <div class="list-group mb-2">
+                        <button type="button" class="list-group-item list-group-item-action useful-link-btn" data-url="https://studenthub.com/pomoc">
+                            Pomoć za studente
+                        </button>
+                        <button type="button" class="list-group-item list-group-item-action useful-link-btn" data-url="https://studenthub.com/faq">
+                            Česta pitanja (FAQ)
+                        </button>
+                        <button type="button" class="list-group-item list-group-item-action useful-link-btn" data-url="mailto:ensar.krehmic.22@size.ba">
+                            Kontaktiraj podršku
+                        </button>
+                    </div>
+                </div>
+                <button id="stopAnimations" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["StopAnimations"]</button>
+                <button id="highlightFocus" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["HighlightFocus"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Accessibility Statement Modal -->
+<div class="modal fade" id="accessibilityStatementModal" tabindex="-1" role="dialog" aria-labelledby="accessibilityStatementTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="color:#222;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="accessibilityStatementTitle">@Localizer["Statement"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Zatvori">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Ova stranica je posvećena pristupačnosti za sve korisnike. Naš cilj je omogućiti svima, bez obzira na poteškoće, pristup svim informacijama i funkcijama.
+                </p>
+                <p>
+                    Ukoliko imate prijedloge ili naiđete na problem, javite nam se na <a href="mailto:ensar.krehmic.22@size.ba">ensar.krehmic.22@size.ba</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

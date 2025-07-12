@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="Accessibility" xml:space="preserve">
+    <value>Pristupačnost</value>
+  </data>
+	<data name="AccessibilityPanelDesc" xml:space="preserve">
+    <value>Odaberite željene postavke za pristupačnost.</value>
+  </data>
+	<data name="ChooseLanguage" xml:space="preserve">
+    <value>Odaberite jezik</value>
+  </data>
+	<data name="Bosnian" xml:space="preserve">
+    <value>Bosanski</value>
+  </data>
+	<data name="English" xml:space="preserve">
+    <value>Engleski</value>
+  </data>
+	<data name="ResetSettings" xml:space="preserve">
+    <value>Resetuj postavke</value>
+  </data>
+	<data name="Statement" xml:space="preserve">
+    <value>Izjava o pristupačnosti</value>
+  </data>
+	<data name="HideInterface" xml:space="preserve">
+    <value>Sakrij panel</value>
+  </data>
+	<data name="ProfileTitle" xml:space="preserve">
+    <value>Odaberi pristupačni profil</value>
+  </data>
+	<data name="SeizureSafe" xml:space="preserve">
+    <value>Sigurno za epilepsiju</value>
+  </data>
+	<data name="VisionImpaired" xml:space="preserve">
+    <value>Profil za slabovidne</value>
+  </data>
+	<data name="ADHDFriendly" xml:space="preserve">
+    <value>ADHD prijateljski profil</value>
+  </data>
+	<data name="CognitiveDisability" xml:space="preserve">
+    <value>Kognitivne poteškoće</value>
+  </data>
+	<data name="KeyboardNavigation" xml:space="preserve">
+    <value>Navigacija tastaturom</value>
+  </data>
+	<data name="BlindUsers" xml:space="preserve">
+    <value>Korisnici sa čitačem ekrana</value>
+  </data>
+	<data name="DyslexiaProfile" xml:space="preserve">
+    <value>Disleksija profil</value>
+  </data>
+	<data name="ContentScaling" xml:space="preserve">
+    <value>Povećaj ili smanji sadržaj</value>
+  </data>
+	<data name="ReadableFont" xml:space="preserve">
+    <value>Čitljiv font</value>
+  </data>
+	<data name="HighlightTitles" xml:space="preserve">
+    <value>Označi naslove</value>
+  </data>
+	<data name="HighlightLinks" xml:space="preserve">
+    <value>Označi linkove</value>
+  </data>
+	<data name="AlignCenter" xml:space="preserve">
+    <value>Poravnaj centar</value>
+  </data>
+	<data name="AlignLeft" xml:space="preserve">
+    <value>Poravnaj lijevo</value>
+  </data>
+	<data name="AlignRight" xml:space="preserve">
+    <value>Poravnaj desno</value>
+  </data>
+	<data name="AdjustFontSize" xml:space="preserve">
+    <value>Podešavanje veličine fonta</value>
+  </data>
+	<data name="AdjustLineHeight" xml:space="preserve">
+    <value>Podešavanje razmaka linija</value>
+  </data>
+	<data name="AdjustLetterSpacing" xml:space="preserve">
+    <value>Podešavanje razmaka slova</value>
+  </data>
+	<data name="ColorAdjustments" xml:space="preserve">
+    <value>Podešavanje boja</value>
+  </data>
+	<data name="DarkContrast" xml:space="preserve">
+    <value>Tamni kontrast</value>
+  </data>
+	<data name="LightContrast" xml:space="preserve">
+    <value>Svijetli kontrast</value>
+  </data>
+	<data name="HighContrast" xml:space="preserve">
+    <value>Visoki kontrast</value>
+  </data>
+	<data name="HighSaturation" xml:space="preserve">
+    <value>Visoka zasićenost</value>
+  </data>
+	<data name="Monochrome" xml:space="preserve">
+    <value>Monohromatski</value>
+  </data>
+	<data name="LowSaturation" xml:space="preserve">
+    <value>Niska zasićenost</value>
+  </data>
+	<data name="AdjustTextColors" xml:space="preserve">
+    <value>Boje teksta</value>
+  </data>
+	<data name="AdjustTitleColors" xml:space="preserve">
+    <value>Boje naslova</value>
+  </data>
+	<data name="AdjustBackgroundColors" xml:space="preserve">
+    <value>Boje pozadine</value>
+  </data>
+	<data name="OrientationAdjustments" xml:space="preserve">
+    <value>Podešavanje orijentacije</value>
+  </data>
+	<data name="MuteSounds" xml:space="preserve">
+    <value>Isključi zvukove</value>
+  </data>
+	<data name="HideImages" xml:space="preserve">
+    <value>Sakrij slike</value>
+  </data>
+	<data name="UsefulLinks" xml:space="preserve">
+    <value>Korisni linkovi</value>
+  </data>
+	<data name="StopAnimations" xml:space="preserve">
+    <value>Zaustavi animacije</value>
+  </data>
+	<data name="HighlightFocus" xml:space="preserve">
+    <value>Označi fokus</value>
+  </data>
+</root>

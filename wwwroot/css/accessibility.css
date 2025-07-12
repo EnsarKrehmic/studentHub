@@ -1,0 +1,454 @@
+﻿/* === Accessibility Floating Button === */
+.accessibility-fab {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2000;
+    width: 60px;
+    height: 60px;
+    background: #27408b;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    font-size: 2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+    .accessibility-fab:hover {
+        background: #1e2a56;
+    }
+
+/* === Accessibility Panel Overlay & Content === */
+.accessibility-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 420px;
+    max-width: 100vw;
+    height: 100vh;
+    z-index: 3000;
+    background: rgba(30,40,80,0.15); /* slabije zamračenje */
+    color: #fff;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    pointer-events: all;
+    transition: background 0.2s;
+}
+
+.accessibility-panel.d-none {
+    display: none !important;
+}
+
+.accessibility-panel-content {
+    background: #fff;
+    color: #222;
+    border-radius: 20px 0 0 20px;
+    padding: 2rem 2.5rem;
+    min-width: 330px;
+    max-width: 420px;
+    width: 100%;
+    min-height: 100vh;
+    box-shadow: -4px 0 24px rgba(30,40,80,0.12);
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.accessibility-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* === Panel Controls and Elements === */
+.accessibility-panel-content .form-control-sm,
+.accessibility-panel-content .btn-sm {
+    min-width: 120px;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.accessibility-panel-content .form-check {
+    margin-bottom: 0.3rem;
+}
+
+.accessibility-panel-content .form-check-label {
+    font-weight: 400;
+}
+
+.accessibility-panel-content .gap-2 {
+    gap: 0.5rem;
+}
+
+.accessibility-panel-content .gap-3 {
+    gap: 1rem;
+}
+
+/* For +/- controls */
+.accessibility-panel-content .align-items-center > * {
+    vertical-align: middle;
+}
+
+.accessibility-panel-content .btn-outline-secondary {
+    min-width: 34px;
+    text-align: center;
+}
+
+/* === Section Titles === */
+.accessibility-panel-content label.font-weight-bold {
+    font-weight: 600 !important;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.25rem;
+}
+
+/* === Color Buttons === */
+.color-btn {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    border: 2px solid #e0e0e0 !important;
+    padding: 0 !important;
+    outline: none !important;
+    transition: border-color 0.15s;
+}
+
+    .color-btn:focus,
+    .color-btn.active {
+        border-color: #27408b !important;
+    }
+
+/* === Responsive Panel === */
+@media (max-width: 600px) {
+    .accessibility-panel-content {
+        min-width: 95vw;
+        padding: 1rem 0.5rem;
+        max-width: 99vw;
+    }
+
+    .accessibility-panel {
+        align-items: flex-start;
+    }
+}
+
+/* === High Contrast Mode === */
+body.access-high-contrast,
+html.access-high-contrast {
+    background: #000 !important;
+    color: #fff !important;
+}
+
+    body.access-high-contrast a,
+    html.access-high-contrast a {
+        color: #ff0 !important;
+        text-decoration: underline !important;
+    }
+
+    body.access-high-contrast .navbar,
+    body.access-high-contrast .card,
+    body.access-high-contrast .footer-container,
+    body.access-high-contrast .accessibility-panel-content {
+        background: #111 !important;
+        color: #fff !important;
+        border-color: #fff !important;
+    }
+
+    body.access-high-contrast .btn,
+    html.access-high-contrast .btn {
+        background: #222 !important;
+        color: #ff0 !important;
+        border: 1px solid #ff0 !important;
+    }
+
+/* === Vision Impaired Profile === */
+body.access-vision-impaired {
+    filter: contrast(1.2) brightness(1.1) !important;
+}
+
+/* === ADHD Friendly Profile (example: minimal distractions) === */
+body.access-adhd-friendly *:not(.accessibility-panel-content):not(.accessibility-panel) {
+    animation: none !important;
+    transition: none !important;
+}
+
+body.access-adhd-friendly .navbar,
+body.access-adhd-friendly .footer-container {
+    box-shadow: none !important;
+}
+
+body.access-adhd-friendly ::selection {
+    background: #ffe066 !important;
+    color: #222 !important;
+}
+
+/* === Dyslexia Font Profile === */
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('/fonts/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body.access-dyslexia-font,
+html.access-dyslexia-font {
+    font-family: 'OpenDyslexic', Arial, sans-serif !important;
+}
+
+/* === Keyboard Navigation Profile === */
+body.access-keyboard-navigation *:focus {
+    outline: 3px solid #27408b !important;
+    outline-offset: 3px !important;
+    background: #e9ecef !important;
+    color: #222 !important;
+    z-index: 10000 !important;
+}
+
+#usefulLinksPanel {
+    background: #f8f9fa;
+    color: #222;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    max-width: 350px;
+    margin-bottom: 1rem;
+}
+
+    #usefulLinksPanel .list-group-item {
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+        margin-bottom: 0.25rem;
+        background: #e9ecef;
+        transition: background 0.13s;
+    }
+
+        #usefulLinksPanel .list-group-item:hover {
+            background: #d6e6fb;
+        }
+
+/* === Blind Users (screen reader mode) === */
+/* Sakrij dekorativne slike, vizuelne elemente */
+body.access-blind-users .visually-hidden,
+body.access-blind-users [aria-hidden="true"],
+body.access-blind-users .img,
+body.access-blind-users .icon,
+body.access-blind-users .decor,
+body.access-blind-users .carousel,
+body.access-blind-users .slider {
+    display: none !important;
+}
+/* Omogući velik fokus na naslovima za navigaciju čitača */
+body.access-blind-users h1,
+body.access-blind-users h2,
+body.access-blind-users h3 {
+    border-bottom: 2px solid #27408b !important;
+    padding-bottom: 0.15em !important;
+}
+/* Screen reader tip (možeš dodati i svoj element, npr. <div class="sr-only">) */
+body.access-blind-users .screen-reader-tip {
+    display: block !important;
+    color: #27408b !important;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+/* === Content Scaling (generic, to be controlled by JS) === */
+body[data-content-scale] {
+    font-size: var(--access-content-scale, 100%) !important;
+}
+
+/* === Readable Font === */
+body.access-readable-font {
+    font-family: 'Arial Rounded MT Bold', 'Verdana', Arial, sans-serif !important;
+    letter-spacing: 0.03em !important;
+}
+
+/* === Highlight Titles === */
+body.access-highlight-titles h1,
+body.access-highlight-titles h2,
+body.access-highlight-titles h3,
+body.access-highlight-titles h4,
+body.access-highlight-titles h5 {
+    background: #ffe066 !important;
+    color: #222 !important;
+    border-radius: 6px;
+    padding: 0.12em 0.4em;
+}
+
+/* === Highlight Links === */
+body.access-highlight-links a {
+    background: #b5e48c !important;
+    color: #222 !important;
+    border-radius: 4px;
+    padding: 0.05em 0.25em;
+}
+
+/* === Alignment Buttons (use via JS) === */
+body.access-align-left {
+    text-align: left !important;
+}
+
+body.access-align-center {
+    text-align: center !important;
+}
+
+body.access-align-right {
+    text-align: right !important;
+}
+
+/* === Font Size, Line Height, Letter Spacing (JS-controlled) === */
+body[data-font-size] {
+    font-size: var(--access-font-size, 16px) !important;
+}
+
+body[data-line-height] {
+    line-height: var(--access-line-height, 1.5) !important;
+}
+
+body[data-letter-spacing] {
+    letter-spacing: var(--access-letter-spacing, normal) !important;
+}
+
+/* === Color Adjustments (Dark, Light, High Contrast, Monochrome, Saturation) === */
+body.access-dark-contrast {
+    background: #181818 !important;
+    color: #fafafa !important;
+}
+
+body.access-light-contrast {
+    background: #fafafa !important;
+    color: #222 !important;
+}
+
+body.access-monochrome * {
+    filter: grayscale(1) !important;
+}
+
+body.access-high-saturation * {
+    filter: saturate(2) !important;
+}
+
+body.access-low-saturation * {
+    filter: saturate(0.5) !important;
+}
+
+/* === Custom Color Pickers (text, title, background) === */
+body[data-text-color] {
+    --access-text-color: var(--access-text-color-value, inherit);
+}
+
+body[data-title-color] h1,
+body[data-title-color] h2,
+body[data-title-color] h3,
+body[data-title-color] h4,
+body[data-title-color] h5 {
+    color: var(--access-title-color, inherit) !important;
+}
+
+body[data-background-color] {
+    background-color: var(--access-background-color, inherit) !important;
+}
+
+/* === Apply color from pickers to text === */
+body[data-text-color], body[data-text-color] * {
+    color: var(--access-text-color, inherit) !important;
+}
+
+/* === Hide Images === */
+body.access-hide-images img,
+body.access-hide-images .img,
+body.access-hide-images picture,
+body.access-hide-images svg {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* === Mute Sounds === */
+body.access-mute-sounds audio,
+body.access-mute-sounds video {
+    volume: 0 !important;
+    /* fallback for some players */
+    mute: true !important;
+}
+
+/* === Stop Animations === */
+body.access-stop-animations *,
+body.access-stop-animations *:before,
+body.access-stop-animations *:after {
+    animation: none !important;
+    transition: none !important;
+}
+
+/* === Highlight Focus (keyboard navigation) === */
+body.access-highlight-focus *:focus {
+    outline: 3px solid #f49d37 !important;
+    outline-offset: 3px !important;
+    background: #ffe066 !important;
+    color: #222 !important;
+    z-index: 9999 !important;
+}
+
+/* Seizure Safe Profile - ukloni animacije, bljeskajuće elemente */
+body.access-seizure-safe *,
+body.access-seizure-safe *:before,
+body.access-seizure-safe *:after {
+    animation: none !important;
+    transition: none !important;
+}
+
+body.access-seizure-safe .carousel,
+body.access-seizure-safe .slider,
+body.access-seizure-safe .gif,
+body.access-seizure-safe img[src$=".gif"] {
+    display: none !important;
+}
+
+body.access-seizure-safe video,
+body.access-seizure-safe [data-seizure-warning] {
+    filter: grayscale(1) brightness(0.8) !important;
+}
+
+/* === Useful Links Panel (can be hidden/displayed via JS) === */
+#usefulLinksPanel {
+    display: none;
+    background: #fff;
+    color: #222;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    font-size: 1rem;
+    max-width: 350px;
+}
+
+    #usefulLinksPanel.active {
+        display: block;
+    }
+
+@media (max-width: 600px) {
+    .accessibility-panel {
+        width: 100vw;
+        min-width: 0;
+        background: rgba(30,40,80,0.25);
+    }
+
+    .accessibility-panel-content {
+        min-width: 100vw;
+        max-width: 100vw;
+        border-radius: 0;
+        padding: 1rem 0.5rem;
+    }
+}

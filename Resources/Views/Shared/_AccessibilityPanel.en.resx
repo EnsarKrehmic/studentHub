@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="Accessibility" xml:space="preserve">
+    <value>Accessibility</value>
+  </data>
+	<data name="AccessibilityPanelDesc" xml:space="preserve">
+    <value>Select desired accessibility settings.</value>
+  </data>
+	<data name="ChooseLanguage" xml:space="preserve">
+    <value>Choose language</value>
+  </data>
+	<data name="Bosnian" xml:space="preserve">
+    <value>Bosnian</value>
+  </data>
+	<data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
+	<data name="ResetSettings" xml:space="preserve">
+    <value>Reset settings</value>
+  </data>
+	<data name="Statement" xml:space="preserve">
+    <value>Accessibility statement</value>
+  </data>
+	<data name="HideInterface" xml:space="preserve">
+    <value>Hide panel</value>
+  </data>
+	<data name="ProfileTitle" xml:space="preserve">
+    <value>Choose accessibility profile</value>
+  </data>
+	<data name="SeizureSafe" xml:space="preserve">
+    <value>Seizure safe profile</value>
+  </data>
+	<data name="VisionImpaired" xml:space="preserve">
+    <value>Vision impaired profile</value>
+  </data>
+	<data name="ADHDFriendly" xml:space="preserve">
+    <value>ADHD friendly profile</value>
+  </data>
+	<data name="CognitiveDisability" xml:space="preserve">
+    <value>Cognitive disability profile</value>
+  </data>
+	<data name="KeyboardNavigation" xml:space="preserve">
+    <value>Keyboard navigation</value>
+  </data>
+	<data name="BlindUsers" xml:space="preserve">
+    <value>Blind users (screen reader)</value>
+  </data>
+	<data name="DyslexiaProfile" xml:space="preserve">
+    <value>Dyslexia profile</value>
+  </data>
+	<data name="ContentScaling" xml:space="preserve">
+    <value>Scale content up or down</value>
+  </data>
+	<data name="ReadableFont" xml:space="preserve">
+    <value>Readable font</value>
+  </data>
+	<data name="HighlightTitles" xml:space="preserve">
+    <value>Highlight titles</value>
+  </data>
+	<data name="HighlightLinks" xml:space="preserve">
+    <value>Highlight links</value>
+  </data>
+	<data name="AlignCenter" xml:space="preserve">
+    <value>Align center</value>
+  </data>
+	<data name="AlignLeft" xml:space="preserve">
+    <value>Align left</value>
+  </data>
+	<data name="AlignRight" xml:space="preserve">
+    <value>Align right</value>
+  </data>
+	<data name="AdjustFontSize" xml:space="preserve">
+    <value>Adjust font size</value>
+  </data>
+	<data name="AdjustLineHeight" xml:space="preserve">
+    <value>Adjust line height</value>
+  </data>
+	<data name="AdjustLetterSpacing" xml:space="preserve">
+    <value>Adjust letter spacing</value>
+  </data>
+	<data name="ColorAdjustments" xml:space="preserve">
+    <value>Color adjustments</value>
+  </data>
+	<data name="DarkContrast" xml:space="preserve">
+    <value>Dark contrast</value>
+  </data>
+	<data name="LightContrast" xml:space="preserve">
+    <value>Light contrast</value>
+  </data>
+	<data name="HighContrast" xml:space="preserve">
+    <value>High contrast</value>
+  </data>
+	<data name="HighSaturation" xml:space="preserve">
+    <value>High saturation</value>
+  </data>
+	<data name="Monochrome" xml:space="preserve">
+    <value>Monochrome</value>
+  </data>
+	<data name="LowSaturation" xml:space="preserve">
+    <value>Low saturation</value>
+  </data>
+	<data name="AdjustTextColors" xml:space="preserve">
+    <value>Text colors</value>
+  </data>
+	<data name="AdjustTitleColors" xml:space="preserve">
+    <value>Title colors</value>
+  </data>
+	<data name="AdjustBackgroundColors" xml:space="preserve">
+    <value>Background colors</value>
+  </data>
+	<data name="OrientationAdjustments" xml:space="preserve">
+    <value>Orientation adjustments</value>
+  </data>
+	<data name="MuteSounds" xml:space="preserve">
+    <value>Mute sounds</value>
+  </data>
+	<data name="HideImages" xml:space="preserve">
+    <value>Hide images</value>
+  </data>
+	<data name="UsefulLinks" xml:space="preserve">
+    <value>Useful links</value>
+  </data>
+	<data name="StopAnimations" xml:space="preserve">
+    <value>Stop animations</value>
+  </data>
+	<data name="HighlightFocus" xml:space="preserve">
+    <value>Highlight focus</value>
+  </data>
+</root>

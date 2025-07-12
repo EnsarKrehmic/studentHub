@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
@@ -68,6 +69,20 @@ namespace StudentHub.Controllers
 
             // Vraćamo view nakon što je sve obavljeno
             return View(homeViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult SetLanguage(string culture, string returnUrl = null)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+            // Vraćamo korisnika na stranicu s koje je došao
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return LocalRedirect(returnUrl);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Home/Error

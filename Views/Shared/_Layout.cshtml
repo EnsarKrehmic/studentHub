@@ -197,7 +197,7 @@
                                 <a class="nav-link" asp-controller="Obavjestenja" asp-action="Index">Obavještenja</a>
                             </li>
                         }
-                        @if (User.IsInRole("Student") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                        @if (User.IsInRole("Student") || User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="MojiPodaci" asp-action="Index">Moji podaci</a>

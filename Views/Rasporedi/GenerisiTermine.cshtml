@@ -12,6 +12,19 @@
     };
 }
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @Html.Raw(TempData["Success"])
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
 <div class="container mt-4">
     <h3 class="mb-3"><i class="fas fa-magic"></i> Automatsko generisanje termina</h3>
     <form asp-action="GenerisiTermine" asp-route-id="@Model.RasporedId" method="post">
@@ -56,6 +69,11 @@
                 <label class="form-label">Pauza (min):</label>
                 <input asp-for="PauzaMin" type="number" class="form-control" min="0" max="60" />
                 <span asp-validation-for="PauzaMin" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Broj sedmica u semestru:</label>
+                <input asp-for="BrojSedmica" type="number" class="form-control" min="1" max="30" />
+                <span asp-validation-for="BrojSedmica" class="text-danger"></span>
             </div>
         </div>
 

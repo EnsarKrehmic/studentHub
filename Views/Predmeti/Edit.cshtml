@@ -1,144 +1,166 @@
 ﻿@model StudentHub.ViewModels.PredmetCreateViewModel
 
 @{
-    ViewData["Title"] = "Izmjena podataka predmeta";
+    ViewData["Title"] = "Izmjena predmeta";
+    var programi = (IEnumerable<SelectListItem>)ViewBag.StudijskiProgrami;
+    var nastavniPlanovi = ViewBag.NastavniPlanovi as IEnumerable<dynamic>;
+    var profesori = ViewBag.Profesori as IEnumerable<dynamic>;
+    var asistenti = ViewBag.Asistenti as IEnumerable<dynamic>;
+    var godineStudija = ViewBag.GodineStudija as IEnumerable<SelectListItem>;
 }
 
 <h2>@ViewData["Title"]</h2>
-
-<h4>Predmet</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit" method="post">
             <div class="form-group">
-                <label asp-for="Naziv" class="control-label"></label>
+                <label asp-for="Naziv"></label>
                 <input asp-for="Naziv" class="form-control" />
                 <span asp-validation-for="Naziv" class="text-danger"></span>
             </div>
-
             <div class="form-group">
-                <label asp-for="Opis" class="control-label"></label>
+                <label asp-for="Opis"></label>
                 <textarea asp-for="Opis" class="form-control"></textarea>
                 <span asp-validation-for="Opis" class="text-danger"></span>
             </div>
-
             <div class="form-group">
-                <label asp-for="ECTS" class="control-label"></label>
+                <label asp-for="ECTS"></label>
                 <input asp-for="ECTS" class="form-control" />
                 <span asp-validation-for="ECTS" class="text-danger"></span>
             </div>
-
             <div class="form-group">
-                <label asp-for="TipPredmeta" class="control-label"></label>
+                <label asp-for="TipPredmeta"></label>
                 <select asp-for="TipPredmeta" class="form-control" asp-items="Html.GetEnumSelectList<TipPredmeta>()"></select>
                 <span asp-validation-for="TipPredmeta" class="text-danger"></span>
             </div>
-
+            <!-- STUDIJSKI PROGRAM -->
             <div class="form-group">
-                <label for="ProfesorIds">Profesor/i (opcionalno)</label>
-                <select class="form-control" id="ProfesorIds" name="ProfesorIds" multiple>
-                    @foreach (var profesor in (IEnumerable<SelectListItem>)ViewBag.Profesori)
+                <label for="StudijskiProgramId">Studijski program</label>
+                <select asp-for="StudijskiProgramId" class="form-control" id="StudijskiProgramId">
+                    <option value="">Odaberite program</option>
+                    @foreach (var program in programi ?? Enumerable.Empty<SelectListItem>())
                     {
-                        <option value="@profesor.Value" selected="@(profesor.Selected)">
-                            @profesor.Text
-                        </option>
+                        <option value="@program.Value" selected="@(program.Value == Model.StudijskiProgramId.ToString() ? "selected" : null)">@program.Text</option>
                     }
                 </select>
-                <span class="text-danger" data-valmsg-for="ProfesorIds" data-valmsg-replace="true"></span>
+                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
             </div>
-
+            <!-- GODINA STUDIJA -->
             <div class="form-group">
-                <label for="AsistentIds">Asistent/i (opcionalno)</label>
-                <select class="form-control" id="AsistentIds" name="AsistentIds" multiple>
-                    @foreach (var asistent in (IEnumerable<SelectListItem>)ViewBag.Asistenti)
+                <label asp-for="GodinaStudija"></label>
+                <select asp-for="GodinaStudija" class="form-control" id="GodinaStudija">
+                    <option value="">Odaberite godinu</option>
+                    @foreach (var godina in godineStudija ?? Enumerable.Empty<SelectListItem>())
                     {
-                        <option value="@asistent.Value" selected="@(asistent.Selected)">
-                            @asistent.Text
-                        </option>
+                        <option value="@godina.Value" selected="@(godina.Value == Model.GodinaStudija.ToString() ? "selected" : null)">@godina.Text</option>
                     }
                 </select>
-                <span class="text-danger" data-valmsg-for="AsistentIds" data-valmsg-replace="true"></span>
+                <span asp-validation-for="GodinaStudija" class="text-danger"></span>
             </div>
-
+            <!-- SEMESTAR -->
             <div class="form-group">
-                <label for="NastavniPlanId">Nastavni plan (opcionalno)</label>
-                <select asp-for="NastavniPlanId" asp-items="ViewBag.NastavniPlanId" class="form-control">
-                    <option value="">Odaberite nastavni plan</option>
-                </select>
-                <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="Semestar">Semestar</label>
+                <label asp-for="Semestar"></label>
                 <select asp-for="Semestar" class="form-control">
-                    @for (int i = 1; i <= 12; i++)
-                    {
-                        <option value="@i" selected="@(Model.Semestar == i)">
-                            @i
-                        </option>
-                    }
+                    <option value="">Odaberite semestar</option>
+                    <option value="1" selected="@(Model.Semestar == 1 ? "selected" : null)">1 (Zimski)</option>
+                    <option value="2" selected="@(Model.Semestar == 2 ? "selected" : null)">2 (Ljetni)</option>
                 </select>
                 <span asp-validation-for="Semestar" class="text-danger"></span>
             </div>
-
+            <!-- NASTAVNI PLAN -->
             <div class="form-group">
-                <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
-                <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
+                <label for="NastavniPlanId">Nastavni plan (opcionalno)</label>
+                <select asp-for="NastavniPlanId" class="form-control" id="NastavniPlanId">
+                    <option value="">Odaberite nastavni plan</option>
+                    @foreach (var plan in nastavniPlanovi ?? Enumerable.Empty<dynamic>())
+                    {
+                        <option value="@plan.Id"
+                                data-programid="@plan.StudijskiProgramId"
+                                data-godina="@plan.GodinaStudija"
+                                selected="@(Model.NastavniPlanId == (long)plan.Id ? "selected" : null)">
+                            @plan.Naziv
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
+            </div>
+            <!-- SATI PREDAVANJA I VJEŽBI -->
+            <div class="form-group">
+                <label asp-for="SatiPredavanja"></label>
+                <input asp-for="SatiPredavanja" class="form-control" />
+                <span asp-validation-for="SatiPredavanja" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SatiVjezbi"></label>
+                <input asp-for="SatiVjezbi" class="form-control" />
+                <span asp-validation-for="SatiVjezbi" class="text-danger"></span>
+            </div>
+            <!-- PROFESORI -->
+            <div class="form-group">
+                <label for="ProfesorIds">Profesori</label>
+                <select asp-for="ProfesorIds" class="form-control" id="ProfesorIds" multiple>
+                    @foreach (var profesor in (ViewBag.Profesori ?? new List<dynamic>()))
+                    {
+                        <option value="@profesor.Id"
+                                data-programids="@string.Join(",", profesor.StudijskiProgramIds)"
+                                selected="@(Model.ProfesorIds != null && Model.ProfesorIds.Contains((long)profesor.Id) ? "selected" : null)">
+                            @profesor.ImePrezime
+                        </option>
+                    }
+                </select>
+            </div>
+            <!-- ASISTENTI -->
+            <div class="form-group">
+                <label for="AsistentIds">Asistenti</label>
+                <select asp-for="AsistentIds" class="form-control" id="AsistentIds" multiple>
+                    @foreach (var asistent in (ViewBag.Asistenti ?? new List<dynamic>()))
+                    {
+                        <option value="@asistent.Id"
+                                data-programids="@string.Join(",", asistent.StudijskiProgramIds)"
+                                selected="@(Model.AsistentIds != null && Model.AsistentIds.Contains((long)asistent.Id) ? "selected" : null)">
+                            @asistent.ImePrezime
+                        </option>
+                    }
+                </select>
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $(document).ready(function () {
-            $.validator.addMethod("atLeastOneProfessor", function (value, element) {
-                return $("#ProfesorIds option:selected").length > 0;
-            }, "Please select at least one professor.");
-
-            $.validator.addMethod("atLeastOneAssistant", function (value, element) {
-                return $("#AsistentIds option:selected").length > 0;
-            }, "Please select at least one assistant.");
-
-            $("form").validate({
-                rules: {
-                    ProfesorIds: {
-                        atLeastOneProfessor: true
-                    },
-                    AsistentIds: {
-                        atLeastOneAssistant: true
-                    }
-                },
-                messages: {
-                    Naziv: {
-                        required: "Naziv predmeta je obavezan."
-                    },
-                    Opis: {
-                        required: "Opis predmeta je obavezan."
-                    },
-                    ECTS: {
-                        required: "Vrijednost ECTS bodova predmeta je obavezna.",
-                        range: "Broj ECTS bodova mora biti između 1 i 30."
-                    },
-                    Semestar: {
-                        required: "Semestar je obavezan.",
-                        range: "Semestar mora biti između 1 i 12."
-                    },
-                    ProfesorIds: {
-                        atLeastOneProfessor: "Please select at least one professor."
-                    },
-                    AsistentIds: {
-                        atLeastOneAssistant: "Please select at least one assistant."
-                    }
-                }
+        function filterByProgram(programId) {
+            $("#ProfesorIds option").each(function () {
+                var programIds = $(this).data("programids") ? $(this).data("programids").toString().split(',') : [];
+                $(this).toggle(!programId || programIds.includes(programId.toString()));
             });
+            $("#AsistentIds option").each(function () {
+                var programIds = $(this).data("programids") ? $(this).data("programids").toString().split(',') : [];
+                $(this).toggle(!programId || programIds.includes(programId.toString()));
+            });
+        }
+        function filterNastavniPlanByGodina() {
+            var godina = $("#GodinaStudija").val();
+            var programId = $("#StudijskiProgramId").val();
+            $("#NastavniPlanId option").each(function () {
+                var pid = $(this).data("programid");
+                var g = $(this).data("godina");
+                var show = (!programId || pid == programId || !pid) && (!godina || g == godina || !g);
+                $(this).toggle(show);
+            });
+        }
+        $("#StudijskiProgramId").on("change", function () {
+            filterByProgram($(this).val());
+            filterNastavniPlanByGodina();
+        });
+        $("#GodinaStudija").change(function () {
+            filterNastavniPlanByGodina();
+        });
+        $(document).ready(function () {
+            filterByProgram($("#StudijskiProgramId").val());
+            filterNastavniPlanByGodina();
         });
     </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
 }

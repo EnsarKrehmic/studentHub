@@ -1,5 +1,4 @@
 ﻿using StudentHub.Models;
-using System;
 using System.Collections.Generic;
 
 namespace StudentHub.ViewModels
@@ -9,6 +8,13 @@ namespace StudentHub.ViewModels
         public Predmet Predmet { get; set; }
         public List<NastavnaAktivnost> Aktivnosti { get; set; } = new();
         public List<Student> Studenti { get; set; } = new();
+
+        // Prikaz osnovnih podataka za zaglavlje i filtre
+        public string NazivPredmeta => Predmet?.Naziv ?? "";
+        public string StudijskiProgram => Predmet?.StudijskiProgram?.Naziv ?? "";
+        public int GodinaStudija => Predmet?.GodinaStudija ?? 0;
+        public int Semestar => Predmet?.Semestar ?? 0;
+        public string TipPredmetaLabel => Predmet?.TipPredmeta == TipPredmeta.Osnovni ? "Osnovni" : "Izborni";
 
         // Prisustvo: mapa (studentId, aktivnostId) => status ("Prisutan", "Odsutan" itd.)
         public Dictionary<(long studentId, long aktivnostId), string> StatusiPrisustva { get; set; } = new();

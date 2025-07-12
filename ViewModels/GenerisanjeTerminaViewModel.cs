@@ -18,6 +18,11 @@ namespace StudentHub.ViewModels
         [Display(Name = "Trajanje termina (minuta)")]
         public int TrajanjeMin { get; set; } = 45;
 
+        // NOVO
+        [Display(Name = "Broj sedmica u semestru")]
+        [Range(1, 30, ErrorMessage = "Broj sedmica mora biti između 1 i 30.")]
+        public int BrojSedmica { get; set; } = 15;
+
         [Display(Name = "Pauza između termina (minuta)")]
         public int PauzaMin { get; set; } = 0;
 

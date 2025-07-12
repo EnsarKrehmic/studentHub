@@ -38,34 +38,51 @@ else
                     <div class="col-md-6">
                         <dl class="row">
                             <dt class="col-sm-5">Naziv predmeta:</dt>
-                            <dd class="col-sm-7">@Model.Predmet?.Naziv</dd>
+                            <dd class="col-sm-7">@Model.NazivPredmeta</dd>
+
+                            <dt class="col-sm-5">Studijski program:</dt>
+                            <dd class="col-sm-7">
+                                @if (!string.IsNullOrWhiteSpace(Model.StudijskiProgram))
+                                {
+                                    @Model.StudijskiProgram
+                                }
+                                else
+                                {
+                                    <span class="text-warning">Nema programa</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-5">Godina studija:</dt>
+                            <dd class="col-sm-7">@Model.GodinaStudija. godina</dd>
+
+                            <dt class="col-sm-5">Semestar:</dt>
+                            <dd class="col-sm-7">
+                                @(Model.Semestar == 1 ? "1 (Zimski)" : Model.Semestar == 2 ? "2 (Ljetni)" : Model.Semestar.ToString())
+                            </dd>
 
                             <dt class="col-sm-5">ECTS bodovi:</dt>
-                            <dd class="col-sm-7">@Model.Predmet?.ECTS</dd>
+                            <dd class="col-sm-7">@Model.ECTS</dd>
 
                             <dt class="col-sm-5">Tip predmeta:</dt>
-                            <dd class="col-sm-7">@Model.Predmet.TipPredmeta.ToString()</dd>
+                            <dd class="col-sm-7">@Model.TipPredmeta</dd>
+
+                            <dt class="col-sm-5">Sati predavanja:</dt>
+                            <dd class="col-sm-7">@Model.SatiPredavanja</dd>
+
+                            <dt class="col-sm-5">Sati vježbi:</dt>
+                            <dd class="col-sm-7">@Model.SatiVjezbi</dd>
 
                             <dt class="col-sm-5">Nastavni plan:</dt>
                             <dd class="col-sm-7">
-                                @if (Model.Predmet?.NastavniPlan != null)
+                                @if (Model.Predmet?.NastavniPlan != null && Model.Predmet.NastavniPlan.StudijskiProgram != null)
                                 {
                                     <span>
-                                        @Model.Predmet.NastavniPlan.GodinaStudija. godina,
-                                        @(Model.Predmet.Semestar == 1 ? "prvi" :
-                                          Model.Predmet.Semestar == 2 ? "drugi" :
-                                          Model.Predmet.Semestar == 3 ? "treći" :
-                                          Model.Predmet.Semestar == 4 ? "četvrti" :
-                                          Model.Predmet.Semestar == 5 ? "peti" :
-                                          Model.Predmet.Semestar == 6 ? "šesti" :
-                                          Model.Predmet.Semestar == 7 ? "sedmi" :
-                                          Model.Predmet.Semestar == 8 ? "osmi" :
-                                          Model.Predmet.Semestar + ".") semestar
+                                        @Model.Predmet.NastavniPlan.GodinaStudija. godina (@Model.Predmet.NastavniPlan.StudijskiProgram.Naziv)
                                     </span>
                                 }
                                 else
                                 {
-                                    <span class="text-warning">Nema dodijeljen nastavni plan.</span>
+                                    <span class="text-warning">Nema dodijeljen nastavni plan ili studijski program.</span>
                                 }
                             </dd>
                         </dl>
@@ -78,7 +95,7 @@ else
                             <dd class="col-sm-6">
                                 @if (Model.ProsjecnaOcjena.HasValue)
                                 {
-                                    <span class="badge badge-info">@Model.ProsjecnaOcjena.Value.ToString("F2")</span>
+                                    <span class="badge bg-info">@Model.ProsjecnaOcjena.Value.ToString("F2")</span>
                                 }
                                 else
                                 {
@@ -90,7 +107,7 @@ else
                             <dd class="col-sm-6">
                                 @if (Model.ProsjecnoPrisustvo.HasValue)
                                 {
-                                    <span class="badge badge-success">@Model.ProsjecnoPrisustvo.Value.ToString("F1")%</span>
+                                    <span class="badge bg-success">@Model.ProsjecnoPrisustvo.Value.ToString("F1")%</span>
                                 }
                                 else
                                 {
@@ -112,7 +129,7 @@ else
                 <!-- Opis (puni red) -->
                 <div class="mt-4">
                     <h5>Opis predmeta:</h5>
-                    <p>@Model.Predmet?.Opis</p>
+                    <p>@Model.OpisPredmeta</p>
                 </div>
             </div>
         </div>
@@ -126,8 +143,8 @@ else
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Ime i prezime</th>
                             <th>Titula</th>
+                            <th>Ime i prezime</th>
                             @if (User.IsInRole("Studentska služba"))
                             {
                                 <th>Akcije</th>
@@ -140,8 +157,8 @@ else
                             @foreach (var profesor in Model.Profesori)
                             {
                                 <tr>
-                                    <td>@profesor.Profesor?.Ime @profesor.Profesor?.Prezime</td>
                                     <td>@profesor.Profesor?.ProfesorTitula</td>
+                                    <td>@profesor.Profesor?.Ime @profesor.Profesor?.Prezime</td>
                                     @if (User.IsInRole("Studentska služba"))
                                     {
                                         <td>
@@ -156,7 +173,7 @@ else
                         else
                         {
                             <tr>
-                                <td colspan="3" class="text-warning">Nema dodijeljenog profesora.</td>
+                                <td colspan="3" class="text-warning">Nema dodijeljenih profesora.</td>
                             </tr>
                         }
                     </tbody>
@@ -183,8 +200,8 @@ else
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Ime i prezime</th>
                             <th>Titula</th>
+                            <th>Ime i prezime</th>
                             @if (User.IsInRole("Studentska služba"))
                             {
                                 <th>Akcije</th>
@@ -197,8 +214,8 @@ else
                             @foreach (var asistent in Model.Asistenti)
                             {
                                 <tr>
-                                    <td>@asistent.Asistent?.Ime @asistent.Asistent?.Prezime</td>
                                     <td>@asistent.Asistent?.AsistentTitula</td>
+                                    <td>@asistent.Asistent?.Ime @asistent.Asistent?.Prezime</td>
                                     @if (User.IsInRole("Studentska služba"))
                                     {
                                         <td>
@@ -213,7 +230,7 @@ else
                         else
                         {
                             <tr>
-                                <td colspan="3" class="text-warning">Nema dodijeljenog asistenta.</td>
+                                <td colspan="3" class="text-warning">Nema dodijeljenih asistenata.</td>
                             </tr>
                         }
                     </tbody>
@@ -247,7 +264,7 @@ else
                     <thead>
                         <tr>
                             <th>Ime i prezime</th>
-                            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                            @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                             {
                                 <th>Broj indeksa</th>
                             }
@@ -262,11 +279,12 @@ else
                     <tbody>
                         @if (Model?.StudentiNaPredmetu?.Any() == true)
                         {
-                            @foreach (var studentNaPredmetu in Model.StudentiNaPredmetu)
+                            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                            foreach (var studentNaPredmetu in Model.StudentiNaPredmetu)
                             {
                                 <tr>
                                     <td>@studentNaPredmetu.Student?.Ime @studentNaPredmetu.Student?.Prezime</td>
-                                    @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                    @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                     {
                                         <td>@studentNaPredmetu.Student?.BrojIndeksa</td>
                                     }
@@ -274,11 +292,12 @@ else
                                     <td>
                                         @if (User.IsInRole("Student"))
                                         {
-                                            if (studentNaPredmetu.Student.AspNetUserId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+                                            if (studentNaPredmetu.Student.AspNetUserId == currentUserId)
                                             {
-                                                @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true && Model.Ocjene[studentNaPredmetu.StudentId].HasValue)
+                                                if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true && Model.Ocjene[studentNaPredmetu.StudentId].HasValue)
                                                 {
-                                                    <span class="badge badge-success">@Model.Ocjene[studentNaPredmetu.StudentId]</span>
+                                                    var ocjena = Model.Ocjene[studentNaPredmetu.StudentId].Value;
+                                                    <span class="badge @(ocjena >= 6 ? "badge-success" : "badge-danger")">@ocjena</span>
                                                 }
                                                 else
                                                 {
@@ -292,9 +311,10 @@ else
                                         }
                                         else
                                         {
-                                            @if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true && Model.Ocjene[studentNaPredmetu.StudentId].HasValue)
+                                            if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true && Model.Ocjene[studentNaPredmetu.StudentId].HasValue)
                                             {
-                                                <span class="badge badge-success">@Model.Ocjene[studentNaPredmetu.StudentId]</span>
+                                                var ocjena = Model.Ocjene[studentNaPredmetu.StudentId].Value;
+                                                <span class="badge @(ocjena >= 6 ? "badge-success" : "badge-danger")">@ocjena</span>
                                             }
                                             else
                                             {
@@ -302,9 +322,9 @@ else
                                             }
                                         }
                                     </td>
-                                    <td>
-                                        @if (User.IsInRole("Profesor") || User.IsInRole("Studentska služba"))
-                                        {
+                                    @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                                    {
+                                        <td>
                                             <div class="btn-group" role="group">
                                                 @if (Model?.OcjenaIds?.ContainsKey(studentNaPredmetu.StudentId) == true)
                                                 {
@@ -327,25 +347,21 @@ else
                                                     </a>
                                                 }
 
-                                                @* Dugme za uklanjanje studenta s predmeta *@
-                                                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
-                                                {
-                                                    <button type="button"
-                                                            class="btn btn-outline-danger btn-sm"
-                                                            onclick="confirmDelete('RemoveStudentFromSubject', '@Model.Predmet.Id', '@studentNaPredmetu.StudentId', '@($"{studentNaPredmetu.Student?.Ime} {studentNaPredmetu.Student?.Prezime}")')">
+                                                <form asp-action="RemoveStudentFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-studentId="@studentNaPredmetu.StudentId" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Jeste li sigurni da želite ukloniti ovog studenta s predmeta?')">
                                                         Ukloni
                                                     </button>
-                                                }
+                                                </form>
                                             </div>
-                                        }
-                                    </td>
+                                        </td>
+                                    }
                                 </tr>
                             }
                         }
                         else
                         {
                             <tr>
-                                <td colspan="5" class="text-warning">Nema studenata na ovom predmetu.</td>
+                                <td colspan="@(4 + ((User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent")) ? 1 : 0))" class="text-warning">Nema studenata na ovom predmetu.</td>
                             </tr>
                         }
                     </tbody>
@@ -397,7 +413,7 @@ else
                     {
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                <thead class="thead-light">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Naziv</th>
                                         <th>Datum i vrijeme</th>
@@ -409,71 +425,70 @@ else
                                     @foreach (var aktivnost in predavanja)
                                     {
                                         <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <span>@aktivnost.Naziv</span>
-
-                                                @if (!aktivnost.JeDostupno && User.IsInRole("Student"))
-                                                {
-                                                    var remaining = aktivnost.DatumVrijemeOdrzavanja - DateTime.Now;
-                                                    if (remaining.TotalSeconds > 0)
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <span>@aktivnost.Naziv</span>
+                                                    @if (!aktivnost.JeDostupno && User.IsInRole("Student"))
                                                     {
-                                                        <span class="small mt-1 text-muted countdown-wrapper">
-                                                            <i class="fas fa-lock me-1"></i>
-                                                            Dostupno za:
-                                                            <span class="badge bg-warning text-dark countdown-timer"
-                                                                  data-countdown="@aktivnost.DatumVrijemeOdrzavanja.ToString("O")">
-                                                                Učitavanje...
+                                                        var remaining = aktivnost.DatumVrijemeOdrzavanja - DateTime.Now;
+                                                        if (remaining.TotalSeconds > 0)
+                                                        {
+                                                            <span class="small mt-1 text-muted countdown-wrapper">
+                                                                <i class="fas fa-lock me-1"></i>
+                                                                Dostupno za:
+                                                                <span class="badge bg-warning text-dark countdown-timer"
+                                                                      data-countdown="@aktivnost.DatumVrijemeOdrzavanja.ToString("O")">
+                                                                    Učitavanje...
+                                                                </span>
                                                             </span>
-                                                        </span>
+                                                        }
                                                     }
-                                                }
-                                            </div>
-                                        </td>
-                                        <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
-                                        <td>
-                                            <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
-                                                @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <!-- Detalji dugme -->
-                                            @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
-                                            {
-                                                <a asp-controller="NastavneAktivnosti"
-                                                   asp-action="Details"
-                                                   asp-route-id="@aktivnost.Id"
-                                                   class="btn btn-sm btn-info">
-                                                    Detalji
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <span class="btn btn-sm btn-secondary disabled"
-                                                      data-toggle="tooltip"
-                                                      title="Aktivnost će postati dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
-                                                    Detalji
+                                                </div>
+                                            </td>
+                                            <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td>
+                                                <span class="badge @(aktivnost.JeDostupno ? "bg-success" : "bg-secondary")">
+                                                    @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
                                                 </span>
-                                            }
+                                            </td>
+                                            <td>
+                                                @* Detalji dugme *@
+                                                @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
+                                                {
+                                                    <a asp-controller="NastavneAktivnosti"
+                                                       asp-action="Details"
+                                                       asp-route-id="@aktivnost.Id"
+                                                       class="btn btn-sm btn-info">
+                                                        Detalji
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="btn btn-sm btn-secondary disabled"
+                                                          data-bs-toggle="tooltip"
+                                                          title="Aktivnost će postati dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
+                                                        Detalji
+                                                    </span>
+                                                }
 
-                                            <!-- Akcije za nastavno osoblje -->
-                                            @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-                                            {
-                                                <a asp-controller="NastavneAktivnosti"
-                                                   asp-action="Edit"
-                                                   asp-route-id="@aktivnost.Id"
-                                                   class="btn btn-sm btn-warning">
-                                                    Uredi
-                                                </a>
-                                                <a asp-controller="NastavneAktivnosti"
-                                                   asp-action="Delete"
-                                                   asp-route-id="@aktivnost.Id"
-                                                   class="btn btn-sm btn-danger">
-                                                    Obriši
-                                                </a>
-                                            }
-                                        </td>
-                                    </tr>
+                                                @* Akcije za nastavno osoblje *@
+                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                                {
+                                                    <a asp-controller="NastavneAktivnosti"
+                                                       asp-action="Edit"
+                                                       asp-route-id="@aktivnost.Id"
+                                                       class="btn btn-sm btn-warning">
+                                                        Uredi
+                                                    </a>
+                                                    <a asp-controller="NastavneAktivnosti"
+                                                       asp-action="Delete"
+                                                       asp-route-id="@aktivnost.Id"
+                                                       class="btn btn-sm btn-danger">
+                                                        Obriši
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -500,7 +515,7 @@ else
                     {
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                <thead class="thead-light">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Naziv</th>
                                         <th>Datum i vrijeme</th>
@@ -515,7 +530,6 @@ else
                                             <td>
                                                 <div class="d-flex flex-column">
                                                     <span>@aktivnost.Naziv</span>
-
                                                     @if (!aktivnost.JeDostupno && User.IsInRole("Student"))
                                                     {
                                                         var remaining = aktivnost.DatumVrijemeOdrzavanja - DateTime.Now;
@@ -535,7 +549,7 @@ else
                                             </td>
                                             <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
                                             <td>
-                                                <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
+                                                <span class="badge @(aktivnost.JeDostupno ? "bg-success" : "bg-secondary")">
                                                     @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
                                                 </span>
                                             </td>
@@ -552,7 +566,7 @@ else
                                                 else
                                                 {
                                                     <span class="btn btn-sm btn-secondary disabled"
-                                                          data-toggle="tooltip"
+                                                          data-bs-toggle="tooltip"
                                                           title="Aktivnost će postati dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
                                                         Detalji
                                                     </span>

@@ -12,7 +12,7 @@ using StudentHub.Data;
 namespace StudentHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250629000328_migracija16")]
+    [Migration("20250629141504_migracija16")]
     partial class migracija16
     {
         /// <inheritdoc />
@@ -725,6 +725,9 @@ namespace StudentHub.Data.Migrations
                     b.Property<int>("ECTS")
                         .HasColumnType("int");
 
+                    b.Property<int>("GodinaStudija")
+                        .HasColumnType("int");
+
                     b.Property<long?>("NastavniPlanId")
                         .HasColumnType("bigint");
 
@@ -750,10 +753,16 @@ namespace StudentHub.Data.Migrations
                     b.Property<long?>("ProfesorId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("Semestar")
+                    b.Property<int>("SatiPredavanja")
                         .HasColumnType("int");
 
-                    b.Property<long?>("StudijskiProgramId")
+                    b.Property<int>("SatiVjezbi")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Semestar")
+                        .HasColumnType("int");
+
+                    b.Property<long>("StudijskiProgramId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("TipPredmeta")
@@ -1610,7 +1619,9 @@ namespace StudentHub.Data.Migrations
 
                     b.HasOne("StudentHub.Models.StudijskiProgram", "StudijskiProgram")
                         .WithMany()
-                        .HasForeignKey("StudijskiProgramId");
+                        .HasForeignKey("StudijskiProgramId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Asistent");
 
@@ -1806,7 +1817,7 @@ namespace StudentHub.Data.Migrations
                     b.HasOne("StudentHub.Models.Raspored", "Raspored")
                         .WithMany("Termini")
                         .HasForeignKey("RasporedId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Predmet");
 

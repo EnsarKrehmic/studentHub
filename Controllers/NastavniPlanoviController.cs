@@ -52,14 +52,13 @@ namespace StudentHub.Controllers
             if (nastavniPlan == null)
                 return NotFound();
 
-            // Dohvati predmete za dati nastavni plan
+            // Dohvati predmete za dati nastavni plan sa povezanim podacima
             var predmeti = await _context.Predmeti
-                .Include(p => p.Profesor)
-                .Include(p => p.Asistent)
                 .Where(p => p.NastavniPlanId == id)
+                .Include(p => p.PredmetProfesori).ThenInclude(pp => pp.Profesor)
+                .Include(p => p.PredmetAsistenti).ThenInclude(pa => pa.Asistent)
                 .ToListAsync();
 
-            // Proslijedi predmete u ViewBag
             ViewBag.Predmeti = predmeti;
 
             return View(nastavniPlan);

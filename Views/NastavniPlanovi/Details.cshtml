@@ -5,65 +5,164 @@
     var predmeti = ViewBag.Predmeti as List<StudentHub.Models.Predmet>;
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4">@ViewData["Title"]</h2>
 
 <div class="container mt-4">
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
-            <h3>Podaci o nastavnom planu</h3>
+            <h3 class="mb-0">
+                Nastavni plan - @Model.StudijskiProgram.Naziv, @Model.GodinaStudija. godina
+            </h3>
         </div>
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Godina studija:</dt>
-                <dd class="col-sm-9">@Model.GodinaStudija</dd>
-
-                <dt class="col-sm-3">Studijski program:</dt>
-                <dd class="col-sm-9">@Model.StudijskiProgram.Naziv</dd>
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Studijski program:</dt>
+                <dd class="col-sm-8">@Model.StudijskiProgram.Naziv</dd>
+                <dt class="col-sm-4">Godina studija:</dt>
+                <dd class="col-sm-8">@Model.GodinaStudija</dd>
             </dl>
         </div>
     </div>
 
     @if (predmeti != null && predmeti.Any())
     {
-        <!-- Grupa predmeta po semestrima -->
-        @foreach (var semestar in predmeti.Select(p => p.Semestar).Distinct().OrderBy(s => s))
+        // Grupiši predmete po semestru
+        var predmetiPoSemestrima = predmeti.GroupBy(p => p.Semestar).OrderBy(g => g.Key);
+
+        @foreach (var semestarGroup in predmetiPoSemestrima)
         {
-            var semestarPredmeti = predmeti.Where(p => p.Semestar == semestar).ToList();
+            var semestar = semestarGroup.Key;
+            var semestarPredmeti = semestarGroup.ToList();
+
+            // Sumarni podaci
+            var brojPredmeta = semestarPredmeti.Count;
+            var brojIzbornih = semestarPredmeti.Count(p => p.TipPredmeta == TipPredmeta.Izborni);
+            var ukupnoEcts = semestarPredmeti.Sum(p => p.ECTS);
+
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-secondary text-white">
-                    <h4>Predmeti - @(semestar % 2 == 1 ? "Prvi" : "Drugi") semestar @((semestar + 1) / 2). godina</h4>
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Naziv predmeta</th>
-                                <th>Opis</th>
-                                <th>ECTS bodovi</th>
-                                <th>Profesor</th>
-                                <th>Asistent</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var predmet in semestarPredmeti)
-                            {
-                                <tr>
-                                    <td>@predmet.Naziv</td>
-                                    <td>@predmet.Opis</td>
-                                    <td>@predmet.ECTS</td>
-                                    <td>@(predmet.Profesor != null ? predmet.Profesor.Ime + " " + predmet.Profesor.Prezime + ", " + predmet.Profesor.ProfesorTitula : "N/A")</td>
-                                    <td>@(predmet.Asistent != null ? predmet.Asistent.Ime + " " + predmet.Asistent.Prezime + ", " + predmet.Asistent.AsistentTitula : "N/A")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <h4 class="mb-0">
+                        @(semestar == 1 ? "1. (Zimski) semestar" :
+                                        semestar == 2 ? "2. (Ljetni) semestar" :
+                                        $"{semestar}. semestar")
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <span class="badge bg-primary me-2">Ukupno predmeta: @brojPredmeta</span>
+                <span class="badge bg-success me-2">ECTS: @ukupnoEcts</span>
+                <span class="badge bg-warning text-dark">Izbornih: @brojIzbornih</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Naziv predmeta</th>
+                            <th>Tip</th>
+                            <th>ECTS</th>
+                            <th>Sati predavanja</th>
+                            <th>Sati vježbi</th>
+                            <th>Termina sedmično</th>
+                            <th>Profesori</th>
+                            <th>Asistenti</th>
+                            <th>Prag prisustva (P/V/U)</th>
+                            <th>Opis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var predmet in semestarPredmeti)
+                                {
+                                    // Oznaci izborne vizualno (boja ili badge)
+                                    var redKlasa = predmet.TipPredmeta == TipPredmeta.Izborni ? "table-warning" : "";
+                                    <tr class="@redKlasa">
+                                        <td>
+                                            <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id">
+                                                @predmet.Naziv
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @if (predmet.TipPredmeta == TipPredmeta.Osnovni)
+                                            {
+                                                <span class="badge bg-primary">Osnovni</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning text-dark">Izborni</span>
+                                            }
+                                        </td>
+                                        <td>@predmet.ECTS</td>
+                                        <td>@predmet.SatiPredavanja</td>
+                                        <td>@predmet.SatiVjezbi</td>
+                                        <td>
+                                            @* Prikaži koliko termina sedmično (zaokruženo na 45min = 1 termin) *@
+                                            @{
+                                                var predavanjaTermina = predmet.SatiPredavanja > 0 ? Math.Ceiling((decimal)predmet.SatiPredavanja / 1.5M) : 0;
+                                                var vjezbiTermina = predmet.SatiVjezbi > 0 ? Math.Ceiling((decimal)predmet.SatiVjezbi / 1.5M) : 0;
+                                            }
+                                            <span>@predavanjaTermina predavanja / @vjezbiTermina vježbi</span>
+                                        </td>
+                                        <td>
+                                            @if (predmet.PredmetProfesori != null && predmet.PredmetProfesori.Any())
+                                            {
+                                                <ul class="list-unstyled mb-0">
+                                                    @foreach (var pp in predmet.PredmetProfesori)
+                                                    {
+                                                        <li>
+                                                            @(pp.Profesor != null ? $"{pp.Profesor.Ime} {pp.Profesor.Prezime} ({pp.Profesor.ProfesorTitula})" : "N/A")
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                            else
+                                            {
+
+                                                <span class="text-danger">Nema profesora</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (predmet.PredmetAsistenti != null && predmet.PredmetAsistenti.Any())
+                                            {
+                                                <ul class="list-unstyled mb-0">
+                                                    @foreach (var pa in predmet.PredmetAsistenti)
+                                                    {
+                                                        <li>
+                                                            @(pa.Asistent != null ? $"{pa.Asistent.Ime} {pa.Asistent.Prezime} ({pa.Asistent.AsistentTitula})" : "N/A")
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                            else
+                                            {
+
+                                                <span class="text-danger">Nema asistenta</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @($"{predmet.PragPrisustvaPredavanja ?? 70}% / {predmet.PragPrisustvaVjezbe ?? 70}% / {predmet.PragPrisustvaUkupno ?? 70}%")
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrWhiteSpace(predmet.Opis))
+                                            {
+                                                @(predmet.Opis.Length > 50 ? predmet.Opis.Substring(0, 50) + "..." : predmet.Opis)
+                                            }
+                                            else
+                                            {
+
+                                                <span class="text-muted">Nema opisa</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         }
     }
     else
     {
-        <div class="alert alert-warning">
+        <div class="alert alert-warning text-center">
             <strong>Nema definisanih predmeta za ovaj nastavni plan!</strong>
         </div>
     }
@@ -73,6 +172,6 @@
     @if (User.IsInRole("Studentska služba"))
     {
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Izmjena</a>
-    }    
+    }
     <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
 </div>

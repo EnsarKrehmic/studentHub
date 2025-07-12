@@ -28,8 +28,16 @@ namespace StudentHub.Models
         [Required(ErrorMessage = "Tip predmeta je obavezan.")]
         public TipPredmeta TipPredmeta { get; set; }
 
-        [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
-        public int? Semestar { get; set; }
+        [Required, Range(1, 2, ErrorMessage = "Semestar može biti samo 1 (zimski) ili 2 (ljetni).")]
+        public int Semestar { get; set; }
+
+        [Required, Range(1, 6, ErrorMessage = "Godina studija mora biti između 1 i 6.")]
+        public int GodinaStudija { get; set; }
+
+        [Required, Range(0, 60)]
+        public int SatiPredavanja { get; set; }
+        [Required, Range(0, 60)]
+        public int SatiVjezbi { get; set; }
 
         [Range(0, 100)]
         public int? PragPrisustvaPredavanja { get; set; } = 70;
@@ -48,8 +56,9 @@ namespace StudentHub.Models
         public long? AsistentId { get; set; }
         public Asistent Asistent { get; set; }
 
+        [Required]
         [ForeignKey("StudijskiProgram")]
-        public long? StudijskiProgramId { get; set; }
+        public long StudijskiProgramId { get; set; }
         public StudijskiProgram StudijskiProgram { get; set; }
 
         [ForeignKey("NastavniPlan")]

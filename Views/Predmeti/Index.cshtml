@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<StudentHub.Models.Predmet>
 
 @{
-    ViewData["Title"] = "Lista predmeta po studijskim programima";
+    ViewData["Title"] = "Lista predmeta";
+    var programi = (SelectList)ViewBag.StudijskiProgrami;
+    var godine = ViewBag.GodineStudija as List<SelectListItem>;
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -14,6 +16,32 @@
     }
 </div>
 
+<!-- FILTERI -->
+<form method="get" class="mb-4 row g-2">
+    <div class="col-md-4">
+        <select name="studijskiProgramId" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Prikaži sve studijske programe --</option>
+            @foreach (var program in programi)
+            {
+                <option value="@program.Value" selected="@(program.Selected ? "selected" : null)">@program.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+        <select name="godinaStudija" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Sve godine --</option>
+            @foreach (var godina in godine)
+            {
+                <option value="@godina.Value" selected="@(godina.Selected ? "selected" : null)">@godina.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filtriraj</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary ms-2"><i class="fas fa-undo"></i> Reset</a>
+    </div>
+</form>
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -24,11 +52,11 @@
 
 @if (Model != null && Model.Any())
 {
-    var studijskiProgrami = Model
-        .GroupBy(p => p.NastavniPlan.StudijskiProgram.Naziv)
+    var programGrupe = Model
+        .GroupBy(p => p.StudijskiProgram.Naziv)
         .OrderBy(g => g.Key);
 
-    foreach (var programGroup in studijskiProgrami)
+    foreach (var programGroup in programGrupe)
     {
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white">
@@ -36,18 +64,16 @@
             </div>
             <div class="card-body">
                 @{
-                    var godineGrupe = programGroup
-                    .GroupBy(p => p.NastavniPlan.GodinaStudija)
-                    .OrderBy(g => g.Key);
+                    var godinaGrupe = programGroup
+                        .GroupBy(p => p.GodinaStudija)
+                        .OrderBy(g => g.Key);
                 }
-
-                @foreach (var godinaGroup in godineGrupe)
+                @foreach (var godinaGroup in godinaGrupe)
                 {
                     <div>
                         <h5 class="text-primary mt-3">
                             <i class="fas fa-calendar-alt"></i> Godina studija: @godinaGroup.Key
                         </h5>
-
                         <div class="table-responsive">
                             <table class="table table-striped align-middle">
                                 <thead class="table-light">
@@ -56,6 +82,8 @@
                                         <th>Opis</th>
                                         <th class="text-center">ECTS</th>
                                         <th>Tip predmeta</th>
+                                        <th>Semestar</th>
+                                        <th>Sati P/V</th>
                                         <th>Profesor</th>
                                         <th>Asistent</th>
                                         @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
@@ -65,7 +93,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var predmet in godinaGroup)
+                                    @foreach (var predmet in godinaGroup.OrderBy(p => p.Semestar).ThenBy(p => p.Naziv))
                                     {
                                         <tr>
                                             <td>@predmet.Naziv</td>
@@ -80,7 +108,15 @@
                                                 }
                                             </td>
                                             <td class="text-center">@predmet.ECTS</td>
-                                            <td>@predmet.TipPredmeta.ToString()</td>
+                                            <td>
+                                                @(predmet.TipPredmeta == StudentHub.Models.TipPredmeta.Osnovni ? "Osnovni" : "Izborni")
+                                            </td>
+                                            <td>
+                                                @(predmet.Semestar == 1 ? "1 (Zimski)" : "2 (Ljetni)")
+                                            </td>
+                                            <td>
+                                                @($"{predmet.SatiPredavanja}/{predmet.SatiVjezbi}")
+                                            </td>
                                             <td>
                                                 @if (predmet.Profesor != null)
                                                 {
@@ -104,15 +140,15 @@
                                             @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                             {
                                                 <td class="text-center">
-                                                    <a asp-action="Details" asp-route-id="@predmet.Id" class="btn btn-sm btn-info">
+                                                    <a asp-action="Details" asp-route-id="@predmet.Id" class="btn btn-sm btn-info" title="Detalji">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     @if (User.IsInRole("Studentska služba"))
                                                     {
-                                                        <a asp-action="Edit" asp-route-id="@predmet.Id" class="btn btn-sm btn-warning">
+                                                        <a asp-action="Edit" asp-route-id="@predmet.Id" class="btn btn-sm btn-warning" title="Izmijeni">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a asp-action="Delete" asp-route-id="@predmet.Id" class="btn btn-sm btn-danger">
+                                                        <a asp-action="Delete" asp-route-id="@predmet.Id" class="btn btn-sm btn-danger" title="Obriši">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a>
                                                     }

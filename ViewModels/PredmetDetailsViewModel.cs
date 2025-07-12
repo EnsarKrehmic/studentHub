@@ -7,6 +7,17 @@ namespace StudentHub.ViewModels
     {
         public Predmet Predmet { get; set; }
 
+        // Pomoćna svojstva za lakši prikaz
+        public string NazivPredmeta => Predmet?.Naziv ?? "";
+        public string OpisPredmeta => Predmet?.Opis ?? "";
+        public int ECTS => Predmet?.ECTS ?? 0;
+        public string TipPredmeta => Predmet?.TipPredmeta == Models.TipPredmeta.Osnovni ? "Osnovni" : "Izborni";
+        public string StudijskiProgram => Predmet?.StudijskiProgram?.Naziv ?? "";
+        public int GodinaStudija => Predmet?.GodinaStudija ?? 0;
+        public int Semestar => Predmet?.Semestar ?? 0;
+        public int SatiPredavanja => Predmet?.SatiPredavanja ?? 0;
+        public int SatiVjezbi => Predmet?.SatiVjezbi ?? 0;
+
         public List<PredmetProfesor> Profesori { get; set; } = new();
         public List<PredmetAsistent> Asistenti { get; set; } = new();
         public List<StudentNaPredmetu> StudentiNaPredmetu { get; set; } = new();

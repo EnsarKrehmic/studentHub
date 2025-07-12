@@ -240,6 +240,13 @@ namespace StudentHub.Data
                 .HasForeignKey(p => p.NastavniPlanId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Konfiguracija za Predmet -> StudijskiProgram
+            modelBuilder.Entity<Predmet>()
+                .HasOne(p => p.StudijskiProgram)
+                .WithMany()
+                .HasForeignKey(p => p.StudijskiProgramId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Konfiguracija za NastavniPlan -> StudijskiProgram
             modelBuilder.Entity<NastavniPlan>()
                 .HasOne(np => np.StudijskiProgram)

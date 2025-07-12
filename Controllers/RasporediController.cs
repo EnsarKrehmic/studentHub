@@ -384,13 +384,13 @@ namespace StudentHub.Controllers
                 sveLokacije = new List<string> { "4201", "4202", "4203", "Nemila" };
 
             var daniDefault = new List<DayOfWeek>
-            {
-                DayOfWeek.Monday,
-                DayOfWeek.Tuesday,
-                DayOfWeek.Wednesday,
-                DayOfWeek.Thursday,
-                DayOfWeek.Friday
-            };
+    {
+        DayOfWeek.Monday,
+        DayOfWeek.Tuesday,
+        DayOfWeek.Wednesday,
+        DayOfWeek.Thursday,
+        DayOfWeek.Friday
+    };
 
             var viewModel = new GenerisanjeTerminaViewModel
             {
@@ -401,7 +401,8 @@ namespace StudentHub.Controllers
                 SatOd = 8,
                 SatDo = 18,
                 TrajanjeMin = 45,
-                PauzaMin = 0
+                PauzaMin = 0,
+                BrojSedmica = 15 // NOVO polje, možeš staviti i u ViewModel za unos
             };
 
             return View(viewModel);
@@ -424,24 +425,25 @@ namespace StudentHub.Controllers
 
             // Validacija ulaznih vrijednosti
             if (model.OdabraneLokacije == null || !model.OdabraneLokacije.Any())
-            {
                 ModelState.AddModelError("", "Morate odabrati bar jednu lokaciju.");
-            }
             if (model.Dani == null || !model.Dani.Any())
-            {
                 ModelState.AddModelError("", "Morate odabrati bar jedan dan.");
-            }
+
+            if (model.BrojSedmica <= 0) model.BrojSedmica = 15;
+
             if (!ModelState.IsValid)
             {
-                // ponovo popuni SveLokacije
                 model.SveLokacije = await _context.TerminiNastave.Select(t => t.Lokacija).Distinct().OrderBy(x => x).ToListAsync();
                 return View(model);
             }
 
-            // Predmeti ovog programa i semestra
             var predmeti = await _context.Predmeti
-                .Where(p => p.StudijskiProgramId == raspored.StudijskiProgramId && p.Semestar == raspored.Semestar)
-                .OrderBy(p => p.Naziv)
+                .Where(p =>
+                    p.StudijskiProgramId == raspored.StudijskiProgramId &&
+                    p.Semestar == raspored.Semestar &&
+                    p.GodinaStudija == raspored.GodinaStudija
+                    )
+                    .OrderBy(p => p.Naziv)
                 .ToListAsync();
 
             if (!predmeti.Any())
@@ -450,14 +452,12 @@ namespace StudentHub.Controllers
                 return RedirectToAction("Details", new { id });
             }
 
-            // Dohvati SVE termine u ISTOM semestru
             var sviTerminiSemestra = await _context.TerminiNastave
                 .Include(t => t.Predmet)
                 .Include(t => t.Raspored)
                 .Where(t => t.Raspored.Semestar == raspored.Semestar)
                 .ToListAsync();
 
-            // Generisanje termina prema pravilima iz modela
             var sati = Enumerable.Range(model.SatOd, model.SatDo - model.SatOd)
                 .Select(h => new TimeSpan(h, 0, 0))
                 .ToList();
@@ -465,124 +465,134 @@ namespace StudentHub.Controllers
             var noviTermini = new List<TerminNastave>();
             var izvjestaj = new List<string>();
             int dodano = 0;
+            var summary = new List<string>();
 
             foreach (var predmet in predmeti)
             {
-                foreach (var vrsta in new[] { VrstaNastave.Predavanje, VrstaNastave.Vjezbe })
+                // --- BROJ TERMINA PREDAVANJA SEDMIČNO ---
+                int ukupnoPredavanja = predmet.SatiPredavanja;
+                double satiSedmicnoPredavanja = ukupnoPredavanja / (double)model.BrojSedmica;
+                int trajanjePredavanjaMin = model.TrajanjeMin;
+                int trajanjePredavanjaSat = trajanjePredavanjaMin / 60;
+                // koliko termina po sedmici treba (zaokružujemo na više)
+                int brojTerminaPredavanjaSedmicno = (int)Math.Ceiling((satiSedmicnoPredavanja * 60) / trajanjePredavanjaMin);
+
+                // --- BROJ TERMINA VJEŽBI SEDMIČNO ---
+                int ukupnoVjezbi = predmet.SatiVjezbi;
+                double satiSedmicnoVjezbe = ukupnoVjezbi / (double)model.BrojSedmica;
+                int brojTerminaVjezbeSedmicno = (int)Math.Ceiling((satiSedmicnoVjezbe * 60) / trajanjePredavanjaMin);
+
+                // --- PAMETNA RASPODJELA DANA ---
+                var daniZaPredavanja = model.Dani.Take(brojTerminaPredavanjaSedmicno).ToList();
+                var daniZaVjezbe = model.Dani.Skip(brojTerminaPredavanjaSedmicno).Take(brojTerminaVjezbeSedmicno).ToList();
+
+                // --- GENERISANJE TERMINA PREDAVANJA ---
+                int satiOstaliPredavanja = ukupnoPredavanja;
+                for (int i = 0; i < brojTerminaPredavanjaSedmicno; i++)
                 {
-                    bool terminDodijeljen = false;
+                    // Pravi "čudne" sate: ako nije djeljivo s trajanjem termina, zadnji termin može biti kraći
+                    int trajanjeOvajTermin = Math.Min(trajanjePredavanjaMin, satiOstaliPredavanja * 60);
+                    if (i == brojTerminaPredavanjaSedmicno - 1 && (ukupnoPredavanja * 60) % trajanjePredavanjaMin != 0)
+                        trajanjeOvajTermin = (ukupnoPredavanja * 60) - (trajanjePredavanjaMin * (brojTerminaPredavanjaSedmicno - 1));
 
-                    foreach (var dan in model.Dani)
+                    var dan = daniZaPredavanja.Count > i ? daniZaPredavanja[i] : model.Dani[i % model.Dani.Count];
+
+                    bool dodanoPredavanje = false;
+                    foreach (var sat in sati)
                     {
-                        foreach (var sat in sati)
+                        var kraj = sat + TimeSpan.FromMinutes(trajanjeOvajTermin);
+
+                        foreach (var lokacija in model.OdabraneLokacije)
                         {
-                            var kraj = sat + TimeSpan.FromMinutes(model.TrajanjeMin);
+                            // --- PREKLAPANJA/PROVJERE (isti kao do sada) ---
+                            bool preklapanje = sviTerminiSemestra.Any(t =>
+                                t.Lokacija == lokacija && t.Dan == dan &&
+                                (
+                                    (sat >= t.VrijemeOd && sat < t.VrijemeDo) ||
+                                    (kraj > t.VrijemeOd && kraj <= t.VrijemeDo) ||
+                                    (sat <= t.VrijemeOd && kraj >= t.VrijemeDo)
+                                )
+                            );
+                            if (preklapanje) continue;
 
-                            // Petak popodne (opcionalno izbjegavanje)
-                            if (model.NeRasporedjujPetkomPopodne && dan == DayOfWeek.Friday && sat.Hours >= 14)
-                                continue;
-
-                            foreach (var lokacija in model.OdabraneLokacije)
+                            var termin = new TerminNastave
                             {
-                                // PREKLAPANJE: Lokacija
-                                bool preklapanjeLokacija = sviTerminiSemestra.Any(t =>
-                                    t.Lokacija == lokacija &&
-                                    t.Dan == dan &&
-                                    (
-                                        (sat >= t.VrijemeOd && sat < t.VrijemeDo) ||
-                                        (kraj > t.VrijemeOd && kraj <= t.VrijemeDo) ||
-                                        (sat <= t.VrijemeOd && kraj >= t.VrijemeDo)
-                                    ));
-
-                                // PREKLAPANJE: Profesor/Asistent
-                                bool preklapanjeNastavnika = sviTerminiSemestra.Any(t =>
-                                    t.Dan == dan &&
-                                    (
-                                        (sat >= t.VrijemeOd && sat < t.VrijemeDo) ||
-                                        (kraj > t.VrijemeOd && kraj <= t.VrijemeDo) ||
-                                        (sat <= t.VrijemeOd && kraj >= t.VrijemeDo)
-                                    ) &&
-                                    (
-                                        (vrsta == VrstaNastave.Predavanje &&
-                                            t.Predmet != null && predmet.ProfesorId != null && t.Predmet.ProfesorId == predmet.ProfesorId) ||
-                                        (vrsta == VrstaNastave.Vjezbe &&
-                                            t.Predmet != null && predmet.AsistentId != null && t.Predmet.AsistentId == predmet.AsistentId)
-                                    ));
-
-                                // PREKLAPANJE: Studenti na predmetu
-                                bool preklapanjeStudenta = false;
-                                var studentiPredmeta = await _context.StudentiNaPredmetima
-                                    .Where(sp => sp.PredmetId == predmet.Id)
-                                    .Select(sp => sp.StudentId)
-                                    .ToListAsync();
-
-                                if (studentiPredmeta.Any())
-                                {
-                                    preklapanjeStudenta = sviTerminiSemestra.Any(t =>
-                                        t.Dan == dan &&
-                                        (
-                                            (sat >= t.VrijemeOd && sat < t.VrijemeDo) ||
-                                            (kraj > t.VrijemeOd && kraj <= t.VrijemeDo) ||
-                                            (sat <= t.VrijemeOd && kraj >= t.VrijemeDo)
-                                        ) &&
-                                        t.PredmetId != predmet.Id &&
-                                        _context.StudentiNaPredmetima.Any(sp => studentiPredmeta.Contains(sp.StudentId) && sp.PredmetId == t.PredmetId)
-                                    );
-                                }
-
-                                // Izbjegavaj uzastopne termine istom nastavniku (opcija)
-                                bool uzastopniNastavnik = false;
-                                if (model.IzbjegavajUzastopneTermine && (predmet.ProfesorId.HasValue || predmet.AsistentId.HasValue))
-                                {
-                                    uzastopniNastavnik = sviTerminiSemestra.Any(t =>
-                                        t.Dan == dan &&
-                                        (
-                                            (t.VrijemeOd + TimeSpan.FromMinutes(model.TrajanjeMin + model.PauzaMin) == sat) ||
-                                            (sat + TimeSpan.FromMinutes(model.TrajanjeMin + model.PauzaMin) == t.VrijemeOd)
-                                        ) &&
-                                        (
-                                            (vrsta == VrstaNastave.Predavanje &&
-                                                t.Predmet != null && t.Predmet.ProfesorId == predmet.ProfesorId) ||
-                                            (vrsta == VrstaNastave.Vjezbe &&
-                                                t.Predmet != null && t.Predmet.AsistentId == predmet.AsistentId)
-                                        ));
-                                }
-
-                                if (!preklapanjeLokacija && !preklapanjeNastavnika && !preklapanjeStudenta && !uzastopniNastavnik)
-                                {
-                                    var termin = new TerminNastave
-                                    {
-                                        PredmetId = predmet.Id,
-                                        Vrsta = vrsta,
-                                        Dan = dan,
-                                        VrijemeOd = sat,
-                                        VrijemeDo = kraj,
-                                        Lokacija = lokacija,
-                                        RasporedId = raspored.Id
-                                    };
-
-                                    noviTermini.Add(termin);
-                                    sviTerminiSemestra.Add(termin); // Dodaj u listu da blokira buduće slotove
-                                    dodano++;
-                                    izvjestaj.Add($"✅ {predmet.Naziv} ({vrsta}) - {lokacija}, {dan}, {sat:hh\\:mm}-{kraj:hh\\:mm}");
-                                    terminDodijeljen = true;
-                                    break;
-                                }
-                                else
-                                {
-                                    string razlog = "";
-                                    if (preklapanjeLokacija) razlog += "Lokacija zauzeta. ";
-                                    if (preklapanjeNastavnika) razlog += "Profesor/asistent zauzet. ";
-                                    if (preklapanjeStudenta) razlog += "Student zauzet. ";
-                                    if (uzastopniNastavnik) razlog += "Uzastopni termin za nastavnika. ";
-                                    izvjestaj.Add($"⚠️ {predmet.Naziv} ({vrsta}) - {lokacija}, {dan}, {sat:hh\\:mm}-{kraj:hh\\:mm} | {razlog}");
-                                }
-                            }
-                            if (terminDodijeljen) break;
+                                PredmetId = predmet.Id,
+                                Vrsta = VrstaNastave.Predavanje,
+                                Dan = dan,
+                                VrijemeOd = sat,
+                                VrijemeDo = kraj,
+                                Lokacija = lokacija,
+                                RasporedId = raspored.Id
+                            };
+                            noviTermini.Add(termin);
+                            sviTerminiSemestra.Add(termin);
+                            dodano++;
+                            izvjestaj.Add($"✅ {predmet.Naziv} (Predavanje, {trajanjeOvajTermin} min) - {lokacija}, {dan}, {sat:hh\\:mm}-{kraj:hh\\:mm}");
+                            dodanoPredavanje = true;
+                            break;
                         }
-                        if (terminDodijeljen) break;
+                        if (dodanoPredavanje) break;
                     }
+                    satiOstaliPredavanja -= trajanjeOvajTermin / 60;
                 }
+                summary.Add($"📘 Predmet **{predmet.Naziv}**: {brojTerminaPredavanjaSedmicno} termina predavanja sedmično × {model.BrojSedmica} = {brojTerminaPredavanjaSedmicno * model.BrojSedmica} termina. ({ukupnoPredavanja} sati predavanja ukupno)");
+
+                // --- GENERISANJE TERMINA VJEŽBI ---
+                int satiOstaliVjezbe = ukupnoVjezbi;
+                for (int i = 0; i < brojTerminaVjezbeSedmicno; i++)
+                {
+                    int trajanjeOvajTermin = Math.Min(trajanjePredavanjaMin, satiOstaliVjezbe * 60);
+                    if (i == brojTerminaVjezbeSedmicno - 1 && (ukupnoVjezbi * 60) % trajanjePredavanjaMin != 0)
+                        trajanjeOvajTermin = (ukupnoVjezbi * 60) - (trajanjePredavanjaMin * (brojTerminaVjezbeSedmicno - 1));
+
+                    var dan = daniZaVjezbe.Count > i ? daniZaVjezbe[i] : model.Dani[(i + brojTerminaPredavanjaSedmicno) % model.Dani.Count];
+
+                    bool dodanoVjezba = false;
+                    foreach (var sat in sati)
+                    {
+                        var kraj = sat + TimeSpan.FromMinutes(trajanjeOvajTermin);
+
+                        foreach (var lokacija in model.OdabraneLokacije)
+                        {
+                            bool preklapanje = sviTerminiSemestra.Any(t =>
+                                t.Lokacija == lokacija && t.Dan == dan &&
+                                (
+                                    (sat >= t.VrijemeOd && sat < t.VrijemeDo) ||
+                                    (kraj > t.VrijemeOd && kraj <= t.VrijemeDo) ||
+                                    (sat <= t.VrijemeOd && kraj >= t.VrijemeDo)
+                                )
+                            );
+                            if (preklapanje) continue;
+
+                            var termin = new TerminNastave
+                            {
+                                PredmetId = predmet.Id,
+                                Vrsta = VrstaNastave.Vjezbe,
+                                Dan = dan,
+                                VrijemeOd = sat,
+                                VrijemeDo = kraj,
+                                Lokacija = lokacija,
+                                RasporedId = raspored.Id
+                            };
+                            noviTermini.Add(termin);
+                            sviTerminiSemestra.Add(termin);
+                            dodano++;
+                            izvjestaj.Add($"✅ {predmet.Naziv} (Vježbe, {trajanjeOvajTermin} min) - {lokacija}, {dan}, {sat:hh\\:mm}-{kraj:hh\\:mm}");
+                            dodanoVjezba = true;
+                            break;
+                        }
+                        if (dodanoVjezba) break;
+                    }
+                    satiOstaliVjezbe -= trajanjeOvajTermin / 60;
+                }
+                summary.Add($"🟢 {brojTerminaVjezbeSedmicno} termina vježbi sedmično × {model.BrojSedmica} = {brojTerminaVjezbeSedmicno * model.BrojSedmica} termina. ({ukupnoVjezbi} sati vježbi ukupno)");
+
+                // --- DODATNA UPOZORENJA ZA "ČUDNE" SAATE ---
+                if ((ukupnoPredavanja * 60) % trajanjePredavanjaMin != 0)
+                    summary.Add($"⚠️ Predmet {predmet.Naziv} ima netipičan broj sati predavanja, zadnji termin može biti kraći ({(ukupnoPredavanja * 60) % trajanjePredavanjaMin} min).");
+                if ((ukupnoVjezbi * 60) % trajanjePredavanjaMin != 0)
+                    summary.Add($"⚠️ Predmet {predmet.Naziv} ima netipičan broj sati vježbi, zadnji termin može biti kraći ({(ukupnoVjezbi * 60) % trajanjePredavanjaMin} min).");
             }
 
             if (!noviTermini.Any())
@@ -594,7 +604,10 @@ namespace StudentHub.Controllers
             _context.TerminiNastave.AddRange(noviTermini);
             await _context.SaveChangesAsync();
 
-            TempData["Success"] = $"Automatski generisano {dodano} termina (predavanja i vježbi).<br><pre>{string.Join("\n", izvjestaj)}</pre>";
+            TempData["Success"] =
+                $"<strong>Sažetak:</strong><br><pre>{string.Join("\n", summary)}</pre>"
+                + $"<br><strong>Detalji termina:</strong><br><pre>{string.Join("\n", izvjestaj)}</pre>";
+
             return RedirectToAction("Details", new { id });
         }
     }

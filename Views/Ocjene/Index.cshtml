@@ -4,6 +4,7 @@
     ViewData["Title"] = "Lista ocjena";
     var userRole = User.IsInRole("Student") ? "Student" : User.IsInRole("Profesor") ? "Profesor" : "Studentska služba";
     var grouped = Model.GroupBy(o => o.PredmetNaziv).OrderBy(g => g.Key);
+    var prikaziTezinu = Model.Any(o => o.TezinaProcentualno.HasValue);
 }
 
 <div class="container mt-4">
@@ -67,7 +68,16 @@
                             }
                             <th>Tip</th>
                             <th>Vrijednost</th>
-                            <th>Težina</th>
+                            @* Prikazi kolonu Težina samo ako postoji barem jedna vrijednost *@
+                            @if (prikaziTezinu)
+                            {
+                                <th>
+                                    Težina
+                                    <span data-bs-toggle="tooltip" title="Težina ocjene u ukupnoj ocjeni (procenti)">
+                                        <i class="fas fa-info-circle text-secondary"></i>
+                                    </span>
+                                </th>
+                            }
                             <th>Datum</th>
                             <th></th>
                         </tr>
@@ -86,16 +96,19 @@
                                         @ocjena.Vrijednost
                                     </span>
                                 </td>
-                                <td>
-                                    @if (ocjena.TezinaProcentualno.HasValue)
-                                    {
-                                        @($"{ocjena.TezinaProcentualno}%")
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">—</span>
-                                    }
-                                </td>
+                                @if (prikaziTezinu)
+                                {
+                                    <td>
+                                        @if (ocjena.TezinaProcentualno.HasValue)
+                                        {
+                                            @($"{ocjena.TezinaProcentualno}%")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">–</span>
+                                        }
+                                    </td>
+                                }
                                 <td>@ocjena.DatumDodjele?.ToString("dd.MM.yyyy")</td>
                                 <td>
                                     <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjena.Id" class="btn btn-sm btn-outline-secondary">Detalji</a>
@@ -115,6 +128,12 @@
 
 @section Scripts {
     <script>
+        // Tooltip za kolonu "Težina"
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
         // Toggle prikaz prosjeka
         document.getElementById("toggleProsjeciBtn")?.addEventListener("click", function () {
             const container = document.getElementById("prosjekContainer");

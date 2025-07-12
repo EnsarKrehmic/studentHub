@@ -29,24 +29,43 @@
                 <dd class="col-sm-9">@Model.Predmet.ECTS</dd>
 
                 <dt class="col-sm-3">Tip predmeta:</dt>
-                <dd class="col-sm-9">@Model.Predmet.TipPredmeta.ToString()</dd>
+                <dd class="col-sm-9">
+                    @(Model.Predmet.TipPredmeta == StudentHub.Models.TipPredmeta.Osnovni ? "Osnovni" : "Izborni")
+                </dd>
+
+                <dt class="col-sm-3">Studijski program:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Predmet.StudijskiProgram != null)
+                    {
+                        @Model.Predmet.StudijskiProgram.Naziv
+                    }
+                    else
+                    {
+                        @Html.Raw("<span class='text-warning'>Nema programa</span>")
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Godina studija:</dt>
+                <dd class="col-sm-9">@Model.Predmet.GodinaStudija. godina</dd>
+
+                <dt class="col-sm-3">Semestar:</dt>
+                <dd class="col-sm-9">
+                    @(Model.Predmet.Semestar == 1 ? "1 (Zimski)" : Model.Predmet.Semestar == 2 ? "2 (Ljetni)" : Model.Predmet.Semestar.ToString())
+                </dd>
+
+                <dt class="col-sm-3">Sati predavanja:</dt>
+                <dd class="col-sm-9">@Model.Predmet.SatiPredavanja</dd>
+
+                <dt class="col-sm-3">Sati vježbi:</dt>
+                <dd class="col-sm-9">@Model.Predmet.SatiVjezbi</dd>
 
                 <dt class="col-sm-3">Nastavni plan:</dt>
                 <dd class="col-sm-9">
                     @if (Model.Predmet.NastavniPlan != null)
                     {
                         <span>
-                            Predmet pripada nastavnom planu:
                             @Model.Predmet.NastavniPlan.GodinaStudija. godina,
-                            @(Model.Predmet.Semestar == 1 ? "prvi" :
-                                Model.Predmet.Semestar == 2 ? "drugi" :
-                                Model.Predmet.Semestar == 3 ? "treći" :
-                                Model.Predmet.Semestar == 3 ? "četvrti" :
-                                Model.Predmet.Semestar == 3 ? "peti" :
-                                Model.Predmet.Semestar == 3 ? "šesti" :
-                                Model.Predmet.Semestar == 3 ? "sedmi" :
-                                Model.Predmet.Semestar == 3 ? "osmi" :
-                                Model.Predmet.Semestar + ".") semestar
+                            @Model.Predmet.NastavniPlan.StudijskiProgram?.Naziv
                         </span>
                     }
                     else

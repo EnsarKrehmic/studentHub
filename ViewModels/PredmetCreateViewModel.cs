@@ -26,8 +26,23 @@ namespace StudentHub.ViewModels
         [Display(Name = "Nastavni plan")]
         public long? NastavniPlanId { get; set; }
 
-        [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
-        public int? Semestar { get; set; }
+        [Required(ErrorMessage = "Semestar je obavezan.")]
+        [Range(1, 2, ErrorMessage = "Semestar može biti samo 1 (zimski) ili 2 (ljetni).")]
+        public int Semestar { get; set; } // promijeni u int i validiraj na 1 ili 2
+
+        [Required(ErrorMessage = "Godina studija je obavezna.")]
+        [Range(1, 6, ErrorMessage = "Godina studija mora biti između 1 i 6.")]
+        public int GodinaStudija { get; set; } // NOVO
+
+        [Required(ErrorMessage = "Broj sati predavanja je obavezan.")]
+        [Range(0, 60, ErrorMessage = "Sati predavanja mora biti između 0 i 60.")]
+        public int SatiPredavanja { get; set; } // NOVO
+
+        [Required(ErrorMessage = "Broj sati vježbi je obavezan.")]
+        [Range(0, 60, ErrorMessage = "Sati vježbi mora biti između 0 i 60.")]
+        public int SatiVjezbi { get; set; } // NOVO
+
+        public long StudijskiProgramId { get; set; } // OBAVEZNO u viewmodelu, jer je u modelu required
 
         // Liste za višestruki odabir (profesori/asistenti povezani sa predmetom)
         public List<long> ProfesorIds { get; set; } = new List<long>();

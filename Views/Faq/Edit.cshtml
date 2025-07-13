@@ -1,7 +1,7 @@
 ﻿@model StudentHub.ViewModels.FaqPitanjeViewModel
 
 @{
-    ViewData["Title"] = "Dodavanje FAQ pitanja";
+    ViewData["Title"] = "Izmjena FAQ pitanja";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -9,10 +9,10 @@
 <hr />
 <div class="row">
     <div class="col-md-6 col-lg-5">
-        <form asp-action="Create" method="post">
-            @* Prikaz svih validacionih grešaka (uključujući duplikate, custom greške iz kontrolera) *@
+        <form asp-action="Edit" method="post">
             @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
 
+            <input type="hidden" asp-for="Id" />
             <div class="form-group mb-3">
                 <label asp-for="Kategorija" class="control-label"></label>
                 <select asp-for="Kategorija" class="form-control" id="KategorijaDropdown" required>
@@ -39,12 +39,15 @@
                 <textarea asp-for="Odgovor" class="form-control" rows="5" maxlength="2000"></textarea>
                 <span asp-validation-for="Odgovor" class="text-danger"></span>
             </div>
-            <div class="form-check mb-3">
-                <input asp-for="Preporuceno" class="form-check-input" type="checkbox" id="preporucenoFaq" />
-                <label class="form-check-label" for="preporucenoFaq">Prikaži kao preporučeno pitanje</label>
-            </div>
+            @if (User.IsInRole("Studentska služba"))
+            {
+                <div class="form-check mb-3">
+                    <input asp-for="Preporuceno" class="form-check-input" type="checkbox" id="preporucenoFaq" />
+                    <label class="form-check-label" for="preporucenoFaq">Prikaži kao preporučeno pitanje</label>
+                </div>
+            }
             <div class="form-group mt-3">
-                <input type="submit" value="Dodaj" class="btn btn-primary" />
+                <input type="submit" value="Sačuvaj izmjene" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-secondary">Odustani</a>
             </div>
         </form>

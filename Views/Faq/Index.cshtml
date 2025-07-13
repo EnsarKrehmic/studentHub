@@ -1,0 +1,220 @@
+﻿@model IEnumerable<StudentHub.Models.FaqPitanje>
+
+@{
+    ViewData["Title"] = "Najčešća pitanja (FAQ)";
+    var preporucena = Model.Where(f => f.Preporuceno).Take(3).ToList();
+    var grouped = Model
+            .Where(f => !f.Preporuceno)
+            .GroupBy(f => string.IsNullOrWhiteSpace(f.Kategorija) ? "Ostalo" : f.Kategorija.Trim())
+            .OrderBy(g => g.Key)
+            .ToList();
+}
+
+<div class="container py-4">
+    <h2 class="mb-5 text-primary fw-bold text-center">
+        <i class="fas fa-question-circle"></i> @ViewData["Title"]
+    </h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
+    }
+
+    @if (preporucena.Any())
+    {
+        <div class="mb-5">
+            <div class="alert alert-primary d-flex align-items-center mb-3" role="alert">
+                <i class="fas fa-star fs-3 me-2 text-warning"></i>
+                <span class="fs-5 fw-semibold">Preporučena pitanja</span>
+            </div>
+            <div class="row g-4">
+                @foreach (var item in preporucena)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card shadow-sm h-100 border-0 faq-card">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-start mb-2 gap-2">
+                                    <i class="fas fa-question-circle text-secondary fs-5 mt-1"></i>
+                                    <span class="fw-semibold fs-6">@item.Pitanje</span>
+                                </div>
+                                <div class="mb-3 text-body">
+                                    <i class="fas fa-arrow-right text-muted"></i>
+                                    <span>@Html.Raw(item.Odgovor.Replace("\n", "<br/>"))</span>
+                                </div>
+                                @if (User.IsInRole("Studentska služba"))
+                                {
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i> Uredi
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash-alt"></i> Obriši
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-12 col-md-7 col-lg-6 mx-auto">
+            <input type="text" id="faqSearch" class="form-control form-control-lg" placeholder="Pretraži pitanja ili odgovore..." autocomplete="off">
+        </div>
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <div class="col-12 col-md-auto d-flex justify-content-end mt-3 mt-md-0">
+                <a class="btn btn-success" asp-action="Create">
+                    <i class="fas fa-plus"></i> Dodaj novo pitanje
+                </a>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">Još uvijek nema postavljenih pitanja.</div>
+    }
+    else
+    {
+        foreach (var group in grouped)
+        {
+            <div class="mb-5 faq-category" data-category="@group.Key.ToLower()">
+                <div class="mb-3 pb-1 border-bottom border-3 border-primary d-flex align-items-center gap-2">
+                    <i class="fas fa-folder-open text-primary fs-5"></i>
+                    <span class="fs-4 fw-semibold text-primary">@group.Key</span>
+                    <span class="badge bg-primary ms-2 px-3 py-2 fs-6 align-middle">@group.Count() pitanja</span>
+                </div>
+                <div class="row g-4 faq-category-cards">
+                    @foreach (var item in group.OrderBy(x => x.Pitanje))
+                    {
+                        var shortAnswer = (item.Odgovor != null && item.Odgovor.Length > 220)
+                        ? item.Odgovor.Substring(0, 200) + "..." : item.Odgovor;
+                        var isLong = (item.Odgovor != null && item.Odgovor.Length > 220);
+                        <div class="col-12 col-md-6 col-lg-4 faq-card-col" data-question="@item.Pitanje.ToLower()" data-answer="@item.Odgovor.ToLower()">
+                            <div class="card shadow-sm h-100 border-0 faq-card">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex align-items-start mb-2 gap-2">
+                                        <i class="fas fa-question-circle text-secondary fs-5 mt-1"></i>
+                                        <span class="fw-semibold fs-6">@item.Pitanje</span>
+                                    </div>
+                                    <div class="mb-3 text-body">
+                                        <i class="fas fa-arrow-right text-muted"></i>
+                                        <span id="answer-short-@item.Id" style="@(isLong ? "" : "display:none")">
+                                            @Html.Raw(shortAnswer.Replace("\n", "<br/>"))
+                                            <a href="javascript:void(0)" class="faq-more-link ms-2" data-id="@item.Id">prikaži više</a>
+                                        </span>
+                                        <span id="answer-full-@item.Id" style="@(isLong ? "display:none" : "")">
+                                            @Html.Raw(item.Odgovor.Replace("\n", "<br/>"))
+                                            @if (isLong)
+                                            {
+                                                <a href="javascript:void(0)" class="faq-less-link ms-2" data-id="@item.Id">prikaži manje</a>
+                                            }
+                                        </span>
+                                    </div>
+                                    @if (User.IsInRole("Studentska služba"))
+                                    {
+                                        <div class="mt-auto d-flex gap-2">
+                                            <a asp-action="Edit" asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i> Uredi
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash-alt"></i> Obriši
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+
+    <div class="text-center mt-5">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
+        </a>
+    </div>
+</div>
+
+<style>
+    .faq-card {
+        border-radius: 1rem;
+        transition: box-shadow 0.15s;
+        background: #f8fafc;
+    }
+
+        .faq-card:hover {
+            box-shadow: 0 0.5rem 2rem 0 rgba(51, 92, 173, 0.13), 0 0.125rem 0.5rem rgba(0,0,0,0.07);
+            background: #f3f8fe;
+        }
+
+        .faq-card .btn {
+            min-width: 86px;
+        }
+
+    .faq-more-link, .faq-less-link {
+        font-size: 0.95em;
+        color: #1d4ed8;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+        .faq-more-link:hover, .faq-less-link:hover {
+            color: #0d47a1;
+            text-decoration: none;
+        }
+
+    .faq-category .badge {
+        border-radius: 1em;
+        font-weight: 500;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Search/filter funkcija
+        document.getElementById("faqSearch").addEventListener("input", function () {
+            var query = this.value.toLowerCase().trim();
+            var allCards = document.querySelectorAll(".faq-card-col");
+            var allCategories = document.querySelectorAll(".faq-category");
+            allCards.forEach(function (card) {
+                var q = card.getAttribute('data-question');
+                var a = card.getAttribute('data-answer');
+                if (!query || (q && q.includes(query)) || (a && a.includes(query))) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+            // Sakrij kategoriju ako su svi njeni cardovi sakriveni
+            allCategories.forEach(function (cat) {
+                var visible = cat.querySelectorAll('.faq-card-col:not([style*="display: none"])').length;
+                cat.style.display = visible ? "" : "none";
+            });
+        });
+
+        // Prikaži više/manje za odgovore
+        document.querySelectorAll(".faq-more-link").forEach(function (el) {
+            el.addEventListener("click", function () {
+                var id = this.getAttribute("data-id");
+                document.getElementById("answer-short-" + id).style.display = "none";
+                document.getElementById("answer-full-" + id).style.display = "";
+            });
+        });
+        document.querySelectorAll(".faq-less-link").forEach(function (el) {
+            el.addEventListener("click", function () {
+                var id = this.getAttribute("data-id");
+                document.getElementById("answer-short-" + id).style.display = "";
+                document.getElementById("answer-full-" + id).style.display = "none";
+            });
+        });
+    </script>
+}

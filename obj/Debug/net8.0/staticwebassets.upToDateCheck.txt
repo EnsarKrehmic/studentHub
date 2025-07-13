@@ -1,6 +1,8 @@
+wwwroot\css\accessibility.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\images\profili\6.jpg
+wwwroot\js\accessibility.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.min.css
@@ -30,5 +32,3 @@ wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\uploads\nastavni-materijali\0011191e-f165-4d37-b0d0-bd1ed99ba730_BH-TELECOM-DIREKCIJA-ZENICA-Masarykova-ulica-Zenica-4.jpg
-wwwroot\css\accessibility.css
-wwwroot\js\accessibility.js

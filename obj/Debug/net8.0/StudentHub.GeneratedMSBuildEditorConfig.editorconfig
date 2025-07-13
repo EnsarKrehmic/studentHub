@@ -132,6 +132,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9rdW1lbnRpXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Faq/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFxXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Faq/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFxXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Faq/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFxXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Faq/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFxXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

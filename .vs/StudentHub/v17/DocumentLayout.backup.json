@@ -3,8 +3,60 @@
   "WorkspaceRootPath": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\faq\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\faq\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\faq\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\faq\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\faqcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\faqcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\faq\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\faq\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\nastavniplanovi\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\nastavniplanovi\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\viewmodels\\faqpitanjeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:viewmodels\\faqpitanjeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\models\\faqpitanje.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:models\\faqpitanje.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\faq\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\faq\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\nastavniplanovi\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\nastavniplanovi\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\shared\\_accessibilitypanel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:views\\shared\\_accessibilitypanel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\studenticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\studenticontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\views\\shared\\_layout.cshtml.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
@@ -27,10 +79,6 @@
       "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:resources\\views\\shared\\_accessibilitypanel.en.resx||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|c:\\users\\me\\source\\repos\\studenthub\\studenthub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DC717E62-6F3C-4A3D-A1FB-9DFEC52D6347}|StudentHub.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -46,7 +94,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 821,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -70,7 +118,159 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-13T01:00:07.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\NastavniPlanovi\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\NastavniPlanovi\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\NastavniPlanovi\\Delete.cshtml",
+              "RelativeToolTip": "Views\\NastavniPlanovi\\Delete.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACIAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T00:02:56.361Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\NastavniPlanovi\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\NastavniPlanovi\\Create.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\NastavniPlanovi\\Create.cshtml",
+              "RelativeToolTip": "Views\\NastavniPlanovi\\Create.cshtml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAoAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T00:02:31.823Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Faq\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Faq\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Faq\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Faq\\Delete.cshtml",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAkwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T00:01:09.105Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Faq\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Faq\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Faq\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Faq\\Edit.cshtml",
+              "ViewState": "AgIAACAAAAAAAAAAAAAgwC8AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T00:01:08.518Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Faq\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Faq\\Create.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Faq\\Create.cshtml",
+              "RelativeToolTip": "Views\\Faq\\Create.cshtml",
+              "ViewState": "AgIAACcAAAAAAAAAAAAUwFUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T00:01:07.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Faq\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Faq\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Faq\\Index.cshtml",
+              "RelativeToolTip": "Views\\Faq\\Index.cshtml",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAgwIQAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-12T23:55:06.082Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "StudentiController.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\StudentiController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StudentiController.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\StudentiController.cs",
+              "RelativeToolTip": "Controllers\\StudentiController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-12T23:56:47.116Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FaqController.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\FaqController.cs",
+              "RelativeDocumentMoniker": "Controllers\\FaqController.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\FaqController.cs",
+              "RelativeToolTip": "Controllers\\FaqController.cs",
+              "ViewState": "AgIAABABAAAAAAAAAAAQwCcBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-12T23:54:17.341Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FaqPitanjeViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\FaqPitanjeViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\FaqPitanjeViewModel.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\ViewModels\\FaqPitanjeViewModel.cs",
+              "RelativeToolTip": "ViewModels\\FaqPitanjeViewModel.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABcAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-12T23:48:05.846Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAA8wDUAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-12T23:46:41.391Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FaqPitanje.cs",
+              "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\FaqPitanje.cs",
+              "RelativeDocumentMoniker": "Models\\FaqPitanje.cs",
+              "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Models\\FaqPitanje.cs",
+              "RelativeToolTip": "Models\\FaqPitanje.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-12T23:46:16.021Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
               "Title": "_AccessibilityPanel.bs.resx",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Resources\\Views\\Shared\\_AccessibilityPanel.bs.resx",
               "RelativeDocumentMoniker": "Resources\\Views\\Shared\\_AccessibilityPanel.bs.resx",
@@ -78,12 +278,11 @@
               "RelativeToolTip": "Resources\\Views\\Shared\\_AccessibilityPanel.bs.resx",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAIEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-07-12T22:17:17.263Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T22:17:17.263Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 18,
               "Title": "_AccessibilityPanel.en.resx",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Resources\\Views\\Shared\\_AccessibilityPanel.en.resx",
               "RelativeDocumentMoniker": "Resources\\Views\\Shared\\_AccessibilityPanel.en.resx",
@@ -91,25 +290,23 @@
               "RelativeToolTip": "Resources\\Views\\Shared\\_AccessibilityPanel.en.resx",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAIEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-07-12T22:02:44.004Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T22:02:44.004Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "HomeController.cs",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
               "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Controllers\\HomeController.cs",
               "RelativeToolTip": "Controllers\\HomeController.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAwwEkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAkwGEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-12T21:47:04.117Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T21:47:04.117Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 19,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -117,12 +314,11 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAFQAAAAAAAAAAADwv3wAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-12T21:45:36.127Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T21:45:36.127Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 20,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -130,12 +326,11 @@
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAPAAAAAAAAAAAIBJwA8BAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-12T21:31:58.123Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T21:31:58.123Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 16,
               "Title": "accessibility.js",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\wwwroot\\js\\accessibility.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\accessibility.js",
@@ -143,12 +338,11 @@
               "RelativeToolTip": "wwwroot\\js\\accessibility.js",
               "ViewState": "AgIAADkAAAAAAAAAAADwv2QAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-07-12T21:22:08.055Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T21:22:08.055Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 15,
               "Title": "accessibility.css",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\wwwroot\\css\\accessibility.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\accessibility.css",
@@ -156,12 +350,11 @@
               "RelativeToolTip": "wwwroot\\css\\accessibility.css",
               "ViewState": "AgIAAMMAAAAAAAAAAAAcwNQAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-07-12T21:21:48.121Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T21:21:48.121Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 14,
               "Title": "_Layout.cshtml.css",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Shared\\_Layout.cshtml.css",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml.css",
@@ -169,21 +362,19 @@
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml.css",
               "ViewState": "AgIAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-07-12T21:21:07.733Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T21:21:07.733Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 10,
               "Title": "_AccessibilityPanel.cshtml",
               "DocumentMoniker": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Shared\\_AccessibilityPanel.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_AccessibilityPanel.cshtml",
               "ToolTip": "C:\\Users\\Me\\source\\repos\\studentHub\\studentHub\\Views\\Shared\\_AccessibilityPanel.cshtml",
               "RelativeToolTip": "Views\\Shared\\_AccessibilityPanel.cshtml",
-              "ViewState": "AgIAAKgAAAAAAAAAAADwv8EAAACWAAAAAAAAAA==",
+              "ViewState": "AgIAAKgAAAAAAAAAAADwv8AAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-12T21:20:37.098Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-12T21:20:37.098Z"
             }
           ]
         },

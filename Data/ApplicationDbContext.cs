@@ -13,6 +13,7 @@ namespace StudentHub.Data
         public DbSet<AsistentStudijskiProgram> AsistentStudijskiProgrami { get; set; }
         public DbSet<Dokument> Dokumenti { get; set; }
         public DbSet<DokumentSlike> DokumentSlike { get; set; }
+        public DbSet<FaqPitanje> FaqPitanja { get; set; }
         public DbSet<Ispit> Ispiti { get; set; }
         public DbSet<Korisnik> Korisnici { get; set; }
         public DbSet<Komentar> Komentari { get; set; }
@@ -49,6 +50,7 @@ namespace StudentHub.Data
             modelBuilder.Entity<AsistentStudijskiProgram>().ToTable("AsistentStudijskiProgram");
             modelBuilder.Entity<Dokument>().ToTable("Dokument");
             modelBuilder.Entity<DokumentSlike>().ToTable("DokumentSlike");
+            modelBuilder.Entity<FaqPitanje>().ToTable("FaqPitanje");
             modelBuilder.Entity<Ispit>().ToTable("Ispit");
             modelBuilder.Entity<Korisnik>().ToTable("Korisnik");
             modelBuilder.Entity<Komentar>().ToTable("Komentar");

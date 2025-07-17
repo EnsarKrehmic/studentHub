@@ -1,0 +1,26 @@
+﻿@model StudentHub.Models.BugReport
+@{
+    ViewData["Title"] = "Uredi odgovor na prijavu";
+}
+<h2>@ViewData["Title"]</h2>
+<hr />
+<div class="mb-4">
+    <strong>Tip prijave:</strong> @(Model.Tip == BugTip.Bug ? "Greška" : "Prijedlog") <br />
+    <strong>Naslov:</strong> @Model.Naslov <br />
+    <strong>Opis:</strong> @Model.Opis <br />
+    <strong>Prijavio/la:</strong> @($"{Model.Korisnik?.Ime} {Model.Korisnik?.Prezime}") <br />
+    <strong>Datum prijave:</strong> @Model.DatumPrijave.ToString("dd.MM.yyyy HH:mm")
+</div>
+<form asp-action="EditOdgovor" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label for="odgovor" class="form-label">Uredi odgovor</label>
+        <textarea name="odgovor" id="odgovor" class="form-control" rows="5" required>@Model.Odgovor</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Sačuvaj odgovor</button>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Nazad</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

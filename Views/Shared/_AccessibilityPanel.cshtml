@@ -185,15 +185,12 @@
                 <div id="usefulLinksPanel" class="mb-3" style="display:none;">
                     <label class="font-weight-bold">@Localizer["UsefulLinks"]:</label>
                     <div class="list-group mb-2">
-                        <button type="button" class="list-group-item list-group-item-action useful-link-btn" data-url="https://studenthub.com/pomoc">
-                            Pomoć za studente
-                        </button>
                         <a class="list-group-item list-group-item-action useful-link-btn" asp-controller="Faq" asp-action="Index">
                             Česta pitanja (FAQ)
                         </a>
-                        <button type="button" class="list-group-item list-group-item-action useful-link-btn" data-url="mailto:ensar.krehmic.22@size.ba">
-                            Kontaktiraj podršku
-                        </button>
+                        <div class="alert alert-info">
+                            Preostale korisne linkove i opcije za podršku pronađite klikom na <b>plutajući dugme za podršku</b> (<i class="fas fa-comments"></i>) u donjem desnom uglu.
+                        </div>
                     </div>
                 </div>
                 <button id="stopAnimations" class="btn btn-outline-secondary btn-sm" type="button">@Localizer["StopAnimations"]</button>

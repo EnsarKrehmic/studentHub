@@ -1,0 +1,66 @@
+﻿@model IEnumerable<StudentHub.Models.PodrskaUpit>
+@using StudentHub.Models
+@{
+    ViewData["Title"] = "Upiti za podršku";
+    var aspNetUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    bool isSluzba = User.IsInRole("Studentska služba");
+}
+
+<h2>@ViewData["Title"]</h2>
+<a class="btn btn-primary mb-3" asp-action="Create">Novi upit</a>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Naslov</th>
+            <th>Datum</th>
+            <th>Status</th>
+            <th>Korisnik</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var upit in Model)
+        {
+            <tr>
+                <td>@upit.Naslov</td>
+                <td>@upit.DatumKreiranja.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    @switch (upit.Status)
+                    {
+                        case UpitStatus.Podnesen:
+                            <span class="badge bg-warning text-dark">Podnesen</span>
+                            break;
+                        case UpitStatus.UObradi:
+                            <span class="badge bg-info text-dark">U obradi</span>
+                            break;
+                        case UpitStatus.Zatvoren:
+                            <span class="badge bg-success">Zatvoren</span>
+                            break;
+                    }
+                </td>
+                <td>@($"{upit.Korisnik?.Ime} {upit.Korisnik?.Prezime}")</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@upit.Id">Detalji</a>
+                    @if (!isSluzba && upit.Korisnik.AspNetUserId == aspNetUserId && upit.Status == UpitStatus.Podnesen)
+                    {
+                        <a class="btn btn-sm btn-outline-warning" asp-action="Edit" asp-route-id="@upit.Id">Uredi</a>
+                    }
+                    @if (isSluzba)
+                    {
+                        @* Odgovori ili Uredi odgovor *@
+                        @if (upit.Status == UpitStatus.UObradi)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Odgovori" asp-route-id="@upit.Id">Odgovori</a>
+                        }
+                        else if (upit.Status == UpitStatus.Zatvoren)
+                        {
+                            <a class="btn btn-sm btn-outline-info" asp-action="EditOdgovor" asp-route-id="@upit.Id">Uredi odgovor</a>
+                        }
+                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@upit.Id">Obriši</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

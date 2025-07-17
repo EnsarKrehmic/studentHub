@@ -280,6 +280,10 @@ namespace StudentHub.Controllers
                                 TipAktivnosti = "Prijava ispita"
                             }).ToListAsync();
 
+                        // --- Podrška: broj vlastitih upita i prijava ---
+                        model.BrojMojihUpita = await _context.PodrskaUpiti.CountAsync(u => u.KorisnikId == korisnik.Id);
+                        model.BrojMojihBugova = await _context.BugReporti.CountAsync(u => u.KorisnikId == korisnik.Id);
+
                         break;
                     }
                 case Uloga.Profesor:
@@ -393,6 +397,10 @@ namespace StudentHub.Controllers
                             model.TodoAkcijeNastavnik.Add($"Pregledajte <b>{model.BrojZahtjevaZaPrisustvo}</b> novih zahtjeva za priznavanje prisustva.");
                         if (model.NadolazeciIspitiZaPredmete.Any())
                             model.TodoAkcijeNastavnik.Add($"Pripremite se za naredne ispite na svojim predmetima.");
+
+                        // --- Broj upita i bug prijava za asistenta ---
+                        model.BrojMojihUpita = await _context.PodrskaUpiti.CountAsync(u => u.KorisnikId == korisnik.Id);
+                        model.BrojMojihBugova = await _context.BugReporti.CountAsync(u => u.KorisnikId == korisnik.Id);
 
                         break;
                     }
@@ -508,6 +516,10 @@ namespace StudentHub.Controllers
                         if (model.NadolazeciIspitiZaPredmete.Any())
                             model.TodoAkcijeNastavnik.Add($"Pripremite se za naredne ispite na predmetima gdje asistirate.");
 
+                        // --- Broj upita i bug prijava za asistenta ---
+                        model.BrojMojihUpita = await _context.PodrskaUpiti.CountAsync(u => u.KorisnikId == korisnik.Id);
+                        model.BrojMojihBugova = await _context.BugReporti.CountAsync(u => u.KorisnikId == korisnik.Id);
+
                         break;
                     }
                 case Uloga.StudentskaSluzba:
@@ -567,12 +579,40 @@ namespace StudentHub.Controllers
                             .Where(g => g.Godina.HasValue)
                             .Select(g => g.Broj).ToList();
 
-                        // To-do lista (prilagodi prema poslovnoj logici)
+                        // Svi upiti i bug prijave (studentska služba vidi sve)
+                        model.BrojMojihUpita = await _context.PodrskaUpiti.CountAsync();
+                        model.BrojMojihBugova = await _context.BugReporti.CountAsync();
+
+                        // Broj otvorenih i zatvorenih upita/prijava
+                        model.BrojOtvorenihUpita = await _context.PodrskaUpiti
+                            .CountAsync(u => u.Status == UpitStatus.Podnesen || u.Status == UpitStatus.UObradi);
+                        model.BrojZatvorenihUpita = await _context.PodrskaUpiti
+                            .CountAsync(u => u.Status == UpitStatus.Zatvoren);
+
+                        model.BrojOtvorenihBugova = await _context.BugReporti
+                            .CountAsync(u => u.Status == BugStatus.Podnesen || u.Status == BugStatus.UObradi);
+                        model.BrojZatvorenihBugova = await _context.BugReporti
+                            .CountAsync(u => u.Status == BugStatus.Zatvoren);
+
                         model.TodoAkcijeSluzba = new List<string>();
+
                         if (model.BrojNerijesenihZahtjeva > 0)
                             model.TodoAkcijeSluzba.Add($"Obradite <b>{model.BrojNerijesenihZahtjeva}</b> neriješenih zahtjeva studenata.");
+
+                        if (model.BrojOtvorenihUpita > 0)
+                            model.TodoAkcijeSluzba.Add($"Odgovorite na <b>{model.BrojOtvorenihUpita}</b> otvorenih upita korisnika.");
+
+                        if (model.BrojOtvorenihBugova > 0)
+                            model.TodoAkcijeSluzba.Add($"Provjerite <b>{model.BrojOtvorenihBugova}</b> otvorenih prijava bugova ili prijedloga za poboljšanja.");
+
                         if (model.BrojUpisanihStudenata == 0)
                             model.TodoAkcijeSluzba.Add("Nema upisanih studenata. Provjerite upisni rok.");
+
+                        if (model.BrojMojihBugova > 10) // primjer za “nagomilane” bugove
+                            model.TodoAkcijeSluzba.Add("Veliki broj prijava bugova čeka na rješavanje – razmotrite hitnu reakciju!");
+
+                        if (model.BrojOtvorenihUpita > 0 && model.BrojOtvorenihUpita > 5)
+                            model.TodoAkcijeSluzba.Add("Broj otvorenih korisničkih upita je iznad normale. Provjerite raspodjelu zadataka u službi.");
 
                         break;
                     }

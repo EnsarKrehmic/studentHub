@@ -1,0 +1,78 @@
+﻿@model StudentHub.Models.BugReport
+@using StudentHub.Models
+@{
+    ViewData["Title"] = "Detalji prijave";
+    bool isSluzba = User.IsInRole("Studentska služba");
+    var aspNetUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+<dl class="row">
+    <dt class="col-sm-3">Tip prijave:</dt>
+    <dd class="col-sm-9">
+        @(Model.Tip == BugTip.Bug ? "Greška u radu sistema" : "Prijedlog za poboljšanje")
+    </dd>
+    <dt class="col-sm-3">Naslov:</dt>
+    <dd class="col-sm-9">@Model.Naslov</dd>
+    <dt class="col-sm-3">Opis:</dt>
+    <dd class="col-sm-9">@Model.Opis</dd>
+    <dt class="col-sm-3">Datum prijave:</dt>
+    <dd class="col-sm-9">@Model.DatumPrijave.ToString("dd.MM.yyyy HH:mm")</dd>
+    <dt class="col-sm-3">Status:</dt>
+    <dd class="col-sm-9">
+        @switch (Model.Status)
+        {
+            case BugStatus.Podnesen:
+                <span class="badge bg-warning text-dark">Podnesen</span>
+                break;
+            case BugStatus.UObradi:
+                <span class="badge bg-info text-dark">U obradi</span>
+                break;
+            case BugStatus.Zatvoren:
+                <span class="badge bg-success">Zatvoren</span>
+                break;
+        }
+    </dd>
+    <dt class="col-sm-3">Prijavio/la:</dt>
+    <dd class="col-sm-9">@($"{Model.Korisnik?.Ime} {Model.Korisnik?.Prezime}")</dd>
+
+    @if (!string.IsNullOrEmpty(Model.Slika))
+    {
+        <dt class="col-sm-3">Slika / Screenshot:</dt>
+        <dd class="col-sm-9">
+            <img src="~/uploads/bugreport/@Model.Slika" style="max-width:350px;max-height:200px;" />
+        </dd>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Odgovor))
+    {
+        <dt class="col-sm-3 text-success">Odgovor službe:</dt>
+        <dd class="col-sm-9 text-success">@Model.Odgovor</dd>
+        <dt class="col-sm-3">Datum odgovora:</dt>
+        <dd class="col-sm-9">@Model.DatumOdgovora?.ToString("dd.MM.yyyy HH:mm")</dd>
+    }
+</dl>
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+
+    @if (!isSluzba && Model.Korisnik.AspNetUserId == aspNetUserId && Model.Status == BugStatus.Podnesen)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Uredi</a>
+    }
+    @if (isSluzba && Model.Status == BugStatus.Podnesen)
+    {
+        <form asp-action="PostaviUObradi" asp-route-id="@Model.Id" method="post" class="d-inline">
+            <button type="submit" class="btn btn-warning">Postavi u obradi</button>
+        </form>
+    }
+    @if (isSluzba && Model.Status == BugStatus.UObradi)
+    {
+        <a asp-action="Odgovori" asp-route-id="@Model.Id" class="btn btn-secondary">Odgovori</a>
+    }
+    @if (isSluzba && Model.Status == BugStatus.Zatvoren)
+    {
+        <a asp-action="EditOdgovor" asp-route-id="@Model.Id" class="btn btn-info">Uredi odgovor</a>
+    }
+</div>

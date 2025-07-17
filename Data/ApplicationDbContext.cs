@@ -11,6 +11,7 @@ namespace StudentHub.Data
         // Definicije DbSet za svaku klasu
         public DbSet<Asistent> Asistenti { get; set; }
         public DbSet<AsistentStudijskiProgram> AsistentStudijskiProgrami { get; set; }
+        public DbSet<BugReport> BugReporti { get; set; }
         public DbSet<Dokument> Dokumenti { get; set; }
         public DbSet<DokumentSlike> DokumentSlike { get; set; }
         public DbSet<FaqPitanje> FaqPitanja { get; set; }
@@ -25,6 +26,7 @@ namespace StudentHub.Data
         public DbSet<Obavjestenje> Obavjestenja { get; set; }
         public DbSet<ObavjestenjeStudijskiProgram> ObavjestenjeStudijskiProgrami { get; set; }
         public DbSet<Ocjena> Ocjene { get; set; }
+        public DbSet<PodrskaUpit> PodrskaUpiti { get; set; }
         public DbSet<Predmet> Predmeti { get; set; }
         public DbSet<PredmetAsistent> PredmetAsistenti { get; set; }
         public DbSet<PredmetProfesor> PredmetProfesori { get; set; }
@@ -48,6 +50,7 @@ namespace StudentHub.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AsistentStudijskiProgram>().ToTable("AsistentStudijskiProgram");
+            modelBuilder.Entity<BugReport>().ToTable("BugReport");
             modelBuilder.Entity<Dokument>().ToTable("Dokument");
             modelBuilder.Entity<DokumentSlike>().ToTable("DokumentSlike");
             modelBuilder.Entity<FaqPitanje>().ToTable("FaqPitanje");
@@ -61,6 +64,7 @@ namespace StudentHub.Data
             modelBuilder.Entity<Obavjestenje>().ToTable("Obavjestenje");
             modelBuilder.Entity<ObavjestenjeStudijskiProgram>().ToTable("ObavjestenjeStudijskiProgram");
             modelBuilder.Entity<Ocjena>().ToTable("Ocjena");
+            modelBuilder.Entity<PodrskaUpit>().ToTable("PodrskaUpit");
             modelBuilder.Entity<Predmet>().ToTable("Predmet");
             modelBuilder.Entity<PredmetAsistent>().ToTable("PredmetAsistent");
             modelBuilder.Entity<PredmetProfesor>().ToTable("PredmetProfesor");
@@ -455,5 +459,6 @@ namespace StudentHub.Data
 
             base.OnModelCreating(modelBuilder);
         }
+        public DbSet<StudentHub.Models.BugReport> BugReport { get; set; } = default!;
     }
 }

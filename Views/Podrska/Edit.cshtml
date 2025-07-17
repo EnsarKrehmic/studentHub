@@ -1,0 +1,30 @@
+﻿@model StudentHub.Models.PodrskaUpit
+@{
+    ViewData["Title"] = "Uredi upit";
+}
+<h2>@ViewData["Title"]</h2>
+<hr />
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Naslov" class="form-label"></label>
+        <input asp-for="Naslov" class="form-control" />
+        <span asp-validation-for="Naslov" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Opis" class="form-label"></label>
+        <textarea asp-for="Opis" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="Opis" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Sačuvaj</button>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Nazad</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

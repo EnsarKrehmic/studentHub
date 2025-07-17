@@ -1,0 +1,69 @@
+﻿@model IEnumerable<StudentHub.Models.BugReport>
+@using StudentHub.Models
+@{
+    ViewData["Title"] = "Prijave grešaka i prijedloga";
+    var aspNetUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    bool isSluzba = User.IsInRole("Studentska služba");
+}
+
+<h2>@ViewData["Title"]</h2>
+<a class="btn btn-primary mb-3" asp-action="Create">Nova prijava</a>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Tip</th>
+            <th>Naslov</th>
+            <th>Datum</th>
+            <th>Status</th>
+            <th>Korisnik</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var prijava in Model)
+        {
+            <tr>
+                <td>
+                    @(prijava.Tip == BugTip.Bug ? "Greška" : "Prijedlog")
+                </td>
+                <td>@prijava.Naslov</td>
+                <td>@prijava.DatumPrijave.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    @switch (prijava.Status)
+                    {
+                        case BugStatus.Podnesen:
+                            <span class="badge bg-warning text-dark">Podnesen</span>
+                            break;
+                        case BugStatus.UObradi:
+                            <span class="badge bg-info text-dark">U obradi</span>
+                            break;
+                        case BugStatus.Zatvoren:
+                            <span class="badge bg-success">Zatvoren</span>
+                            break;
+                    }
+                </td>
+                <td>@($"{prijava.Korisnik?.Ime} {prijava.Korisnik?.Prezime}")</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@prijava.Id">Detalji</a>
+                    @if (!isSluzba && prijava.Korisnik.AspNetUserId == aspNetUserId && prijava.Status == BugStatus.Podnesen)
+                    {
+                        <a class="btn btn-sm btn-outline-warning" asp-action="Edit" asp-route-id="@prijava.Id">Uredi</a>
+                    }
+                    @if (isSluzba)
+                    {
+                        if (prijava.Status == BugStatus.UObradi)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Odgovori" asp-route-id="@prijava.Id">Odgovori</a>
+                        }
+                        else if (prijava.Status == BugStatus.Zatvoren)
+                        {
+                            <a class="btn btn-sm btn-outline-info" asp-action="EditOdgovor" asp-route-id="@prijava.Id">Uredi odgovor</a>
+                        }
+                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@prijava.Id">Obriši</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

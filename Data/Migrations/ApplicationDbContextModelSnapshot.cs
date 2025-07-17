@@ -247,6 +247,53 @@ namespace StudentHub.Data.Migrations
                     b.ToTable("AsistentStudijskiProgram", (string)null);
                 });
 
+            modelBuilder.Entity("StudentHub.Models.BugReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DatumOdgovora")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DatumPrijave")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("KorisnikId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Naslov")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Odgovor")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Opis")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Slika")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tip")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KorisnikId");
+
+                    b.ToTable("BugReport", (string)null);
+                });
+
             modelBuilder.Entity("StudentHub.Models.Dokument", b =>
                 {
                     b.Property<long>("Id")
@@ -737,6 +784,46 @@ namespace StudentHub.Data.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Ocjena", (string)null);
+                });
+
+            modelBuilder.Entity("StudentHub.Models.PodrskaUpit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DatumKreiranja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DatumOdgovora")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("KorisnikId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Naslov")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Odgovor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Opis")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KorisnikId");
+
+                    b.ToTable("PodrskaUpit", (string)null);
                 });
 
             modelBuilder.Entity("StudentHub.Models.Predmet", b =>
@@ -1377,6 +1464,17 @@ namespace StudentHub.Data.Migrations
                     b.Navigation("StudijskiProgram");
                 });
 
+            modelBuilder.Entity("StudentHub.Models.BugReport", b =>
+                {
+                    b.HasOne("StudentHub.Models.Korisnik", "Korisnik")
+                        .WithMany()
+                        .HasForeignKey("KorisnikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Korisnik");
+                });
+
             modelBuilder.Entity("StudentHub.Models.Dokument", b =>
                 {
                     b.HasOne("StudentHub.Models.Student", "Student")
@@ -1626,6 +1724,17 @@ namespace StudentHub.Data.Migrations
                     b.Navigation("Profesor");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("StudentHub.Models.PodrskaUpit", b =>
+                {
+                    b.HasOne("StudentHub.Models.Korisnik", "Korisnik")
+                        .WithMany()
+                        .HasForeignKey("KorisnikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Korisnik");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Predmet", b =>

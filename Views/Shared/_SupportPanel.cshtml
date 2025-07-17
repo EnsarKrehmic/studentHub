@@ -1,0 +1,48 @@
+﻿<!-- Floating Support Button -->
+<button id="supportFab" aria-label="Podrška" class="support-fab" type="button" title="Podrška korisnicima">
+    <i class="fas fa-comments"></i>
+</button>
+
+<!-- Support Panel -->
+<div id="supportPanel" class="support-panel d-none" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="support-panel-content">
+        <button id="supportPanelClose" aria-label="Zatvori" class="support-close-btn" type="button">&times;</button>
+        <h4 class="mb-3"><i class="fas fa-hands-helping mr-1"></i> Podrška korisnicima</h4>
+        <ul class="nav nav-tabs mb-3" id="supportTabNav" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="tab-chatbot" data-toggle="tab" href="#tabChatbot" role="tab">AI Chatbot</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="tab-upit" data-toggle="tab" href="#tabUpit" role="tab">Upit službi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="tab-bug" data-toggle="tab" href="#tabBug" role="tab">Bug/Poboljšanje</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="supportTabContent">
+            <div class="tab-pane fade show active" id="tabChatbot" role="tabpanel">
+                <div id="chatbotFrame" style="min-height:250px;">
+                    <p>AI Chatbot (uskoro...)</p>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tabUpit" role="tabpanel">
+                <a href="@Url.Action("Create", "Podrska")" class="btn btn-primary btn-block my-2">
+                    <i class="fas fa-envelope-open-text"></i> Pošalji upit studentskoj službi
+                </a>
+                <a href="@Url.Action("Index", "Podrska")" class="btn btn-outline-secondary btn-block my-2">
+                    <i class="fas fa-list"></i> Moji upiti i odgovori
+                </a>
+                <p class="text-muted small mb-0">Za sva pitanja ili zahtjeve, kontaktirajte studentsku službu putem ovog formulara. Svoje prethodne upite možete pregledati klikom na dugme iznad.</p>
+            </div>
+            <div class="tab-pane fade" id="tabBug" role="tabpanel">
+                <a href="@Url.Action("Create", "BugReport")" class="btn btn-danger btn-block my-2">
+                    <i class="fas fa-bug"></i> Prijavi grešku ili predloži poboljšanje
+                </a>
+                <a href="@Url.Action("Index", "BugReport")" class="btn btn-outline-secondary btn-block my-2">
+                    <i class="fas fa-list"></i> Moje prijave bugova/poboljšanja
+                </a>
+                <p class="text-muted small mb-0">Pomozite nam da unaprijedimo sistem – prijavite uočenu grešku ili dajte prijedlog! Svoje prijave i njihov status pratite klikom na dugme iznad.</p>
+            </div>
+        </div>
+    </div>
+</div>

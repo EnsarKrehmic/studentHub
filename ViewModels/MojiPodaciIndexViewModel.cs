@@ -11,7 +11,7 @@ namespace StudentHub.ViewModels
         public string Ime { get; set; }
         public string Prezime { get; set; }
         public string? Email { get; set; }
-        public string? ProfilnaSlikaUrl { get; set; } // putanja do slike (za personalizaciju)
+        public string? ProfilnaSlikaUrl { get; set; }
         public string QrKodBase64 { get; set; }
 
         // --- Student specifično ---
@@ -29,10 +29,10 @@ namespace StudentHub.ViewModels
         public List<PredmetInfoVM> UpisaniPredmeti { get; set; } = new();
         public List<IspitInfoVM> NadolazeciIspiti { get; set; } = new();
         public List<KorisnikAktivnostVM> TimelineAktivnosti { get; set; } = new();
-        public List<KontaktPredmetVM> BrziKontakti { get; set; } = new(); // NOVO
+        public List<KontaktPredmetVM> BrziKontakti { get; set; } = new();
 
         // Vizualizacija statistike (grafikoni)
-        public List<int> PolozenoPoSemestru { get; set; } = new(); // Broj položenih po semestru
+        public List<int> PolozenoPoSemestru { get; set; } = new();
         public List<string> SemestriLabels { get; set; } = new();
         public int BrojPolozenihObaveznih { get; set; }
         public int BrojPolozenihIzbornih { get; set; }
@@ -44,7 +44,7 @@ namespace StudentHub.ViewModels
         public SljedeciTerminVM SljedeciTermin { get; set; }
 
         // Vizualni prikaz prisustva
-        public int PrisustvoBarValue { get; set; } // 0-100 za progress bar
+        public int PrisustvoBarValue { get; set; }
 
         // --- Profesor / Asistent specifično ---
         public string? Titula { get; set; }
@@ -52,7 +52,7 @@ namespace StudentHub.ViewModels
         public int BrojZahtjevaZaPrisustvo { get; set; }
         public List<IspitInfoVM> NadolazeciIspitiZaPredmete { get; set; } = new();
         public List<StudentStatistikaVM> StatistikaPoPredmetu { get; set; } = new();
-        public List<string> TodoAkcijeNastavnik { get; set; } = new(); // Za profesore/asistente
+        public List<string> TodoAkcijeNastavnik { get; set; } = new();
 
         // Za grafikone – npr. prosjek po predmetima
         public List<string> PredmetiLabels { get; set; } = new();
@@ -63,8 +63,12 @@ namespace StudentHub.ViewModels
         public int BrojUpisanihStudenata { get; set; }
         public int BrojUpisanihProfesora { get; set; }
         public int BrojUpisanihAsistenata { get; set; }
+        public int BrojOtvorenihUpita { get; set; }
+        public int BrojZatvorenihUpita { get; set; }
+        public int BrojOtvorenihBugova { get; set; }
+        public int BrojZatvorenihBugova { get; set; }
         public List<StatistikaProgramVM> StatistikaPoProgramima { get; set; } = new();
-        public List<string> TodoAkcijeSluzba { get; set; } = new(); // Za službu
+        public List<string> TodoAkcijeSluzba { get; set; } = new();
 
         // Za grafikone – generacije
         public List<string> GeneracijeLabels { get; set; } = new();
@@ -72,6 +76,10 @@ namespace StudentHub.ViewModels
 
         // --- Sistemske notifikacije / poruke ---
         public List<SystemNotifikacijaVM> ZadnjeNotifikacije { get; set; } = new();
+
+        // --- NOVO: Podrška i prijave ---
+        public int BrojMojihUpita { get; set; }
+        public int BrojMojihBugova { get; set; }
     }
 
     // --- Brzi kontakti: SVI profesori i asistenti po predmetu ---
@@ -88,11 +96,8 @@ namespace StudentHub.ViewModels
     {
         public string ImePrezime { get; set; }
         public string Email { get; set; }
-        public bool Glavni { get; set; } // true ako je Predmet.ProfesorId ili .AsistentId
+        public bool Glavni { get; set; }
     }
-
-    // --- Ostali widgeti ostaju isti kao u tvom kodu iznad ---
-
     public class PredmetInfoVM
     {
         public long Id { get; set; }

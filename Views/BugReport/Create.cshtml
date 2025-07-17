@@ -1,0 +1,44 @@
+﻿@model StudentHub.Models.BugReport
+@{
+    ViewData["Title"] = "Nova prijava greške ili prijedloga";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Tip" class="form-label">Tip prijave</label>
+        <select asp-for="Tip" class="form-select">
+            <option value="">-- Odaberite tip --</option>
+            <option value="1">Greška u radu sistema</option>
+            <option value="2">Prijedlog za poboljšanje</option>
+        </select>
+        <span asp-validation-for="Tip" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Naslov" class="form-label">Naslov (opcionalno)</label>
+        <input asp-for="Naslov" class="form-control" />
+        <span asp-validation-for="Naslov" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Opis" class="form-label"></label>
+        <textarea asp-for="Opis" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="Opis" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="slika" class="form-label">Dodaj sliku/screenshot (opcionalno)</label>
+        <input type="file" name="slika" id="slika" class="form-control" accept="image/*" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Pošalji prijavu</button>
+    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

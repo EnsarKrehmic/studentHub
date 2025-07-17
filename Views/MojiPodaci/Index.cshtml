@@ -311,6 +311,45 @@
         </div>
     }
 
+    <!-- Sekcija: Moji upiti i prijave -->
+    <div class="card my-4 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="fas fa-hands-helping"></i> Komunikacija i podrška</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="mb-2">
+                        <i class="fas fa-envelope-open-text fa-2x text-primary"></i>
+                    </div>
+                    <h6 class="mb-1">Moji upiti studentskoj službi</h6>
+                    <p class="text-muted mb-1">Ukupno: <b>@Model.BrojMojihUpita</b></p>
+                    <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Index", "Podrska")">Pregledaj upite</a>
+                    <a class="btn btn-primary btn-sm ms-2" href="@Url.Action("Create", "Podrska")">
+                        <i class="fas fa-plus"></i> Novi upit
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <i class="fas fa-bug fa-2x text-danger"></i>
+                    </div>
+                    <h6 class="mb-1">Moje prijave bugova i prijedloga</h6>
+                    <p class="text-muted mb-1">Ukupno: <b>@Model.BrojMojihBugova</b></p>
+                    <a class="btn btn-outline-danger btn-sm" href="@Url.Action("Index", "BugReport")">Pregledaj prijave</a>
+                    <a class="btn btn-danger btn-sm ms-2" href="@Url.Action("Create", "BugReport")">
+                        <i class="fas fa-plus"></i> Nova prijava
+                    </a>
+                </div>
+            </div>
+            <hr />
+            <div class="text-center mt-3">
+                <a href="#" class="btn btn-outline-success btn-sm" onclick="$('#supportFab').click(); return false;">
+                    <i class="fas fa-comments"></i> Otvori panel podrške
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Timeline aktivnosti -->
     @if (Model.TimelineAktivnosti?.Any() == true)
     {
@@ -543,6 +582,45 @@
         </div>
     }
 
+    <!-- SEKCIJA: Moji upiti i prijave (nastavno osoblje) -->
+    <div class="card my-4 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="fas fa-hands-helping"></i> Komunikacija i podrška</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="mb-2">
+                        <i class="fas fa-envelope-open-text fa-2x text-primary"></i>
+                    </div>
+                    <h6 class="mb-1">Moji upiti studentskoj službi</h6>
+                    <p class="text-muted mb-1">Ukupno: <b>@Model.BrojMojihUpita</b></p>
+                    <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Index", "Podrska")">Pregledaj upite</a>
+                    <a class="btn btn-primary btn-sm ms-2" href="@Url.Action("Create", "Podrska")">
+                        <i class="fas fa-plus"></i> Novi upit
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <i class="fas fa-bug fa-2x text-danger"></i>
+                    </div>
+                    <h6 class="mb-1">Moje prijave bugova i prijedloga</h6>
+                    <p class="text-muted mb-1">Ukupno: <b>@Model.BrojMojihBugova</b></p>
+                    <a class="btn btn-outline-danger btn-sm" href="@Url.Action("Index", "BugReport")">Pregledaj prijave</a>
+                    <a class="btn btn-danger btn-sm ms-2" href="@Url.Action("Create", "BugReport")">
+                        <i class="fas fa-plus"></i> Nova prijava
+                    </a>
+                </div>
+            </div>
+            <hr />
+            <div class="text-center mt-3">
+                <a href="#" class="btn btn-outline-success btn-sm" onclick="$('#supportFab').click(); return false;">
+                    <i class="fas fa-comments"></i> Otvori panel podrške
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Timeline aktivnosti -->
     @if (Model.TimelineAktivnosti?.Any() == true)
     {
@@ -668,6 +746,51 @@
                     </ul>
                 </div>
             }
+        </div>
+    </div>
+
+    <!-- SEKCIJA: Komunikacija i podrška (studentska služba, sa brojem otvorenih i zatvorenih) -->
+    <div class="card my-4 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="fas fa-hands-helping"></i> Komunikacija i podrška</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="mb-2">
+                        <i class="fas fa-envelope-open-text fa-2x text-primary"></i>
+                    </div>
+                    <h6 class="mb-1">Svi upiti korisnika</h6>
+                    <p class="mb-1">
+                        <span class="text-muted">Ukupno: <b>@Model.BrojMojihUpita</b></span><br />
+                        <span class="badge bg-warning text-dark">Otvoreni: @Model.BrojOtvorenihUpita</span>
+                        <span class="badge bg-success">Zatvoreni: @Model.BrojZatvorenihUpita</span>
+                    </p>
+                    <a class="btn btn-primary btn-sm" href="@Url.Action("Index", "Podrska")">
+                        <i class="fas fa-list"></i> Pregledaj sve upite
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <i class="fas fa-bug fa-2x text-danger"></i>
+                    </div>
+                    <h6 class="mb-1">Sve prijave bugova i prijedloga</h6>
+                    <p class="mb-1">
+                        <span class="text-muted">Ukupno: <b>@Model.BrojMojihBugova</b></span><br />
+                        <span class="badge bg-warning text-dark">Otvoreni: @Model.BrojOtvorenihBugova</span>
+                        <span class="badge bg-success">Zatvoreni: @Model.BrojZatvorenihBugova</span>
+                    </p>
+                    <a class="btn btn-danger btn-sm" href="@Url.Action("Index", "BugReport")">
+                        <i class="fas fa-list"></i> Pregledaj sve prijave
+                    </a>
+                </div>
+            </div>
+            <hr />
+            <div class="text-center mt-3">
+                <a href="#" class="btn btn-outline-success btn-sm" onclick="$('#supportFab').click(); return false;">
+                    <i class="fas fa-comments"></i> Otvori panel podrške
+                </a>
+            </div>
         </div>
     </div>
 

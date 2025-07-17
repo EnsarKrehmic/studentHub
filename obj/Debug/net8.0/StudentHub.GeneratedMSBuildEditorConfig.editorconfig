@@ -112,6 +112,34 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXNpc3RlbnRpXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/BugReport/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVnUmVwb3J0XENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/BugReport/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVnUmVwb3J0XERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/BugReport/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVnUmVwb3J0XERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/BugReport/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVnUmVwb3J0XEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/BugReport/EditOdgovor.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVnUmVwb3J0XEVkaXRPZGdvdm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/BugReport/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVnUmVwb3J0XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/BugReport/Odgovori.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVnUmVwb3J0XE9kZ292b3JpLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/Dokumenti/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9rdW1lbnRpXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -340,6 +368,34 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2NqZW5lXF9PY2plbmFDYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Podrska/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9kcnNrYVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Podrska/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9kcnNrYVxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Podrska/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9kcnNrYVxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Podrska/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9kcnNrYVxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Podrska/EditOdgovor.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9kcnNrYVxFZGl0T2Rnb3Zvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Podrska/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9kcnNrYVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Podrska/Odgovori.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9kcnNrYVxPZGdvdm9yaS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/Predmeti/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlZG1ldGlcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -446,6 +502,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Shared/_SupportPanel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TdXBwb3J0UGFuZWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/Shared/_ValidationScriptsPartial.cshtml]

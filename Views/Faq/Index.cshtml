@@ -4,14 +4,14 @@
     ViewData["Title"] = "Najčešća pitanja (FAQ)";
     var preporucena = Model.Where(f => f.Preporuceno).Take(3).ToList();
     var grouped = Model
-            .Where(f => !f.Preporuceno)
-            .GroupBy(f => string.IsNullOrWhiteSpace(f.Kategorija) ? "Ostalo" : f.Kategorija.Trim())
-            .OrderBy(g => g.Key)
-            .ToList();
+        .Where(f => !f.Preporuceno)
+        .GroupBy(f => string.IsNullOrWhiteSpace(f.Kategorija) ? "Ostalo" : f.Kategorija.Trim())
+        .OrderBy(g => g.Key)
+        .ToList();
 }
 
-<div class="container py-4">
-    <h2 class="mb-5 text-primary fw-bold text-center">
+<div class="container py-4 faq-container">
+    <h2 class="mb-4 text-primary fw-bold text-center">
         <i class="fas fa-question-circle"></i> @ViewData["Title"]
     </h2>
 
@@ -20,6 +20,20 @@
         <div class="alert alert-success text-center">@TempData["Success"]</div>
     }
 
+    <!-- Brzi linkovi za kategorije -->
+    @if (grouped.Any())
+    {
+        <div class="mb-4 text-center">
+            @foreach (var group in grouped)
+            {
+                <a href="#cat-@group.Key.Replace(" ", "")" class="btn btn-outline-primary btn-sm mx-1 my-1 jump-link">
+                    <i class="fas fa-folder-open"></i> @group.Key
+                </a>
+            }
+        </div>
+    }
+
+    <!-- Preporučena pitanja -->
     @if (preporucena.Any())
     {
         <div class="mb-5">
@@ -33,14 +47,26 @@
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card shadow-sm h-100 border-0 faq-card">
                             <div class="card-body d-flex flex-column">
-                                <div class="d-flex align-items-start mb-2 gap-2">
-                                    <i class="fas fa-question-circle text-secondary fs-5 mt-1"></i>
+                                <div class="d-flex align-items-center mb-2 gap-2">
+                                    <i class="fas fa-question-circle text-secondary fs-5"></i>
                                     <span class="fw-semibold fs-6">@item.Pitanje</span>
+                                    <span class="badge bg-warning text-dark ms-2"><i class="fas fa-star"></i> Preporučeno</span>
                                 </div>
                                 <div class="mb-3 text-body">
                                     <i class="fas fa-arrow-right text-muted"></i>
                                     <span>@Html.Raw(item.Odgovor.Replace("\n", "<br/>"))</span>
+                                    <button class="btn btn-link btn-sm copy-answer" data-answer="@item.Odgovor" title="Kopiraj odgovor">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
                                 </div>
+                                @if (!User.IsInRole("Studentska služba"))
+                                {
+                                    <div class="mt-auto text-end">
+                                        <a href="@Url.Action("Create", "Podrska", new { pitanje = item.Pitanje })" class="text-decoration-underline text-secondary small">
+                                            <i class="fas fa-exclamation-circle"></i> Pitanje nije riješilo moj problem?
+                                        </a>
+                                    </div>
+                                }
                                 @if (User.IsInRole("Studentska služba"))
                                 {
                                     <div class="mt-auto d-flex gap-2">
@@ -82,7 +108,7 @@
     {
         foreach (var group in grouped)
         {
-            <div class="mb-5 faq-category" data-category="@group.Key.ToLower()">
+            <div class="mb-5 faq-category" id="cat-@group.Key.Replace(" ", "")" data-category="@group.Key.ToLower()">
                 <div class="mb-3 pb-1 border-bottom border-3 border-primary d-flex align-items-center gap-2">
                     <i class="fas fa-folder-open text-primary fs-5"></i>
                     <span class="fs-4 fw-semibold text-primary">@group.Key</span>
@@ -114,16 +140,25 @@
                                                 <a href="javascript:void(0)" class="faq-less-link ms-2" data-id="@item.Id">prikaži manje</a>
                                             }
                                         </span>
+                                        <button class="btn btn-link btn-sm copy-answer" data-answer="@item.Odgovor" title="Kopiraj odgovor">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
                                     </div>
+                                    @if (!User.IsInRole("Studentska služba"))
+                                    {
+                                        <div class="mt-2 text-end">
+                                            <a href="@Url.Action("Create", "Podrska", new { pitanje = item.Pitanje })" class="text-decoration-underline text-secondary small">
+                                                <i class="fas fa-exclamation-circle"></i> Pitanje nije riješilo moj problem?
+                                            </a>
+                                        </div>
+                                    }
                                     @if (User.IsInRole("Studentska služba"))
                                     {
                                         <div class="mt-auto d-flex gap-2">
-                                            <a asp-action="Edit" asp-route-id="@item.Id"
-                                               class="btn btn-sm btn-warning">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i> Uredi
                                             </a>
-                                            <a asp-action="Delete" asp-route-id="@item.Id"
-                                               class="btn btn-sm btn-danger">
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash-alt"></i> Obriši
                                             </a>
                                         </div>
@@ -176,6 +211,15 @@
         border-radius: 1em;
         font-weight: 500;
     }
+
+    .jump-link {
+        transition: background 0.15s, color 0.15s;
+    }
+
+        .jump-link:hover {
+            background: #e7f0fe;
+            color: #083b8c !important;
+        }
 </style>
 
 @section Scripts {
@@ -214,6 +258,32 @@
                 var id = this.getAttribute("data-id");
                 document.getElementById("answer-short-" + id).style.display = "";
                 document.getElementById("answer-full-" + id).style.display = "none";
+            });
+        });
+
+        // Kopiraj odgovor u clipboard
+        document.querySelectorAll('.copy-answer').forEach(btn => {
+            btn.addEventListener('click', function () {
+                navigator.clipboard.writeText(this.getAttribute('data-answer'));
+                this.innerHTML = '<i class="fas fa-check text-success"></i>';
+                setTimeout(() => this.innerHTML = '<i class="fas fa-copy"></i>', 1200);
+            });
+        });
+
+        // Jump links
+        document.querySelectorAll('.jump-link').forEach(function (el) {
+            el.addEventListener('click', function (e) {
+                var href = this.getAttribute('href');
+                if (href && href.startsWith("#cat-")) {
+                    e.preventDefault();
+                    var target = document.querySelector(href);
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 50,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
             });
         });
     </script>

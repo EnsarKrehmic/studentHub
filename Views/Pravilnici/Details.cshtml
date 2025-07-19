@@ -1,0 +1,56 @@
+﻿@model StudentHub.ViewModels.PravilnikViewModel
+
+@{
+    ViewData["Title"] = "Pravilnik: " + Model.Naslov;
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-primary fw-bold">
+        <i class="fas fa-file-alt"></i> @Model.Naslov
+    </h2>
+    <div class="mb-3">
+        <span class="text-muted">Opis:</span>
+        <div class="fs-5">@Model.Opis</div>
+    </div>
+
+    @if (Model.Clanovi != null && Model.Clanovi.Any())
+    {
+        <div class="mb-4">
+            <div class="alert alert-info mb-3">
+                <i class="fas fa-list-ol"></i> Članovi pravilnika
+            </div>
+            <ol class="list-group list-group-numbered mb-4">
+                @foreach (var clanak in Model.Clanovi.OrderBy(c => c.RedniBroj))
+                {
+                    <li class="list-group-item mb-3 border-0" style="background: #f9fafd;">
+                        <div class="fw-semibold mb-1">
+                            @clanak.RedniBroj. @clanak.NaslovClanka
+                        </div>
+                        <div class="text-secondary" style="white-space: pre-line;">
+                            @clanak.Sadrzaj
+                        </div>
+                    </li>
+                }
+            </ol>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">Pravilnik nema dodanih članova.</div>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Povratak na listu pravilnika
+        </a>
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning ms-2">
+                <i class="fas fa-edit"></i> Uredi pravilnik
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger ms-2">
+                <i class="fas fa-trash-alt"></i> Obriši pravilnik
+            </a>
+        }
+    </div>
+</div>

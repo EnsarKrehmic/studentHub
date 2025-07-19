@@ -396,6 +396,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9kcnNrYVxPZGdvdm9yaS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Pravilnici/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJhdmlsbmljaVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Pravilnici/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJhdmlsbmljaVxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Pravilnici/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJhdmlsbmljaVxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Pravilnici/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJhdmlsbmljaVxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Me/source/repos/studentHub/studentHub/Views/Pravilnici/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJhdmlsbmljaVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Me/source/repos/studentHub/studentHub/Views/Predmeti/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlZG1ldGlcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

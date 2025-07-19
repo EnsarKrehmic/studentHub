@@ -1,0 +1,177 @@
+﻿@model IEnumerable<StudentHub.ViewModels.PravilnikViewModel>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Pravilnici i pravilna dokumentacija";
+    bool isAdmin = User.IsInRole("Studentska služba");
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-success fw-bold text-center">
+        <i class="fas fa-gavel"></i> Pravilnici i zvanična dokumentacija
+    </h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
+    }
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input type="text" id="pravilnikSearch" class="form-control form-control-lg" placeholder="Pretraži pravilnike ili članove..." autocomplete="off" />
+        </div>
+        @if (isAdmin)
+        {
+            <div class="col-md-6 text-md-right text-start mt-3 mt-md-0 d-flex justify-content-end">
+                <a asp-action="Create" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Dodaj novi pravilnik
+                </a>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">Još uvijek nema objavljenih pravilnika.</div>
+    }
+    else
+    {
+        <div class="accordion" id="pravilnikAccordion">
+            @foreach (var p in Model.OrderByDescending(x => x.Id)) // ili po datumu, po želji
+            {
+                var collapseId = $"collapse_{p.Id}";
+                <div class="card shadow-sm mb-3 pravilnik-card" data-pravilnik="@p.Naslov.ToLower() @p.Opis.ToLower()">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fas fa-file-alt text-success fs-5"></i>
+                            <span class="fs-5 fw-bold">@p.Naslov</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-link text-decoration-none fs-5" type="button" data-toggle="collapse" data-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="@collapseId" class="collapse" data-parent="#pravilnikAccordion">
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <span class="fw-bold text-secondary">Opis:</span>
+                                <span>@p.Opis</span>
+                            </div>
+                            @if (p.Clanovi != null && p.Clanovi.Any())
+                            {
+                                <hr />
+                                <div>
+                                    <span class="fw-bold text-secondary">Članovi pravilnika:</span>
+                                    <ul class="list-group mt-2 mb-2">
+                                        @foreach (var clan in p.Clanovi.OrderBy(x => x.RedniBroj))
+                                        {
+                                            <li class="list-group-item pravilnik-clanak-item" data-clanak="@clan.NaslovClanka.ToLower() @clan.Sadrzaj.ToLower()">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <span class="badge bg-secondary me-2">Član @clan.RedniBroj</span>
+                                                        <span class="fw-bold">@clan.NaslovClanka</span>
+                                                    </div>
+                                                    <button class="btn btn-link btn-sm p-0 text-info pravilnik-toggle-clanak" type="button" data-toggle="collapse" data-target="#clanakBody_@p.Id@clan.RedniBroj">
+                                                        <i class="fas fa-angle-double-down"></i>
+                                                    </button>
+                                                </div>
+                                                <div id="clanakBody_@p.Id@clan.RedniBroj" class="collapse mt-2">
+                                                    <div class="text-body">
+                                                        @Html.Raw(clan.Sadrzaj.Replace("\n", "<br/>"))
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            @if (isAdmin)
+                            {
+                                <div class="mt-3 d-flex gap-2">
+                                    <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Uredi
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@p.Id" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash-alt"></i> Obriši
+                                    </a>
+                                </div>
+                            }
+                            <div class="mt-2">
+                                <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-info-circle"></i> Prikaži detalje
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Povratak na početnu
+        </a>
+    </div>
+</div>
+
+<style>
+    .pravilnik-card {
+        border-radius: 1rem;
+        transition: box-shadow 0.15s;
+        background: #f8fafc;
+    }
+
+        .pravilnik-card:hover {
+            box-shadow: 0 0.5rem 2rem 0 rgba(19, 169, 116, 0.13), 0 0.125rem 0.5rem rgba(0,0,0,0.07);
+            background: #f2fef7;
+        }
+
+    .pravilnik-clanak-item {
+        background: #f7f9fa;
+        border-radius: 0.7rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid #e7e7e7;
+        transition: background 0.2s;
+    }
+
+        .pravilnik-clanak-item:hover {
+            background: #e6faf3;
+        }
+
+    .pravilnik-toggle-clanak {
+        color: #19a974 !important;
+        font-size: 1.3em;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Pretraga pravilnika i članova
+        document.getElementById("pravilnikSearch").addEventListener("input", function () {
+            var query = this.value.toLowerCase().trim();
+            var allPravilnici = document.querySelectorAll(".pravilnik-card");
+            allPravilnici.forEach(function (card) {
+                var match = card.getAttribute("data-pravilnik").includes(query);
+                // Provjeri članove unutar pravilnika
+                var clanovi = card.querySelectorAll(".pravilnik-clanak-item");
+                var clanMatch = false;
+                clanovi.forEach(function (c) {
+                    if (c.getAttribute("data-clanak").includes(query)) clanMatch = true;
+                });
+                if (!query || match || clanMatch) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+        // Prikaži/sakrij sadržaj člana
+        $(document).on("click", ".pravilnik-toggle-clanak", function () {
+            var target = $(this).data("target");
+            $(target).collapse('toggle');
+        });
+    </script>
+}

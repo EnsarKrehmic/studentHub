@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentHub.Data;
 
@@ -11,9 +12,11 @@ using StudentHub.Data;
 namespace StudentHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250717174222_migracija23")]
+    partial class migracija23
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,9 +318,6 @@ namespace StudentHub.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PodrskaUpitId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -326,8 +326,6 @@ namespace StudentHub.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PodrskaUpitId");
 
                     b.ToTable("ChatbotLogUpiti");
                 });
@@ -893,63 +891,6 @@ namespace StudentHub.Data.Migrations
                     b.HasIndex("KorisnikId");
 
                     b.ToTable("PodrskaUpit", (string)null);
-                });
-
-            modelBuilder.Entity("StudentHub.Models.Pravilnik", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DatumKreiranja")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Naslov")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Opis")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Pravilnik", (string)null);
-                });
-
-            modelBuilder.Entity("StudentHub.Models.PravilnikClanak", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NaslovClanka")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("PravilnikId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RedniBroj")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Sadrzaj")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PravilnikId");
-
-                    b.ToTable("PravilnikClanak", (string)null);
                 });
 
             modelBuilder.Entity("StudentHub.Models.Predmet", b =>
@@ -1601,16 +1542,6 @@ namespace StudentHub.Data.Migrations
                     b.Navigation("Korisnik");
                 });
 
-            modelBuilder.Entity("StudentHub.Models.ChatbotLogUpit", b =>
-                {
-                    b.HasOne("StudentHub.Models.PodrskaUpit", "PodrskaUpit")
-                        .WithMany()
-                        .HasForeignKey("PodrskaUpitId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("PodrskaUpit");
-                });
-
             modelBuilder.Entity("StudentHub.Models.Dokument", b =>
                 {
                     b.HasOne("StudentHub.Models.Student", "Student")
@@ -1871,17 +1802,6 @@ namespace StudentHub.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Korisnik");
-                });
-
-            modelBuilder.Entity("StudentHub.Models.PravilnikClanak", b =>
-                {
-                    b.HasOne("StudentHub.Models.Pravilnik", "Pravilnik")
-                        .WithMany("Clanovi")
-                        .HasForeignKey("PravilnikId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pravilnik");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Predmet", b =>
@@ -2241,11 +2161,6 @@ namespace StudentHub.Data.Migrations
             modelBuilder.Entity("StudentHub.Models.Ocjena", b =>
                 {
                     b.Navigation("DjelimicneOcjene");
-                });
-
-            modelBuilder.Entity("StudentHub.Models.Pravilnik", b =>
-                {
-                    b.Navigation("Clanovi");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Predmet", b =>

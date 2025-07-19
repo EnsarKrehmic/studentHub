@@ -7,41 +7,112 @@
 <div id="supportPanel" class="support-panel d-none" role="dialog" aria-modal="true" tabindex="-1">
     <div class="support-panel-content">
         <button id="supportPanelClose" aria-label="Zatvori" class="support-close-btn" type="button">&times;</button>
-        <h4 class="mb-3"><i class="fas fa-hands-helping mr-1"></i> Podrška korisnicima</h4>
-        <ul class="nav nav-tabs mb-3" id="supportTabNav" role="tablist">
+        <h4 class="mb-3 d-flex align-items-center gap-2">
+            <i class="fas fa-hands-helping text-success"></i> <span>Podrška korisnicima</span>
+        </h4>
+        <ul class="nav nav-tabs mb-3 border-bottom-0" id="supportTabNav" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="tab-chatbot" data-toggle="tab" href="#tabChatbot" role="tab">AI Chatbot</a>
+                <a class="nav-link active" id="tab-chatbot" data-toggle="tab" href="#tabChatbot" role="tab">
+                    <i class="fas fa-robot"></i> AI Chatbot
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="tab-upit" data-toggle="tab" href="#tabUpit" role="tab">Upit službi</a>
+                <a class="nav-link" id="tab-upit" data-toggle="tab" href="#tabUpit" role="tab">
+                    <i class="fas fa-envelope"></i> Upit službi
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="tab-bug" data-toggle="tab" href="#tabBug" role="tab">Bug/Poboljšanje</a>
+                <a class="nav-link" id="tab-bug" data-toggle="tab" href="#tabBug" role="tab">
+                    <i class="fas fa-bug"></i> Bug/Poboljšanje
+                </a>
             </li>
         </ul>
         <div class="tab-content" id="supportTabContent">
+            <!-- AI Chatbot TAB -->
             <div class="tab-pane fade show active" id="tabChatbot" role="tabpanel">
-                <div id="chatbotFrame" style="min-height:250px;">
-                    <p>AI Chatbot (uskoro...)</p>
+                <div id="chatbotArea">
+                    <div id="chatbotMessages" class="mb-3 chatbot-messages"></div>
+                    <form id="chatbotForm" autocomplete="off" class="d-flex align-items-center gap-2">
+                        <input type="text" class="form-control chatbot-input" id="chatbotInput" placeholder="Postavite pitanje...">
+                        <button class="btn btn-success" id="chatbotSend" type="submit" aria-label="Pošalji">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="chatbot-tip text-muted mt-2">
+                    <i class="fas fa-info-circle"></i> AI chatbot odgovara iz baze znanja, FAQ-a i pravilnika. Ako ne pronađe odgovor, vaše pitanje ide službi!
+                </div>
+                <script>
+                    $(function () {
+                        function appendMessage(html, align = "left") {
+                            const wrap = `<div class='mb-2 d-flex ${align === "right" ? "justify-content-end" : ""}'>
+                                <div class="chat-bubble chat-bubble-${align}">${html}</div>
+                            </div>`;
+                            $('#chatbotMessages').append(wrap);
+                            $('#chatbotMessages').scrollTop($('#chatbotMessages')[0].scrollHeight);
+                        }
+                        $('#chatbotForm').on('submit', function (e) {
+                            e.preventDefault();
+                            var q = $('#chatbotInput').val();
+                            if (!q) return;
+                            appendMessage("<span class='fw-bold'>Vi:</span> " + $('<div>').text(q).html(), "right");
+                            $('#chatbotInput').val('');
+                            appendMessage("<span class='text-muted'><i class='fas fa-spinner fa-spin'></i> Chatbot piše odgovor...</span>", "left");
+                            $.ajax({
+                                url: '/api/Chatbot/Ask',
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ question: q }),
+                                success: function (res) {
+                                    $('#chatbotMessages .chat-bubble-left:last').parent().remove();
+                                    appendMessage(
+                                        "<span class='fw-bold text-success'>Bot:</span> " +
+                                        $('<div>').text(res.answer).html() +
+                                        (res.source ? `<br><small class='text-muted'><i class='fas fa-book'></i> Izvor: ${res.source}</small>` : ""),
+                                        "left"
+                                    );
+                                },
+                                error: function () {
+                                    $('#chatbotMessages .chat-bubble-left:last').parent().remove();
+                                    appendMessage("<span class='text-danger'>Došlo je do greške. Pokušajte ponovo.</span>", "left");
+                                }
+                            });
+                        });
+                        $('#chatbotInput').on('keypress', function (e) {
+                            if (e.which === 13) $('#chatbotSend').click();
+                        });
+                    });
+                </script>
+            </div>
+            <!-- Upit službi TAB -->
+            <div class="tab-pane fade" id="tabUpit" role="tabpanel">
+                <div class="d-grid gap-2 mb-2">
+                    <a href="@Url.Action("Create", "Podrska")" class="btn btn-primary">
+                        <i class="fas fa-envelope-open-text"></i> Pošalji upit studentskoj službi
+                    </a>
+                    <a href="@Url.Action("Index", "Podrska")" class="btn btn-outline-secondary">
+                        <i class="fas fa-list"></i> Moji upiti i odgovori
+                    </a>
+                </div>
+                <div class="alert alert-light border-0 p-2 mb-0 small">
+                    Za sva pitanja ili zahtjeve, kontaktirajte studentsku službu putem ovog formulara.<br>
+                    Svoje prethodne upite možete pregledati klikom na dugme iznad.
                 </div>
             </div>
-            <div class="tab-pane fade" id="tabUpit" role="tabpanel">
-                <a href="@Url.Action("Create", "Podrska")" class="btn btn-primary btn-block my-2">
-                    <i class="fas fa-envelope-open-text"></i> Pošalji upit studentskoj službi
-                </a>
-                <a href="@Url.Action("Index", "Podrska")" class="btn btn-outline-secondary btn-block my-2">
-                    <i class="fas fa-list"></i> Moji upiti i odgovori
-                </a>
-                <p class="text-muted small mb-0">Za sva pitanja ili zahtjeve, kontaktirajte studentsku službu putem ovog formulara. Svoje prethodne upite možete pregledati klikom na dugme iznad.</p>
-            </div>
+            <!-- Bug/Poboljšanje TAB -->
             <div class="tab-pane fade" id="tabBug" role="tabpanel">
-                <a href="@Url.Action("Create", "BugReport")" class="btn btn-danger btn-block my-2">
-                    <i class="fas fa-bug"></i> Prijavi grešku ili predloži poboljšanje
-                </a>
-                <a href="@Url.Action("Index", "BugReport")" class="btn btn-outline-secondary btn-block my-2">
-                    <i class="fas fa-list"></i> Moje prijave bugova/poboljšanja
-                </a>
-                <p class="text-muted small mb-0">Pomozite nam da unaprijedimo sistem – prijavite uočenu grešku ili dajte prijedlog! Svoje prijave i njihov status pratite klikom na dugme iznad.</p>
+                <div class="d-grid gap-2 mb-2">
+                    <a href="@Url.Action("Create", "BugReport")" class="btn btn-danger">
+                        <i class="fas fa-bug"></i> Prijavi grešku ili predloži poboljšanje
+                    </a>
+                    <a href="@Url.Action("Index", "BugReport")" class="btn btn-outline-secondary">
+                        <i class="fas fa-list"></i> Moje prijave bugova/poboljšanja
+                    </a>
+                </div>
+                <div class="alert alert-light border-0 p-2 mb-0 small">
+                    Pomozite nam da unaprijedimo sistem – prijavite uočenu grešku ili dajte prijedlog!<br>
+                    Svoje prijave i njihov status pratite klikom na dugme iznad.
+                </div>
             </div>
         </div>
     </div>

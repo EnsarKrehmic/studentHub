@@ -12,6 +12,7 @@ namespace StudentHub.Data
         public DbSet<Asistent> Asistenti { get; set; }
         public DbSet<AsistentStudijskiProgram> AsistentStudijskiProgrami { get; set; }
         public DbSet<BugReport> BugReporti { get; set; }
+        public DbSet<ChatbotLogUpit> ChatbotLogUpiti { get; set; }
         public DbSet<Dokument> Dokumenti { get; set; }
         public DbSet<DokumentSlike> DokumentSlike { get; set; }
         public DbSet<FaqPitanje> FaqPitanja { get; set; }
@@ -19,6 +20,7 @@ namespace StudentHub.Data
         public DbSet<Korisnik> Korisnici { get; set; }
         public DbSet<Komentar> Komentari { get; set; }
         public DbSet<KomentarVidljivost> KomentarVidljivosti { get; set; }
+        public DbSet<KnowledgeSnippet> KnowledgeSnippets { get; set; }
         public DbSet<NastavniPlan> NastavniPlanovi { get; set; }
         public DbSet<NastavnaAktivnost> NastavneAktivnosti { get; set; }
         public DbSet<NastavniMaterijal> NastavniMaterijali { get; set; }
@@ -26,6 +28,8 @@ namespace StudentHub.Data
         public DbSet<Obavjestenje> Obavjestenja { get; set; }
         public DbSet<ObavjestenjeStudijskiProgram> ObavjestenjeStudijskiProgrami { get; set; }
         public DbSet<Ocjena> Ocjene { get; set; }
+        public DbSet<Pravilnik> Pravilnici { get; set; }
+        public DbSet<PravilnikClanak> PravilnikClanovi { get; set; }
         public DbSet<PodrskaUpit> PodrskaUpiti { get; set; }
         public DbSet<Predmet> Predmeti { get; set; }
         public DbSet<PredmetAsistent> PredmetAsistenti { get; set; }
@@ -64,6 +68,8 @@ namespace StudentHub.Data
             modelBuilder.Entity<Obavjestenje>().ToTable("Obavjestenje");
             modelBuilder.Entity<ObavjestenjeStudijskiProgram>().ToTable("ObavjestenjeStudijskiProgram");
             modelBuilder.Entity<Ocjena>().ToTable("Ocjena");
+            modelBuilder.Entity<Pravilnik>().ToTable("Pravilnik");
+            modelBuilder.Entity<PravilnikClanak>().ToTable("PravilnikClanak");
             modelBuilder.Entity<PodrskaUpit>().ToTable("PodrskaUpit");
             modelBuilder.Entity<Predmet>().ToTable("Predmet");
             modelBuilder.Entity<PredmetAsistent>().ToTable("PredmetAsistent");
@@ -456,6 +462,13 @@ namespace StudentHub.Data
                 .WithMany(r => r.Termini)
                 .HasForeignKey(t => t.RasporedId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Konfiguracija PodrskaUpit -> ChatbotLogUpit
+            modelBuilder.Entity<ChatbotLogUpit>()
+                .HasOne(c => c.PodrskaUpit)
+                .WithMany()
+                .HasForeignKey(c => c.PodrskaUpitId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -1,59 +1,68 @@
 ﻿@model StudentHub.Models.Ocjena
 
 @{
-    ViewData["Title"] = "Ocjeni nastavnu aktivnost";
+    ViewData["Title"] = "Unos ocjene za nastavnu aktivnost";
 }
 
 @if (TempData["Error"] != null)
 {
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
-
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success">@TempData["Success"]</div>
 }
 
-<h2 class="mb-4">Ocjena za aktivnost: <strong>@ViewBag.NastavnaAktivnostNaziv</strong></h2>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Ocjena za aktivnost: <strong>@ViewBag.NastavnaAktivnostNaziv</strong></h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateNastavnaAktivnostOcjena" method="post" novalidate>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Tip" value="NastavnaAktivnost" />
+                        <input type="hidden" asp-for="NastavnaAktivnostId" value="@ViewBag.NastavnaAktivnostId" />
 
-<div class="card shadow-sm">
-    <div class="card-body">
-        <form asp-action="CreateNastavnaAktivnostOcjena" method="post">
-            @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label asp-for="Vrijednost" class="form-label">Ocjena (1–5)</label>
+                            <input asp-for="Vrijednost" class="form-control" type="number" min="1" max="5" />
+                            <span asp-validation-for="Vrijednost" class="text-danger"></span>
+                        </div>
 
-            <input type="hidden" asp-for="Tip" value="NastavnaAktivnost" />
-            <input type="hidden" asp-for="NastavnaAktivnostId" value="@ViewBag.NastavnaAktivnostId" />
+                        <div class="mb-3">
+                            <label asp-for="TezinaProcentualno" class="form-label">Težina (%)</label>
+                            <input asp-for="TezinaProcentualno" class="form-control" type="number" min="0" max="100" />
+                            <span asp-validation-for="TezinaProcentualno" class="text-danger"></span>
+                            <div class="form-text">Opcionalno: koristi se ako ocjena ulazi u ponderaciju zaključne ocjene.</div>
+                        </div>
 
-            <div class="form-group">
-                <label asp-for="Vrijednost">Ocjena (1–5)</label>
-                <input asp-for="Vrijednost" class="form-control" type="number" min="1" max="5" step="1" />
-                <span asp-validation-for="Vrijednost" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="Komentar" class="form-label">Komentar ili opis</label>
+                            <textarea asp-for="Komentar" class="form-control" maxlength="200" placeholder="Npr. Kvalitet prezentacije, učešće, angažman..."></textarea>
+                            <span asp-validation-for="Komentar" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DatumUnosa" class="form-label">Datum unosa</label>
+                            <input asp-for="DatumUnosa" class="form-control" type="date" value="@Model.DatumUnosa.ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="DatumUnosa" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Spremi ocjenu
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Nazad
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group mt-3">
-                <label asp-for="TezinaProcentualno">Težina (%)</label>
-                <input asp-for="TezinaProcentualno" class="form-control" type="number" min="0" max="100" />
-                <span asp-validation-for="TezinaProcentualno" class="text-danger"></span>
-                <div class="form-text">Opcionalno: koristi se ako ocjena ulazi u ponderaciju zaključne ocjene.</div>
-            </div>
-
-            <div class="form-group mt-3">
-                <label asp-for="Komentar">Komentar ili opis</label>
-                <textarea asp-for="Komentar" class="form-control" maxlength="200" placeholder="Npr. Kvalitet prezentacije, učešće, angažman..."></textarea>
-                <span asp-validation-for="Komentar" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mt-3">
-                <label asp-for="DatumUnosa">Datum unosa</label>
-                <input asp-for="DatumUnosa" class="form-control" type="date" value="@Model.DatumUnosa.ToString("yyyy-MM-dd")" />
-                <span asp-validation-for="DatumUnosa" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary">Spremi ocjenu</button>
-                <a asp-action="Index" class="btn btn-secondary">Nazad</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 

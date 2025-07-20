@@ -1,11 +1,14 @@
 wwwroot\css\accessibility.css
+wwwroot\css\sidebar.css
 wwwroot\css\site.css
 wwwroot\css\support.css
 wwwroot\favicon.ico
 wwwroot\images\profili\6.jpg
 wwwroot\js\accessibility.js
+wwwroot\js\sidebar.js
 wwwroot\js\site.js
 wwwroot\js\support.js
+wwwroot\js\theme.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.min.css
 wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js

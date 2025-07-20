@@ -4,51 +4,66 @@
     ViewData["Title"] = "Uredi komentar";
 }
 
-<h1 class="text-center my-4">Uredi komentar</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-lg">
+                <div class="card-header bg-warning text-dark text-center">
+                    <h2 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>Uredi komentar
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EditKomentar" method="post" enctype="multipart/form-data" autocomplete="off">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.IspitId)
 
-<div class="container mt-4">
-    <div class="card shadow-lg p-4">
-        <form asp-action="EditKomentar" method="post" enctype="multipart/form-data">
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.Id)
-            @Html.HiddenFor(model => model.IspitId)
+                        <div class="mb-3">
+                            <label asp-for="Sadrzaj" class="form-label fw-bold">Sadržaj komentara</label>
+                            <textarea asp-for="Sadrzaj" class="form-control" rows="4" required maxlength="200"></textarea>
+                            <span asp-validation-for="Sadrzaj" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group mb-3">
-                <label for="Sadrzaj">Sadržaj komentara</label>
-                <textarea asp-for="Sadrzaj" class="form-control" rows="4" required></textarea>
-                <span asp-validation-for="Sadrzaj" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="Vidljivost" class="form-label fw-bold">Vidljivost</label>
+                            <select asp-for="Vidljivost" class="form-select" id="vidljivostSelect">
+                                <option value="Javno" selected="@(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Javno ? "selected" : null)">Javno</option>
+                                <option value="Privatno" selected="@(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno ? "selected" : null)">Privatno</option>
+                            </select>
+                        </div>
+
+                        <div id="odabirKorisnika" class="mb-3" style="display: @(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno ? "block" : "none")">
+                            <label for="korisniciSelect" class="form-label">Vidljivo korisnicima:</label>
+                            <select name="odabraniKorisnici" multiple class="form-control" id="korisniciSelect"></select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Prilog (opciono – zamijeniti stari):</label>
+                            <input type="file" name="prilog" class="form-control" />
+                            @if (!string.IsNullOrEmpty(Model.PrilogPath))
+                            {
+                                <p class="mt-2 mb-0">
+                                    Trenutni prilog:
+                                    <a href="@Model.PrilogPath" target="_blank" class="btn btn-sm btn-link" title="Preuzmi prilog">
+                                        <i class="fas fa-paperclip"></i> Preuzmi
+                                    </a>
+                                </p>
+                            }
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Spasi izmjene
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.IspitId" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Nazad
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group mb-3">
-                <label for="vidljivost">Vidljivost</label>
-                <select asp-for="Vidljivost" class="form-select" id="vidljivostSelect">
-                    <option value="Javno" selected="@(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Javno ? "selected" : null)">Javno</option>
-                    <option value="Privatno" selected="@(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno ? "selected" : null)">Privatno</option>
-                </select>
-            </div>
-
-            <div id="odabirKorisnika" class="mb-3" style="display: @(Model.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno ? "block" : "none")">
-                <label for="korisniciSelect">Vidljivo korisnicima:</label>
-                <select name="odabraniKorisnici" multiple class="form-control" id="korisniciSelect">
-                    <!-- Ovdje će AJAX dinamički ubaciti korisnike -->
-                </select>
-            </div>
-
-            <div class="form-group mb-3">
-                <label>Prilog (opciono - zamijeniti stari):</label>
-                <input type="file" name="prilog" class="form-control" />
-                @if (!string.IsNullOrEmpty(Model.PrilogPath))
-                {
-                    <p class="mt-2">
-                        Trenutni prilog:
-                        <a href="@Model.PrilogPath" target="_blank">📎 Preuzmi</a>
-                    </p>
-                }
-            </div>
-
-            <button type="submit" class="btn btn-primary">💾 Spasi izmjene</button>
-            <a asp-action="Details" asp-route-id="@Model.IspitId" class="btn btn-secondary ms-2">↩️ Nazad</a>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -72,17 +87,13 @@
                 });
             }
 
-            // Na promjenu Vidljivost:
             $('#vidljivostSelect').change(function () {
                 $('#odabirKorisnika').toggle($(this).val() === 'Privatno');
-
                 if ($(this).val() === 'Privatno') {
-                    // AKO promijeni na Privatno → ucitaj korisnike i označene
                     ucitajVidljiveKorisnike(odabraniKorisniciIds);
                 }
             });
 
-            // Ako je PRIVATNO na load → odmah učitaj korisnike + selektovane
             if ($('#vidljivostSelect').val() === 'Privatno') {
                 $('#odabirKorisnika').show();
                 ucitajVidljiveKorisnike(odabraniKorisniciIds);

@@ -4,54 +4,57 @@
     ViewData["Title"] = "Detalji asistenta";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container my-4">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
 
-<div class="container mt-4">
-    <div class="row">
+    <div class="row g-4">
+        <!-- Osnovni podaci o asistentu -->
         <div class="col-md-6">
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
-                    <h3>Podaci o asistentu</h3>
+                    <h3 class="mb-0">Podaci o asistentu</h3>
                 </div>
                 <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-4">Ime:</dt>
-                        <dd class="col-sm-8">@Model.Asistent.Ime</dd>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Ime:</dt>
+                        <dd class="col-sm-7">@Model.Asistent.Ime</dd>
 
-                        <dt class="col-sm-4">Prezime:</dt>
-                        <dd class="col-sm-8">@Model.Asistent.Prezime</dd>
+                        <dt class="col-sm-5">Prezime:</dt>
+                        <dd class="col-sm-7">@Model.Asistent.Prezime</dd>
 
                         @if (User.IsInRole("Studentska služba") || User.IsInRole("Asistent"))
                         {
-                            <dt class="col-sm-4">JMBG:</dt>
-                            <dd class="col-sm-8">@Model.Asistent.JMBG</dd>
+                            <dt class="col-sm-5">JMBG:</dt>
+                            <dd class="col-sm-7">@Model.Asistent.JMBG</dd>
                         }
 
-                        <dt class="col-sm-4">Email:</dt>
-                        <dd class="col-sm-8">@Model.Asistent.Email</dd>
+                        <dt class="col-sm-5">Email:</dt>
+                        <dd class="col-sm-7">@Model.Asistent.Email</dd>
 
-                        <dt class="col-sm-4">Titula:</dt>
-                        <dd class="col-sm-8">@Model.Asistent.AsistentTitula</dd>
+                        <dt class="col-sm-5">Titula:</dt>
+                        <dd class="col-sm-7">@Model.Asistent.AsistentTitula</dd>
 
-                        <dt class="col-sm-4">Uloga:</dt>
-                        <dd class="col-sm-8">@Model.Asistent.Uloga</dd>
+                        <dt class="col-sm-5">Uloga:</dt>
+                        <dd class="col-sm-7">@Model.Asistent.Uloga</dd>
                     </dl>
                 </div>
             </div>
         </div>
 
+        <!-- Studijski programi -->
         <div class="col-md-6">
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm h-100">
                 <div class="card-header bg-secondary text-white">
-                    <h4>Studijski programi</h4>
+                    <h4 class="mb-0">Studijski programi</h4>
                 </div>
                 <div class="card-body">
                     @if (Model.StudijskiProgrami.Any())
                     {
-                        <ul class="list-group">
+                        <ul class="list-group list-group-flush">
                             @foreach (var studijskiProgram in Model.StudijskiProgrami)
                             {
-                                <li class="list-group-item">
+                                <li class="list-group-item px-0">
+                                    <i class="fas fa-graduation-cap text-info me-2"></i>
                                     <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@studijskiProgram.Id" class="text-decoration-none">
                                         @studijskiProgram.Naziv
                                     </a>
@@ -61,34 +64,37 @@
                     }
                     else
                     {
-                        <p class="text-muted">Asistent trenutno nije dodijeljen nijednom studijskom programu.</p>
+                        <p class="text-muted mb-0">Asistent trenutno nije dodijeljen nijednom studijskom programu.</p>
                     }
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h4>Predmeti</h4>
+    <!-- Predmeti -->
+    <div class="card shadow-sm my-4">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Predmeti</h4>
         </div>
         <div class="card-body">
             @if (Model.Predmeti.Any())
             {
-                <div class="row">
+                <div class="row g-3">
                     @foreach (var predmet in Model.Predmeti)
                     {
                         <div class="col-md-4">
-                            <div class="card shadow-sm mb-3">
+                            <div class="card h-100 shadow-sm">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none">
+                                        <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none text-primary">
                                             @predmet.Naziv
                                         </a>
                                     </h5>
-                                    <p class="card-text"><strong>ECTS:</strong> @predmet.ECTS</p>
-                                    <p class="card-text"><strong>Semestar:</strong> @(predmet.Semestar)</p>
-                                    <p class="card-text"><strong>Opis:</strong> @(string.IsNullOrEmpty(predmet.Opis) ? "Nema opisa." : predmet.Opis)</p>
+                                    <div class="mb-2">
+                                        <span class="badge bg-secondary me-1"><i class="fas fa-coins"></i> @predmet.ECTS ECTS</span>
+                                        <span class="badge bg-info text-dark"><i class="fas fa-calendar"></i> Semestar: @predmet.Semestar</span>
+                                    </div>
+                                    <p class="mb-0"><strong>Opis:</strong> @(string.IsNullOrWhiteSpace(predmet.Opis) ? "Nema opisa." : predmet.Opis)</p>
                                 </div>
                             </div>
                         </div>
@@ -101,12 +107,16 @@
             }
         </div>
     </div>
-</div>
 
-<div class="mt-3">
-    @if (User.IsInRole("Studentska služba"))
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Asistent.Id" class="btn btn-warning">Izmjena</a>
-    }
-    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
+    <div class="d-flex gap-2 mt-2 flex-wrap">
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Asistent.Id" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Izmjena
+            </a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Nazad na listu
+        </a>
+    </div>
 </div>

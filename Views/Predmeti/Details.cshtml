@@ -13,8 +13,9 @@
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
         @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
@@ -72,6 +73,18 @@ else
                             <dt class="col-sm-5">Sati vježbi:</dt>
                             <dd class="col-sm-7">@Model.SatiVjezbi</dd>
 
+                            <dt class="col-sm-5">Ukupno bodova za predmet:</dt>
+                            <dd class="col-sm-7">
+                                @if (Model.Predmet?.UkupnoBodova != null)
+                                {
+                                    <span class="badge bg-success">@Model.Predmet.UkupnoBodova bodova</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </dd>
+
                             <dt class="col-sm-5">Nastavni plan:</dt>
                             <dd class="col-sm-7">
                                 @if (Model.Predmet?.NastavniPlan != null && Model.Predmet.NastavniPlan.StudijskiProgram != null)
@@ -89,7 +102,7 @@ else
                     </div>
 
                     <!-- Desni stupac: statistike predmeta -->
-                    <div class="col-md-6 border-left">
+                    <div class="col-md-6 border-start">
                         <dl class="row">
                             <dt class="col-sm-6">Prosječna ocjena:</dt>
                             <dd class="col-sm-6">
@@ -140,7 +153,7 @@ else
                 <h4>Profesori</h4>
             </div>
             <div class="card-body">
-                <table class="table table-striped">
+                <table class="table table-striped align-middle">
                     <thead>
                         <tr>
                             <th>Titula</th>
@@ -163,6 +176,7 @@ else
                                     {
                                         <td>
                                             <form asp-action="RemoveProfesorFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-profesorId="@profesor.ProfesorId" method="post">
+                                                @Html.AntiForgeryToken()
                                                 <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
                                             </form>
                                         </td>
@@ -181,11 +195,11 @@ else
                 @if (User.IsInRole("Studentska služba"))
                 {
                     <form asp-action="AddProfesorToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
-                        <div class="form-group">
-                            <label for="ProfesorId">Dodaj profesora:</label>
-                            <select asp-for="ProfesorId" asp-items="ViewBag.Profesori" class="form-control"></select>
+                        <div class="mb-3">
+                            <label for="ProfesorId" class="form-label">Dodaj profesora:</label>
+                            <select asp-for="ProfesorId" asp-items="ViewBag.Profesori" class="form-select"></select>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Dodaj profesora</button>
+                        <button type="submit" class="btn btn-primary">Dodaj profesora</button>
                     </form>
                 }
             </div>
@@ -197,7 +211,7 @@ else
                 <h4>Asistenti</h4>
             </div>
             <div class="card-body">
-                <table class="table table-striped">
+                <table class="table table-striped align-middle">
                     <thead>
                         <tr>
                             <th>Titula</th>
@@ -220,6 +234,7 @@ else
                                     {
                                         <td>
                                             <form asp-action="RemoveAsistentFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-asistentId="@asistent.AsistentId" method="post">
+                                                @Html.AntiForgeryToken()
                                                 <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
                                             </form>
                                         </td>
@@ -238,11 +253,11 @@ else
                 @if (User.IsInRole("Studentska služba"))
                 {
                     <form asp-action="AddAsistentToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
-                        <div class="form-group">
-                            <label for="AsistentId">Dodaj asistenta:</label>
-                            <select asp-for="AsistentId" asp-items="ViewBag.Asistenti" class="form-control"></select>
+                        <div class="mb-3">
+                            <label for="AsistentId" class="form-label">Dodaj asistenta:</label>
+                            <select asp-for="AsistentId" asp-items="ViewBag.Asistenti" class="form-select"></select>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Dodaj asistenta</button>
+                        <button type="submit" class="btn btn-primary">Dodaj asistenta</button>
                     </form>
                 }
             </div>
@@ -260,121 +275,124 @@ else
                         <i class="fas fa-user-check me-1"></i> Pregled prisustva studenata
                     </a>
                 }
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Ime i prezime</th>
-                            @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Ime i prezime</th>
+                                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                {
+                                    <th>Broj indeksa</th>
+                                }
+                                <th>Godina studija</th>
+                                <th>Ocjena</th>
+                                @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                                {
+                                    <th>Akcije</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model?.StudentiNaPredmetu?.Any() == true)
                             {
-                                <th>Broj indeksa</th>
-                            }
-                            <th>Godina studija</th>
-                            <th>Ocjena</th>
-                            @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
-                            {
-                                <th>Akcije</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model?.StudentiNaPredmetu?.Any() == true)
-                        {
-                            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-                            foreach (var studentNaPredmetu in Model.StudentiNaPredmetu)
-                            {
-                                <tr>
-                                    <td>@studentNaPredmetu.Student?.Ime @studentNaPredmetu.Student?.Prezime</td>
-                                    @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-                                    {
-                                        <td>@studentNaPredmetu.Student?.BrojIndeksa</td>
-                                    }
-                                    <td>@studentNaPredmetu.Student?.GodinaStudija</td>
-                                    <td>
-                                        @if (User.IsInRole("Student"))
+                                var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                                foreach (var studentNaPredmetu in Model.StudentiNaPredmetu)
+                                {
+                                    <tr>
+                                        <td>@studentNaPredmetu.Student?.Ime @studentNaPredmetu.Student?.Prezime</td>
+                                        @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                         {
-                                            if (studentNaPredmetu.Student.AspNetUserId == currentUserId)
+                                            <td>@studentNaPredmetu.Student?.BrojIndeksa</td>
+                                        }
+                                        <td>@studentNaPredmetu.Student?.GodinaStudija</td>
+                                        <td>
+                                            @if (User.IsInRole("Student"))
+                                            {
+                                                if (studentNaPredmetu.Student.AspNetUserId == currentUserId)
+                                                {
+                                                    if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true && Model.Ocjene[studentNaPredmetu.StudentId].HasValue)
+                                                    {
+                                                        var ocjena = Model.Ocjene[studentNaPredmetu.StudentId].Value;
+                                                        <span class="badge @(ocjena >= 6 ? "bg-success" : "bg-danger")">@ocjena</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-warning">Nema ocjene</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Ocjena nije dostupna</span>
+                                                }
+                                            }
+                                            else
                                             {
                                                 if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true && Model.Ocjene[studentNaPredmetu.StudentId].HasValue)
                                                 {
                                                     var ocjena = Model.Ocjene[studentNaPredmetu.StudentId].Value;
-                                                    <span class="badge @(ocjena >= 6 ? "badge-success" : "badge-danger")">@ocjena</span>
+                                                    <span class="badge @(ocjena >= 6 ? "bg-success" : "bg-danger")">@ocjena</span>
                                                 }
                                                 else
                                                 {
                                                     <span class="text-warning">Nema ocjene</span>
                                                 }
                                             }
-                                            else
-                                            {
-                                                <span class="text-muted">Ocjena nije dostupna</span>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (Model?.Ocjene?.ContainsKey(studentNaPredmetu.StudentId) == true && Model.Ocjene[studentNaPredmetu.StudentId].HasValue)
-                                            {
-                                                var ocjena = Model.Ocjene[studentNaPredmetu.StudentId].Value;
-                                                <span class="badge @(ocjena >= 6 ? "badge-success" : "badge-danger")">@ocjena</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-warning">Nema ocjene</span>
-                                            }
-                                        }
-                                    </td>
-                                    @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
-                                    {
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                @if (Model?.OcjenaIds?.ContainsKey(studentNaPredmetu.StudentId) == true)
-                                                {
-                                                    var ocjenaId = Model.OcjenaIds[studentNaPredmetu.StudentId];
-                                                    <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjenaId" class="btn btn-info btn-sm">Detalji</a>
-                                                    @if (User.IsInRole("Profesor"))
-                                                    {
-                                                        <a asp-controller="Ocjene" asp-action="EditPredmetOcjena" asp-route-id="@ocjenaId" class="btn btn-warning btn-sm">Izmjena</a>
-                                                        <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@ocjenaId" class="btn btn-danger btn-sm">Brisanje</a>
-                                                    }
-                                                }
-                                                else if (User.IsInRole("Profesor"))
-                                                {
-                                                    <a asp-controller="Predmeti"
-                                                       asp-action="StudentDetails"
-                                                       asp-route-predmetId="@Model.Predmet.Id"
-                                                       asp-route-studentId="@studentNaPredmetu.StudentId"
-                                                       class="btn btn-outline-info btn-sm">
-                                                        Detalji studenta
-                                                    </a>
-                                                }
-
-                                                <form asp-action="RemoveStudentFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-studentId="@studentNaPredmetu.StudentId" method="post" class="d-inline">
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Jeste li sigurni da želite ukloniti ovog studenta s predmeta?')">
-                                                        Ukloni
-                                                    </button>
-                                                </form>
-                                            </div>
                                         </td>
-                                    }
+                                        @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
+                                        {
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    @if (Model?.OcjenaIds?.ContainsKey(studentNaPredmetu.StudentId) == true)
+                                                    {
+                                                        var ocjenaId = Model.OcjenaIds[studentNaPredmetu.StudentId];
+                                                        <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjenaId" class="btn btn-info btn-sm">Detalji</a>
+                                                        @if (User.IsInRole("Profesor"))
+                                                        {
+                                                            <a asp-controller="Ocjene" asp-action="EditPredmetOcjena" asp-route-id="@ocjenaId" class="btn btn-warning btn-sm">Izmjena</a>
+                                                            <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@ocjenaId" class="btn btn-danger btn-sm">Brisanje</a>
+                                                        }
+                                                    }
+                                                    else if (User.IsInRole("Profesor"))
+                                                    {
+                                                        <a asp-controller="Predmeti"
+                                                           asp-action="StudentDetails"
+                                                           asp-route-predmetId="@Model.Predmet.Id"
+                                                           asp-route-studentId="@studentNaPredmetu.StudentId"
+                                                           class="btn btn-outline-info btn-sm">
+                                                            Detalji studenta
+                                                        </a>
+                                                    }
+
+                                                    <form asp-action="RemoveStudentFromSubject" asp-route-predmetId="@Model.Predmet.Id" asp-route-studentId="@studentNaPredmetu.StudentId" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Jeste li sigurni da želite ukloniti ovog studenta s predmeta?')">
+                                                            Ukloni
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="@(4 + ((User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent")) ? 1 : 0))" class="text-warning">Nema studenata na ovom predmetu.</td>
                                 </tr>
                             }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="@(4 + ((User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent")) ? 1 : 0))" class="text-warning">Nema studenata na ovom predmetu.</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
 
                 @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
                 {
                     <form asp-action="AddStudentToSubject" asp-route-predmetId="@Model.Predmet.Id" method="post">
-                        <div class="form-group">
-                            <label for="StudentId">Dodaj studenta:</label>
-                            <select asp-for="StudentId" asp-items="ViewBag.Studenti" class="form-control"></select>
+                        <div class="mb-3">
+                            <label for="StudentId" class="form-label">Dodaj studenta:</label>
+                            <select asp-for="StudentId" asp-items="ViewBag.Studenti" class="form-select"></select>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Dodaj studenta</button>
+                        <button type="submit" class="btn btn-primary">Dodaj studenta</button>
                     </form>
                 }
             </div>
@@ -412,7 +430,7 @@ else
                     @if (predavanja?.Any() == true)
                     {
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover align-middle">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Naziv</th>
@@ -452,7 +470,6 @@ else
                                                 </span>
                                             </td>
                                             <td>
-                                                @* Detalji dugme *@
                                                 @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
                                                 {
                                                     <a asp-controller="NastavneAktivnosti"
@@ -471,7 +488,6 @@ else
                                                     </span>
                                                 }
 
-                                                @* Akcije za nastavno osoblje *@
                                                 @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                                 {
                                                     <a asp-controller="NastavneAktivnosti"
@@ -514,7 +530,7 @@ else
                     @if (vjezbe?.Any() == true)
                     {
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover align-middle">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Naziv</th>
@@ -618,8 +634,8 @@ else
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <!-- JavaScript za potvrdu brisanja -->
     <script>
+        // Potvrda za brisanje (nije potrebna ako nema "Delete" dugmeta za nastavne aktivnosti)
         function confirmDelete(action, predmetId, studentId, item) {
             if (confirm(`Jeste li sigurni da želite ukloniti ${item}?`)) {
                 var form = document.createElement("form");
@@ -651,8 +667,8 @@ else
         }
     </script>
 
-    <!-- JavaScript za countdown tajmer -->
     <script>
+        // JS za countdown na aktivnosti
         function startCountdowns() {
             document.querySelectorAll('.countdown-timer').forEach(el => {
                 const targetTime = new Date(el.dataset.countdown);
@@ -674,21 +690,20 @@ else
                 }, 1000);
             });
         }
-
         document.addEventListener("DOMContentLoaded", startCountdowns);
     </script>
 
     <style>
-    .countdown-wrapper {
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-    }
+        .countdown-wrapper {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
 
-    .countdown-wrapper .badge {
-        font-weight: 500;
-        padding: 0.3em 0.6em;
-    }
+            .countdown-wrapper .badge {
+                font-weight: 500;
+                padding: 0.3em 0.6em;
+            }
     </style>
 }

@@ -30,7 +30,14 @@
                 <div class="card-body">
                     <p><strong>Naziv:</strong> @Model.Predmet.Naziv</p>
                     <p><strong>ECTS:</strong> @Model.Predmet.ECTS</p>
-                    <p><strong>Semestar:</strong> @Model.Predmet.Semestar</p>
+                    <p>
+                        <strong>Semestar:</strong>
+                        @(Model.Predmet.Semestar == 1 ? "1 (Zimski)" : Model.Predmet.Semestar == 2 ? "2 (Ljetni)" : Model.Predmet.Semestar.ToString())
+                    </p>
+                    <p>
+                        <strong>Ukupni bodovi na predmetu:</strong>
+                        <span class="badge bg-info">@Model.Predmet.UkupnoBodova</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -64,9 +71,12 @@
                             <tr>
                                 <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
                                 <td>@aktivnost.Naziv</td>
-                                <td>@aktivnost.Tip</td>
                                 <td>
-                                    @if (prisutan)
+                                    @(aktivnost.Tip == TipNastavneAktivnosti.Predavanje ? "Predavanje" :
+                                                                aktivnost.Tip == TipNastavneAktivnosti.Vjezba ? "Vježba" : aktivnost.Tip.ToString())
+                        </td>
+                        <td>
+                            @if (prisutan)
                                     {
                                         <span class="badge bg-success">Prisutan</span>
                                     }
@@ -112,7 +122,8 @@
                             <th>Datum ispita</th>
                             <th>Lokacija</th>
                             <th>Osvojeni bodovi</th>
-                            <th>Ukupno bodova</th>
+                            <th>Ukupno bodova (ispit)</th>
+                            <th>Ukupno bodova (predmet)</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -137,6 +148,9 @@
                                     }
                                 </td>
                                 <td>@prijava.Ispit.BrojBodova</td>
+                                <td>
+                                    <span class="badge bg-secondary">@Model.Predmet.UkupnoBodova</span>
+                                </td>
                                 <td>
                                     @if (!bodovi.HasValue)
                                     {
@@ -173,6 +187,11 @@
                 {
                     <span class="text-muted">Nije unijeta</span>
                 }
+            </p>
+
+            <p>
+                <strong>Ukupni bodovi na predmetu:</strong>
+                <span class="badge bg-info">@Model.Predmet.UkupnoBodova</span>
             </p>
 
             @if (Model.PonderisanaOcjena.HasValue)
@@ -234,6 +253,7 @@
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-light d-flex justify-content-between align-items-center">
                 <span>Parcijalne ocjene</span>
+                <span class="text-muted small">Ukupni bodovi na predmetu: <strong>@Model.Predmet.UkupnoBodova</strong></span>
             </div>
             <div class="card-body">
                 <ul class="list-group">
@@ -264,15 +284,15 @@
                                     @if (User.IsInRole("Profesor"))
                                     {
                                         <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjena.Id"
-                                           class="btn btn-outline-secondary btn-sm" title="Detalji">
+                                            class="btn btn-outline-secondary btn-sm" title="Detalji">
                                             <i class="fas fa-info-circle"></i>
                                         </a>
                                         <a asp-controller="Ocjene" asp-action="Edit" asp-route-id="@ocjena.Id"
-                                           class="btn btn-outline-warning btn-sm" title="Izmijeni">
+                                            class="btn btn-outline-warning btn-sm" title="Izmijeni">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@ocjena.Id"
-                                           class="btn btn-outline-danger btn-sm" title="Obriši">
+                                            class="btn btn-outline-danger btn-sm" title="Obriši">
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
                                     }
@@ -299,43 +319,42 @@
             <i class="fas fa-book me-1"></i> Detalji predmeta
         </a>
     </div>
-</div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('chartPrisustvo');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Prisustva', 'Izostanci'],
-                datasets: [{
-                    label: 'Prisustvo',
-                    data: [
-                        @Model.Prisustva.Count(),
-                        @Model.Aktivnosti.Count() - @Model.Prisustva.Count()
-                    ],
-                    backgroundColor: ['#28a745', '#dc3545']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const value = context.raw;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = (value / total * 100).toFixed(1);
-                                return `${context.label}: ${value} (${percentage}%)`;
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const ctx = document.getElementById('chartPrisustvo');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Prisustva', 'Izostanci'],
+                    datasets: [{
+                        label: 'Prisustvo',
+                        data: [
+                            @Model.Prisustva.Count(),
+                            @Model.Aktivnosti.Count() - @Model.Prisustva.Count()
+                        ],
+                        backgroundColor: ['#28a745', '#dc3545']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = (value / total * 100).toFixed(1);
+                                    return `${context.label}: ${value} (${percentage}%)`;
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
 }

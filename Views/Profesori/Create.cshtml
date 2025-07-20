@@ -4,72 +4,89 @@
     ViewData["Title"] = "Dodaj novog profesora";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
+                        <h5 class="mb-3 mt-2">Prijava</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label"></label>
+                                <input asp-for="Email" class="form-control" placeholder="Unesite e-mail adresu" />
+                                <small class="form-text text-muted">Unesite službenu e-mail adresu profesora.</small>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input asp-for="Password" class="form-control" placeholder="Unesite lozinku" />
+                                <small class="form-text text-muted">Lozinka mora imati najmanje 6 karaktera.</small>
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="ConfirmPassword" class="form-label"></label>
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="Ponovite lozinku" />
+                                <small class="form-text text-muted">Ponovite istu lozinku radi potvrde.</small>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
 
-    <!-- Identity podaci -->
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+                        <hr class="my-4" />
+
+                        <h5 class="mb-3">Podaci o profesoru</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="JMBG" class="form-label"></label>
+                                <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" />
+                                <small class="form-text text-muted">Unesite tačno 13 cifara.</small>
+                                <span asp-validation-for="JMBG" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Ime" class="form-label"></label>
+                                <input asp-for="Ime" class="form-control" placeholder="Unesite ime" />
+                                <span asp-validation-for="Ime" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Prezime" class="form-label"></label>
+                                <input asp-for="Prezime" class="form-control" placeholder="Unesite prezime" />
+                                <span asp-validation-for="Prezime" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="ProfesorTitula" class="form-label"></label>
+                                <input asp-for="ProfesorTitula" class="form-control" placeholder="Npr. red. prof., vanr. prof." />
+                                <small class="form-text text-muted">Unesite akademsku titulu.</small>
+                                <span asp-validation-for="ProfesorTitula" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="StudijskiProgramIds" class="form-label"></label>
+                                <select asp-for="StudijskiProgramIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" id="StudijskiProgramIds" multiple="multiple"></select>
+                                <small class="form-text text-muted">Držite <kbd>Ctrl</kbd> ili <kbd>Cmd</kbd> za višestruki odabir.</small>
+                                <span asp-validation-for="StudijskiProgramIds" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="PredmetIds" class="form-label"></label>
+                                <select asp-for="PredmetIds" class="form-control" asp-items="ViewBag.Predmeti" id="PredmetIds" multiple="multiple"></select>
+                                <small class="form-text text-muted">Predmeti koje predaje profesor.</small>
+                                <span asp-validation-for="PredmetIds" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="btn btn-primary px-4">Dodaj profesora</button>
+                            <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Password" class="control-label"></label>
-        <input asp-for="Password" class="form-control" type="password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ConfirmPassword" class="control-label"></label>
-        <input asp-for="ConfirmPassword" class="form-control" type="password" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-
-    <!-- Poslovni podaci -->
-    <div class="form-group">
-        <label asp-for="JMBG" class="control-label"></label>
-        <input asp-for="JMBG" class="form-control" />
-        <span asp-validation-for="JMBG" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Ime" class="control-label"></label>
-        <input asp-for="Ime" class="form-control" />
-        <span asp-validation-for="Ime" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Prezime" class="control-label"></label>
-        <input asp-for="Prezime" class="form-control" />
-        <span asp-validation-for="Prezime" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ProfesorTitula" class="control-label"></label>
-        <input asp-for="ProfesorTitula" class="form-control" />
-        <span asp-validation-for="ProfesorTitula" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="StudijskiProgramIds">Studijski programi</label>
-        <select asp-for="StudijskiProgramIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" id="StudijskiProgramIds" multiple="multiple"></select>
-        <span asp-validation-for="StudijskiProgramIds" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="PredmetIds">Predmeti</label>
-        <select asp-for="PredmetIds" class="form-control" asp-items="ViewBag.Predmeti" id="PredmetIds" multiple="multiple"></select>
-        <span asp-validation-for="PredmetIds" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="Dodaj profesora" class="btn btn-primary mt-3" />
-        <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     <script>

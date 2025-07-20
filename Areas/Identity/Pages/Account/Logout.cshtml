@@ -3,18 +3,30 @@
 @{
     ViewData["Title"] = "Odjava";
 }
-
-<header>
-    <h1>@ViewData["Title"]</h1>
-    @if (User.Identity?.IsAuthenticated ?? false)
-    {
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-            <button type="submit" class="btn btn-danger">Kliknite ovdje za odjavu</button>
-        </form>
-    }
-    else
-    {
-        <p>Uspješno ste se odjavili iz aplikacije.</p>
-        <a class="btn btn-primary" asp-area="" asp-page="/Account/Login">Prijavite se ponovo</a>
-    }
-</header>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg text-center">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="mb-0">@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" class="mb-0">
+                            <p>Za sigurnu odjavu kliknite na dugme ispod.</p>
+                            <button type="submit" class="btn btn-danger btn-lg"><i class="fas fa-sign-out-alt"></i> Odjavi se</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <p class="mb-4">Uspješno ste se odjavili iz aplikacije.</p>
+                        <a class="btn btn-primary" asp-area="" asp-page="/Account/Login">
+                            <i class="fas fa-sign-in-alt"></i> Prijavite se ponovo
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

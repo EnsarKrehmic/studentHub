@@ -1,0 +1,250 @@
+﻿/* sidebar.css */
+:root {
+    --sidebar-width: 280px;
+    --sidebar-bg-light: #f8f9fa;
+    --sidebar-bg-dark: #232c3c;
+    --sidebar-text-light: #212529;
+    --sidebar-text-dark: #f3f3f3;
+    --sidebar-active-bg: rgba(52, 152, 219, 0.15);
+    --sidebar-hover-bg: rgba(67, 97, 238, 0.13);
+    --sidebar-border-light: #e9ecef;
+    --sidebar-border-dark: #34495e;
+    --sidebar-header-bg: #4361ee;
+    --sidebar-header-text: #ffffff;
+    --transition-speed: 0.3s;
+}
+
+[data-bs-theme="dark"] #sidebar,
+[data-bs-theme="dark"] .sidebar-footer,
+[data-bs-theme="dark"] .sidebar-header {
+    background-color: var(--sidebar-bg-dark) !important;
+    color: var(--sidebar-header-text) !important;
+    border-color: var(--sidebar-border-dark) !important;
+}
+
+    [data-bs-theme="dark"] .sidebar-header h3,
+    [data-bs-theme="dark"] .sidebar-header,
+    [data-bs-theme="dark"] .sidebar-footer {
+        color: var(--sidebar-header-text) !important;
+    }
+
+    [data-bs-theme="dark"] #sidebar .nav-link,
+    [data-bs-theme="dark"] #sidebar .nav-link i {
+        color: var(--sidebar-text-dark) !important;
+    }
+
+        [data-bs-theme="dark"] #sidebar .nav-link:hover,
+        [data-bs-theme="dark"] #sidebar .nav-link.active {
+            background-color: var(--sidebar-hover-bg) !important;
+            color: var(--sidebar-header-bg) !important;
+        }
+
+[data-bs-theme="dark"] .navbar,
+[data-bs-theme="dark"] .navbar.bg-light,
+[data-bs-theme="dark"] .navbar.border-bottom {
+    background-color: #222b3a !important;
+    color: #f3f3f3 !important;
+    border-bottom: 1px solid #33415d !important;
+}
+
+    [data-bs-theme="dark"] .navbar .navbar-brand,
+    [data-bs-theme="dark"] .navbar .nav-link,
+    [data-bs-theme="dark"] .navbar .navbar-text,
+    [data-bs-theme="dark"] .navbar .fw-medium,
+    [data-bs-theme="dark"] .navbar .fas {
+        color: #f3f3f3 !important;
+    }
+
+[data-bs-theme="dark"] footer,
+[data-bs-theme="dark"] footer.bg-light {
+    background: #1a2233 !important;
+    color: #f3f3f3 !important;
+}
+
+    [data-bs-theme="dark"] footer .fas {
+        color: #4cc9f0 !important;
+    }
+
+[data-bs-theme="dark"] .card-header {
+    background-color: #4361ee !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] #sidebar .nav-link {
+    color: var(--sidebar-text-dark);
+}
+
+[data-bs-theme="light"] #sidebar .nav-link {
+    color: var(--sidebar-text-light);
+}
+
+[data-bs-theme="dark"] #sidebar {
+    background-color: var(--sidebar-bg-dark);
+}
+
+[data-bs-theme="light"] #sidebar {
+    background-color: var(--sidebar-bg-light);
+}
+
+[data-bs-theme="dark"] #sidebar {
+    background-color: var(--sidebar-bg-dark);
+    border-color: var(--sidebar-border-dark);
+}
+
+    [data-bs-theme="dark"] #sidebar .nav-link {
+        color: var(--sidebar-text-dark);
+    }
+
+        [data-bs-theme="dark"] #sidebar .nav-link:hover,
+        [data-bs-theme="dark"] #sidebar .nav-link.active {
+            background-color: var(--sidebar-hover-bg);
+        }
+
+    [data-bs-theme="dark"] #sidebar .sidebar-footer {
+        background-color: var(--sidebar-bg-dark);
+        border-top: 1px solid var(--sidebar-border-dark);
+    }
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+#sidebar {
+    min-width: var(--sidebar-width);
+    max-width: var(--sidebar-width);
+    background: var(--sidebar-bg-light);
+    color: var(--sidebar-text-light);
+    transition: all var(--transition-speed);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+    #sidebar .sidebar-header {
+        background: var(--sidebar-header-bg);
+        color: var(--sidebar-header-text);
+        padding: 1.5rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #sidebar .nav-item {
+        margin-bottom: 0.25rem;
+    }
+
+    #sidebar .nav-link {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s;
+        color: var(--sidebar-text-light);
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+        #sidebar .nav-link:hover {
+            background: var(--sidebar-hover-bg);
+            color: var(--sidebar-header-bg);
+        }
+
+        #sidebar .nav-link.active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-header-bg);
+            font-weight: 600;
+        }
+
+        #sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+    #sidebar .dropdown-toggle::after {
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: transform 0.3s;
+    }
+
+    #sidebar .collapse.show .dropdown-toggle::after {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    #sidebar .list-unstyled {
+        padding-left: 0;
+    }
+
+    #sidebar .sidebar-footer {
+        padding: 1.5rem;
+        margin-top: auto;
+        background: var(--sidebar-bg-light);
+        border-top: 1px solid var(--sidebar-border-light);
+    }
+
+#content {
+    width: 100%;
+    min-height: 100vh;
+    transition: all var(--transition-speed);
+    margin-left: var(--sidebar-width);
+}
+
+/* Responsive sidebar */
+@media (max-width: 992px) {
+    #sidebar {
+        transform: translateX(-100%);
+        z-index: 1050;
+    }
+
+        #sidebar.active {
+            transform: translateX(0);
+        }
+
+    #content {
+        margin-left: 0;
+    }
+
+        #content.active::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+            pointer-events: all;
+        }
+}
+
+#sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1020;
+    transition: opacity 0.2s;
+}
+
+    #sidebar-overlay.active {
+        display: block;
+    }
+
+@media (min-width: 993px) {
+    #sidebar-overlay {
+        display: none !important;
+    }
+}

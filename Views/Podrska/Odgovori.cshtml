@@ -1,26 +1,37 @@
 ﻿@model StudentHub.Models.PodrskaUpit
 @{
-    ViewData["Title"] = "Odgovori na upit";
+    bool isEdit = ViewData["Title"]?.ToString()?.ToLower().Contains("uredi") ?? false;
+    ViewData["Title"] = isEdit ? "Uredi odgovor na upit" : "Odgovori na upit";
 }
-<h2>@ViewData["Title"]</h2>
-<hr />
-<div class="mb-4">
-    <strong>Naslov:</strong> @Model.Naslov <br />
-    <strong>Opis upita:</strong> @Model.Opis <br />
-    <strong>Postavio/la:</strong> @($"{Model.Korisnik?.Ime} {Model.Korisnik?.Prezime}") <br />
-    <strong>Datum kreiranja:</strong> @Model.DatumKreiranja.ToString("dd.MM.yyyy HH:mm")
+
+<div class="card shadow-sm mx-auto" style="max-width: 560px;">
+    <div class="card-body">
+        <h2 class="card-title">@ViewData["Title"]</h2>
+        <hr />
+        <div class="mb-4">
+            <strong>Naslov:</strong> @Model.Naslov <br />
+            <strong>Opis upita:</strong> @Model.Opis <br />
+            <strong>Postavio/la:</strong> @($"{Model.Korisnik?.Ime} {Model.Korisnik?.Prezime}") <br />
+            <strong>Datum kreiranja:</strong> @Model.DatumKreiranja.ToString("dd.MM.yyyy HH:mm")
+        </div>
+        <form asp-action="@(isEdit ? "EditOdgovor" : "Odgovori")" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="mb-3">
+                <label for="odgovor" class="form-label">@((isEdit ? "Uredi odgovor" : "Odgovor na upit"))</label>
+                <textarea name="odgovor" id="odgovor" class="form-control" rows="5" required>@(isEdit? Model.Odgovor: "")</textarea>
+            </div>
+            <button type="submit" class="btn btn-success me-2">
+                <i class="fas fa-paper-plane"></i> @(isEdit ? "Sačuvaj odgovor" : "Pošalji odgovor")
+            </button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Nazad
+            </a>
+        </form>
+    </div>
 </div>
 
-<form asp-action="Odgovori" method="post">
-    <input type="hidden" asp-for="Id" />
-    <div class="mb-3">
-        <label for="odgovor" class="form-label">Odgovor na upit</label>
-        <textarea name="odgovor" id="odgovor" class="form-control" rows="5" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-success">Pošalji odgovor</button>
-    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Nazad</a>
-</form>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

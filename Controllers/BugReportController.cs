@@ -60,7 +60,7 @@ namespace StudentHub.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new BugReport());
         }
 
         [HttpPost]

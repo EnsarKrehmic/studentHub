@@ -2,51 +2,50 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<ul class="navbar-nav ml-auto">
+<ul class="navbar-nav ms-auto">
     @if (SignInManager.IsSignedIn(User))
     {
         var korisnik = await UserManager.GetUserAsync(User);
         var uloge = korisnik != null ? await UserManager.GetRolesAsync(korisnik) : new List<string>();
 
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Upravljanje nalogom">
-                Zdravo @User.Identity?.Name!
+        <li class="nav-item d-flex align-items-center">
+            <a class="nav-link fw-semibold" asp-area="Identity" asp-page="/Account/Manage/Index" title="Upravljanje nalogom">
+                <i class="fas fa-user-circle me-1"></i>
+                Zdravo, @User.Identity?.Name!
             </a>
         </li>
 
         @if (uloge.Contains("Studentska služba"))
         {
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
-                    Dodaj korisnika
+                <a class="nav-link dropdown-toggle fw-semibold" href="#" id="navbarDropdown" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user-plus me-1"></i> Dodaj korisnika
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li>
-                        <a class="dropdown-item" asp-controller="Studenti" asp-action="Create">Dodaj studenta</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" asp-controller="Profesori" asp-action="Create">Dodaj profesora</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" asp-controller="Asistenti" asp-action="Create">Dodaj asistenta</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" asp-controller="StudentskaSluzba" asp-action="Create">Dodaj člana studentske službe</a>
-                    </li>
+                <ul class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" asp-controller="Studenti" asp-action="Create">Dodaj studenta</a></li>
+                    <li><a class="dropdown-item" asp-controller="Profesori" asp-action="Create">Dodaj profesora</a></li>
+                    <li><a class="dropdown-item" asp-controller="Asistenti" asp-action="Create">Dodaj asistenta</a></li>
+                    <li><a class="dropdown-item" asp-controller="StudentskaSluzba" asp-action="Create">Dodaj člana studentske službe</a></li>
                 </ul>
             </li>
         }
 
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-dark">Odjavi se</button>
+        <li class="nav-item d-flex align-items-center">
+            <form class="form-inline m-0" asp-area="Identity" asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link p-0 fw-semibold" style="text-decoration:none;">
+                    <i class="fas fa-sign-out-alt me-1"></i> Odjavi se
+                </button>
             </form>
         </li>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Prijava</a>
+        <li class="nav-item d-flex align-items-center">
+            <a class="nav-link fw-semibold" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fas fa-sign-in-alt me-1"></i> Prijava
+            </a>
         </li>
     }
 </ul>

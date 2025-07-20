@@ -4,65 +4,70 @@
     ViewData["Title"] = "Izmjena podataka ispita";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<h4>Ispit</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div class="form-group">
-                <label asp-for="StudijskiProgramId" class="control-label"></label>
-                <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgramId"></select>
-                    <option value="">Odaberite studijski program</option>
-                </select>
-                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-lg">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>@ViewData["Title"]
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <div class="mb-3">
+                            <label asp-for="StudijskiProgramId" class="form-label fw-bold"></label>
+                            <select asp-for="StudijskiProgramId" asp-items="ViewBag.StudijskiProgramId" class="form-select" id="StudijskiProgramId">
+                                <option value="">Odaberite studijski program</option>
+                            </select>
+                            <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="NastavniPlanId" class="form-label fw-bold"></label>
+                            <select asp-for="NastavniPlanId" asp-items="ViewBag.NastavniPlanId" class="form-select" id="NastavniPlanId">
+                                <option value="">Odaberite nastavni plan</option>
+                            </select>
+                            <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PredmetId" class="form-label fw-bold"></label>
+                            <select asp-for="PredmetId" asp-items="ViewBag.PredmetId" class="form-select" id="PredmetId">
+                                <option value="">Odaberite predmet</option>
+                            </select>
+                            <span asp-validation-for="PredmetId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="DatumOdrzavanja" class="form-label fw-bold"></label>
+                            <input asp-for="DatumOdrzavanja" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="DatumOdrzavanja" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Lokacija" class="form-label fw-bold"></label>
+                            <input asp-for="Lokacija" class="form-control" />
+                            <span asp-validation-for="Lokacija" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="BrojBodova" class="form-label fw-bold"></label>
+                            <input asp-for="BrojBodova" class="form-control" type="number" min="1" step="1" />
+                            <span asp-validation-for="BrojBodova" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="UslovZaPolaganje" class="form-label fw-bold"></label>
+                            <input asp-for="UslovZaPolaganje" class="form-control" type="number" min="0" step="1" />
+                            <span asp-validation-for="UslovZaPolaganje" class="text-danger"></span>
+                        </div>
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save"></i> Sačuvaj promjene
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Odustani
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="NastavniPlanId" class="control-label"></label>
-                <select asp-for="NastavniPlanId" class="form-control" asp-items="ViewBag.NastavniPlanId"></select>
-                    <option value="">Odaberite nastavni plan</option>
-                </select>
-                <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="PredmetId" class="control-label"></label>
-                <select asp-for="PredmetId" class="form-control" asp-items="ViewBag.PredmetId"></select>
-                    <option value="">Odaberite predmet</option>
-                </select>
-                <span asp-validation-for="PredmetId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="DatumOdrzavanja" class="control-label"></label>
-                <input asp-for="DatumOdrzavanja" class="form-control" />
-                <span asp-validation-for="DatumOdrzavanja" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Lokacija" class="control-label"></label>
-                <input asp-for="Lokacija" class="form-control" />
-                <span asp-validation-for="Lokacija" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="BrojBodova" class="control-label"></label>
-                <input asp-for="BrojBodova" class="form-control" type="number" step="1" />
-                <span asp-validation-for="BrojBodova" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="UslovZaPolaganje" class="control-label"></label>
-                <input asp-for="UslovZaPolaganje" class="form-control" type="number" step="1" />
-                <span asp-validation-for="UslovZaPolaganje" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
-                <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -72,18 +77,19 @@
             $('#StudijskiProgramId').change(function () {
                 var studijskiProgramId = $(this).val();
                 $.getJSON('/Ispiti/GetNastavniPlanoviByStudijskiProgram/' + studijskiProgramId, function (data) {
-                    var items = '<option value="">Select Nastavni Plan</option>';
+                    var items = '<option value="">Odaberite nastavni plan</option>';
                     $.each(data, function (i, nastavniPlan) {
                         items += "<option value='" + nastavniPlan.id + "'>" + nastavniPlan.godinaStudija + "</option>";
                     });
                     $('#NastavniPlanId').html(items);
+                    $('#PredmetId').html('<option value=\"\">Odaberite predmet</option>');
                 });
             });
 
             $('#NastavniPlanId').change(function () {
                 var nastavniPlanId = $(this).val();
                 $.getJSON('/Ispiti/GetPredmetiByNastavniPlan/' + nastavniPlanId, function (data) {
-                    var items = '<option value="">Select Predmet</option>';
+                    var items = '<option value="">Odaberite predmet</option>';
                     $.each(data, function (i, predmet) {
                         items += "<option value='" + predmet.id + "'>" + predmet.naziv + "</option>";
                     });

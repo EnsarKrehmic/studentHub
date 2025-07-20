@@ -1,64 +1,81 @@
 ﻿@model IEnumerable<StudentHub.ViewModels.StudentGroupedByProgramViewModel>
 
 @{
-    ViewData["Title"] = "Studenti grupisani po studijskom programu";
+    ViewData["Title"] = "Studenti po studijskom programu";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<form asp-action="GroupedByProgram" method="get">
-    <div class="form-group">
-        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Pretraži studente" />
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="mb-0">@ViewData["Title"]</h2>
+        <form asp-action="GroupedByProgram" method="get" class="d-flex gap-2">
+            <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Pretraži studente..." style="max-width:200px;" />
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Pretraži
+            </button>
+        </form>
     </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary mt-3">Pretraži</button>
-    </div>
-</form>
 
-@foreach (var group in Model)
-{
-    <h3>@group.StudijskiProgram.Naziv</h3>
-    <table class="table table-bordered table-hover mt-3">
-        <thead>
-            <tr>
-                <th>
-                    <a asp-action="GroupedByProgram"
-                       asp-route-sortOrder="@ViewData["NameSortParm"]"
-                       asp-route-searchString="@ViewData["CurrentFilter"]">
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().Studenti.FirstOrDefault().Ime)
-                    </a>
-                </th>
-                <th>
-                    <a asp-action="GroupedByProgram"
-                       asp-route-sortOrder="@ViewData["SurnameSortParm"]"
-                       asp-route-searchString="@ViewData["CurrentFilter"]">
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().Studenti.FirstOrDefault().Prezime)
-                    </a>
-                </th>
-                <th>
-                    <a asp-action="GroupedByProgram"
-                       asp-route-sortOrder="@ViewData["IndexSortParm"]"
-                       asp-route-searchString="@ViewData["CurrentFilter"]">
-                        @Html.DisplayNameFor(model => model.FirstOrDefault().Studenti.FirstOrDefault().BrojIndeksa)
-                    </a>
-                </th>
-                <th>Akcije</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var student in group.Studenti)
-            {
-                <tr>
-                    <td>@student.Ime</td>
-                    <td>@student.Prezime</td>
-                    <td>@student.BrojIndeksa</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@student.Id" class="btn btn-info">Detalji</a>
-                        <a asp-action="Edit" asp-route-id="@student.Id" class="btn btn-warning">Izmjena</a>
-                        <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-danger">Brisanje</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    @foreach (var group in Model)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white d-flex align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-graduation-cap me-2"></i> @group.StudijskiProgram?.Naziv ?? "<span class='text-danger'>Nepoznat program</span>"
+                </h4>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>
+                                    <a asp-action="GroupedByProgram"
+                                       asp-route-sortOrder="@ViewData["NameSortParm"]"
+                                       asp-route-searchString="@ViewData["CurrentFilter"]">
+                                        Ime <i class="fas fa-sort"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a asp-action="GroupedByProgram"
+                                       asp-route-sortOrder="@ViewData["SurnameSortParm"]"
+                                       asp-route-searchString="@ViewData["CurrentFilter"]">
+                                        Prezime <i class="fas fa-sort"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a asp-action="GroupedByProgram"
+                                       asp-route-sortOrder="@ViewData["IndexSortParm"]"
+                                       asp-route-searchString="@ViewData["CurrentFilter"]">
+                                        Broj indeksa <i class="fas fa-sort"></i>
+                                    </a>
+                                </th>
+                                <th class="text-center">Akcije</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in group.Studenti)
+                            {
+                                <tr>
+                                    <td>@student.Ime</td>
+                                    <td>@student.Prezime</td>
+                                    <td>@student.BrojIndeksa</td>
+                                    <td class="text-center">
+                                        <a asp-action="Details" asp-route-id="@student.Id" class="btn btn-sm btn-outline-primary me-1" title="Detalji">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@student.Id" class="btn btn-sm btn-outline-warning me-1" title="Izmjena">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-sm btn-outline-danger" title="Brisanje">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

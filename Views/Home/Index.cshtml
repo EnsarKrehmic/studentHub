@@ -4,67 +4,92 @@
     ViewData["Title"] = "Dobrodošli u StudentHub";
 }
 
-<div class="container">
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Dobrodošli u StudentHub!</h1>
-        <p class="lead">Vaš centralizovani sistem za upravljanje fakultetom.</p>
-        <hr class="my-4" />
-        <p>Pratite najnovije objave, podatke o korisnicima i još mnogo toga.</p>
+<div class="container py-4">
+    <!-- Jumbotron hero sekcija -->
+    <div class="jumbotron text-center bg-primary text-white rounded shadow-sm mb-5 p-5">
+        <h1 class="display-4 mb-2">Dobrodošli u <span class="fw-bold">StudentHub</span>!</h1>
+        <p class="lead mb-3">Vaš centralizovani sistem za upravljanje fakultetom.</p>
+        <hr class="my-4 border-light" />
+        <p class="mb-0">Pratite najnovije objave, podatke o korisnicima i još mnogo toga.</p>
     </div>
 
-    <div class="row text-center mt-5">
+    <!-- Studijski programi - Card Grid -->
+    <div class="row text-center mb-5 g-4">
         @foreach (var program in Model.StudijskiProgrami)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">@program.Naziv</h5>
-                        <p>Pogledajte više informacija o navedenom studijskom programu</p>
-                        <a href="@Url.Action("Details", "StudijskiProgrami", new { id = program.Id })" class="btn btn-primary">Pogledaj detalje</a>
+            <div class="col-sm-6 col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-2">@program.Naziv</h5>
+                        <p class="text-muted mb-3 small">Više informacija o studijskom programu.</p>
+                        <a href="@Url.Action("Details", "StudijskiProgrami", new { id = program.Id })"
+                           class="btn btn-outline-primary mt-auto">Pogledaj detalje</a>
                     </div>
                 </div>
             </div>
         }
     </div>
 
-    <div class="mt-5">
-        <h2>Najnovije obavijesti</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Naslov</th>
-                    <th>Autor</th>
-                    <th>Studijski program</th>
-                    <th>Datum objave</th>
-                    <th>Detalji</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var obavijest in Model.NajnovijeObavijesti)
-                {
+    <!-- Obavijesti - Card + Table + Badge + Ikona dugme -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-white d-flex align-items-center">
+            <h2 class="h5 mb-0">Najnovije obavijesti</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
                     <tr>
-                        <td>@obavijest.Naslov</td>
-                        <td>@obavijest.AutorIme</td>
-                        <td>@string.Join(", ", obavijest.StudijskiProgramNazivi)</td>
-                        <td>@obavijest.DatumObjave.ToShortDateString()</td>
-                        <td>
-                            <a href="@Url.Action("Details", "Obavjestenja", new { id = obavijest.Id })" class="btn btn-primary btn-sm">Pogledaj</a>
-                        </td>
+                        <th>Naslov</th>
+                        <th>Autor</th>
+                        <th>Studijski program</th>
+                        <th style="min-width: 110px; white-space: nowrap;">Datum</th>
+                        <th class="text-center" style="width: 70px;">Detalji</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var obavijest in Model.NajnovijeObavijesti)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@obavijest.Naslov</td>
+                            <td>@obavijest.AutorIme</td>
+                            <td>
+                                @foreach (var program in obavijest.StudijskiProgramNazivi)
+                                {
+                                    <span class="badge bg-secondary me-1 mb-1">@program</span>
+                                }
+                            </td>
+                            <td style="white-space: nowrap;">@obavijest.DatumObjave.ToShortDateString()</td>
+                            <td class="text-center">
+                                <a href="@Url.Action("Details", "Obavjestenja", new { id = obavijest.Id })"
+                                   class="btn btn-link btn-sm px-2" title="Pogledaj detalje" data-bs-toggle="tooltip">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- YouTube video -->
+    <!-- YouTube video - Responsive Bootstrap 5 -->
     <div class="mt-5 text-center">
         <h2>Da li želite saznati više o nama?</h2>
-        <p>U ovom videu možete doći do osnovnih informacija o ovom fakultetu.</p>
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item"
-                    src="https://www.youtube.com/embed/fJhbTdVyZBI"
-                    allowfullscreen>
-            </iframe>
+        <p class="mb-4">U ovom videu možete doći do osnovnih informacija o ovom fakultetu.</p>
+        <div class="ratio ratio-16x9 mx-auto" style="max-width: 600px;">
+            <iframe src="https://www.youtube.com/embed/fJhbTdVyZBI" allowfullscreen></iframe>
         </div>
     </div>
 </div>
+
+@await Html.PartialAsync("_FooterPartial")
+
+@section Scripts {
+    <script>
+        // Aktiviraj Bootstrap tooltip za dugmad (Detalji)
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    </script>
+}

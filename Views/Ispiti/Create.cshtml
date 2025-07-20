@@ -4,67 +4,82 @@
     ViewData["Title"] = "Kreiranje ispita";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<h4>Ispit</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
-            <div class="form-group">
-                <label asp-for="StudijskiProgramId" class="control-label"></label>
-                <select asp-for="StudijskiProgramId" asp-items="ViewBag.StudijskiProgramId" class="form-control">
-                    <option value="">Odaberite studijski program</option>
-                </select>
-                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="NastavniPlanId" class="control-label"></label>
-                <select asp-for="NastavniPlanId" asp-items="ViewBag.NastavniPlanId" class="form-control">
-                    <option value="">Odaberite nastavni plan</option>
-                </select>
-                <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="PredmetId" class="control-label"></label>
-                <select asp-for="PredmetId" asp-items="ViewBag.PredmetId" class="form-control">
-                    <option value="">Odaberite predmet</option>
-                </select>
-                <span asp-validation-for="PredmetId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="DatumOdrzavanja" class="control-label"></label>
-                <input asp-for="DatumOdrzavanja" class="form-control" />
-                <span asp-validation-for="DatumOdrzavanja" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Lokacija" class="control-label"></label>
-                <input asp-for="Lokacija" class="form-control" />
-                <span asp-validation-for="Lokacija" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="BrojBodova" class="control-label"></label>
-                <input asp-for="BrojBodova" class="form-control" type="number" step="1" />
-                <span asp-validation-for="BrojBodova" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="UslovZaPolaganje" class="control-label"></label>
-                <input asp-for="UslovZaPolaganje" class="form-control" type="number" step="1" />
-                <span asp-validation-for="UslovZaPolaganje" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />
-                <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
-            </div>
-        </form>
+@if (ViewBag.StudijskiProgramId == null || !((List<SelectListItem>)ViewBag.StudijskiProgramId).Any())
+{
+    <div class="alert alert-warning mt-3">
+        <i class="fas fa-exclamation-triangle"></i>
+        Nemate dodijeljenih studijskih programa. Nije moguće kreirati ispit. Obratite se administratoru!
     </div>
-</div>
+}
+else
+{
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">
+                            <i class="fas fa-plus-circle me-2"></i>@ViewData["Title"]
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div class="mb-3">
+                                <label asp-for="StudijskiProgramId" class="form-label fw-bold"></label>
+                                <select asp-for="StudijskiProgramId" asp-items="ViewBag.StudijskiProgramId" class="form-select" id="StudijskiProgramId">
+                                    <option value="">Odaberite studijski program</option>
+                                </select>
+                                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="NastavniPlanId" class="form-label fw-bold"></label>
+                                <select asp-for="NastavniPlanId" asp-items="ViewBag.NastavniPlanId" class="form-select" id="NastavniPlanId">
+                                    <option value="">Odaberite nastavni plan</option>
+                                </select>
+                                <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="PredmetId" class="form-label fw-bold"></label>
+                                <select asp-for="PredmetId" asp-items="ViewBag.PredmetId" class="form-select" id="PredmetId">
+                                    <option value="">Odaberite predmet</option>
+                                </select>
+                                <span asp-validation-for="PredmetId" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="DatumOdrzavanja" class="form-label fw-bold"></label>
+                                <input asp-for="DatumOdrzavanja" class="form-control" type="datetime-local" />
+                                <span asp-validation-for="DatumOdrzavanja" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Lokacija" class="form-label fw-bold"></label>
+                                <input asp-for="Lokacija" class="form-control" />
+                                <span asp-validation-for="Lokacija" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="BrojBodova" class="form-label fw-bold"></label>
+                                <input asp-for="BrojBodova" class="form-control" type="number" min="1" step="1" />
+                                <span asp-validation-for="BrojBodova" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="UslovZaPolaganje" class="form-label fw-bold"></label>
+                                <input asp-for="UslovZaPolaganje" class="form-control" type="number" min="0" step="1" />
+                                <span asp-validation-for="UslovZaPolaganje" class="text-danger"></span>
+                            </div>
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Kreiraj
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Odustani
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @section Scripts {
     <script>
@@ -77,7 +92,7 @@
                         items += "<option value='" + nastavniPlan.id + "'>" + nastavniPlan.godinaStudija + "</option>";
                     });
                     $('#NastavniPlanId').html(items);
-                    $('#PredmetId').html('<option value="">Odaberite predmet</option>');
+                    $('#PredmetId').html('<option value=\"\">Odaberite predmet</option>');
                 });
             });
 
@@ -93,7 +108,5 @@
             });
         });
     </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

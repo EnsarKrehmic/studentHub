@@ -44,15 +44,29 @@ namespace StudentHub.Controllers
                 .Include(o => o.NastavnaAktivnost)
                 .Include(o => o.DjelimicneOcjene);
 
-            List<Ocjena> ocjene;
+            List<Ocjena> glavneOcjene;
+            List<Ocjena> parcijalneOcjene;
+            List<Ocjena> sveOcjene;
 
             if (User.IsInRole("Student"))
             {
-                ocjene = await ocjeneQuery.Where(o => o.Student.AspNetUserId == userId && o.ParentOcjenaId == null).ToListAsync();
+                glavneOcjene = await ocjeneQuery
+                    .Where(o => o.Student.AspNetUserId == userId
+                             && o.Tip == TipOcjene.Predmet
+                             && o.IspitId == null
+                             && o.ParentOcjenaId == null)
+                    .ToListAsync();
 
-                double prosjekOcjena = ocjene.Any() ? ocjene.Average(o => o.Vrijednost) : 0;
+                // Dodaj sve parcijalne ocjene za ove glavne
+                parcijalneOcjene = glavneOcjene
+                    .SelectMany(o => o.DjelimicneOcjene ?? new List<Ocjena>())
+                    .ToList();
 
-                var ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
+                sveOcjene = glavneOcjene.Concat(parcijalneOcjene).ToList();
+
+                double prosjekOcjena = glavneOcjene.Any() ? glavneOcjene.Average(o => o.Vrijednost) : 0;
+
+                var ocjeneViewModel = sveOcjene.Select(o => new OcjenaViewModel
                 {
                     Id = o.Id,
                     Tip = o.Tip.ToString(),
@@ -72,33 +86,32 @@ namespace StudentHub.Controllers
                     ProsjekOcjena = prosjekOcjena,
                     StudentStudijskiProgramNaziv = GetStudijskiProgram(o)?.Naziv ?? "Nepoznato",
                     StudijskiProgramId = GetStudijskiProgram(o)?.Id ?? 0,
-                    DjelimicneOcjene = o.DjelimicneOcjene.Select(d => new OcjenaViewModel
-                    {
-                        Id = d.Id,
-                        Vrijednost = d.Vrijednost,
-                        Tip = d.Tip.ToString(),
-                        Komentar = d.Komentar,
-                        TezinaProcentualno = d.TezinaProcentualno,
-                        DatumDodjele = d.DatumUnosa,
-                        NastavnaAktivnostNaziv = d.NastavnaAktivnost?.Naziv,
-                        ProfesorIme = d.Profesor?.Ime,
-                        ProfesorPrezime = d.Profesor?.Prezime
-                    }).ToList()
+                    ParentOcjenaId = o.ParentOcjenaId,
+                    DjelimicneOcjene = new List<OcjenaViewModel>()
                 }).ToList();
 
                 return View(ocjeneViewModel);
             }
             else if (User.IsInRole("Profesor"))
             {
-                ocjene = await ocjeneQuery
-                    .Where(o => o.Profesor.AspNetUserId == userId && o.Tip == TipOcjene.Predmet && o.ParentOcjenaId == null)
+                glavneOcjene = await ocjeneQuery
+                    .Where(o => o.Profesor.AspNetUserId == userId
+                             && o.Tip == TipOcjene.Predmet
+                             && o.IspitId == null
+                             && o.ParentOcjenaId == null)
                     .ToListAsync();
 
-                var prosjekPoPredmetu = ocjene
+                parcijalneOcjene = glavneOcjene
+                    .SelectMany(o => o.DjelimicneOcjene ?? new List<Ocjena>())
+                    .ToList();
+
+                sveOcjene = glavneOcjene.Concat(parcijalneOcjene).ToList();
+
+                var prosjekPoPredmetu = glavneOcjene
                     .GroupBy(o => o.PredmetId)
                     .ToDictionary(g => g.Key, g => g.Average(x => x.Vrijednost));
 
-                var ocjeneViewModel = ocjene.Select(o => new OcjenaViewModel
+                var ocjeneViewModel = sveOcjene.Select(o => new OcjenaViewModel
                 {
                     Id = o.Id,
                     Tip = o.Tip.ToString(),
@@ -114,42 +127,40 @@ namespace StudentHub.Controllers
                     ProfesorIme = o.Profesor?.Ime,
                     ProfesorPrezime = o.Profesor?.Prezime,
                     ProfesorTitula = o.Profesor?.ProfesorTitula,
-                    ProsjekPoPredmetu = prosjekPoPredmetu.ContainsKey(o.PredmetId ?? 0) ? prosjekPoPredmetu[o.PredmetId ?? 0] : 0,
+                    ProsjekPoPredmetu = o.PredmetId.HasValue && prosjekPoPredmetu.ContainsKey(o.PredmetId.Value) ? prosjekPoPredmetu[o.PredmetId.Value] : 0,
                     StudentStudijskiProgramNaziv = GetStudijskiProgram(o)?.Naziv ?? "Nepoznato",
                     StudijskiProgramId = GetStudijskiProgram(o)?.Id ?? 0,
-                    DjelimicneOcjene = o.DjelimicneOcjene.Select(d => new OcjenaViewModel
-                    {
-                        Id = d.Id,
-                        Vrijednost = d.Vrijednost,
-                        Tip = d.Tip.ToString(),
-                        Komentar = d.Komentar,
-                        TezinaProcentualno = d.TezinaProcentualno,
-                        DatumDodjele = d.DatumUnosa,
-                        NastavnaAktivnostNaziv = d.NastavnaAktivnost?.Naziv,
-                        ProfesorIme = d.Profesor?.Ime,
-                        ProfesorPrezime = d.Profesor?.Prezime
-                    }).ToList()
+                    ParentOcjenaId = o.ParentOcjenaId,
+                    DjelimicneOcjene = new List<OcjenaViewModel>()
                 }).ToList();
 
                 return View(ocjeneViewModel);
             }
             else if (User.IsInRole("Studentska služba"))
             {
-                ocjene = await ocjeneQuery
-                    .Where(o => o.ParentOcjenaId == null)
+                glavneOcjene = await ocjeneQuery
+                    .Where(o => o.Tip == TipOcjene.Predmet
+                             && o.IspitId == null
+                             && o.ParentOcjenaId == null)
                     .ToListAsync();
 
-                var prosjekPoPredmetu = ocjene
+                parcijalneOcjene = glavneOcjene
+                    .SelectMany(o => o.DjelimicneOcjene ?? new List<Ocjena>())
+                    .ToList();
+
+                sveOcjene = glavneOcjene.Concat(parcijalneOcjene).ToList();
+
+                var prosjekPoPredmetu = glavneOcjene
                     .Where(o => o.Tip == TipOcjene.Predmet && o.Predmet != null)
                     .GroupBy(o => o.Predmet.Naziv)
                     .ToDictionary(g => g.Key, g => g.Average(x => x.Vrijednost));
 
-                var prosjekPoStudijskomProgramu = ocjene
+                var prosjekPoStudijskomProgramu = glavneOcjene
                     .Where(o => o.Tip == TipOcjene.Predmet && GetStudijskiProgram(o) != null)
                     .GroupBy(o => GetStudijskiProgram(o).Naziv)
                     .ToDictionary(g => g.Key, g => g.Average(x => x.Vrijednost));
 
-                var ocjeneViewModel = ocjene.Select(o =>
+                var ocjeneViewModel = sveOcjene.Select(o =>
                 {
                     var studijskiProgram = GetStudijskiProgram(o);
                     var studijskiProgramNaziv = studijskiProgram?.Naziv ?? "Nepoznato";
@@ -181,18 +192,8 @@ namespace StudentHub.Controllers
                                         $"Ukupno: {(((o.Predmet != null && prosjekPoPredmetu.ContainsKey(o.Predmet.Naziv) ? prosjekPoPredmetu[o.Predmet.Naziv] : 0) + (studijskiProgram != null && prosjekPoStudijskomProgramu.ContainsKey(studijskiProgramNaziv) ? prosjekPoStudijskomProgramu[studijskiProgramNaziv] : 0)) / 2):0.00}",
                         StudentStudijskiProgramNaziv = studijskiProgramNaziv,
                         StudijskiProgramId = studijskiProgram?.Id ?? 0,
-                        DjelimicneOcjene = o.DjelimicneOcjene.Select(d => new OcjenaViewModel
-                        {
-                            Id = d.Id,
-                            Vrijednost = d.Vrijednost,
-                            Tip = d.Tip.ToString(),
-                            Komentar = d.Komentar,
-                            TezinaProcentualno = d.TezinaProcentualno,
-                            DatumDodjele = d.DatumUnosa,
-                            NastavnaAktivnostNaziv = d.NastavnaAktivnost?.Naziv,
-                            ProfesorIme = d.Profesor?.Ime,
-                            ProfesorPrezime = d.Profesor?.Prezime
-                        }).ToList()
+                        ParentOcjenaId = o.ParentOcjenaId,
+                        DjelimicneOcjene = new List<OcjenaViewModel>()
                     };
                 }).ToList();
 
@@ -232,6 +233,10 @@ namespace StudentHub.Controllers
                     .ThenInclude(p => p.NastavnaAktivnost)
                 .Include(o => o.ParentOcjena)
                     .ThenInclude(p => p.Predmet)
+                .Include(o => o.ParentOcjena)
+                   .ThenInclude(po => po.Student)
+                .Include(o => o.ParentOcjena)
+                   .ThenInclude(po => po.Profesor)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ocjena == null)
@@ -376,6 +381,18 @@ namespace StudentHub.Controllers
             if (parentOcjenaId.HasValue)
                 ViewBag.ParentOcjenaId = parentOcjenaId;
 
+            // Lista slobodnih parcijalnih ocjena ako se kreira glavna (parentOcjenaId == null)
+            if (parentOcjenaId == null)
+            {
+                ViewBag.NoveParcijalne = await _context.Ocjene
+                    .Where(o => o.PredmetId == predmetId
+                             && o.StudentId == studentId
+                             && o.IspitId != null
+                             && o.ParentOcjenaId == null)
+                    .OrderBy(o => o.DatumUnosa)
+                    .ToListAsync();
+            }
+
             var model = new Ocjena
             {
                 Tip = TipOcjene.Predmet,
@@ -423,11 +440,42 @@ namespace StudentHub.Controllers
                 ViewBag.StudentImePrezime = student != null ? $"{student.Ime} {student.Prezime}" : "";
                 if (ocjena.ParentOcjenaId.HasValue)
                     ViewBag.ParentOcjenaId = ocjena.ParentOcjenaId;
+
+                // Ponovo učitaj "slobodne" parcijalne ocjene ako je glavna
+                if (!ocjena.ParentOcjenaId.HasValue)
+                {
+                    ViewBag.NoveParcijalne = await _context.Ocjene
+                        .Where(o => o.PredmetId == ocjena.PredmetId
+                                 && o.StudentId == ocjena.StudentId
+                                 && o.IspitId != null
+                                 && o.ParentOcjenaId == null)
+                        .OrderBy(o => o.DatumUnosa)
+                        .ToListAsync();
+                }
                 return View("CreatePredmetOcjena", ocjena);
             }
 
+            // --- 1. Snimi ocjenu ---
             _context.Add(ocjena);
             await _context.SaveChangesAsync();
+
+            // --- 2. Ako je glavna ocjena, automatski veži sve "slobodne" parcijalne na ovu glavnu ---
+            if (ocjena.ParentOcjenaId == null)
+            {
+                var slobodneParcijalne = await _context.Ocjene
+                    .Where(o => o.PredmetId == ocjena.PredmetId
+                             && o.StudentId == ocjena.StudentId
+                             && o.IspitId != null
+                             && o.ParentOcjenaId == null
+                             && o.Id != ocjena.Id)
+                    .ToListAsync();
+
+                foreach (var parcijalna in slobodneParcijalne)
+                {
+                    parcijalna.ParentOcjenaId = ocjena.Id;
+                }
+                await _context.SaveChangesAsync();
+            }
 
             if (ocjena.PredmetId.HasValue)
                 await UpdateAverageGrade(ocjena.PredmetId.Value);
@@ -537,6 +585,22 @@ namespace StudentHub.Controllers
                 return RedirectToAction("Index");
             }
 
+            // PRIKUPI VEZANE I SLOBODNE PARCIJALNE OCJENE
+            ViewBag.PovezaneParcijalne = await _context.Ocjene
+                .Where(o => o.ParentOcjenaId == ocjena.Id)
+                .OrderBy(o => o.DatumUnosa)
+                .ToListAsync();
+
+            ViewBag.NoveParcijalne = await _context.Ocjene
+                .Where(o => o.PredmetId == ocjena.PredmetId
+                         && o.StudentId == ocjena.StudentId
+                         && o.IspitId != null
+                         && o.ParentOcjenaId == null
+                         && o.Id != ocjena.Id)
+                .OrderBy(o => o.DatumUnosa)
+                .ToListAsync();
+
+            // SelectList
             ViewBag.StudentId = new SelectList(_context.Studenti.Select(s => new
             {
                 s.Id,
@@ -558,6 +622,9 @@ namespace StudentHub.Controllers
             {
                 ViewBag.ProfesorId = new SelectList(Enumerable.Empty<SelectListItem>());
             }
+
+            ViewBag.PredmetNaziv = ocjena.Predmet?.Naziv;
+            ViewBag.StudentImePrezime = $"{ocjena.Student?.Ime} {ocjena.Student?.Prezime}";
 
             return View("EditPredmetOcjena", ocjena);
         }
@@ -610,11 +677,43 @@ namespace StudentHub.Controllers
                     FullName = p.ProfesorTitula + " " + p.Ime + " " + p.Prezime
                 }), "Id", "FullName", ocjena.ProfesorId);
 
+                ViewBag.PovezaneParcijalne = await _context.Ocjene
+                    .Where(o => o.ParentOcjenaId == ocjena.Id)
+                    .OrderBy(o => o.DatumUnosa)
+                    .ToListAsync();
+
+                ViewBag.NoveParcijalne = await _context.Ocjene
+                    .Where(o => o.PredmetId == ocjena.PredmetId
+                             && o.StudentId == ocjena.StudentId
+                             && o.IspitId != null
+                             && o.ParentOcjenaId == null
+                             && o.Id != ocjena.Id)
+                    .OrderBy(o => o.DatumUnosa)
+                    .ToListAsync();
+
                 return View("EditPredmetOcjena", ocjena);
             }
 
             _context.Update(ocjena);
             await _context.SaveChangesAsync();
+
+            // --- Veže sve "slobodne" parcijalne ocjene na glavnu ako je ovo glavna ---
+            if (ocjena.ParentOcjenaId == null)
+            {
+                var slobodneParcijalne = await _context.Ocjene
+                    .Where(o => o.PredmetId == ocjena.PredmetId
+                             && o.StudentId == ocjena.StudentId
+                             && o.IspitId != null
+                             && o.ParentOcjenaId == null
+                             && o.Id != ocjena.Id)
+                    .ToListAsync();
+
+                foreach (var parcijalna in slobodneParcijalne)
+                {
+                    parcijalna.ParentOcjenaId = ocjena.Id;
+                }
+                await _context.SaveChangesAsync();
+            }
 
             if (ocjena.PredmetId.HasValue)
                 await UpdateAverageGrade(ocjena.PredmetId.Value);

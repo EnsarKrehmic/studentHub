@@ -21,7 +21,7 @@ namespace StudentHub.ViewModels
         public List<PredmetIspitViewModel> Predmeti { get; set; } = new List<PredmetIspitViewModel>();
         public List<NastavniPlanIspitViewModel> NastavniPlanovi { get; set; } = new List<NastavniPlanIspitViewModel>();
         public List<long> PrijavljeniIspitiIds { get; set; } = new List<long>();
-        public Dictionary<long?, Ocjena> Ocjene { get; set; } = new Dictionary<long?, Ocjena>(); // Promjena na long?
+        public Dictionary<long?, List<Ocjena>> Ocjene { get; set; } = new Dictionary<long?, List<Ocjena>>();
         public List<Student> PrijavljeniStudenti { get; set; } = new List<Student>();
         public List<RezultatIspitaViewModel> RezultatiIspita { get; set; } = new List<RezultatIspitaViewModel>();
         public List<Prijava> Prijave { get; set; } = new List<Prijava>();

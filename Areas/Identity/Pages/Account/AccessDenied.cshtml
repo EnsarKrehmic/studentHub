@@ -1,10 +1,53 @@
 ﻿@page
 @model AccessDeniedModel
 @{
-    ViewData["Title"] = "Access denied";
+    ViewData["Title"] = "Pristup odbijen";
 }
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">Nemate dozvolu za pristup ovoj stranici.</p>
-</header>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-lg border-danger">
+                <div class="card-header bg-danger text-white text-center">
+                    <h2 class="mb-0"><i class="fas fa-lock fa-lg me-2"></i> Pristup odbijen</h2>
+                </div>
+                <div class="card-body text-center">
+                    <div class="alert alert-danger d-flex align-items-center gap-2 justify-content-center mb-4" role="alert" style="font-size:1.1rem;">
+                        <i class="fas fa-ban fa-2x"></i>
+                        <div>
+                            <strong>Nemate dozvolu za pristup ovoj stranici ili akciji.</strong><br />
+                            Molimo provjerite svoja prava ili se prijavite drugim korisničkim računom.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <a href="/" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-home"></i> Povratak na početnu
+                        </a>
+                        <a href="/Identity/Account/Login" class="btn btn-primary me-2">
+                            <i class="fas fa-sign-in-alt"></i> Prijava drugim nalogom
+                        </a>
+                        <button id="openSupportPanelBtn" class="btn btn-success">
+                            <i class="fas fa-headset"></i> Kontaktiraj podršku
+                        </button>
+                    </div>
+                    <p class="text-muted mt-3 small">
+                        Ako mislite da je došlo do greške ili da bi trebali imati pristup, kontaktirajte administratora.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('openSupportPanelBtn')?.addEventListener('click', function (e) {
+        e.preventDefault();
+        // Ovdje pozovi JS koji otvara panel, npr.:
+        if (typeof openSupportPanel === "function") {
+            openSupportPanel();
+        } else if (document.getElementById('supportFab')) {
+            document.getElementById('supportFab').click();
+        }
+    });
+</script>

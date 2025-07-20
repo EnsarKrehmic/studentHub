@@ -7,8 +7,10 @@
     var prikaziTezinu = Model.Any(o => o.TezinaProcentualno.HasValue);
 }
 
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Lista ocjena</h2>
+<div class="container my-4">
+    <h2 class="text-center mb-4 text-primary fw-bold">
+        <i class="fas fa-graduation-cap me-2"></i> Lista ocjena
+    </h2>
 
     @if (userRole == "Profesor" || userRole == "Studentska služba")
     {
@@ -19,18 +21,20 @@
         .OrderBy(p => p.Predmet)
         .ToList();
 
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-4 border-primary">
             <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Prosjek ocjena po predmetima</h5>
-                <button class="btn btn-sm btn-light" id="toggleProsjeciBtn">Prikaži</button>
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i> Prosjek ocjena po predmetima
+                </h5>
+                <button class="btn btn-sm btn-light border" id="toggleProsjeciBtn">Prikaži</button>
             </div>
-            <div class="card-body d-none" id="prosjekContainer">
+            <div class="card-body d-none" id="prosjekContainer" style="transition: all 0.2s;">
                 <ul class="list-group" id="prosjekList">
                     @foreach (var item in prosjekPoPredmetu)
                     {
                         <li class="list-group-item d-flex justify-content-between align-items-center" data-predmet="@item.Predmet">
                             <span class="fw-bold">@item.Predmet</span>
-                            <span class="badge bg-primary rounded-pill">@item.Prosjek.ToString("0.00")</span>
+                            <span class="badge bg-primary rounded-pill fs-6">@item.Prosjek.ToString("0.00")</span>
                         </li>
                     }
                 </ul>
@@ -39,126 +43,175 @@
     }
 
     <div class="mb-4">
-        <label for="predmetFilter" class="form-label">Filter po predmetu:</label>
-        <select id="predmetFilter" class="form-select">
-            <option value="">-- Prikaži sve --</option>
-            @foreach (var predmet in grouped.Select(g => g.Key).Distinct())
-            {
-                <option value="@predmet">@predmet</option>
-            }
-        </select>
+        <div class="row g-2 align-items-center">
+            <div class="col-auto">
+                <label for="predmetFilter" class="form-label fw-semibold mb-0">
+                    <i class="fas fa-filter me-1"></i> Filter po predmetu:
+                </label>
+            </div>
+            <div class="col">
+                <select id="predmetFilter" class="form-select form-select-sm w-auto d-inline-block">
+                    <option value="">-- Prikaži sve --</option>
+                    @foreach (var predmet in grouped.Select(g => g.Key).Distinct())
+                    {
+                        <option value="@predmet">@predmet</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3 d-flex align-items-center">
+        <input type="checkbox" class="form-check-input me-2" id="prikaziParcijalne" checked>
+        <label for="prikaziParcijalne" class="form-check-label">Prikaži parcijalne ocjene</label>
     </div>
 
     @foreach (var group in grouped)
     {
-        <div class="card mb-3 ocjena-grupa" data-predmet="@group.Key">
+        <div class="card mb-3 ocjena-grupa border" data-predmet="@group.Key">
             <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                <button class="btn btn-link text-start w-100 text-dark predmet-toggle">
+                <button class="btn btn-link text-start w-100 text-dark predmet-toggle p-0 border-0" style="font-size:1.13rem;">
                     <strong>@group.Key</strong>
                 </button>
                 <span class="badge bg-secondary">@group.Count() ocjena</span>
             </div>
             <div class="card-body p-0 d-none">
-                <table class="table table-striped table-sm mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            @if (userRole != "Student")
-                            {
-                                <th>Student</th>
-                            }
-                            <th>Tip</th>
-                            <th>Vrijednost</th>
-                            @* Prikazi kolonu Težina samo ako postoji barem jedna vrijednost *@
-                            @if (prikaziTezinu)
-                            {
-                                <th>
-                                    Težina
-                                    <span data-bs-toggle="tooltip" title="Težina ocjene u ukupnoj ocjeni (procenti)">
-                                        <i class="fas fa-info-circle text-secondary"></i>
-                                    </span>
-                                </th>
-                            }
-                            <th>Datum</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var ocjena in group.OrderByDescending(o => o.DatumDodjele))
-                        {
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm align-middle mb-0">
+                        <thead class="table-light">
                             <tr>
                                 @if (userRole != "Student")
                                 {
-                                    <td>@ocjena.StudentIme @ocjena.StudentPrezime</td>
+                                    <th>Student</th>
                                 }
-                                <td>@ocjena.Tip</td>
-                                <td>
-                                    <span class="badge @(ocjena.Vrijednost >= 8 ? "bg-success" : ocjena.Vrijednost >= 6 ? "bg-warning" : "bg-danger")">
-                                        @ocjena.Vrijednost
-                                    </span>
-                                </td>
+                                <th>Tip</th>
+                                <th>Vrijednost</th>
                                 @if (prikaziTezinu)
                                 {
+                                    <th>Težina <span data-bs-toggle="tooltip" title="Težina ocjene u ukupnoj ocjeni (procenti)"><i class="fas fa-info-circle text-secondary"></i></span></th>
+                                }
+                                <th>Datum</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ocjena in group.OrderByDescending(o => o.DatumDodjele))
+                            {
+                                var isParcijalna = ocjena.ParentOcjenaId != null;
+                                <tr class="@(isParcijalna ? "parcijalna-ocjena" : "")">
+                                    @if (userRole != "Student")
+                                    {
+                                        <td>@ocjena.StudentIme @ocjena.StudentPrezime</td>
+                                    }
                                     <td>
-                                        @if (ocjena.TezinaProcentualno.HasValue)
+                                        @ocjena.Tip
+                                        @if (ocjena.ParentOcjenaId == null && ocjena.Tip == "Predmet")
                                         {
-                                            @($"{ocjena.TezinaProcentualno}%")
+                                            <span class="badge bg-primary ms-1">Zaključna</span>
                                         }
-                                        else
+                                        else if (isParcijalna)
                                         {
-                                            <span class="text-muted">–</span>
+                                            <span class="badge bg-info ms-1">Parcijalna</span>
                                         }
                                     </td>
-                                }
-                                <td>@ocjena.DatumDodjele?.ToString("dd.MM.yyyy")</td>
-                                <td>
-                                    <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjena.Id" class="btn btn-sm btn-outline-secondary">Detalji</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                    <td>
+                                        <span class="badge @(ocjena.Vrijednost >= 8 ? "bg-success" : ocjena.Vrijednost >= 6 ? "bg-warning text-dark" : "bg-danger") fs-6">
+                                            @ocjena.Vrijednost
+                                        </span>
+                                    </td>
+                                    @if (prikaziTezinu)
+                                    {
+                                        <td>
+                                            @if (ocjena.TezinaProcentualno.HasValue)
+                                            {
+                                                @($"{ocjena.TezinaProcentualno}%")
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">–</span>
+                                            }
+                                        </td>
+                                    }
+                                    <td>@ocjena.DatumDodjele?.ToString("dd.MM.yyyy")</td>
+                                    <td class="text-center">
+                                        <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjena.Id" class="btn btn-sm btn-outline-secondary" title="Detalji">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        @if (User.IsInRole("Profesor") || User.IsInRole("Studentska služba"))
+                                        {
+                                            <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@ocjena.Id"
+                                               class="btn btn-sm btn-outline-danger ms-1" title="Obriši ocjenu">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     }
 
     <div class="text-center mt-4">
-        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu</a>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Povratak na početnu
+        </a>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // Tooltip za kolonu "Težina"
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-          return new bootstrap.Tooltip(tooltipTriggerEl)
-        });
-
-        // Toggle prikaz prosjeka
-        document.getElementById("toggleProsjeciBtn")?.addEventListener("click", function () {
-            const container = document.getElementById("prosjekContainer");
-            container.classList.toggle("d-none");
-            this.textContent = container.classList.contains("d-none") ? "Prikaži" : "Sakrij";
-        });
-
-        // Toggle prikaz ocjena po predmetu
-        document.querySelectorAll(".predmet-toggle").forEach(btn => {
-            btn.addEventListener("click", function () {
-                const card = this.closest(".ocjena-grupa");
-                const body = card.querySelector(".card-body");
-                body.classList.toggle("d-none");
+        document.addEventListener("DOMContentLoaded", function () {
+            // Tooltip za kolonu "Težina"
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-        });
 
-        // Filter po predmetu
-        document.getElementById("predmetFilter").addEventListener("change", function () {
-            const selected = this.value;
-            document.querySelectorAll(".ocjena-grupa").forEach(group => {
-                group.style.display = !selected || group.dataset.predmet === selected ? "block" : "none";
+            // Toggle prikaz prosjeka
+            document.getElementById("toggleProsjeciBtn")?.addEventListener("click", function () {
+                const container = document.getElementById("prosjekContainer");
+                container.classList.toggle("d-none");
+                this.textContent = container.classList.contains("d-none") ? "Prikaži" : "Sakrij";
             });
-            document.querySelectorAll("#prosjekList li").forEach(item => {
-                item.style.display = !selected || item.dataset.predmet === selected ? "flex" : "none";
+
+            // Toggle prikaz ocjena po predmetu (accordion)
+            document.querySelectorAll(".predmet-toggle").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    const card = this.closest(".ocjena-grupa");
+                    const body = card.querySelector(".card-body");
+                    body.classList.toggle("d-none");
+                });
             });
+
+            // Filter po predmetu
+            document.getElementById("predmetFilter").addEventListener("change", function () {
+                const selected = this.value;
+                document.querySelectorAll(".ocjena-grupa").forEach(group => {
+                    group.style.display = !selected || group.dataset.predmet === selected ? "block" : "none";
+                });
+                document.querySelectorAll("#prosjekList li").forEach(item => {
+                    item.style.display = !selected || item.dataset.predmet === selected ? "flex" : "none";
+                });
+            });
+
+            // Početno otvori sve grupe (ili možeš sakriti, po želji)
+            document.querySelectorAll(".card-body").forEach(body => body.classList.add("d-none"));
+
+            // FILTER PARCIJALNIH OCJENA – sve unutar DOMContentLoaded
+            var cb = document.getElementById("prikaziParcijalne");
+            function refreshParcijalneRows() {
+                document.querySelectorAll(".parcijalna-ocjena").forEach(function (row) {
+                    row.style.display = cb.checked ? "" : "none";
+                });
+            }
+            if (cb) {
+                cb.addEventListener("change", refreshParcijalneRows);
+                // Pozovi jednom odmah da se stanje postavi na početku
+                refreshParcijalneRows();
+            }
         });
     </script>
 }

@@ -8,147 +8,151 @@
     var asistenti = ViewBag.Asistenti as IEnumerable<dynamic>;
 }
 
-<h2>@ViewData["Title"]</h2>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            <div class="form-group">
-                <label asp-for="Naziv"></label>
-                <input asp-for="Naziv" class="form-control" />
-                <span asp-validation-for="Naziv" class="text-danger"></span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="Naziv" class="form-label"></label>
+                                <input asp-for="Naziv" class="form-control" placeholder="Unesite naziv predmeta" />
+                                <span asp-validation-for="Naziv" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="ECTS" class="form-label"></label>
+                                <input asp-for="ECTS" class="form-control" />
+                                <span asp-validation-for="ECTS" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="UkupnoBodova" class="form-label"></label>
+                                <input asp-for="UkupnoBodova" class="form-control" min="1" max="1000" />
+                                <small class="form-text text-muted">Ukupni broj bodova na predmetu (npr. 100).</small>
+                                <span asp-validation-for="UkupnoBodova" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="TipPredmeta" class="form-label"></label>
+                                <select asp-for="TipPredmeta" class="form-control" asp-items="Html.GetEnumSelectList<TipPredmeta>()"></select>
+                                <span asp-validation-for="TipPredmeta" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Semestar" class="form-label"></label>
+                                <select asp-for="Semestar" class="form-control">
+                                    <option value="">Odaberite semestar</option>
+                                    <option value="1">1 (Zimski)</option>
+                                    <option value="2">2 (Ljetni)</option>
+                                </select>
+                                <span asp-validation-for="Semestar" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="StudijskiProgramId" class="form-label">Studijski program</label>
+                                <select asp-for="StudijskiProgramId" class="form-control" id="StudijskiProgramId">
+                                    <option value="">Odaberite program</option>
+                                    @foreach (var program in programi)
+                                    {
+                                        <option value="@program.Value">@program.Text</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="StudijskiProgramId" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="GodinaStudija" class="form-label"></label>
+                                <select asp-for="GodinaStudija" class="form-control" id="GodinaStudija">
+                                    <option value="">Odaberite godinu</option>
+                                    @for (int i = 1; i <= 6; i++)
+                                    {
+                                        <option value="@i">@i. godina</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="GodinaStudija" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <label asp-for="Opis" class="form-label"></label>
+                                <textarea asp-for="Opis" class="form-control" placeholder="Unesite opis predmeta"></textarea>
+                                <span asp-validation-for="Opis" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="NastavniPlanId" class="form-label">Nastavni plan (opcionalno)</label>
+                                <select asp-for="NastavniPlanId" class="form-control" id="NastavniPlanId">
+                                    <option value="">Odaberite nastavni plan</option>
+                                    @foreach (var plan in nastavniPlanovi)
+                                    {
+                                        <option value="@plan.Id"
+                                                data-programid="@plan.StudijskiProgramId"
+                                                data-godina="@plan.GodinaStudija">@plan.Naziv</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="NastavniPlanId" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="SatiPredavanja" class="form-label"></label>
+                                <input asp-for="SatiPredavanja" class="form-control" />
+                                <span asp-validation-for="SatiPredavanja" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="SatiVjezbi" class="form-label"></label>
+                                <input asp-for="SatiVjezbi" class="form-control" />
+                                <span asp-validation-for="SatiVjezbi" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ProfesorIds" class="form-label">Profesor/i (opcionalno)</label>
+                                <select class="form-control" id="ProfesorIds" name="ProfesorIds" multiple>
+                                    @foreach (var profesor in profesori)
+                                    {
+                                        <option value="@profesor.Id" data-programid="@profesor.StudijskiProgramId">@profesor.ImePrezime</option>
+                                    }
+                                </select>
+                                <small class="form-text text-muted">Odaberite jednog ili više profesora.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="AsistentIds" class="form-label">Asistent/i (opcionalno)</label>
+                                <select class="form-control" id="AsistentIds" name="AsistentIds" multiple>
+                                    @foreach (var asistent in asistenti)
+                                    {
+                                        <option value="@asistent.Id" data-programid="@asistent.StudijskiProgramId">@asistent.ImePrezime</option>
+                                    }
+                                </select>
+                                <small class="form-text text-muted">Odaberite jednog ili više asistenata.</small>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="btn btn-primary px-4">Kreiraj predmet</button>
+                            <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Opis"></label>
-                <textarea asp-for="Opis" class="form-control"></textarea>
-                <span asp-validation-for="Opis" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ECTS"></label>
-                <input asp-for="ECTS" class="form-control" />
-                <span asp-validation-for="ECTS" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TipPredmeta"></label>
-                <select asp-for="TipPredmeta" class="form-control" asp-items="Html.GetEnumSelectList<TipPredmeta>()"></select>
-                <span asp-validation-for="TipPredmeta" class="text-danger"></span>
-            </div>
-            <!-- STUDIJSKI PROGRAM -->
-            <div class="form-group">
-                <label for="StudijskiProgramId">Studijski program</label>
-                <select asp-for="StudijskiProgramId" class="form-control" id="StudijskiProgramId">
-                    <option value="">Odaberite program</option>
-                    @foreach (var program in programi)
-                    {
-                        <option value="@program.Value">@program.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
-            </div>
-            <!-- GODINA STUDIJA -->
-            <div class="form-group">
-                <label asp-for="GodinaStudija"></label>
-                <select asp-for="GodinaStudija" class="form-control" id="GodinaStudija">
-                    <option value="">Odaberite godinu</option>
-                    @for (int i = 1; i <= 6; i++)
-                    {
-                        <option value="@i">@i. godina</option>
-                    }
-                </select>
-                <span asp-validation-for="GodinaStudija" class="text-danger"></span>
-            </div>
-            <!-- SEMESTAR -->
-            <div class="form-group">
-                <label asp-for="Semestar"></label>
-                <select asp-for="Semestar" class="form-control">
-                    <option value="">Odaberite semestar</option>
-                    <option value="1">1 (Zimski)</option>
-                    <option value="2">2 (Ljetni)</option>
-                </select>
-                <span asp-validation-for="Semestar" class="text-danger"></span>
-            </div>
-            <!-- NASTAVNI PLAN (filtrira se po programu + godini) -->
-            <div class="form-group">
-                <label for="NastavniPlanId">Nastavni plan (opcionalno)</label>
-                <select asp-for="NastavniPlanId" class="form-control" id="NastavniPlanId">
-                    <option value="">Odaberite nastavni plan</option>
-                    @foreach (var plan in nastavniPlanovi)
-                    {
-                        <option value="@plan.Id"
-                                data-programid="@plan.StudijskiProgramId"
-                                data-godina="@plan.GodinaStudija">@plan.Naziv</option>
-                    }
-                </select>
-                <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
-            </div>
-            <!-- SATI PREDAVANJA I VJEŽBI -->
-            <div class="form-group">
-                <label asp-for="SatiPredavanja"></label>
-                <input asp-for="SatiPredavanja" class="form-control" />
-                <span asp-validation-for="SatiPredavanja" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SatiVjezbi"></label>
-                <input asp-for="SatiVjezbi" class="form-control" />
-                <span asp-validation-for="SatiVjezbi" class="text-danger"></span>
-            </div>
-            <!-- PROFESORI (filtrirani po programu) -->
-            <div class="form-group">
-                <label for="ProfesorIds">Profesor/i (opcionalno)</label>
-                <select class="form-control" id="ProfesorIds" name="ProfesorIds" multiple>
-                    @foreach (var profesor in profesori)
-                    {
-                        <option value="@profesor.Id" data-programid="@profesor.StudijskiProgramId">@profesor.ImePrezime</option>
-                    }
-                </select>
-            </div>
-            <!-- ASISTENTI (filtrirani po programu) -->
-            <div class="form-group">
-                <label for="AsistentIds">Asistent/i (opcionalno)</label>
-                <select class="form-control" id="AsistentIds" name="AsistentIds" multiple>
-                    @foreach (var asistent in asistenti)
-                    {
-                        <option value="@asistent.Id" data-programid="@asistent.StudijskiProgramId">@asistent.ImePrezime</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Kreiraj" class="btn btn-primary mt-3" />
-                <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
         // Helper za filtraciju
         function filterByProgram() {
             var programId = $("#StudijskiProgramId").val();
-            // Godina studija reset
             $("#GodinaStudija").val("");
 
-            // Filtriraj profesore
             $("#ProfesorIds option").each(function () {
                 $(this).toggle(!programId || $(this).data("programid") == programId);
             });
 
-            // Filtriraj asistente
             $("#AsistentIds option").each(function () {
                 $(this).toggle(!programId || $(this).data("programid") == programId);
             });
 
-            // Filtriraj nastavne planove (po programu)
             $("#NastavniPlanId option").each(function () {
                 var pid = $(this).data("programid");
                 $(this).toggle(!programId || pid == programId || !pid);
             });
         }
 
-        // Helper za filtraciju nastavnih planova po godini studija
         function filterNastavniPlanByGodina() {
             var godina = $("#GodinaStudija").val();
             var programId = $("#StudijskiProgramId").val();
@@ -169,7 +173,6 @@
             filterNastavniPlanByGodina();
         });
 
-        // Pokreni na loadu za inicijalni prikaz
         $(function () {
             filterByProgram();
             filterNastavniPlanByGodina();

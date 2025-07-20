@@ -1,53 +1,49 @@
 ﻿@model StudentHub.Models.Student
-
 @{
     ViewData["Title"] = "Brisanje studenta";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<div class="alert alert-warning" role="alert">
-    <h4 class="alert-heading">Da li ste sigurni da želite obrisati ovog studenta?</h4>
-    <p>Ova akcija je nepovratna i trajno će ukloniti sve podatke o studentu.</p>
-</div>
-
-<div class="card mb-4">
-    <div class="card-header bg-danger text-white">
-        <h5>Podaci o studentu</h5>
-    </div>
+<div class="card shadow-sm mx-auto" style="max-width: 540px;">
     <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Ime:</dt>
-            <dd class="col-sm-9">@Model.Ime</dd>
-
-            <dt class="col-sm-3">Prezime:</dt>
-            <dd class="col-sm-9">@Model.Prezime</dd>
-
-            <dt class="col-sm-3">JMBG:</dt>
-            <dd class="col-sm-9">@Model.JMBG</dd>
-
-            <dt class="col-sm-3">Email:</dt>
-            <dd class="col-sm-9">@Model.Email</dd>
-
-            <dt class="col-sm-3">Broj indeksa:</dt>
-            <dd class="col-sm-9">@Model.BrojIndeksa</dd>
-
-            <dt class="col-sm-3">Godina studija:</dt>
-            <dd class="col-sm-9">@Model.GodinaStudija</dd>
-
-            <dt class="col-sm-3">Semestar:</dt>
-            <dd class="col-sm-9">@Model.Semestar</dd>
-
-            <dt class="col-sm-3">Uloga:</dt>
-            <dd class="col-sm-9">@Model.Uloga</dd>
+        <h2 class="card-title">@ViewData["Title"]</h2>
+        <hr />
+        <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
+            <i class="fas fa-exclamation-triangle fa-lg"></i>
+            <div>
+                <strong>Da li ste sigurni da želite obrisati ovog studenta?</strong><br />
+                <span class="small">Ova akcija je <span class="fw-bold text-danger">nepovratna</span> i trajno će ukloniti sve podatke o studentu.</span>
+            </div>
+        </div>
+        <dl class="row mb-3">
+            <dt class="col-sm-4">Ime:</dt>
+            <dd class="col-sm-8">@Model.Ime</dd>
+            <dt class="col-sm-4">Prezime:</dt>
+            <dd class="col-sm-8">@Model.Prezime</dd>
+            <dt class="col-sm-4">JMBG:</dt>
+            <dd class="col-sm-8">@Model.JMBG</dd>
+            <dt class="col-sm-4">Email:</dt>
+            <dd class="col-sm-8">@Model.Email</dd>
+            <dt class="col-sm-4">Broj indeksa:</dt>
+            <dd class="col-sm-8">@Model.BrojIndeksa</dd>
+            <dt class="col-sm-4">Godina studija:</dt>
+            <dd class="col-sm-8">
+                <span class="badge bg-primary">@Model.GodinaStudija</span>
+            </dd>
+            <dt class="col-sm-4">Semestar:</dt>
+            <dd class="col-sm-8">
+                <span class="badge bg-info text-dark">@Model.Semestar</span>
+            </dd>
+            <dt class="col-sm-4">Uloga:</dt>
+            <dd class="col-sm-8">@Model.Uloga</dd>
         </dl>
+        <form asp-action="Delete" method="post" class="d-flex gap-2">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Obriši
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Odustani
+            </a>
+        </form>
     </div>
 </div>
-
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <button type="submit" class="btn btn-danger">Obriši</button>
-        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-    </div>
-</form>

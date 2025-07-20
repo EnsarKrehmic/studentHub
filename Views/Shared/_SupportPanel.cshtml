@@ -10,21 +10,21 @@
         <h4 class="mb-3 d-flex align-items-center gap-2">
             <i class="fas fa-hands-helping text-success"></i> <span>Podrška korisnicima</span>
         </h4>
-        <ul class="nav nav-tabs mb-3 border-bottom-0" id="supportTabNav" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="tab-chatbot" data-toggle="tab" href="#tabChatbot" role="tab">
+        <ul class="nav nav-tabs mb-3 border-0" id="supportTabNav" role="tablist">
+            <li class="nav-item flex-fill text-center">
+                <button class="nav-link active" id="tab-chatbot" data-bs-toggle="tab" data-bs-target="#tabChatbot" type="button" role="tab">
                     <i class="fas fa-robot"></i> AI Chatbot
-                </a>
+                </button>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="tab-upit" data-toggle="tab" href="#tabUpit" role="tab">
+            <li class="nav-item flex-fill text-center">
+                <button class="nav-link" id="tab-upit" data-bs-toggle="tab" data-bs-target="#tabUpit" type="button" role="tab">
                     <i class="fas fa-envelope"></i> Upit službi
-                </a>
+                </button>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="tab-bug" data-toggle="tab" href="#tabBug" role="tab">
+            <li class="nav-item flex-fill text-center">
+                <button class="nav-link" id="tab-bug" data-bs-toggle="tab" data-bs-target="#tabBug" type="button" role="tab">
                     <i class="fas fa-bug"></i> Bug/Poboljšanje
-                </a>
+                </button>
             </li>
         </ul>
         <div class="tab-content" id="supportTabContent">
@@ -78,17 +78,16 @@
                                 }
                             });
                         });
-                        $('#chatbotInput').on('keypress', function (e) {
-                            if (e.which === 13) $('#chatbotSend').click();
-                        });
                     });
                 </script>
             </div>
+
             <!-- Upit službi TAB -->
             <div class="tab-pane fade" id="tabUpit" role="tabpanel">
                 <div class="d-grid gap-2 mb-2">
-                    <a href="@Url.Action("Create", "Podrska")" class="btn btn-primary">
-                        <i class="fas fa-envelope-open-text"></i> Pošalji upit studentskoj službi
+                    <a href="@Url.Action("Create", "Podrska")" class="btn btn-primary support-loader-btn" id="supportUpitBtn">
+                        <span class="btn-text"><i class="fas fa-envelope-open-text"></i> Pošalji upit studentskoj službi</span>
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                     </a>
                     <a href="@Url.Action("Index", "Podrska")" class="btn btn-outline-secondary">
                         <i class="fas fa-list"></i> Moji upiti i odgovori
@@ -99,11 +98,13 @@
                     Svoje prethodne upite možete pregledati klikom na dugme iznad.
                 </div>
             </div>
+
             <!-- Bug/Poboljšanje TAB -->
             <div class="tab-pane fade" id="tabBug" role="tabpanel">
                 <div class="d-grid gap-2 mb-2">
-                    <a href="@Url.Action("Create", "BugReport")" class="btn btn-danger">
-                        <i class="fas fa-bug"></i> Prijavi grešku ili predloži poboljšanje
+                    <a href="@Url.Action("Create", "BugReport")" class="btn btn-danger support-loader-btn" id="supportBugBtn">
+                        <span class="btn-text"><i class="fas fa-bug"></i> Prijavi grešku ili predloži poboljšanje</span>
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                     </a>
                     <a href="@Url.Action("Index", "BugReport")" class="btn btn-outline-secondary">
                         <i class="fas fa-list"></i> Moje prijave bugova/poboljšanja
@@ -117,3 +118,52 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // --- Pamćenje zadnjeg taba ---
+        document.querySelectorAll('#supportTabNav .nav-link').forEach(function(tab){
+            tab.addEventListener('shown.bs.tab', function (event) {
+                localStorage.setItem('supportPanelTab', event.target.id);
+                if(event.target.id === "tab-chatbot") {
+                    setTimeout(() => document.getElementById('chatbotInput').focus(), 120);
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            var savedTab = localStorage.getItem('supportPanelTab');
+            if(savedTab) {
+                var tabBtn = document.getElementById(savedTab);
+                if(tabBtn) new bootstrap.Tab(tabBtn).show();
+            }
+        });
+
+        // --- Otvaranje/skrivanje panela i FAB-a ---
+        document.getElementById('supportFab').onclick = function() {
+            document.getElementById('supportPanel').classList.remove('d-none');
+            document.getElementById('supportFab').style.display = 'none';
+            setTimeout(() => document.getElementById('supportPanel').focus(), 200);
+        };
+        document.getElementById('supportPanelClose').onclick = function() {
+            document.getElementById('supportPanel').classList.add('d-none');
+            document.getElementById('supportFab').style.display = 'flex';
+        };
+        document.addEventListener('keydown', function(e){
+            if(e.key === "Escape" && !document.getElementById('supportPanel').classList.contains('d-none')){
+                document.getElementById('supportPanelClose').click();
+            }
+        });
+        document.getElementById('supportPanel').addEventListener('click', function(e){
+            if(e.target === this) document.getElementById('supportPanelClose').click();
+        });
+
+        // --- Loader na dugmad (Upit i Bug) ---
+        document.querySelectorAll('.support-loader-btn').forEach(function(btn){
+            btn.addEventListener('click', function(e){
+                btn.querySelector('.btn-text').style.display = 'none';
+                btn.querySelector('.spinner-border').classList.remove('d-none');
+                // Ako koristiš AJAX ovdje ide .then()/.finally() za vraćanje dugmeta
+            });
+        });
+    </script>
+}

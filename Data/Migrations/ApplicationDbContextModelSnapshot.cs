@@ -1009,6 +1009,9 @@ namespace StudentHub.Data.Migrations
                     b.Property<int>("TipPredmeta")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("UkupnoBodova")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AsistentId");
@@ -1919,7 +1922,7 @@ namespace StudentHub.Data.Migrations
             modelBuilder.Entity("StudentHub.Models.PredmetAsistent", b =>
                 {
                     b.HasOne("StudentHub.Models.Asistent", "Asistent")
-                        .WithMany("Predmeti")
+                        .WithMany("PredmetAsistenti")
                         .HasForeignKey("AsistentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1944,7 +1947,7 @@ namespace StudentHub.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("StudentHub.Models.Profesor", "Profesor")
-                        .WithMany("Predmeti")
+                        .WithMany("PredmetProfesori")
                         .HasForeignKey("ProfesorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2281,12 +2284,12 @@ namespace StudentHub.Data.Migrations
                 {
                     b.Navigation("AsistentStudijskiProgrami");
 
-                    b.Navigation("Predmeti");
+                    b.Navigation("PredmetAsistenti");
                 });
 
             modelBuilder.Entity("StudentHub.Models.Profesor", b =>
                 {
-                    b.Navigation("Predmeti");
+                    b.Navigation("PredmetProfesori");
 
                     b.Navigation("ProfesorStudijskiProgrami");
                 });

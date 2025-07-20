@@ -4,41 +4,41 @@
     ViewData["Title"] = "Brisanje člana studentske službe";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<div class="alert alert-warning" role="alert">
-    <h4 class="alert-heading">Da li ste sigurni da želite obrisati ovog člana studentske službe?</h4>
-    <p>Ova akcija je nepovratna i trajno će ukloniti sve podatke o korisniku.</p>
-</div>
-
-<div class="card mb-4">
-    <div class="card-header bg-danger text-white">
-        <h5>Podaci o članu studentske službe</h5>
-    </div>
+<div class="card shadow-sm mx-auto" style="max-width: 520px;">
     <div class="card-body">
+        <h2 class="card-title mb-3">@ViewData["Title"]</h2>
+        <hr />
+        <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
+            <i class="fas fa-exclamation-triangle fa-lg"></i>
+            <div>
+                <strong>Da li ste sigurni da želite obrisati ovog člana studentske službe?</strong><br />
+                <span class="small">Ova akcija je <span class="fw-bold text-danger">nepovratna</span> i trajno će ukloniti sve podatke o korisniku.</span>
+            </div>
+        </div>
         <dl class="row">
-            <dt class="col-sm-3">Ime:</dt>
-            <dd class="col-sm-9">@Model.Ime</dd>
+            <dt class="col-sm-4">Ime:</dt>
+            <dd class="col-sm-8">@Model.Ime</dd>
 
-            <dt class="col-sm-3">Prezime:</dt>
-            <dd class="col-sm-9">@Model.Prezime</dd>
+            <dt class="col-sm-4">Prezime:</dt>
+            <dd class="col-sm-8">@Model.Prezime</dd>
 
-            <dt class="col-sm-3">JMBG:</dt>
-            <dd class="col-sm-9">@Model.JMBG</dd>
+            <dt class="col-sm-4">JMBG:</dt>
+            <dd class="col-sm-8">@Model.JMBG</dd>
 
-            <dt class="col-sm-3">Email:</dt>
-            <dd class="col-sm-9">@Model.Email</dd>
+            <dt class="col-sm-4">Email:</dt>
+            <dd class="col-sm-8">@Model.Email</dd>
 
-            <dt class="col-sm-3">Uloga:</dt>
-            <dd class="col-sm-9">@Model.Uloga</dd>
+            <dt class="col-sm-4">Uloga:</dt>
+            <dd class="col-sm-8">@Model.Uloga</dd>
         </dl>
+        <form asp-action="Delete" method="post" class="d-flex gap-2">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Obriši
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Odustani
+            </a>
+        </form>
     </div>
 </div>
-
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <button type="submit" class="btn btn-danger">Obriši</button>
-        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-    </div>
-</form>

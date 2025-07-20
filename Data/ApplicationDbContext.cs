@@ -128,7 +128,7 @@ namespace StudentHub.Data
             // Konfiguracija za PredmetProfesor -> Profesor
             modelBuilder.Entity<PredmetProfesor>()
                 .HasOne(pp => pp.Profesor)
-                .WithMany(p => p.Predmeti)
+                .WithMany(p => p.PredmetProfesori)
                 .HasForeignKey(pp => pp.ProfesorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -145,7 +145,7 @@ namespace StudentHub.Data
             // Konfiguracija za PredmetAsistent -> Asistent
             modelBuilder.Entity<PredmetAsistent>()
                 .HasOne(pa => pa.Asistent)
-                .WithMany(a => a.Predmeti)
+                .WithMany(a => a.PredmetAsistenti)
                 .HasForeignKey(pa => pa.AsistentId)
                 .OnDelete(DeleteBehavior.Cascade);
 

@@ -289,7 +289,7 @@ namespace StudentHub.Controllers
                 case Uloga.Profesor:
                     {
                         var profesor = await _context.Profesori
-                            .Include(p => p.Predmeti).ThenInclude(pp => pp.Predmet)
+                            .Include(p => p.PredmetProfesori).ThenInclude(pp => pp.Predmet)
                             .FirstOrDefaultAsync(p => p.Id == korisnik.Id);
 
                         if (profesor == null) break;
@@ -297,7 +297,7 @@ namespace StudentHub.Controllers
                         model.Titula = profesor.ProfesorTitula;
                         model.ProfilnaSlikaUrl = $"/images/profili/{profesor.Id}.jpg"; // ili default slika
 
-                        var predmeti = profesor.Predmeti.Select(pp => pp.Predmet).ToList();
+                        var predmeti = profesor.PredmetProfesori.Select(pp => pp.Predmet).ToList();
                         var predmetiIds = predmeti.Select(p => p.Id).ToList();
 
                         // Predmeti koje predaje
@@ -407,7 +407,7 @@ namespace StudentHub.Controllers
                 case Uloga.Asistent:
                     {
                         var asistent = await _context.Asistenti
-                            .Include(a => a.Predmeti).ThenInclude(ap => ap.Predmet)
+                            .Include(a => a.PredmetAsistenti).ThenInclude(ap => ap.Predmet)
                             .FirstOrDefaultAsync(a => a.Id == korisnik.Id);
 
                         if (asistent == null) break;
@@ -415,7 +415,7 @@ namespace StudentHub.Controllers
                         model.Titula = asistent.AsistentTitula;
                         model.ProfilnaSlikaUrl = $"/images/profili/{asistent.Id}.jpg";
 
-                        var predmeti = asistent.Predmeti.Select(ap => ap.Predmet).ToList();
+                        var predmeti = asistent.PredmetAsistenti.Select(ap => ap.Predmet).ToList();
                         var predmetiIds = predmeti.Select(p => p.Id).ToList();
 
                         // Predmeti na kojima asistira

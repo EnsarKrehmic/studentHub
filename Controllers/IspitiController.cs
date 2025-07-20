@@ -1,16 +1,17 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Identity;
 using StudentHub.Data;
+using StudentHub.Hubs;
 using StudentHub.Models;
 using StudentHub.ViewModels;
-using Microsoft.AspNetCore.SignalR;
-using StudentHub.Hubs;
+using System.Linq;
+using System.Security.Claims;
 
 namespace StudentHub.Controllers
 {
@@ -61,60 +62,78 @@ namespace StudentHub.Controllers
 
             if (User.IsInRole("Profesor"))
             {
-                // Profesori vide samo svoje predmete
                 var predmetiIds = await _context.PredmetProfesori
                     .Where(pp => pp.Profesor.AspNetUserId == userId)
                     .Select(pp => pp.PredmetId)
                     .ToListAsync();
 
+                predmeti = predmeti.Where(p => predmetiIds.Contains(p.Id)).ToList();
+
+                // Dohvati sve nastavni planove za te predmete
+                var nastavniPlanoviIds = predmeti.Select(p => p.NastavniPlanId).Distinct().ToList();
+                nastavniPlanovi = nastavniPlanovi.Where(np => nastavniPlanoviIds.Contains(np.Id)).ToList();
+
+                // Dohvati studijske programe za te nastavne planove
+                var studijskiProgramiIds = nastavniPlanovi.Select(np => np.StudijskiProgramId).Distinct().ToList();
+                studijskiProgrami = studijskiProgrami.Where(sp => studijskiProgramiIds.Contains(sp.Id)).ToList();
+
                 if (!string.IsNullOrEmpty(searchPredmet))
-                {
                     predmeti = predmeti.Where(p => p.Naziv.Contains(searchPredmet, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
 
                 if (!showArchivedBool)
-                {
                     ispiti = ispiti.Where(i => predmetiIds.Contains(i.PredmetId) && !i.Arhivirano).ToList();
-                }
                 else
-                {
                     ispiti = ispiti.Where(i => predmetiIds.Contains(i.PredmetId)).ToList();
-                }
             }
 
             if (User.IsInRole("Asistent"))
             {
-                // Asistenti vide samo svoje predmete
                 var predmetiIds = await _context.PredmetAsistenti
                     .Where(pa => pa.Asistent.AspNetUserId == userId)
                     .Select(pa => pa.PredmetId)
                     .ToListAsync();
 
+                predmeti = predmeti.Where(p => predmetiIds.Contains(p.Id)).ToList();
+
+                var nastavniPlanoviIds = predmeti.Select(p => p.NastavniPlanId).Distinct().ToList();
+                nastavniPlanovi = nastavniPlanovi.Where(np => nastavniPlanoviIds.Contains(np.Id)).ToList();
+
+                var studijskiProgramiIds = nastavniPlanovi.Select(np => np.StudijskiProgramId).Distinct().ToList();
+                studijskiProgrami = studijskiProgrami.Where(sp => studijskiProgramiIds.Contains(sp.Id)).ToList();
+
                 if (!string.IsNullOrEmpty(searchPredmet))
-                {
                     predmeti = predmeti.Where(p => p.Naziv.Contains(searchPredmet, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
 
                 if (!showArchivedBool)
-                {
                     ispiti = ispiti.Where(i => predmetiIds.Contains(i.PredmetId) && !i.Arhivirano).ToList();
-                }
                 else
-                {
                     ispiti = ispiti.Where(i => predmetiIds.Contains(i.PredmetId)).ToList();
-                }
             }
 
             if (User.IsInRole("Student"))
             {
-                // Studenti vide samo svoje predmete i samo ispite koji NISU arhivirani
                 var predmetiIds = await _context.StudentiNaPredmetima
                     .Where(snp => snp.Student.AspNetUserId == userId)
                     .Select(snp => snp.PredmetId)
                     .ToListAsync();
 
                 predmeti = predmeti.Where(p => predmetiIds.Contains(p.Id)).ToList();
-                ispiti = ispiti.Where(i => predmetiIds.Contains(i.PredmetId) && !i.Arhivirano).ToList();
+
+                var nastavniPlanoviIds = predmeti.Select(p => p.NastavniPlanId).Distinct().ToList();
+                nastavniPlanovi = nastavniPlanovi.Where(np => nastavniPlanoviIds.Contains(np.Id)).ToList();
+
+                var studijskiProgramiIds = nastavniPlanovi.Select(np => np.StudijskiProgramId).Distinct().ToList();
+                studijskiProgrami = studijskiProgrami.Where(sp => studijskiProgramiIds.Contains(sp.Id)).ToList();
+
+                // Filtriranje arhiviranih ispita
+                if (!showArchivedBool)
+                    ispiti = ispiti.Where(i => predmetiIds.Contains(i.PredmetId) && !i.Arhivirano).ToList();
+                else
+                    ispiti = ispiti.Where(i => predmetiIds.Contains(i.PredmetId)).ToList();
+
+                // Pretraga predmeta
+                if (!string.IsNullOrEmpty(searchPredmet))
+                    predmeti = predmeti.Where(p => p.Naziv.Contains(searchPredmet, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             ViewBag.ShowArchived = showArchivedBool;
             return View(await CreateViewModel(studijskiProgrami, nastavniPlanovi, predmeti, ispiti, sortOrder));
@@ -130,7 +149,7 @@ namespace StudentHub.Controllers
             var userId = _userManager.GetUserId(User);
             var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
 
-            var ocjene = new Dictionary<long?, Ocjena>();
+            var ocjene = new Dictionary<long?, List<Ocjena>>();
             var prijavljeniIspitiIds = new List<long>();
 
             // Id-jevi ispita koje prikazujemo
@@ -146,7 +165,8 @@ namespace StudentHub.Controllers
                 // OCJENE studenta
                 ocjene = await _context.Ocjene
                     .Where(o => o.StudentId == student.Id)
-                    .ToDictionaryAsync(o => o.PredmetId, o => o);
+                    .GroupBy(o => o.PredmetId)
+                    .ToDictionaryAsync(g => g.Key, g => g.ToList());
 
                 // PRIJAVLJENI ISPITI za studenta
                 prijavljeniIspitiIds = prijave
@@ -286,31 +306,22 @@ namespace StudentHub.Controllers
         {
             try
             {
-                ViewBag.StudijskiProgramId = _context.StudijskiProgrami
-                    .Select(sp => new SelectListItem
-                    {
-                        Value = sp.Id.ToString(),
-                        Text = $"Studijski program: {sp.Naziv}."
-                    }).ToList();
-                ViewBag.NastavniPlanId = _context.NastavniPlanovi
-                    .Include(np => np.StudijskiProgram)
-                    .Select(np => new SelectListItem
-                    {
-                        Value = np.Id.ToString(),
-                        Text = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godina"
-                    }).ToList();
-                ViewBag.PredmetId = _context.Predmeti
-                    .Include(p => p.NastavniPlan)
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.Id.ToString(),
-                        Text = $"Predmet: {p.Naziv}: ({p.NastavniPlan.StudijskiProgram.Naziv})"
-                    }).ToList();
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var jeProfesor = User.IsInRole("Profesor");
+                var jeAsistent = User.IsInRole("Asistent");
+                var jeStudentskaSluzba = User.IsInRole("Studentska služba");
+
+                var (spSelect, npSelect, pSelect) = GetDozvoljeniProgramiPlanoviPredmetiZaKorisnika(userId, jeProfesor, jeAsistent, jeStudentskaSluzba);
+
+                ViewBag.StudijskiProgramId = spSelect;
+                ViewBag.NastavniPlanId = npSelect;
+                ViewBag.PredmetId = pSelect;
+
                 return View();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Nastala je greška prilikom učitavanja forme za kreiranje ispita..");
+                _logger.LogError(ex, "Greška prilikom učitavanja forme za kreiranje ispita.");
                 return View("Error");
             }
         }
@@ -321,30 +332,24 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Create(IspitCreateViewModel model)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jeProfesor = User.IsInRole("Profesor");
+            var jeAsistent = User.IsInRole("Asistent");
+            var jeStudentskaSluzba = User.IsInRole("Studentska služba");
+
+            // DODATNA PROVJERA dozvole za predmet (osim ako je super-admin služba)
+            var dozvoljeniPredmeti = GetDozvoljeniProgramiPlanoviPredmetiZaKorisnika(userId, jeProfesor, jeAsistent, jeStudentskaSluzba).pSelect;
+            if (!dozvoljeniPredmeti.Any(p => p.Value == model.PredmetId.ToString()))
+            {
+                ModelState.AddModelError("", "Nemate pravo kreirati ispit za odabrani predmet.");
+            }
+
             if (!ModelState.IsValid)
             {
-                foreach (var state in ModelState)
-                {
-                    if (state.Value.Errors.Count > 0)
-                    {
-                        _logger.LogWarning("Missing or invalid attribute: {Key}", state.Key);
-                    }
-                }
-
-                // Repopulate dropdowns
-                ViewBag.StudijskiProgramId = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
-                ViewBag.NastavniPlanId = new SelectList(
-                    _context.NastavniPlanovi.Where(np => np.StudijskiProgramId == model.StudijskiProgramId),
-                    "Id",
-                    "GodinaStudija",
-                    model.NastavniPlanId
-                );
-                ViewBag.PredmetId = new SelectList(
-                    _context.Predmeti.Where(p => p.NastavniPlanId == model.NastavniPlanId),
-                    "Id",
-                    "Naziv",
-                    model.PredmetId
-                );
+                var (spSelect, npSelect, pSelect) = GetDozvoljeniProgramiPlanoviPredmetiZaKorisnika(userId, jeProfesor, jeAsistent, jeStudentskaSluzba);
+                ViewBag.StudijskiProgramId = spSelect;
+                ViewBag.NastavniPlanId = npSelect;
+                ViewBag.PredmetId = pSelect;
                 return View(model);
             }
 
@@ -364,14 +369,13 @@ namespace StudentHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Ispiti/Edit
         [HttpGet("Edit/{id:long}")]
         [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var ispit = await _context.Ispiti
                 .Include(i => i.StudijskiProgram)
@@ -380,9 +384,7 @@ namespace StudentHub.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ispit == null)
-            {
                 return NotFound();
-            }
 
             var model = new IspitCreateViewModel
             {
@@ -395,9 +397,16 @@ namespace StudentHub.Controllers
                 UslovZaPolaganje = ispit.UslovZaPolaganje
             };
 
-            ViewBag.StudijskiProgramId = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", ispit.StudijskiProgramId);
-            ViewBag.NastavniPlanId = new SelectList(_context.NastavniPlanovi.Where(np => np.StudijskiProgramId == ispit.StudijskiProgramId), "Id", "GodinaStudija", ispit.NastavniPlanId);
-            ViewBag.PredmetId = new SelectList(_context.Predmeti.Where(p => p.NastavniPlanId == ispit.NastavniPlanId), "Id", "Naziv", ispit.PredmetId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jeProfesor = User.IsInRole("Profesor");
+            var jeAsistent = User.IsInRole("Asistent");
+            var jeStudentskaSluzba = User.IsInRole("Studentska služba");
+
+            var (spSelect, npSelect, pSelect) = GetDozvoljeniProgramiPlanoviPredmetiZaKorisnika(userId, jeProfesor, jeAsistent, jeStudentskaSluzba);
+
+            ViewBag.StudijskiProgramId = spSelect;
+            ViewBag.NastavniPlanId = npSelect;
+            ViewBag.PredmetId = pSelect;
 
             return View(model);
         }
@@ -408,19 +417,29 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Edit(long id, IspitCreateViewModel model)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jeProfesor = User.IsInRole("Profesor");
+            var jeAsistent = User.IsInRole("Asistent");
+            var jeStudentskaSluzba = User.IsInRole("Studentska služba");
+
+            var dozvoljeniPredmeti = GetDozvoljeniProgramiPlanoviPredmetiZaKorisnika(userId, jeProfesor, jeAsistent, jeStudentskaSluzba).pSelect;
+            if (!dozvoljeniPredmeti.Any(p => p.Value == model.PredmetId.ToString()))
+            {
+                ModelState.AddModelError("", "Nemate pravo uređivati ispit za odabrani predmet.");
+            }
+
             if (!ModelState.IsValid)
             {
-                ViewBag.StudijskiProgramId = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
-                ViewBag.NastavniPlanId = new SelectList(_context.NastavniPlanovi.Where(np => np.StudijskiProgramId == model.StudijskiProgramId), "Id", "GodinaStudija", model.NastavniPlanId);
-                ViewBag.PredmetId = new SelectList(_context.Predmeti.Where(p => p.NastavniPlanId == model.NastavniPlanId), "Id", "Naziv", model.PredmetId);
+                var (spSelect, npSelect, pSelect) = GetDozvoljeniProgramiPlanoviPredmetiZaKorisnika(userId, jeProfesor, jeAsistent, jeStudentskaSluzba);
+                ViewBag.StudijskiProgramId = spSelect;
+                ViewBag.NastavniPlanId = npSelect;
+                ViewBag.PredmetId = pSelect;
                 return View(model);
             }
 
             var ispit = await _context.Ispiti.FindAsync(id);
             if (ispit == null)
-            {
                 return NotFound();
-            }
 
             ispit.StudijskiProgramId = model.StudijskiProgramId;
             ispit.NastavniPlanId = model.NastavniPlanId;
@@ -598,18 +617,14 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> UnesiBodove([FromBody] UnosBodovaViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(new { success = false, message = "Neispravni podaci." });
-            }
 
             var prijava = await _context.Prijave
                 .Include(p => p.Ispit)
                 .FirstOrDefaultAsync(p => p.IspitId == model.IspitId && p.StudentId == model.StudentId);
 
             if (prijava == null)
-            {
                 return NotFound(new { success = false, message = "Prijava nije pronađena." });
-            }
 
             prijava.Bodovi = model.Bodovi;
             await _context.SaveChangesAsync();
@@ -630,17 +645,6 @@ namespace StudentHub.Controllers
             });
         }
 
-        private float MapirajBodoveUBrojOcjenu(decimal bodovi, decimal ukupnoBodova)
-        {
-            var procenat = (double)bodovi / (double)ukupnoBodova * 100;
-            if (procenat >= 95) return 10;
-            if (procenat >= 85) return 9;
-            if (procenat >= 75) return 8;
-            if (procenat >= 65) return 7;
-            if (procenat >= 55) return 6;
-            return 5; // Minimalna prolazna ocjena u sistemu
-        }
-
         private long GetTrenutniProfesorIliAsistentId()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -659,7 +663,7 @@ namespace StudentHub.Controllers
                 return asistent.Id;
             }
 
-            return 0; // Ako nije pronađen, što ne bi smjelo biti slučaj
+            return 0;
         }
 
         [HttpGet("PrikaziRezultate/{ispitId}")]
@@ -923,7 +927,7 @@ namespace StudentHub.Controllers
 
         [HttpPost("DeleteKomentar/{id}")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Student, Profesor, Asistent", Policy = "MozeBrisatiKomentar")]
+        [Authorize(Roles = "Student, Profesor, Asistent")]
         public async Task<IActionResult> DeleteKomentar(long id)
         {
             var komentar = await _context.Komentari
@@ -1080,6 +1084,134 @@ namespace StudentHub.Controllers
                 .Any(ssp => ssp.StudijskiProgramId == studijskiProgramId);
 
             return belongsToStudijskiProgram && student.IsEnrolledInPredmet(predmetId.Value, _context);
+        }
+
+        // Vraća SelectListItem kolekcije za SP, NP i Predmete koje profesor/asistent predaje.
+        private (List<SelectListItem> spSelect, List<SelectListItem> npSelect, List<SelectListItem> pSelect)
+        GetDozvoljeniProgramiPlanoviPredmetiZaKorisnika(
+            string userId,
+            bool jeProfesor,
+            bool jeAsistent,
+            bool jeStudentskaSluzba)
+        {
+            var programi = new List<StudijskiProgram>();
+            var planovi = new List<NastavniPlan>();
+            var predmeti = new List<Predmet>();
+
+            if (jeProfesor)
+            {
+                var profesor = _context.Profesori
+                    .Include(p => p.ProfesorStudijskiProgrami).ThenInclude(psp => psp.StudijskiProgram)
+                    .Include(p => p.PredmetProfesori).ThenInclude(pp => pp.Predmet)
+                    .FirstOrDefault(p => p.AspNetUserId == userId);
+
+                if (profesor?.ProfesorStudijskiProgrami?.Any() == true)
+                {
+                    programi = profesor.ProfesorStudijskiProgrami
+                        .Select(psp => psp.StudijskiProgram)
+                        .Where(sp => sp != null)
+                        .Distinct()
+                        .ToList();
+
+                    var spIds = programi.Select(sp => sp.Id).ToList();
+                    planovi = _context.NastavniPlanovi
+                        .Where(np => spIds.Contains(np.StudijskiProgramId))
+                        .ToList();
+
+                    // Ovdje ključno! Pretvaramo Id-eve u long?
+                    var planoviIds = planovi.Select(np => (long?)np.Id).ToList();
+                    predmeti = profesor.PredmetProfesori
+                        .Select(pp => pp.Predmet)
+                        .Where(p => p != null && planoviIds.Contains(p.NastavniPlanId))
+                        .Distinct()
+                        .ToList();
+                }
+            }
+            else if (jeAsistent)
+            {
+                var asistent = _context.Asistenti
+                    .Include(a => a.AsistentStudijskiProgrami).ThenInclude(asp => asp.StudijskiProgram)
+                    .Include(a => a.PredmetAsistenti).ThenInclude(pa => pa.Predmet)
+                    .FirstOrDefault(a => a.AspNetUserId == userId);
+
+                if (asistent?.AsistentStudijskiProgrami?.Any() == true)
+                {
+                    programi = asistent.AsistentStudijskiProgrami
+                        .Select(asp => asp.StudijskiProgram)
+                        .Where(sp => sp != null)
+                        .Distinct()
+                        .ToList();
+
+                    var spIds = programi.Select(sp => sp.Id).ToList();
+                    planovi = _context.NastavniPlanovi
+                        .Where(np => spIds.Contains(np.StudijskiProgramId))
+                        .ToList();
+
+                    var planoviIds = planovi.Select(np => (long?)np.Id).ToList();
+                    predmeti = asistent.PredmetAsistenti
+                        .Select(pa => pa.Predmet)
+                        .Where(p => p != null && planoviIds.Contains(p.NastavniPlanId))
+                        .Distinct()
+                        .ToList();
+                }
+            }
+            else if (jeStudentskaSluzba)
+            {
+                var sluzbenik = _context.StudentskeSluzbe
+                    .Include(ss => ss.StudentskaSluzbaStudijskiProgrami)
+                        .ThenInclude(sssp => sssp.StudijskiProgram)
+                    .FirstOrDefault(ss => ss.AspNetUserId == userId);
+
+                if (sluzbenik?.StudentskaSluzbaStudijskiProgrami?.Any() == true)
+                {
+                    programi = sluzbenik.StudentskaSluzbaStudijskiProgrami
+                        .Select(sssp => sssp.StudijskiProgram)
+                        .Where(sp => sp != null)
+                        .Distinct()
+                        .ToList();
+
+                    var spIds = programi.Select(sp => sp.Id).ToList();
+                    planovi = _context.NastavniPlanovi
+                        .Where(np => spIds.Contains(np.StudijskiProgramId))
+                        .ToList();
+
+                    var planoviIds = planovi.Select(np => (long?)np.Id).ToList();
+                    predmeti = _context.Predmeti
+                        .Where(p => planoviIds.Contains(p.NastavniPlanId))
+                        .ToList();
+                }
+                else
+                {
+                    // Ako nema veze, fallback: prikazi sve
+                    programi = _context.StudijskiProgrami.ToList();
+                    planovi = _context.NastavniPlanovi.ToList();
+                    predmeti = _context.Predmeti.ToList();
+                }
+            }
+
+            var spSelect = programi.Select(sp => new SelectListItem
+            {
+                Value = sp.Id.ToString(),
+                Text = sp.Naziv
+            }).ToList();
+
+            var npSelect = planovi.Select(np => new SelectListItem
+            {
+                Value = np.Id.ToString(),
+                Text = $"{np.GodinaStudija}. godina ({programi
+                            .FirstOrDefault(sp => sp.Id == np.StudijskiProgramId)?
+                            .Naziv ?? "–"})"
+            }).ToList();
+
+            var pSelect = predmeti.Select(p => new SelectListItem
+            {
+                Value = p.Id.ToString(),
+                Text = $"{p.Naziv} ({planovi
+                            .FirstOrDefault(np => np.Id == p.NastavniPlanId)?
+                            .GodinaStudija}. godina)"
+            }).ToList();
+
+            return (spSelect, npSelect, pSelect);
         }
 
         private long GetTrenutniKorisnikId()

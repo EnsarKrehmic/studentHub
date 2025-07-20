@@ -34,6 +34,11 @@ namespace StudentHub.Models
         [Required, Range(1, 6, ErrorMessage = "Godina studija mora biti između 1 i 6.")]
         public int GodinaStudija { get; set; }
 
+        [Required(ErrorMessage = "Ukupni broj bodova na predmetu je obavezan.")]
+        [Range(1, 1000, ErrorMessage = "Ukupni broj bodova mora biti veći od 0.")]
+        [Display(Name = "Ukupni broj bodova na predmetu")]
+        public decimal UkupnoBodova { get; set; } = 100;
+
         [Required, Range(0, 60)]
         public int SatiPredavanja { get; set; }
         [Required, Range(0, 60)]

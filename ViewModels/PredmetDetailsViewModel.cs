@@ -15,6 +15,7 @@ namespace StudentHub.ViewModels
         public string StudijskiProgram => Predmet?.StudijskiProgram?.Naziv ?? "";
         public int GodinaStudija => Predmet?.GodinaStudija ?? 0;
         public int Semestar => Predmet?.Semestar ?? 0;
+        public decimal UkupnoBodova => Predmet?.UkupnoBodova ?? 0;
         public int SatiPredavanja => Predmet?.SatiPredavanja ?? 0;
         public int SatiVjezbi => Predmet?.SatiVjezbi ?? 0;
 

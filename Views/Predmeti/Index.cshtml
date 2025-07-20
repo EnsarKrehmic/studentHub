@@ -65,8 +65,8 @@
             <div class="card-body">
                 @{
                     var godinaGrupe = programGroup
-                        .GroupBy(p => p.GodinaStudija)
-                        .OrderBy(g => g.Key);
+                    .GroupBy(p => p.GodinaStudija)
+                    .OrderBy(g => g.Key);
                 }
                 @foreach (var godinaGroup in godinaGrupe)
                 {
@@ -81,6 +81,7 @@
                                         <th>Naziv predmeta</th>
                                         <th>Opis</th>
                                         <th class="text-center">ECTS</th>
+                                        <th class="text-center">Ukupni bodovi</th> <!-- NOVO -->
                                         <th>Tip predmeta</th>
                                         <th>Semestar</th>
                                         <th>Sati P/V</th>
@@ -108,6 +109,7 @@
                                                 }
                                             </td>
                                             <td class="text-center">@predmet.ECTS</td>
+                                            <td class="text-center"><span class="badge bg-info">@predmet.UkupnoBodova</span></td> <!-- NOVO -->
                                             <td>
                                                 @(predmet.TipPredmeta == StudentHub.Models.TipPredmeta.Osnovni ? "Osnovni" : "Izborni")
                                             </td>

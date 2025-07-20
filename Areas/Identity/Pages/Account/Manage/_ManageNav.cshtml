@@ -12,4 +12,12 @@
     }
     <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Dvofaktorska autentifikacija</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Osobni podaci</a></li>
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fas fa-user-plus me-1"></i> Registracija novog korisnika
+            </a>
+        </li>
+    }
 </ul>

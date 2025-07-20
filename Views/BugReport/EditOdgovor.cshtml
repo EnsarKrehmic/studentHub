@@ -1,26 +1,43 @@
 ﻿@model StudentHub.Models.BugReport
 @{
-    ViewData["Title"] = "Uredi odgovor na prijavu";
+    bool isEdit = ViewData["Title"]?.ToString()?.ToLower().Contains("uredi") ?? false;
+    ViewData["Title"] = isEdit ? "Uredi odgovor na prijavu" : "Odgovori na prijavu";
 }
-<h2>@ViewData["Title"]</h2>
-<hr />
-<div class="mb-4">
-    <strong>Tip prijave:</strong> @(Model.Tip == BugTip.Bug ? "Greška" : "Prijedlog") <br />
-    <strong>Naslov:</strong> @Model.Naslov <br />
-    <strong>Opis:</strong> @Model.Opis <br />
-    <strong>Prijavio/la:</strong> @($"{Model.Korisnik?.Ime} {Model.Korisnik?.Prezime}") <br />
-    <strong>Datum prijave:</strong> @Model.DatumPrijave.ToString("dd.MM.yyyy HH:mm")
-</div>
-<form asp-action="EditOdgovor" method="post">
-    <input type="hidden" asp-for="Id" />
-    <div class="mb-3">
-        <label for="odgovor" class="form-label">Uredi odgovor</label>
-        <textarea name="odgovor" id="odgovor" class="form-control" rows="5" required>@Model.Odgovor</textarea>
+<div class="card shadow-sm mx-auto" style="max-width: 560px;">
+    <div class="card-body">
+        <h2 class="card-title">@ViewData["Title"]</h2>
+        <hr />
+        <div class="mb-4">
+            <strong>Tip prijave:</strong> @(Model.Tip == BugTip.Bug ? "Greška" : "Prijedlog") <br />
+            <strong>Naslov:</strong> @Model.Naslov <br />
+            <strong>Opis:</strong> @Model.Opis <br />
+            <strong>Prijavio/la:</strong> @($"{Model.Korisnik?.Ime} {Model.Korisnik?.Prezime}") <br />
+            <strong>Datum prijave:</strong> @Model.DatumPrijave.ToString("dd.MM.yyyy HH:mm")
+            @if (!string.IsNullOrEmpty(Model.Slika))
+            {
+                <div class="mt-3">
+                    <strong>Slika/Screenshot:</strong><br />
+                    <img src="~/uploads/bugreport/@Model.Slika" style="max-width:300px;max-height:120px;" class="border rounded shadow-sm" />
+                </div>
+            }
+        </div>
+        <form asp-action="@(isEdit ? "EditOdgovor" : "Odgovori")" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="mb-3">
+                <label for="odgovor" class="form-label">@((isEdit ? "Uredi odgovor" : "Odgovor službe"))</label>
+                <textarea name="odgovor" id="odgovor" class="form-control" rows="5" required>@(isEdit? Model.Odgovor: "")</textarea>
+            </div>
+            <button type="submit" class="btn btn-success me-2">
+                <i class="fas fa-paper-plane"></i> @(isEdit ? "Sačuvaj odgovor" : "Pošalji odgovor")
+            </button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Nazad
+            </a>
+        </form>
     </div>
-    <button type="submit" class="btn btn-success">Sačuvaj odgovor</button>
-    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Nazad</a>
-</form>
-
+</div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

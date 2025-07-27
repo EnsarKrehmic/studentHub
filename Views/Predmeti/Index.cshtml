@@ -1,179 +1,204 @@
 ﻿@model IEnumerable<StudentHub.Models.Predmet>
-
 @{
     ViewData["Title"] = "Lista predmeta";
+    Layout = "_Layout";
     var programi = (SelectList)ViewBag.StudijskiProgrami;
     var godine = ViewBag.GodineStudija as List<SelectListItem>;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">@ViewData["Title"]</h2>
-    @if (User.IsInRole("Studentska služba"))
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-4">
+        <h2 class="mb-0">@ViewData["Title"]</h2>
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Create" class="btn btn-success shadow-sm">
+                <i class="fas fa-plus-circle me-2"></i> Kreiraj novi predmet
+            </a>
+        }
+    </div>
+
+    <form method="get" class="card card-body shadow-sm mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <select name="studijskiProgramId" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Prikaži sve studijske programe --</option>
+                    @foreach (var program in programi)
+                    {
+                        <option value="@program.Value" selected="@(program.Selected ? "selected" : null)">
+                            @program.Text
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="godinaStudija" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Sve godine --</option>
+                    @foreach (var godina in godine)
+                    {
+                        <option value="@godina.Value" selected="@(godina.Selected ? "selected" : null)">
+                            @godina.Text
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-center gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter me-1"></i> Filtriraj
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary ms-2">
+                    <i class="fas fa-undo me-1"></i> Reset
+                </a>
+            </div>
+        </div>
+    </form>
+
+    @if (TempData["SuccessMessage"] != null)
     {
-        <a asp-action="Create" class="btn btn-success">
-            <i class="fas fa-plus-circle"></i> Kreiraj novi predmet
-        </a>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     }
-</div>
 
-<!-- FILTERI -->
-<form method="get" class="mb-4 row g-2">
-    <div class="col-md-4">
-        <select name="studijskiProgramId" class="form-select" onchange="this.form.submit()">
-            <option value="">-- Prikaži sve studijske programe --</option>
-            @foreach (var program in programi)
-            {
-                <option value="@program.Value" selected="@(program.Selected ? "selected" : null)">@program.Text</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-4">
-        <select name="godinaStudija" class="form-select" onchange="this.form.submit()">
-            <option value="">-- Sve godine --</option>
-            @foreach (var godina in godine)
-            {
-                <option value="@godina.Value" selected="@(godina.Selected ? "selected" : null)">@godina.Text</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-4">
-        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filtriraj</button>
-        <a href="@Url.Action("Index")" class="btn btn-secondary ms-2"><i class="fas fa-undo"></i> Reset</a>
-    </div>
-</form>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-@if (Model != null && Model.Any())
-{
-    var programGrupe = Model
+    @if (Model != null && Model.Any())
+    {
+        var programGrupe = Model
         .GroupBy(p => p.StudijskiProgram.Naziv)
         .OrderBy(g => g.Key);
 
-    foreach (var programGroup in programGrupe)
-    {
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="fas fa-university"></i> @programGroup.Key</h4>
-            </div>
-            <div class="card-body">
-                @{
-                    var godinaGrupe = programGroup
-                    .GroupBy(p => p.GodinaStudija)
-                    .OrderBy(g => g.Key);
-                }
-                @foreach (var godinaGroup in godinaGrupe)
-                {
-                    <div>
-                        <h5 class="text-primary mt-3">
-                            <i class="fas fa-calendar-alt"></i> Godina studija: @godinaGroup.Key
-                        </h5>
-                        <div class="table-responsive">
-                            <table class="table table-striped align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Naziv predmeta</th>
-                                        <th>Opis</th>
-                                        <th class="text-center">ECTS</th>
-                                        <th class="text-center">Ukupni bodovi</th> <!-- NOVO -->
-                                        <th>Tip predmeta</th>
-                                        <th>Semestar</th>
-                                        <th>Sati P/V</th>
-                                        <th>Profesor</th>
-                                        <th>Asistent</th>
-                                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-                                        {
-                                            <th class="text-center">Akcije</th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var predmet in godinaGroup.OrderBy(p => p.Semestar).ThenBy(p => p.Naziv))
-                                    {
+        @foreach (var programGroup in programGrupe)
+        {
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0 no-wrap">
+                        <i class="fas fa-university me-2"></i>@programGroup.Key
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @{
+                        var godinaGrupe = programGroup
+                        .GroupBy(p => p.GodinaStudija)
+                        .OrderBy(g => g.Key);
+                    }
+                    @foreach (var godinaGroup in godinaGrupe)
+                    {
+                        <div class="mb-3">
+                            <h5 class="text-primary no-wrap">
+                                <i class="fas fa-calendar-alt me-1"></i>Godina studija: @godinaGroup.Key
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped align-middle mb-0">
+                                    <thead class="table-light">
                                         <tr>
-                                            <td>@predmet.Naziv</td>
-                                            <td>
-                                                @if (!string.IsNullOrWhiteSpace(predmet.Opis))
-                                                {
-                                                    @((predmet.Opis.Length > 50) ? $"{predmet.Opis.Substring(0, 50)}..." : predmet.Opis)
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted">Nema opisa</span>
-                                                }
-                                            </td>
-                                            <td class="text-center">@predmet.ECTS</td>
-                                            <td class="text-center"><span class="badge bg-info">@predmet.UkupnoBodova</span></td> <!-- NOVO -->
-                                            <td>
-                                                @(predmet.TipPredmeta == StudentHub.Models.TipPredmeta.Osnovni ? "Osnovni" : "Izborni")
-                                            </td>
-                                            <td>
-                                                @(predmet.Semestar == 1 ? "1 (Zimski)" : "2 (Ljetni)")
-                                            </td>
-                                            <td>
-                                                @($"{predmet.SatiPredavanja}/{predmet.SatiVjezbi}")
-                                            </td>
-                                            <td>
-                                                @if (predmet.Profesor != null)
-                                                {
-                                                    @($"{predmet.Profesor.Ime} {predmet.Profesor.Prezime}{(string.IsNullOrEmpty(predmet.Profesor.ProfesorTitula) ? "" : $", {predmet.Profesor.ProfesorTitula}")}")
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-danger">Nema profesora</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (predmet.Asistent != null)
-                                                {
-                                                    @($"{predmet.Asistent.Ime} {predmet.Asistent.Prezime}{(string.IsNullOrEmpty(predmet.Asistent.AsistentTitula) ? "" : $", {predmet.Asistent.AsistentTitula}")}")
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-danger">Nema asistenta</span>
-                                                }
-                                            </td>
-                                            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                            <th class="no-wrap">Naziv predmeta</th>
+                                            <th class="text-center no-wrap">ECTS</th>
+                                            <th class="no-wrap">Tip predmeta</th>
+                                            <th class="no-wrap">Semestar</th>
+                                            <th class="no-wrap">Sati P/V</th>
+                                            <th class="no-wrap">Profesor</th>
+                                            <th class="no-wrap">Asistent</th>
+                                            @if (User.IsInRole("Student")
+                                                                            || User.IsInRole("Studentska služba")
+                                                                            || User.IsInRole("Profesor")
+                                                                            || User.IsInRole("Asistent"))
                                             {
-                                                <td class="text-center">
-                                                    <a asp-action="Details" asp-route-id="@predmet.Id" class="btn btn-sm btn-info" title="Detalji">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    @if (User.IsInRole("Studentska služba"))
-                                                    {
-                                                        <a asp-action="Edit" asp-route-id="@predmet.Id" class="btn btn-sm btn-warning" title="Izmijeni">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <a asp-action="Delete" asp-route-id="@predmet.Id" class="btn btn-sm btn-danger" title="Obriši">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a>
-                                                    }
-                                                </td>
+                                                <th class="text-center no-wrap">Akcije</th>
                                             }
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var predmet in godinaGroup
+                                                                    .OrderBy(p => p.Semestar)
+                                                                    .ThenBy(p => p.Naziv))
+                                        {
+                                            <tr>
+                                            <td class="no-wrap">@predmet.Naziv</td>
+                                            <td class="text-center no-wrap">@predmet.ECTS</td>
+                                            <td class="no-wrap">
+                                                @(predmet.TipPredmeta == StudentHub.Models.TipPredmeta.Osnovni
+                                                                                    ? "Osnovni"
+                                                                                    : "Izborni")
+                                                                                            </td>
+                                                                                            <td class="no-wrap">
+                                                @(predmet.Semestar == 1
+                                                                                    ? "1 (Zimski)"
+                                                                                    : "2 (Ljetni)")
+                                </td>
+                                <td class="no-wrap">
+                                    @($"{predmet.SatiPredavanja}/{predmet.SatiVjezbi}")
+                                </td>
+                                <td class="no-wrap">
+                                    @if (predmet.Profesor != null)
+                                                    {
+                                                        @($"{predmet.Profesor.Ime} {predmet.Profesor.Prezime}" +
+                                                                                            (string.IsNullOrEmpty(predmet.Profesor.ProfesorTitula)
+                                                                                            ? ""
+                                                                                            : $", {predmet.Profesor.ProfesorTitula}"))
+                                                                        }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Nema profesora</span>
+                                                    }
+                                                </td>
+                                                <td class="no-wrap">
+                                                    @if (predmet.Asistent != null)
+                                                    {
+                                                        @($"{predmet.Asistent.Ime} {predmet.Asistent.Prezime}" +
+                                                                                            (string.IsNullOrEmpty(predmet.Asistent.AsistentTitula)
+                                                                                            ? ""
+                                                                                            : $", {predmet.Asistent.AsistentTitula}"))
+                                                                        }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Nema asistenta</span>
+                                                    }
+                                                </td>
+                                                @if (User.IsInRole("Student")
+                                                                                || User.IsInRole("Studentska služba")
+                                                                                || User.IsInRole("Profesor")
+                                                                                || User.IsInRole("Asistent"))
+                                                {
+                                                    <td class="text-center no-wrap">
+                                                        <div class="d-inline-flex gap-1">
+                                                            <a asp-action="Details" asp-route-id="@predmet.Id"
+                                                               class="btn btn-sm btn-info" title="Detalji">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            @if (User.IsInRole("Studentska služba"))
+                                                            {
+                                                                <a asp-action="Edit" asp-route-id="@predmet.Id"
+                                                                   class="btn btn-sm btn-warning" title="Izmijeni">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
+                                                                <a asp-action="Delete" asp-route-id="@predmet.Id"
+                                                                   class="btn btn-sm btn-danger" title="Obriši">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </a>
+                                                            }
+                                                        </div>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            <strong>Nema predmeta za prikaz!</strong>
         </div>
     }
-}
-else
-{
-    <div class="alert alert-warning text-center">
-        <strong>Nema predmeta za prikaz!</strong>
-    </div>
-}
 
-<a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
-    <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
-</a>
+    <div class="text-center mt-4">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary no-wrap">
+            <i class="fas fa-arrow-left me-1"></i> Povratak na početnu
+        </a>
+    </div>
+</div>

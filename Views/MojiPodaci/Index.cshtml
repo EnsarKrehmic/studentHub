@@ -2,97 +2,153 @@
 
 @{
     ViewData["Title"] = "Moji podaci";
+    Layout = "_Layout";
 }
 
-<h2 class="mb-4"><i class="fas fa-user-circle text-primary"></i> Moji podaci</h2>
+<h2 class="mb-4">
+    <i class="fas fa-user-circle text-primary me-2"></i>
+    @ViewData["Title"]
+</h2>
+
+@if (Model.Uloga is "Student" or "Profesor" or "Asistent")
+{
+    <div class="mb-4">
+        <div class="d-flex flex-wrap gap-2">
+            @if (Model.Uloga == "Student" || Model.Uloga == "Profesor" || Model.Uloga == "Asistent")
+            {
+                <a asp-controller="MojiPodaci"
+                   asp-action="Raspored"
+                   class="btn btn-outline-primary shadow-sm">
+                    <i class="fas fa-calendar-alt me-1"></i> Moj raspored
+                </a>
+            }
+            @if (Model.Uloga == "Profesor" || Model.Uloga == "Asistent")
+            {
+                <a asp-controller="MojiPodaci"
+                   asp-action="ZahtjeviZaPrisustvo"
+                   class="btn btn-outline-success shadow-sm">
+                    <i class="fas fa-user-check me-1"></i> Zahtjevi za prisustvo
+                </a>
+            }
+        </div>
+    </div>
+}
 
 <!-- Osnovna kartica o korisniku -->
 <div class="card shadow-sm border-start border-4 border-primary mb-4">
-    <div class="card-body row align-items-center">
+    <div class="card-body row align-items-center gx-0">
         <div class="col-md-2 text-center">
             @if (!string.IsNullOrEmpty(Model.QrKodBase64))
             {
-                <img src="data:image/png;base64,@Model.QrKodBase64" alt="QR kod profila" class="img-thumbnail" style="width: 90px;" />
-                <p class="text-muted small mt-2">Vaš QR kod</p>
+                <img src="data:image/png;base64,@Model.QrKodBase64"
+                     alt="QR kod profila"
+                     class="img-thumbnail mb-2"
+                     style="width: 90px;" />
+                <div class="small text-muted">Vaš QR kod</div>
             }
         </div>
         <div class="col-md-10">
-            <h4 class="mb-1">@Model.Ime @Model.Prezime</h4>
-            <p class="mb-0"><strong>E-mail:</strong> @Model.Email</p>
-            <p class="mb-0"><strong>Uloga:</strong> @Model.Uloga</p>
-            @if (!string.IsNullOrEmpty(Model.BrojIndeksa))
-            {
-                <p class="mb-0"><strong>Broj indeksa:</strong> @Model.BrojIndeksa</p>
-            }
-            @if (!string.IsNullOrEmpty(Model.Titula))
-            {
-                <p class="mb-0"><strong>Titula:</strong> @Model.Titula</p>
-            }
-            @if (!string.IsNullOrEmpty(Model.StudijskiProgram))
-            {
-                <p class="mb-0"><strong>Studijski program:</strong> @Model.StudijskiProgram</p>
-            }
+            <dt class="col-sm-1">
+                @Model.Ime @Model.Prezime
+            </dt>
+            <dl class="row mb-0">
+                <dt class="col-sm-3">E-mail:</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3">Uloga:</dt>
+                <dd class="col-sm-9">@Model.Uloga</dd>
+
+                @if (!string.IsNullOrEmpty(Model.BrojIndeksa))
+                {
+                    <dt class="col-sm-3">Broj indeksa:</dt>
+                    <dd class="col-sm-9">@Model.BrojIndeksa</dd>
+                }
+                @if (!string.IsNullOrEmpty(Model.Titula))
+                {
+                    <dt class="col-sm-3">Titula:</dt>
+                    <dd class="col-sm-9">@Model.Titula</dd>
+                }
+                @if (!string.IsNullOrEmpty(Model.StudijskiProgram))
+                {
+                    <dt class="col-sm-3">Studijski program:</dt>
+                    <dd class="col-sm-9">@Model.StudijskiProgram</dd>
+                }
+            </dl>
         </div>
     </div>
 </div>
 
-<!-- STUDENT SEKCIJA -->
 @if (Model.Uloga == "Student")
 {
     <div class="row mb-4">
+        <!-- Profilna slika i linkovi -->
         <div class="col-md-2 text-center">
-            <img src="@(!string.IsNullOrEmpty(Model.ProfilnaSlikaUrl) ? Model.ProfilnaSlikaUrl : "/images/profili/default.png")"
-                 class="rounded-circle border border-2"
-                 style="width: 90px; height: 90px; object-fit: cover;" alt="Profilna slika" />
-            <br />
-            <button type="button" class="btn btn-link mt-2 p-0" data-toggle="modal" data-target="#modalProfilnaSlika">
-                <i class="fas fa-edit"></i> Izmijeni sliku
+            <img src="@(!string.IsNullOrEmpty(Model.ProfilnaSlikaUrl)
+                                         ? Model.ProfilnaSlikaUrl
+                                         : Url.Content("~/images/profili/default.png"))"
+             class="rounded-circle border border-2 mb-3"
+             style="width: 90px; height: 90px; object-fit: cover;"
+             alt="Profilna slika" />
+
+            <button type="button"
+                    class="btn btn-link p-0 mb-1"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalProfilnaSlika">
+                <i class="fas fa-edit me-1"></i> Izmijeni sliku
             </button>
-            <br />
-            <a href="/Identity/Account/Manage" class="btn btn-outline-secondary btn-sm mt-1">
-                <i class="fas fa-user-cog"></i> Izmijeni podatke
-            </a>
-            <a href="/Identity/Account/Manage/ChangePassword" class="btn btn-outline-warning btn-sm mt-1">
-                <i class="fas fa-key"></i> Promijeni lozinku
-            </a>
+
+            <div class="d-grid gap-1 mt-2">
+                <a href="/Identity/Account/Manage"
+                   class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-user-cog me-1"></i> Uredi profil
+                </a>
+                <a href="/Identity/Account/Manage/ChangePassword"
+                   class="btn btn-outline-warning btn-sm">
+                    <i class="fas fa-key me-1"></i> Promijeni lozinku
+                </a>
+            </div>
         </div>
+
+        <!-- Statistika -->
         <div class="col-md-10">
-            <div class="row">
+            <div class="row g-3">
                 <div class="col-md-3">
-                    <div class="card text-white bg-success shadow-sm mb-3">
+                    <div class="card bg-success text-white shadow-sm h-100">
                         <div class="card-body text-center">
                             <h5 class="card-title">@Model.BrojPolozenihIspita</h5>
-                            <p class="card-text">Položenih ispita</p>
+                            <p class="card-text mb-0">Položenih ispita</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-white bg-info shadow-sm mb-3">
+                    <div class="card bg-info text-white shadow-sm h-100">
                         <div class="card-body text-center">
-                            <h5 class="card-title">@Model.ProsjekOcjena.ToString("0.00")</h5>
-                            <p class="card-text">Prosjek ocjena</p>
+                            <h5 class="card-title">@Model.ProsjekOcjena</h5>
+                            <p class="card-text mb-0">Prosjek ocjena</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-white bg-warning shadow-sm mb-3">
+                    <div class="card bg-warning text-dark shadow-sm h-100">
                         <div class="card-body text-center">
                             <h5 class="card-title">@Model.BrojNepolozenihPredmeta</h5>
-                            <p class="card-text">Nepoloženih predmeta</p>
+                            <p class="card-text mb-0">Nepoloženih predmeta</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-white bg-secondary shadow-sm mb-3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">@Model.ProcenatPrisustva %</h5>
-                            <p class="card-text mb-2">Prisustvo</p>
+                    <div class="card bg-secondary text-white shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">@Model.ProcenatPrisustva %</h5>
+                                <small class="text-white-50">Prisustvo</small>
+                            </div>
                             <div class="progress" style="height: 12px;">
                                 <div class="progress-bar @(
-                                     Model.PrisustvoBarValue >= 80 ? "bg-success"
-                                     : Model.PrisustvoBarValue >= 60 ? "bg-info"
-                                     : Model.PrisustvoBarValue >= 40 ? "bg-warning"
-                                     : "bg-danger"
+                                                                      Model.PrisustvoBarValue >= 80 ? "bg-success" :
+                                                                      Model.PrisustvoBarValue >= 60 ? "bg-info" :
+                                                                      Model.PrisustvoBarValue >= 40 ? "bg-warning text-dark" :
+                                                                      "bg-danger"
                                                                 )"
                                  role="progressbar"
                                  style="width: @Model.PrisustvoBarValue%"></div>
@@ -102,11 +158,11 @@
             </div>
         </div>
 
-        <!-- To-do preporučene akcije -->
+            @* To-do preporučene akcije *@
         @if (Model.TodoAkcije?.Any() == true)
             {
-                <div class="alert alert-primary mt-1">
-                    <i class="fas fa-bolt text-warning"></i>
+                <div class="alert alert-primary mt-3">
+                    <i class="fas fa-bolt text-warning me-2"></i>
                     <ul class="mb-0">
                         @foreach (var todo in Model.TodoAkcije)
                         {
@@ -116,22 +172,23 @@
                 </div>
             }
 
-            <!-- Mini-kalendar: sljedeći termin -->
+            @* Sljedeći termin *@
             @if (Model.SljedeciTermin != null)
             {
-                <div class="card mb-2 shadow-sm border-start border-4 border-primary">
+                <div class="card shadow-sm border-start border-4 border-primary mt-3">
                     <div class="card-body d-flex align-items-center">
                         <i class="fas fa-calendar-alt fa-2x text-primary me-3"></i>
                         <div>
                             <div>
-                                <span class="fw-bold">@Model.SljedeciTermin.Predmet</span>
+                                <strong>@Model.SljedeciTermin.Predmet</strong>
                                 – @Model.SljedeciTermin.TipAktivnosti
                             </div>
-                            <div>
-                                <i class="far fa-clock text-secondary"></i>
-                                @Model.SljedeciTermin.Datum.ToString("dddd, dd.MM.yyyy HH:mm")
-                                <span class="ms-2">
-                                    <i class="fas fa-map-marker-alt text-danger"></i> @Model.SljedeciTermin.Lokacija
+                            <div class="text-muted">
+                                <i class="far fa-clock me-1"></i>
+                                @Model.SljedeciTermin.Datum
+                                <span class="ms-3">
+                                    <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                    @Model.SljedeciTermin.Lokacija
                                 </span>
                             </div>
                         </div>
@@ -141,203 +198,145 @@
         </div>
     </div>
 
-    <!-- Vizualna statistika (grafikoni) -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm mb-3">
-                <div class="card-header bg-info text-white">
-                    <i class="fas fa-chart-pie"></i> Položeni predmeti: obavezni/izborni
-                </div>
-                <div class="card-body">
-                    <canvas id="piePolozeni"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card shadow-sm mb-3">
-                <div class="card-header bg-primary text-white">
-                    <i class="fas fa-chart-bar"></i> Položeni po semestrima
-                </div>
-                <div class="card-body">
-                    <canvas id="barSemestri"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Brzi kontakti -->
-    @if (Model.BrziKontakti?.Any() == true)
-    {
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-light">
-                <i class="fas fa-address-book text-primary"></i> Brzi kontakti po predmetu
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th>Predmet</th>
-                            <th>Profesori</th>
-                            <th>Asistenti</th>
-                            <th>Studentska služba</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var k in Model.BrziKontakti)
-                        {
-                            <tr>
-                                <td class="fw-bold">@k.PredmetNaziv</td>
-                                <td>
-                                    @foreach (var p in k.Profesori)
-                                    {
-                                        <span>
-                                            <a href="mailto:@p.Email">@p.ImePrezime</a>
-                                            @if (p.Glavni)
-                                            {
-                                                <span class="badge bg-primary ms-1">Glavni</span>
-                                            }
-                                            <br />
-                                        </span>
-                                    }
-                                </td>
-                                <td>
-                                    @foreach (var a in k.Asistenti)
-                                    {
-                                        <span>
-                                            <a href="mailto:@a.Email">@a.ImePrezime</a>
-                                            @if (a.Glavni)
-                                            {
-                                                <span class="badge bg-primary ms-1">Glavni</span>
-                                            }
-                                            <br />
-                                        </span>
-                                    }
-                                </td>
-                                <td>
-                                    @if (!string.IsNullOrEmpty(k.SluzbaEmail))
-                                    {
-                                        <a href="mailto:@k.SluzbaEmail">@k.SluzbaIme</a>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    }
-
-    <!-- Nadolazeći ispiti -->
+    @* Nadolazeći ispiti *@
     @if (Model.NadolazeciIspiti?.Any() == true)
     {
-        <div class="card mb-4">
-            <div class="card-header bg-warning text-white">
-                <i class="fas fa-hourglass-half"></i> Nadolazeći ispiti
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-warning text-white d-flex align-items-center">
+                <i class="fas fa-hourglass-half me-2"></i>
+                <strong>Nadolazeći ispiti</strong>
             </div>
             <div class="card-body p-0">
-                <table class="table table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th>Predmet</th>
-                            <th>Datum</th>
-                            <th>Status</th>
-                            <th>Akcija</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var ispit in Model.NadolazeciIspiti)
-                        {
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0 align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <td>@ispit.NazivPredmeta</td>
-                                <td>@ispit.Datum.ToString("dd.MM.yyyy")</td>
-                                <td>
-                                    @if (ispit.Prijavljen)
-                                    {
-                                        <span class="badge bg-success">Prijavljen</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary">Nije prijavljen</span>
-                                    }
-                                </td>
-                                <td>
-                                    @if (!ispit.Prijavljen && ispit.MozeSePrijaviti)
-                                    {
-                                        <a asp-controller="Ispiti" asp-action="Prijavi" asp-route-id="@ispit.Id" class="btn btn-sm btn-success">Prijavi se</a>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">/</span>
-                                    }
-                                </td>
+                                <th>Predmet</th>
+                                <th>Datum</th>
+                                <th>Status</th>
+                                <th>Akcija</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var ispit in Model.NadolazeciIspiti)
+                            {
+                                <tr>
+                                    <td>@ispit.NazivPredmeta</td>
+                                    <td>@ispit.Datum.ToString("dd.MM.yyyy")</td>
+                                    <td>
+                                        <span class="badge @(ispit.Prijavljen ? "bg-success" : "bg-secondary")">
+                                            @(ispit.Prijavljen ? "Prijavljen" : "Nije prijavljen")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var rokOtvoren = ispit.Datum.AddDays(-3) > DateTime.Now;
+                                        }
+
+                                        @if (!ispit.Prijavljen && ispit.MozeSePrijaviti)
+                                        {
+                                            <form asp-controller="Ispiti" asp-action="Prijavi" asp-route-id="@ispit.Id" method="post" class="d-inline-block">
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-check me-1"></i> Prijavi se
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (ispit.Prijavljen && rokOtvoren)
+                                        {
+                                            <form asp-controller="Ispiti" asp-action="Odjavi" asp-route-id="@ispit.Id" method="post" class="d-inline-block">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-times me-1"></i> Odjavi
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">Nije dostupno</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     }
 
-    <!-- Predmeti koje student pohađa -->
+    @* Predmeti koje student pohađa *@
     @if (Model.UpisaniPredmeti?.Any() == true)
     {
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <i class="fas fa-book"></i> Predmeti koje pohađate
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white d-flex align-items-center">
+                <i class="fas fa-book me-2"></i>
+                <strong>Predmeti koje pohađate</strong>
             </div>
             <div class="card-body p-0">
-                <table class="table table-bordered table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Naziv predmeta</th>
-                            <th>ECTS</th>
-                            <th>Semestar</th>
-                            <th>Tip</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var p in Model.UpisaniPredmeti)
-                        {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover mb-0 align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <td>@p.Naziv</td>
-                                <td>@p.ECTS</td>
-                                <td>@p.Semestar</td>
-                                <td>@p.TipPredmeta</td>
+                                <th>Naziv predmeta</th>
+                                <th class="text-center">ECTS</th>
+                                <th class="text-center">Semestar</th>
+                                <th class="text-center">Tip</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model.UpisaniPredmeti)
+                            {
+                                <tr>
+                                    <td>@p.Naziv</td>
+                                    <td class="text-center">@p.ECTS</td>
+                                    <td class="text-center">
+                                        @(p.Semestar == 1 ? "1 (Zimski)" : "2 (Ljetni)")
+                                    </td>
+                                    <td class="text-center">
+                                        @(p.TipPredmeta == "Osnovni" ? "Osnovni" : "Izborni")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     }
 
-    <!-- Sekcija: Moji upiti i prijave -->
-    <div class="card my-4 shadow-sm">
+    @* Komunikacija i podrška *@
+    <div class="card mb-4 shadow-sm">
         <div class="card-header bg-light">
-            <h5 class="mb-0"><i class="fas fa-hands-helping"></i> Komunikacija i podrška</h5>
+            <h5 class="mb-0">
+                <i class="fas fa-hands-helping me-2 text-primary"></i>
+                Komunikacija i podrška
+            </h5>
         </div>
         <div class="card-body">
-            <div class="row text-center">
-                <div class="col-md-6 mb-3 mb-md-0">
+            <div class="row text-center g-3">
+                <div class="col-md-6">
                     <div class="mb-2">
                         <i class="fas fa-envelope-open-text fa-2x text-primary"></i>
                     </div>
-                    <h6 class="mb-1">Moji upiti studentskoj službi</h6>
-                    <p class="text-muted mb-1">Ukupno: <b>@Model.BrojMojihUpita</b></p>
-                    <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Index", "Podrska")">Pregledaj upite</a>
-                    <a class="btn btn-primary btn-sm ms-2" href="@Url.Action("Create", "Podrska")">
-                        <i class="fas fa-plus"></i> Novi upit
+                    <label class="mb-1"><p>Moji upiti studentskoj službi</p></label>
+                    <p class="text-muted mb-2">Ukupno: <strong>@Model.BrojMojihUpita</strong></p>
+                    <a href="@Url.Action("Index", "Podrska")" class="btn btn-outline-primary btn-sm">
+                        Pregledaj upite
+                    </a>
+                    <a href="@Url.Action("Create", "Podrska")" class="btn btn-primary btn-sm ms-2">
+                        <i class="fas fa-plus me-1"></i> Novi upit
                     </a>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-2">
                         <i class="fas fa-bug fa-2x text-danger"></i>
                     </div>
-                    <h6 class="mb-1">Moje prijave bugova i prijedloga</h6>
-                    <p class="text-muted mb-1">Ukupno: <b>@Model.BrojMojihBugova</b></p>
-                    <a class="btn btn-outline-danger btn-sm" href="@Url.Action("Index", "BugReport")">Pregledaj prijave</a>
-                    <a class="btn btn-danger btn-sm ms-2" href="@Url.Action("Create", "BugReport")">
-                        <i class="fas fa-plus"></i> Nova prijava
+                    <label class="mb-1"><p>Prijave bugova i prijedloga</p></label>
+                    <p class="text-muted mb-2">Ukupno: <strong>@Model.BrojMojihBugova</strong></p>
+                    <a href="@Url.Action("Index", "BugReport")" class="btn btn-outline-danger btn-sm">
+                        Pregledaj prijave
+                    </a>
+                    <a href="@Url.Action("Create", "BugReport")" class="btn btn-danger btn-sm ms-2">
+                        <i class="fas fa-plus me-1"></i> Nova prijava
                     </a>
                 </div>
             </div>
@@ -350,37 +349,43 @@
         </div>
     </div>
 
-    <!-- Timeline aktivnosti -->
+    @* Timeline aktivnosti *@
     @if (Model.TimelineAktivnosti?.Any() == true)
     {
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <i class="fas fa-history"></i> Zadnje aktivnosti
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-info text-white d-flex align-items-center">
+                <i class="fas fa-history me-2"></i>
+                <strong>Zadnje aktivnosti</strong>
             </div>
             <ul class="list-group list-group-flush">
                 @foreach (var akt in Model.TimelineAktivnosti)
                 {
-                    <li class="list-group-item">
-                        <i class="fas fa-angle-right text-muted"></i>
-                        <span class="fw-bold">@akt.Opis</span>
-                        <span class="text-muted small float-end">@akt.Vrijeme.ToString("dd.MM.yyyy HH:mm")</span>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="fas fa-angle-right me-2 text-muted"></i>
+                            @akt.Opis
+                        </span>
+                        <small class="text-muted">@akt.Vrijeme.ToString("dd.MM.yyyy HH:mm")</small>
                     </li>
                 }
             </ul>
         </div>
     }
 
-    <!-- MODAL za izmjenu profilne slike -->
+    @* Modal za izmjenu profilne slike *@
     <div class="modal fade" id="modalProfilnaSlika" tabindex="-1" aria-labelledby="modalProfilnaSlikaLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form asp-action="UploadProfilnaSlika" asp-controller="MojiPodaci" enctype="multipart/form-data" method="post">
+                <form asp-action="UploadProfilnaSlika"
+                      asp-controller="MojiPodaci"
+                      method="post"
+                      enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalProfilnaSlikaLabel">Izmijeni profilnu sliku</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="file" class="form-control" name="profilnaSlika" accept="image/*" required />
+                        <input type="file" name="profilnaSlika" accept="image/*" class="form-control" required />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
@@ -425,38 +430,49 @@
     </script>
 }
 
-<!-- PROFESOR / ASISTENT SEKCIJA -->
+@* PROFESOR / ASISTENT SEKCIJA *@
 @if (Model.Uloga == "Profesor" || Model.Uloga == "Asistent")
 {
     <div class="row mb-4">
         <div class="col-md-2 text-center">
-            <img src="@(!string.IsNullOrEmpty(Model.ProfilnaSlikaUrl) ? Model.ProfilnaSlikaUrl : "/images/profili/default.png")"
+            <img src="@(string.IsNullOrEmpty(Model.ProfilnaSlikaUrl) 
+                        ? "/images/profili/default.png" 
+                        : Model.ProfilnaSlikaUrl)"
                  class="rounded-circle border border-2"
-                 style="width: 90px; height: 90px; object-fit: cover;" alt="Profilna slika" />
+                 style="width: 90px; height: 90px; object-fit: cover;"
+                 alt="Profilna slika" />
             <br />
-            <button type="button" class="btn btn-link mt-2 p-0" data-toggle="modal" data-target="#modalProfilnaSlika">
-                <i class="fas fa-edit"></i> Izmijeni sliku
+            <button type="button"
+                    class="btn btn-link mt-2 p-0"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalProfilnaSlika">
+                <i class="fas fa-edit me-1"></i> Izmijeni sliku
             </button>
             <br />
             <a href="/Identity/Account/Manage" class="btn btn-outline-secondary btn-sm mt-1">
-                <i class="fas fa-user-cog"></i> Izmijeni podatke
+                <i class="fas fa-user-cog me-1"></i> Izmijeni podatke
             </a>
             <a href="/Identity/Account/Manage/ChangePassword" class="btn btn-outline-warning btn-sm mt-1">
-                <i class="fas fa-key"></i> Promijeni lozinku
+                <i class="fas fa-key me-1"></i> Promijeni lozinku
             </a>
         </div>
         <div class="col-md-10">
-            <div class="row">
+            <div class="row g-3">
                 <div class="col-md-4">
-                    <div class="card text-white bg-info shadow-sm mb-3">
+                    <div class="card bg-info text-white shadow-sm mb-3">
                         <div class="card-body text-center">
                             <h5 class="card-title">@Model.PredmetiPredaje.Count</h5>
-                            <p class="card-text">Predmeta @((Model.Uloga == "Profesor") ? "predajete" : "na kojima asistirate")</p>
+                            <p class="card-text">
+                                Predmeta
+                                @(Model.Uloga == "Profesor"
+                                    ? " koje predajete"
+                                    : " na kojima asistate")
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card text-white bg-warning shadow-sm mb-3">
+                    <div class="card bg-warning text-white shadow-sm mb-3">
                         <div class="card-body text-center">
                             <h5 class="card-title">@Model.BrojZahtjevaZaPrisustvo</h5>
                             <p class="card-text">Zahtjeva za prisustvo</p>
@@ -464,7 +480,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card text-white bg-secondary shadow-sm mb-3">
+                    <div class="card bg-secondary text-white shadow-sm mb-3">
                         <div class="card-body text-center">
                             <h5 class="card-title">@Model.NadolazeciIspitiZaPredmete.Count</h5>
                             <p class="card-text">Nadolazećih ispita</p>
@@ -473,147 +489,162 @@
                 </div>
             </div>
 
-            <!-- To-do/preporučene akcije -->
+            @* To-do/preporučene akcije *@
             @if (Model.TodoAkcijeNastavnik?.Any() == true)
-            {
-                <div class="alert alert-primary mt-1">
-                    <i class="fas fa-bolt text-warning"></i>
-                    <ul class="mb-0">
-                        @foreach (var todo in Model.TodoAkcijeNastavnik)
-                        {
-                            <li>@Html.Raw(todo)</li>
-                        }
-                    </ul>
-                </div>
-            }
+                {
+                    <div class="alert alert-primary mt-3">
+                        <i class="fas fa-bolt text-warning me-2"></i>
+                        <ul class="mb-0">
+                            @foreach (var todo in Model.TodoAkcijeNastavnik)
+                            {
+                                <li>@Html.Raw(todo)</li>
+                            }
+                        </ul>
+                    </div>
+                }
 
-            <!-- Mini-kalendar: sljedeći termin -->
-            @if (Model.SljedeciTermin != null)
-            {
-                <div class="card mb-2 shadow-sm border-start border-4 border-primary">
-                    <div class="card-body d-flex align-items-center">
-                        <i class="fas fa-calendar-alt fa-2x text-primary me-3"></i>
-                        <div>
+                @* Mini-kalendar: sljedeći termin *@
+                @if (Model.SljedeciTermin != null)
+                {
+                    <div class="card mb-3 shadow-sm border-start border-4 border-primary">
+                        <div class="card-body d-flex align-items-center">
+                            <i class="fas fa-calendar-alt fa-2x text-primary me-3"></i>
                             <div>
-                                <span class="fw-bold">@Model.SljedeciTermin.Predmet</span>
-                                – @Model.SljedeciTermin.TipAktivnosti
-                            </div>
-                            <div>
-                                <i class="far fa-clock text-secondary"></i>
-                                @Model.SljedeciTermin.Datum.ToString("dddd, dd.MM.yyyy HH:mm")
-                                <span class="ms-2">
-                                    <i class="fas fa-map-marker-alt text-danger"></i> @Model.SljedeciTermin.Lokacija
-                                </span>
+                                <div>
+                                    <span class="fw-bold">@Model.SljedeciTermin.Predmet</span>
+                                    – @Model.SljedeciTermin.TipAktivnosti
+                                </div>
+                                <div>
+                                    <i class="far fa-clock text-secondary me-1"></i>
+                                    @Model.SljedeciTermin.Datum.ToString("dddd, dd.MM.yyyy HH:mm")
+                                    <span class="ms-2">
+                                        <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                        @Model.SljedeciTermin.Lokacija
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
-    </div>
 
-    <!-- Grafikoni (bar chart: prosjek po predmetima) -->
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <i class="fas fa-chart-bar"></i> Prosječna ocjena po predmetu
+    @* Bar chart: prosječna ocjena po predmetu *@
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="fas fa-chart-bar me-2"></i>
+            <strong>Prosječna ocjena po predmetu</strong>
         </div>
         <div class="card-body">
             <canvas id="barProsjeci"></canvas>
         </div>
     </div>
 
-    <!-- Nadolazeći ispiti za predmete -->
+    @* Nadolazeći ispiti za predmete *@
     @if (Model.NadolazeciIspitiZaPredmete?.Any() == true)
     {
-        <div class="card mb-4">
-            <div class="card-header bg-warning text-white">
-                <i class="fas fa-hourglass-half"></i> Nadolazeći ispiti na vašim predmetima
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-warning text-white d-flex align-items-center">
+                <i class="fas fa-hourglass-half me-2"></i>
+                <strong>Nadolazeći ispiti na vašim predmetima</strong>
             </div>
             <div class="card-body p-0">
-                <table class="table table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th>Predmet</th>
-                            <th>Datum</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var ispit in Model.NadolazeciIspitiZaPredmete)
-                        {
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0 align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <td>@ispit.NazivPredmeta</td>
-                                <td>@ispit.Datum.ToString("dd.MM.yyyy")</td>
+                                <th>Predmet</th>
+                                <th>Datum</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var ispit in Model.NadolazeciIspitiZaPredmete)
+                            {
+                                <tr>
+                                    <td>@ispit.NazivPredmeta</td>
+                                    <td>@ispit.Datum.ToString("dd.MM.yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     }
 
-    <!-- Statistika po predmetima -->
+    @* Statistika po predmetima *@
     @if (Model.StatistikaPoPredmetu?.Any() == true)
     {
-        <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-                <i class="fas fa-table"></i> Statistika po predmetima
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-success text-white d-flex align-items-center">
+                <i class="fas fa-table me-2"></i>
+                <strong>Statistika po predmetima</strong>
             </div>
             <div class="card-body p-0">
-                <table class="table table-bordered table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Predmet</th>
-                            <th>Broj studenata</th>
-                            <th>Prosječna ocjena</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var p in Model.StatistikaPoPredmetu)
-                        {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover mb-0 align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <td>@p.NazivPredmeta</td>
-                                <td>@p.BrojStudenata</td>
-                                <td>@p.ProsjecnaOcjena.ToString("0.00")</td>
+                                <th>Predmet</th>
+                                <th>Broj studenata</th>
+                                <th>Prosječna ocjena</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model.StatistikaPoPredmetu)
+                            {
+                                <tr>
+                                    <td>@p.NazivPredmeta</td>
+                                    <td>@p.BrojStudenata</td>
+                                    <td>@p.ProsjecnaOcjena.ToString("0.00")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     }
 
-    <!-- SEKCIJA: Moji upiti i prijave (nastavno osoblje) -->
-    <div class="card my-4 shadow-sm">
+    @* Komunikacija i podrška (nastavno osoblje) *@
+    <div class="card mb-4 shadow-sm">
         <div class="card-header bg-light">
-            <h5 class="mb-0"><i class="fas fa-hands-helping"></i> Komunikacija i podrška</h5>
+            <h5 class="mb-0">
+                <i class="fas fa-hands-helping me-2 text-primary"></i>
+                Komunikacija i podrška
+            </h5>
         </div>
         <div class="card-body">
-            <div class="row text-center">
-                <div class="col-md-6 mb-3 mb-md-0">
+            <div class="row text-center g-3">
+                <div class="col-md-6">
                     <div class="mb-2">
                         <i class="fas fa-envelope-open-text fa-2x text-primary"></i>
                     </div>
-                    <h6 class="mb-1">Moji upiti studentskoj službi</h6>
-                    <p class="text-muted mb-1">Ukupno: <b>@Model.BrojMojihUpita</b></p>
-                    <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Index", "Podrska")">Pregledaj upite</a>
-                    <a class="btn btn-primary btn-sm ms-2" href="@Url.Action("Create", "Podrska")">
-                        <i class="fas fa-plus"></i> Novi upit
+                    <label class="mb-1"><p>Moji upiti studentskoj službi</p></label>
+                    <p class="text-muted mb-2">Ukupno: <strong>@Model.BrojMojihUpita</strong></p>
+                    <a href="@Url.Action("Index", "Podrska")" class="btn btn-outline-primary btn-sm">
+                        Pregledaj upite
+                    </a>
+                    <a href="@Url.Action("Create", "Podrska")" class="btn btn-primary btn-sm ms-2">
+                        <i class="fas fa-plus me-1"></i> Novi upit
                     </a>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-2">
                         <i class="fas fa-bug fa-2x text-danger"></i>
                     </div>
-                    <h6 class="mb-1">Moje prijave bugova i prijedloga</h6>
-                    <p class="text-muted mb-1">Ukupno: <b>@Model.BrojMojihBugova</b></p>
-                    <a class="btn btn-outline-danger btn-sm" href="@Url.Action("Index", "BugReport")">Pregledaj prijave</a>
-                    <a class="btn btn-danger btn-sm ms-2" href="@Url.Action("Create", "BugReport")">
-                        <i class="fas fa-plus"></i> Nova prijava
+                    <label class="mb-1"><p>Prijave bugova i prijedloga</p></label>
+                    <p class="text-muted mb-2">Ukupno: <strong>@Model.BrojMojihBugova</strong></p>
+                    <a href="@Url.Action("Index", "BugReport")" class="btn btn-outline-danger btn-sm">
+                        Pregledaj prijave
+                    </a>
+                    <a href="@Url.Action("Create", "BugReport")" class="btn btn-danger btn-sm ms-2">
+                        <i class="fas fa-plus me-1"></i> Nova prijava
                     </a>
                 </div>
             </div>
             <hr />
-            <div class="text-center mt-3">
+            <div class="text-center">
                 <a href="#" class="btn btn-outline-success btn-sm" onclick="$('#supportFab').click(); return false;">
                     <i class="fas fa-comments"></i> Otvori panel podrške
                 </a>
@@ -621,40 +652,45 @@
         </div>
     </div>
 
-    <!-- Timeline aktivnosti -->
+    @* Timeline aktivnosti *@
     @if (Model.TimelineAktivnosti?.Any() == true)
     {
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <i class="fas fa-history"></i> Zadnje aktivnosti
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-info text-white d-flex align-items-center">
+                <i class="fas fa-history me-2"></i>
+                <strong>Zadnje aktivnosti</strong>
             </div>
             <ul class="list-group list-group-flush">
                 @foreach (var akt in Model.TimelineAktivnosti)
                 {
-                    <li class="list-group-item">
-                        <i class="fas fa-angle-right text-muted"></i>
-                        <span class="fw-bold">@akt.Opis</span>
-                        <span class="text-muted small float-end">@akt.Vrijeme.ToString("dd.MM.yyyy HH:mm")</span>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="fas fa-angle-right me-2 text-muted"></i>@akt.Opis
+                        </span>
+                        <small class="text-muted">@akt.Vrijeme.ToString("dd.MM.yyyy HH:mm")</small>
                     </li>
                 }
             </ul>
         </div>
     }
 
-    <!-- MODAL za izmjenu profilne slike -->
+    @* Modal za izmjenu profilne slike *@
     <div class="modal fade" id="modalProfilnaSlika" tabindex="-1" aria-labelledby="modalProfilnaSlikaLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form asp-action="UploadProfilnaSlika" enctype="multipart/form-data" method="post">
+                <form asp-action="UploadProfilnaSlika"
+                      asp-controller="MojiPodaci"
+                      method="post"
+                      enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalProfilnaSlikaLabel">Izmijeni profilnu sliku</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Zatvori"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="file" class="form-control" name="profilnaSlika" accept="image/*" required />
+                        <input type="file" name="profilnaSlika" accept="image/*" class="form-control" required />
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
                         <button type="submit" class="btn btn-primary">Sačuvaj</button>
                     </div>
                 </form>
@@ -662,7 +698,7 @@
         </div>
     </div>
 
-    <!-- Chart.js (Bar chart: prosjek po predmetima) -->
+    @* Chart.js: bar chart prosjek po predmetima *@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctxBarProsjeci = document.getElementById('barProsjeci');
@@ -682,7 +718,9 @@
                     plugins: { legend: { display: false } },
                     scales: {
                         y: {
-                            min: 5, max: 10, stepSize: 1,
+                            suggestedMin: 5,
+                            suggestedMax: 10,
+                            ticks: { stepSize: 1 },
                             title: { display: true, text: 'Ocjena' }
                         }
                     }
@@ -692,52 +730,60 @@
     </script>
 }
 
-<!-- STUDENTSKA SLUŽBA SEKCIJA -->
+@* STUDENTSKA SLUŽBA SEKCIJA *@
 @if (Model.Uloga == "StudentskaSluzba")
 {
     <div class="row mb-4">
         <div class="col-md-2 text-center">
-            <img src="@(!string.IsNullOrEmpty(Model.ProfilnaSlikaUrl) ? Model.ProfilnaSlikaUrl : "/images/profili/default.png")"
-                 class="rounded-circle border border-2"
-                 style="width: 90px; height: 90px; object-fit: cover;" alt="Profilna slika" />
-            <br />
-            <button type="button" class="btn btn-link mt-2 p-0" data-toggle="modal" data-target="#modalProfilnaSlika">
-                <i class="fas fa-edit"></i> Izmijeni sliku
-            </button>
-        </div>
-        <div class="col-md-10">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card text-white bg-danger shadow-sm mb-3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">@Model.BrojNerijesenihZahtjeva</h5>
-                            <p class="card-text">Neriješenih zahtjeva</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-primary shadow-sm mb-3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">@Model.BrojUpisanihStudenata</h5>
-                            <p class="card-text">Upisanih studenata</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-secondary shadow-sm mb-3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">@Model.BrojUpisanihProfesora + @Model.BrojUpisanihAsistenata</h5>
-                            <p class="card-text">Nastavnika (profesora + asistenata)</p>
-                        </div>
+            <img src="@(string.IsNullOrEmpty(Model.ProfilnaSlikaUrl)
+                                         ? "/images/profili/default.png"
+                                         : Model.ProfilnaSlikaUrl)"
+             class="rounded-circle border border-2"
+             style="width: 90px; height: 90px; object-fit: cover;"
+             alt="Profilna slika" />
+        <br />
+        <button type="button"
+                class="btn btn-link mt-2 p-0"
+                data-bs-toggle="modal"
+                data-bs-target="#modalProfilnaSlika">
+            <i class="fas fa-edit me-1"></i> Izmijeni sliku
+        </button>
+    </div>
+    <div class="col-md-10">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card bg-danger text-white shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@Model.BrojNerijesenihZahtjeva</h5>
+                        <p class="card-text">Neriješenih zahtjeva</p>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card bg-primary text-white shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@Model.BrojUpisanihStudenata</h5>
+                        <p class="card-text">Upisanih studenata</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-secondary text-white shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">
+                            @(Model.BrojUpisanihProfesora + Model.BrojUpisanihAsistenata)
+                        </h5>
+                        <p class="card-text">Nastavnika (profesora + asistenata)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <!-- To-do / preporučene akcije -->
-            @if (Model.TodoAkcijeSluzba?.Any() == true)
+            @* To-do / preporučene akcije *@
+        @if (Model.TodoAkcijeSluzba?.Any() == true)
             {
-                <div class="alert alert-primary mt-1">
-                    <i class="fas fa-bolt text-warning"></i>
+                <div class="alert alert-primary mt-3">
+                    <i class="fas fa-bolt text-warning me-2"></i>
                     <ul class="mb-0">
                         @foreach (var todo in Model.TodoAkcijeSluzba)
                         {
@@ -749,44 +795,45 @@
         </div>
     </div>
 
-    <!-- SEKCIJA: Komunikacija i podrška (studentska služba, sa brojem otvorenih i zatvorenih) -->
-    <div class="card my-4 shadow-sm">
-        <div class="card-header bg-light">
-            <h5 class="mb-0"><i class="fas fa-hands-helping"></i> Komunikacija i podrška</h5>
+    @* Komunikacija i podrška (studentska služba) *@
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light d-flex align-items-center">
+            <i class="fas fa-hands-helping me-2 text-primary"></i>
+            <h5 class="mb-0">Komunikacija i podrška</h5>
         </div>
         <div class="card-body">
-            <div class="row text-center">
-                <div class="col-md-6 mb-3 mb-md-0">
+            <div class="row text-center g-3">
+                <div class="col-md-6">
                     <div class="mb-2">
                         <i class="fas fa-envelope-open-text fa-2x text-primary"></i>
                     </div>
-                    <h6 class="mb-1">Svi upiti korisnika</h6>
-                    <p class="mb-1">
-                        <span class="text-muted">Ukupno: <b>@Model.BrojMojihUpita</b></span><br />
-                        <span class="badge bg-warning text-dark">Otvoreni: @Model.BrojOtvorenihUpita</span>
+                    <label class="mb-1"><p>Svi upiti korisnika</p></label>
+                    <p class="mb-2">
+                        <span class="text-muted">Ukupno: <strong>@Model.BrojMojihUpita</strong></span><br />
+                        <span class="badge bg-warning text-dark me-1">Otvoreni: @Model.BrojOtvorenihUpita</span>
                         <span class="badge bg-success">Zatvoreni: @Model.BrojZatvorenihUpita</span>
                     </p>
-                    <a class="btn btn-primary btn-sm" href="@Url.Action("Index", "Podrska")">
-                        <i class="fas fa-list"></i> Pregledaj sve upite
+                    <a href="@Url.Action("Index", "Podrska")" class="btn btn-primary btn-sm">
+                        <i class="fas fa-list me-1"></i> Pregledaj sve upite
                     </a>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-2">
                         <i class="fas fa-bug fa-2x text-danger"></i>
                     </div>
-                    <h6 class="mb-1">Sve prijave bugova i prijedloga</h6>
-                    <p class="mb-1">
-                        <span class="text-muted">Ukupno: <b>@Model.BrojMojihBugova</b></span><br />
-                        <span class="badge bg-warning text-dark">Otvoreni: @Model.BrojOtvorenihBugova</span>
+                    <label class="mb-1"><p>Sve prijave bugova i prijedloga</p></label>
+                    <p class="mb-2">
+                        <span class="text-muted">Ukupno: <strong>@Model.BrojMojihBugova</strong></span><br />
+                        <span class="badge bg-warning text-dark me-1">Otvoreni: @Model.BrojOtvorenihBugova</span>
                         <span class="badge bg-success">Zatvoreni: @Model.BrojZatvorenihBugova</span>
                     </p>
-                    <a class="btn btn-danger btn-sm" href="@Url.Action("Index", "BugReport")">
-                        <i class="fas fa-list"></i> Pregledaj sve prijave
+                    <a href="@Url.Action("Index", "BugReport")" class="btn btn-danger btn-sm">
+                        <i class="fas fa-list me-1"></i> Pregledaj sve prijave
                     </a>
                 </div>
             </div>
             <hr />
-            <div class="text-center mt-3">
+            <div class="text-center">
                 <a href="#" class="btn btn-outline-success btn-sm" onclick="$('#supportFab').click(); return false;">
                     <i class="fas fa-comments"></i> Otvori panel podrške
                 </a>
@@ -794,61 +841,65 @@
         </div>
     </div>
 
-    <!-- Vizualizacija: upis po godini studija -->
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <i class="fas fa-chart-bar"></i> Broj studenata po godini studija
+    @* Bar chart: broj studenata po godini studija *@
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="fas fa-chart-bar me-2"></i>
+            <strong>Broj studenata po godini studija</strong>
         </div>
         <div class="card-body">
             <canvas id="barGodine"></canvas>
         </div>
     </div>
 
-    <!-- Statistika po programima -->
+    @* Statistika po studijskim programima *@
     @if (Model.StatistikaPoProgramima?.Any() == true)
     {
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <i class="fas fa-chart-pie"></i> Statistika po studijskim programima
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-info text-white d-flex align-items-center">
+                <i class="fas fa-chart-pie me-2"></i>
+                <strong>Statistika po studijskim programima</strong>
             </div>
             <div class="card-body p-0">
-                <table class="table table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th>Program</th>
-                            <th>Broj studenata</th>
-                            <th>Prosjek ocjena</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var sp in Model.StatistikaPoProgramima)
-                        {
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0 align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <td>@sp.NazivPrograma</td>
-                                <td>@sp.BrojStudenata</td>
-                                <td>@sp.ProsjekOcjena.ToString("0.00")</td>
+                                <th>Program</th>
+                                <th>Broj studenata</th>
+                                <th>Prosjek ocjena</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var sp in Model.StatistikaPoProgramima)
+                            {
+                                <tr>
+                                    <td>@sp.NazivPrograma</td>
+                                    <td>@sp.BrojStudenata</td>
+                                    <td>@sp.ProsjekOcjena.ToString("0.00")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     }
 
-    <!-- MODAL za izmjenu profilne slike -->
+    @* Modal za izmjenu profilne slike (Bootstrap 5) *@
     <div class="modal fade" id="modalProfilnaSlika" tabindex="-1" aria-labelledby="modalProfilnaSlikaLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form asp-action="UploadProfilnaSlika" enctype="multipart/form-data" method="post">
+                <form asp-action="UploadProfilnaSlika" asp-controller="MojiPodaci" method="post" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalProfilnaSlikaLabel">Izmijeni profilnu sliku</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Zatvori"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="file" class="form-control" name="profilnaSlika" accept="image/*" required />
+                        <input type="file" name="profilnaSlika" accept="image/*" class="form-control" required />
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkaži</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
                         <button type="submit" class="btn btn-primary">Sačuvaj</button>
                     </div>
                 </form>
@@ -856,7 +907,7 @@
         </div>
     </div>
 
-    <!-- Chart.js vizualizacija -->
+    @* Chart.js vizualizacija broja studenata po godini *@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctxBarGodine = document.getElementById('barGodine');
@@ -880,20 +931,23 @@
     </script>
 }
 
-<!-- Notifikacije (za sve uloge) -->
+@* Notifikacije za sve uloge *@
 @if (Model.ZadnjeNotifikacije?.Any() == true)
 {
-    <div class="card mb-4">
-        <div class="card-header bg-warning text-dark">
-            <i class="fas fa-bell"></i> Zadnje notifikacije
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-warning text-dark d-flex align-items-center">
+            <i class="fas fa-bell me-2"></i>
+            <strong>Zadnje notifikacije</strong>
         </div>
         <ul class="list-group list-group-flush">
             @foreach (var notif in Model.ZadnjeNotifikacije)
             {
-                <li class="list-group-item">
-                    <i class="fas fa-info-circle text-warning"></i>
-                    <span>@notif.Sadrzaj</span>
-                    <span class="text-muted small float-end">@notif.Vrijeme.ToString("dd.MM.yyyy HH:mm")</span>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="fas fa-info-circle text-warning me-2"></i>
+                        @notif.Sadrzaj
+                    </span>
+                    <small class="text-muted">@notif.Vrijeme.ToString("dd.MM.yyyy HH:mm")</small>
                 </li>
             }
         </ul>

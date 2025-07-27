@@ -1,36 +1,48 @@
 ﻿@model StudentHub.Models.PodrskaUpit
 @{
-    ViewData["Title"] = Model.Id == 0 ? "Novi upit za podršku" : "Uredi upit";
+    bool isEdit = Model.Id != 0;
+    ViewData["Title"] = isEdit ? "Uredi upit za podršku" : "Novi upit za podršku";
 }
 
 <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+    <div class="card-header bg-primary text-white">
+        <h2 class="card-title mb-0">
+            <i class="fas fa-life-ring me-2"></i>@ViewData["Title"]
+        </h2>
+    </div>
     <div class="card-body">
-        <h2 class="card-title">@ViewData["Title"]</h2>
-        <hr />
-        <form asp-action="@((Model.Id == 0) ? "Create" : "Edit")" method="post" novalidate>
-            <div asp-validation-summary="All" class="text-danger"></div>
+        <form asp-action="@(isEdit ? "Edit" : "Create")" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="alert alert-danger"></div>
+
             <div class="mb-3">
-                <label asp-for="Naslov" class="form-label"></label>
-                <input asp-for="Naslov" class="form-control" maxlength="60" placeholder="Kratko opišite problem (npr. Nemam pristup sistemu)" />
-                <span asp-validation-for="Naslov" class="text-danger"></span>
+                <label asp-for="Naslov" class="form-label fw-bold"></label>
+                <input asp-for="Naslov" class="form-control" maxlength="60"
+                       placeholder="Kratko opišite problem (npr. Nemam pristup sistemu)" />
+                <span asp-validation-for="Naslov" class="text-danger small"></span>
             </div>
+
             <div class="mb-3">
-                <label asp-for="Opis" class="form-label"></label>
-                <textarea asp-for="Opis" class="form-control" rows="5" maxlength="2000" placeholder="Detaljno opišite upit ili problem..."></textarea>
-                <span asp-validation-for="Opis" class="text-danger"></span>
+                <label asp-for="Opis" class="form-label fw-bold"></label>
+                <textarea asp-for="Opis" class="form-control" rows="5" maxlength="2000"
+                          placeholder="Detaljno opišite upit ili problem..."></textarea>
+                <span asp-validation-for="Opis" class="text-danger small"></span>
             </div>
-            <button type="submit" class="btn btn-success me-2">
-                <i class="fas fa-paper-plane"></i> @(Model.Id == 0 ? "Pošalji upit" : "Sačuvaj")
-            </button>
-            <a asp-action="@(Model.Id == 0 ? "Index" : "Details")" asp-route-id="@(Model.Id)" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Nazad
-            </a>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-paper-plane me-1"></i> @(isEdit ? "Sačuvaj" : "Pošalji upit")
+                </button>
+                <a asp-action="@(isEdit ? "Details" : "Index")"
+                   asp-route-id="@(Model.Id)"
+                   class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Nazad
+                </a>
+            </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

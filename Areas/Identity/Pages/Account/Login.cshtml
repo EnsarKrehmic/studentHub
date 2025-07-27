@@ -15,9 +15,8 @@
                     <form id="account" method="post" novalidate>
                         <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                         <div class="form-floating mb-3">
-                            <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="ime@primjer.com" />
-                            <label asp-for="Input.Email" class="form-label">Email adresa</label>
-                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="Email adresa" />
+                            <label asp-for="Input.Email">Email adresa</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input asp-for="Input.Password" type="password" class="form-control" autocomplete="current-password" placeholder="Lozinka" />

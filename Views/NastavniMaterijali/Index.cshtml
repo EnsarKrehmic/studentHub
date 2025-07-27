@@ -1,130 +1,141 @@
 ﻿@model IEnumerable<StudentHub.Models.NastavniMaterijal>
 
 @{
-    ViewBag.Title = "Nastavni Materijali";
+    ViewData["Title"] = "Nastavni materijali";
     var aktivnostNaziv = ViewBag.NastavnaAktivnostNaziv as string ?? "Nepoznata aktivnost";
     var aktivnostId = ViewBag.NastavnaAktivnostId as long? ?? 0;
 }
 
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">
-            <i class="fas fa-folder-open me-2"></i>Materijali za: <strong>@aktivnostNaziv</strong>
-        </h4>
-        @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-        {
-            <a asp-action="Create" asp-route-nastavnaAktivnostId="@aktivnostId" class="btn btn-light btn-sm">
-                <i class="fas fa-plus me-1"></i> Dodaj novi materijal
-            </a>
-        }
-    </div>
-
-    <div class="card-body p-0">
-        @if (!Model.Any())
-        {
-            <div class="alert alert-info m-3">
-                <i class="fas fa-info-circle me-2"></i> Trenutno nema dostupnih materijala za ovu aktivnost.
-            </div>
-        }
-        else
-        {
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">Naziv</th>
-                            <th scope="col">Opis</th>
-                            <th scope="col">Fajlovi</th>
-                            <th scope="col" class="text-center">Akcije</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var materijal in Model)
-                        {
-                            var brojFajlova = materijal.Fajlovi?.Count() ?? 0;
-
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="fas fa-folder-open me-2"></i>
+                Materijali za: <strong>@aktivnostNaziv</strong>
+            </h4>
+            @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+            {
+                <a asp-action="Create"
+                   asp-route-nastavnaAktivnostId="@aktivnostId"
+                   class="btn btn-light btn-sm">
+                    <i class="fas fa-plus me-1"></i> Dodaj materijal
+                </a>
+            }
+        </div>
+        <div class="card-body p-0">
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info m-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Trenutno nema materijala za ovu aktivnost.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <td>
-                                    <strong>@materijal.Naziv</strong>
-                                </td>
-                                <td>
-                                    @if (!string.IsNullOrWhiteSpace(materijal.Opis))
-                                    {
-                                        <span class="text-muted small">@materijal.Opis</span>
-                                    }
-                                    else
-                                    {
-                                        <em class="text-muted">Bez opisa</em>
-                                    }
-                                </td>
-                                <td>
-                                    @if (brojFajlova > 0)
-                                    {
-                                        <span class="badge bg-success">
-                                            <i class="fas fa-paperclip me-1"></i> @brojFajlova
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted fst-italic">Nema fajlova</span>
-                                    }
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <a asp-action="Details" asp-route-id="@materijal.Id"
-                                           class="btn btn-outline-info" title="Prikaži detalje">
-                                            <i class="fas fa-info-circle"></i>
-                                        </a>
-
-                                        @if (brojFajlova > 0)
-                                        {
-                                            <a asp-action="DownloadAll"
-                                               asp-route-id="@materijal.Id"
-                                               class="btn btn-outline-secondary"
-                                               title="Preuzmi sve fajlove u ZIP arhivi"
-                                               data-bs-toggle="tooltip"
-                                               data-bs-placement="top">
-                                                <i class="fas fa-file-archive me-1"></i> ZIP
-                                            </a>
-                                        }
-
-                                        @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-                                        {
-                                            <a asp-action="Edit" asp-route-id="@materijal.Id"
-                                               class="btn btn-outline-warning" title="Uredi materijal">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a asp-action="Delete" asp-route-id="@materijal.Id"
-                                               class="btn btn-outline-danger" title="Obriši materijal">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
-                                        }
-                                    </div>
-                                </td>
+                                <th>Naziv</th>
+                                <th>Opis</th>
+                                <th>Fajlovi</th>
+                                <th class="text-center">Akcije</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
-    </div>
-</div>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model)
+                            {
+                                var count = m.Fajlovi?.Count() ?? 0;
+                                <tr>
+                                    <td><strong>@m.Naziv</strong></td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(m.Opis))
+                                        {
+                                            <span class="text-muted small">@m.Opis</span>
+                                        }
+                                        else
+                                        {
+                                            <em class="text-muted">Bez opisa</em>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (count > 0)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-paperclip me-1"></i> @count
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">Nema fajlova</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a asp-action="Details"
+                                               asp-route-id="@m.Id"
+                                               class="btn btn-outline-info"
+                                               title="Detalji"
+                                               data-bs-toggle="tooltip">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
 
-<a asp-controller="NastavneAktivnosti"
-   asp-action="Details"
-   asp-route-id="@aktivnostId"
-   class="btn btn-secondary mt-3">
-    <i class="fas fa-arrow-left me-1"></i> Nazad na aktivnost
-</a>
+                                            @if (count > 0)
+                                            {
+                                                <a asp-action="DownloadAll"
+                                                   asp-route-id="@m.Id"
+                                                   class="btn btn-outline-secondary"
+                                                   title="Preuzmi sve (ZIP)"
+                                                   data-bs-toggle="tooltip">
+                                                    <i class="fas fa-file-archive me-1"></i> ZIP
+                                                </a>
+                                            }
+
+                                            @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+                                            {
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@m.Id"
+                                                   class="btn btn-outline-warning"
+                                                   title="Uredi"
+                                                   data-bs-toggle="tooltip">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a asp-action="Delete"
+                                                   asp-route-id="@m.Id"
+                                                   class="btn btn-outline-danger"
+                                                   title="Obriši"
+                                                   data-bs-toggle="tooltip">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <a asp-controller="NastavneAktivnosti"
+       asp-action="Details"
+       asp-route-id="@aktivnostId"
+       class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Nazad na aktivnost
+    </a>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-                new bootstrap.Tooltip(tooltipTriggerEl);
+            var tooltipTriggerList = [].slice.call(
+                document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            );
+            tooltipTriggerList.forEach(function (el) {
+                new bootstrap.Tooltip(el);
             });
         });
     </script>

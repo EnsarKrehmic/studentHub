@@ -1,28 +1,41 @@
 ﻿@model StudentHub.ViewModels.IspitDetailsViewModel
+@using StudentHub.Models
+@using System.Globalization
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Detalji ispita";
     var ispit = Model.Predmeti?.FirstOrDefault()?.Ispiti?.FirstOrDefault();
     var ispitProsao = ispit != null && ispit.DatumOdrzavanja < DateTime.Now;
     var trenutniKorisnikId = ViewBag.TrenutniKorisnikId as long?;
+    var isPrijavljen = ViewBag.JePrijavljen as bool? ?? false;
+    var aktivnostId = Model.IspitId;
 }
+
+@Html.AntiForgeryToken()
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+<input type="hidden"
+       name="__RequestVerificationToken"
+       value="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert" id="successMessage">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
         @TempData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
 
 <div class="container mt-5">
-    <div class="card shadow-lg p-4">
+
+    <!-- Detalji ispita -->
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h1 class="card-title text-center mb-4">Detalji ispita</h1>
 
-            <div class="mb-4">
-                <h5 class="text-primary">Studijski program:</h5>
-                <p class="lead">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Studijski program:</dt>
+                <dd class="col-sm-9">
                     @if (Model.StudijskiProgram != null)
                     {
                         @Model.StudijskiProgram.Naziv
@@ -31,95 +44,87 @@
                     {
                         <span class="text-danger">Nema povezanog studijskog programa</span>
                     }
-                </p>
-            </div>
+                </dd>
+
+                <dt class="col-sm-3">Predmet:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Predmeti.Any())
+                    {
+                        @Model.Predmeti.First().Predmet.Naziv
+                    }
+                    else
+                    {
+                        <span class="text-danger">Nepoznat predmet</span>
+                    }
+                </dd>
+            </dl>
 
             <hr />
 
-            <h5 class="text-primary">Predmet:</h5>
-            <p class="lead">
-                @if (Model.Predmeti != null && Model.Predmeti.Any())
-                {
-                    @Model.Predmeti.First().Predmet.Naziv
-                }
-                else
-                {
-                    <span class="text-danger">Nepoznat predmet</span>
-                }
-            </p>
-
-            <hr />
-
-            <h4 class="text-primary mb-3">Detalji ispita</h4>
             @if (ispit != null)
             {
-                <div class="card bg-light mb-4 shadow-sm">
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>📍 Lokacija:</strong> @ispit.Lokacija</li>
-                            <li class="list-group-item"><strong>📅 Datum:</strong> @ispit.DatumOdrzavanja.ToString("dd.MM.yyyy HH:mm")</li>
-                            <li class="list-group-item"><strong>💯 Ukupni bodovi ispita:</strong> @ispit.BrojBodova</li>
-                            <li class="list-group-item"><strong>Uslov za polaganje (minimalni broj bodova):</strong> @ispit.UslovZaPolaganje</li>
-                        </ul>
-                    </div>
-                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>📍 Lokacija:</strong> @ispit.Lokacija</li>
+                    <li class="list-group-item"><strong>📅 Datum:</strong> @ispit.DatumOdrzavanja.ToString("dd.MM.yyyy HH:mm")</li>
+                    <li class="list-group-item"><strong>💯 Ukupni bodovi:</strong> @ispit.BrojBodova</li>
+                    <li class="list-group-item"><strong>🔢 Uslov (min):</strong> @ispit.UslovZaPolaganje</li>
+                </ul>
             }
             else
             {
-                <div class="alert alert-info">Detalji o ispitu trenutno nisu dostupni.</div>
+                <div class="alert alert-info mb-0">Detalji o ispitu trenutno nisu dostupni.</div>
             }
 
-            <div class="d-flex justify-content-between mt-4 align-items-center flex-wrap gap-2">
+            <div class="d-flex justify-content-end gap-2 mt-4 flex-wrap">
+                @* Prijava / odjava *@
                 @if (User.IsInRole("Student") && ispit != null)
                 {
                     if (!Model.Prijavljen && ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now)
                     {
-                        <form asp-action="Prijavi" asp-route-id="@Model.IspitId" method="post" class="me-2">
-                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Prijavi se</button>
+                        <form asp-action="Prijavi" asp-route-id="@aktivnostId" method="post">
+                            <button class="btn btn-success"><i class="fas fa-check me-1"></i> Prijavi se</button>
                         </form>
                     }
                     else if (Model.Prijavljen && ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now)
                     {
-                        <form asp-action="Odjavi" asp-route-id="@Model.IspitId" method="post" class="me-2">
-                            <button type="submit" class="btn btn-danger"><i class="fas fa-times"></i> Odjavi se</button>
+                        <form asp-action="Odjavi" asp-route-id="@aktivnostId" method="post">
+                            <button class="btn btn-danger"><i class="fas fa-times me-1"></i> Odjavi se</button>
                         </form>
                     }
                 }
 
+                @* Arhiviranje *@
                 @if ((User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
                                 && ispit != null && ispitProsao && !ispit.Arhivirano)
                 {
-                    <form asp-action="Arhiviraj" asp-route-id="@Model.IspitId" method="post" class="me-2">
+                    <form asp-action="Arhiviraj" asp-route-id="@aktivnostId" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-secondary">
-                            <i class="fas fa-archive"></i> Arhiviraj ispit
-                        </button>
+                        <button class="btn btn-secondary"><i class="fas fa-archive me-1"></i> Arhiviraj ispit</button>
                     </form>
                 }
                 else if (ispit != null && ispit.Arhivirano)
                 {
                     <span class="badge bg-info align-self-center">
-                        <i class="fas fa-archive"></i> Ispit je arhiviran
+                        <i class="fas fa-archive me-1"></i> Ispit je arhiviran
                     </span>
                 }
 
                 <a asp-action="Index" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left"></i> Povratak na listu ispita
+                    <i class="fas fa-arrow-left me-1"></i> Povratak na listu ispita
                 </a>
             </div>
         </div>
     </div>
-</div>
 
-@if ((User.IsInRole("Profesor") || User.IsInRole("Asistent")) && Model.PrijavljeniStudenti.Any())
-{
-    <div class="container mt-5">
-        <div class="card shadow-lg p-4">
-            <h4>Rezultati ispita</h4>
+    @* Rezultati ispita za nastavnika/službu *@
+    @if ((User.IsInRole("Profesor") || User.IsInRole("Asistent")) && Model.PrijavljeniStudenti.Any())
+    {
+        <div class="card shadow-sm p-4 mb-4">
+            <h4 class="mb-3">Rezultati ispita</h4>
+            <div class="alert alert-info">
+                Unos bodova <strong>ne stvara automatski ocjenu</strong>. Za dodavanje ocjene, koristite sekciju za ocjene predmeta.
+            </div>
             <div class="table-responsive">
-                <div class="alert alert-info mt-3">
-                    Unos bodova <b>ne stvara automatski ocjenu</b>. Za dodavanje ocjene, koristite sekciju za ocjene predmeta.
-                </div>
                 <table class="table align-middle">
                     <thead>
                         <tr>
@@ -138,8 +143,11 @@
                             <tr>
                                 <td>@student.Ime @student.Prezime (@student.BrojIndeksa)</td>
                                 <td>
-                                    <input type="number" class="form-control" id="bodovi-@student.Id"
-                                           value="@(bodovi.HasValue? bodovi.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")" disabled />
+                                    <input type="number"
+                                           class="form-control"
+                                           id="bodovi-@student.Id"
+                                           value="@(bodovi.HasValue? bodovi.Value.ToString(CultureInfo.InvariantCulture) : "")"
+                                           disabled />
                                 </td>
                                 <td id="status-@student.Id">
                                     @if (bodovi.HasValue)
@@ -156,11 +164,13 @@
                                 <td>
                                     @if (ispitProsao)
                                     {
-                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-1"
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-secondary mb-1"
                                                 onclick="omoguciUredjivanje(@student.Id)">
                                             ✏️ Uredi
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-primary d-none"
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary d-none"
                                                 id="spasi-@student.Id"
                                                 onclick="unesiBodove(@Model.IspitId, @student.Id)">
                                             💾 Spasi
@@ -168,7 +178,9 @@
                                     }
                                     else
                                     {
-                                        <button class="btn btn-secondary btn-sm" disabled>Očekivanje ispita</button>
+                                        <button class="btn btn-secondary btn-sm" disabled>
+                                            Očekivanje ispita
+                                        </button>
                                     }
                                 </td>
                             </tr>
@@ -177,95 +189,97 @@
                 </table>
             </div>
         </div>
-    </div>
-}
+    }
 
-@if (ViewBag.JePrijavljen == true)
+@* Vaš rezultat *@
+@if (isPrijavljen)
 {
-    <div class="container mt-5">
-        <div class="card shadow-lg p-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
             <h4 class="mb-3">Vaš rezultat</h4>
             @{
-                var bodovi = Model.Bodovi;
-                var polozen = bodovi.HasValue && bodovi >= Model.UslovZaPolaganje;
+                var bod = Model.Bodovi;
+                var polozen = bod.HasValue && bod >= Model.UslovZaPolaganje;
             }
-            <p><strong>Bodovi:</strong> @(bodovi.HasValue? bodovi.ToString() : "Nisu još uneseni")</p>
+            <p><strong>Bodovi:</strong> @(bod.HasValue? bod.Value.ToString(CultureInfo.InvariantCulture) : "Nisu još uneseni")</p>
             <p>
                 <strong>Status:</strong>
-                <span class="badge @(bodovi.HasValue ? (polozen ? "bg-success" : "bg-danger") : "bg-warning text-dark")">
-                    @(bodovi.HasValue ? (polozen ? "Položen" : "Nije položen") : "Rezultat nije objavljen")
+                <span class="badge @(bod.HasValue ? (polozen ? "bg-success" : "bg-danger") : "bg-warning text-dark")">
+                    @(bod.HasValue ? (polozen ? "Položen" : "Nije položen") : "Rezultat nije objavljen")
                 </span>
             </p>
         </div>
     </div>
 }
 
+@* Komentari i forma *@
 @if (User.IsInRole("Student") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
 {
-    <div class="container mt-5">
-        <div class="card shadow-lg p-4">
-            <h4 class="mb-3">Komentari</h4>
-            <input class="form-control mb-3" id="komentarSearch" onkeyup="filtrirajKomentare()" placeholder="Pretraga komentara..." />
+    <div class="card shadow-sm mb-4 p-4">
+        <h4 class="mb-3">Komentari</h4>
 
-            @if (Model.Arhivirano)
-            {
-                <div class="alert alert-warning">
-                    Ispit je arhiviran. Dodavanje komentara nije moguće.
+        <input class="form-control mb-3" id="komentarSearch" onkeyup="filtrirajKomentare()" placeholder="Pretraga komentara..." />
+
+        @if (ispit?.Arhivirano == true)
+        {
+            <div class="alert alert-warning">Ispit je arhiviran. Dodavanje komentara nije moguće.</div>
+        }
+        else
+        {
+            <form asp-action="DodajKomentar" enctype="multipart/form-data" class="mb-4">
+                <input type="hidden" name="ispitId" value="@Model.IspitId" />
+                <textarea name="sadrzaj" class="form-control mb-2" placeholder="Unesite komentar..." required></textarea>
+                <input type="file" name="prilog" class="form-control mb-2" />
+                <select name="vidljivost" class="form-control mb-2" id="vidljivostSelect">
+                    <option value="Javno">Javno</option>
+                    <option value="Privatno">Privatno</option>
+                </select>
+                <div id="odabirKorisnika" class="mb-2" style="display: none;">
+                    <select name="odabraniKorisnici" multiple class="form-control" id="korisniciSelect"></select>
                 </div>
-            }
-            else
-            {
-                <form asp-action="DodajKomentar" enctype="multipart/form-data" class="mb-4">
-                    <input type="hidden" name="ispitId" value="@Model.IspitId" />
-                    <textarea name="sadrzaj" class="form-control mb-2" placeholder="Unesite komentar..." required></textarea>
-                    <input type="file" name="prilog" class="form-control mb-2" />
-                    <select name="vidljivost" class="form-control mb-2" id="vidljivostSelect">
-                        <option value="Javno">Javno</option>
-                        <option value="Privatno">Privatno</option>
-                    </select>
-                    <div id="odabirKorisnika" style="display: none;">
-                        <select name="odabraniKorisnici" multiple class="form-control" id="korisniciSelect"></select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Objavi komentar</button>
-                </form>
-            }
-        </div>
-        <!-- Komentari -->
-        <div class="komentari-lista">
+                <button class="btn btn-primary">Objavi komentar</button>
+            </form>
+        }
+
+        <div id="komentariLista">
             @foreach (var komentar in Model.Komentari)
             {
-                var mozeVidjeti = komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Javno ||
-                (komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno &&
-                (komentar.KorisnikId == trenutniKorisnikId || komentar.VidljivostKorisnici.Any(vk => vk.KorisnikId == trenutniKorisnikId)));
+                var mozeVidjeti = komentar.Vidljivost == VidljivostKomentara.Javno ||
+                (komentar.Vidljivost == VidljivostKomentara.Privatno &&
+                (komentar.KorisnikId == trenutniKorisnikId ||
+                komentar.VidljivostKorisnici.Any(vk => vk.KorisnikId == trenutniKorisnikId)));
 
                 if (mozeVidjeti)
                 {
-                    <div class="komentar border rounded p-2 mb-2" data-komentar-id="@komentar.Id">
-                        <div><strong>@komentar.Korisnik.Ime @komentar.Korisnik.Prezime</strong></div>
-                        <div class="text-muted">@komentar.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</div>
-                        <div class="mt-1 komentar-sadrzaj">@komentar.Sadrzaj</div>
-                        @if (!string.IsNullOrEmpty(komentar.PrilogPath))
+                    <div class="border rounded p-3 mb-3 komentar-item" data-sadrzaj="@komentar.Sadrzaj">
+                        <div>
+                            <strong>
+                                @(komentar.Student != null
+                                                    ? komentar.Student.Ime + " " + komentar.Student.Prezime
+                                                    : komentar.Korisnik.Ime + " " + komentar.Korisnik.Prezime)
+                </strong>
+            </div>
+            <div class="text-muted small">@komentar.DatumVrijeme.ToString("dd.MM.yyyy HH:mm")</div>
+            <p class="mt-2">@komentar.Sadrzaj</p>
+            @if (!string.IsNullOrEmpty(komentar.PrilogPath))
                         {
-                            <a class="btn btn-sm btn-link mt-1" href="@komentar.PrilogPath">📎 Prilog</a>
+                            <a href="@komentar.PrilogPath" class="small">📎 Prilog</a>
                         }
-                        @if (komentar.Vidljivost == StudentHub.Models.VidljivostKomentara.Privatno)
+                        @if (komentar.Vidljivost == VidljivostKomentara.Privatno)
                         {
-                            <span class="badge bg-warning text-dark">🔒 Privatni komentar</span>
+                            <span class="badge bg-warning text-dark ms-2">🔒 Privatni</span>
                         }
-
-                        <!-- DUGMAD Edit / Delete -->
-                        @if (komentar.KorisnikId == trenutniKorisnikId || User.IsInRole("Studentska služba"))
+                        @if ((komentar.KorisnikId == trenutniKorisnikId) || User.IsInRole("Studentska služba"))
                         {
                             <div class="mt-2">
-                                <a asp-action="EditKomentar" asp-route-id="@komentar.Id" class="btn btn-sm btn-outline-secondary">✏️ Uredi</a>
+                                <a asp-action="EditKomentar" asp-route-id="@komentar.Id" class="btn btn-sm btn-outline-secondary me-2">✏️ Uredi</a>
                                 <button type="button"
-                                        class="btn btn-sm btn-outline-danger ms-2"
+                                        class="btn btn-sm btn-outline-danger"
                                         data-bs-toggle="modal"
                                         data-bs-target="#deleteKomentarModal"
                                         data-id="@komentar.Id"
                                         data-sadrzaj="@komentar.Sadrzaj"
-                                        data-prilog="@komentar.PrilogPath"
-                                        data-ispit="@komentar.IspitId">
+                                        data-prilog="@komentar.PrilogPath">
                                     🗑️ Obriši
                                 </button>
                             </div>
@@ -277,28 +291,23 @@
     </div>
 }
 
-<!-- MODAL za potvrdu brisanja komentara -->
-<div class="modal fade" id="deleteKomentarModal" tabindex="-1" aria-labelledby="deleteKomentarModalLabel" aria-hidden="true">
+</div>
+
+<!-- Modal za brisanje komentara -->
+<div class="modal fade" id="deleteKomentarModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form id="deleteKomentarForm" method="post">
+            <form asp-action="DeleteKomentar" method="post" id="deleteKomentarForm">
                 @Html.AntiForgeryToken()
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="deleteKomentarModalLabel"><i class="fas fa-trash-alt me-2"></i>Brisanje komentara</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+                    <h5 class="modal-title"><i class="fas fa-trash-alt me-2"></i> Potvrda brisanja</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-warning text-center">
-                        <strong>Da li ste sigurni da želite obrisati ovaj komentar?</strong><br>
-                        Ova akcija je <span class="text-danger fw-bold">nepovratna</span>.
-                    </div>
-                    <div class="mb-3 text-start">
-                        <label class="fw-bold">Sadržaj komentara:</label>
-                        <div class="border rounded p-2 bg-light" id="modalKomentarSadrzaj"></div>
-                        <div id="modalKomentarPrilog" class="mt-2"></div>
-                    </div>
+                    <p class="text-center"><strong>Ova akcija je nepovratna.</strong></p>
+                    <div class="border rounded p-2 mb-3" id="modalKomentarSadrzaj"></div>
+                    <div id="modalKomentarPrilog"></div>
                     <input type="hidden" name="id" id="modalKomentarId" />
-                    <input type="hidden" name="ispitId" id="modalKomentarIspitId" />
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Obriši</button>
@@ -310,219 +319,163 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
-    <script>
-        // Bootstrap 5: Proper closing for alerts
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.alert .btn-close').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    btn.closest('.alert').style.display = 'none';
-                });
-            });
-        });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+            integrity="sha512-894YeK...==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"
+            integrity="sha512-+K+X...==" crossorigin="anonymous"></script>
 
-        // SignalR: Live refresh registered students
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/examHub")
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          // 1) Bootstrap alert close
+          document.querySelectorAll('.alert .btn-close').forEach(btn =>
+            btn.addEventListener('click', () => btn.closest('.alert').style.display = 'none')
+          );
+
+          // 2) SignalR + live refresh
+            const tbody = document.getElementById('registeredStudents');
+        let connection;
+        if (tbody) {
+          connection = new signalR.HubConnectionBuilder()
+            .withUrl('/examHub')
             .build();
 
-        connection.on("UpdateRegisteredStudents", function (examId) {
-            fetch(`/Ispiti/GetRegisteredStudents/${examId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.getElementById("registeredStudents");
-                    tbody.innerHTML = "";
-                    data.forEach(student => {
-                        const row = `<tr>
-                            <td>${student.ime} ${student.prezime} (${student.brojIndeksa})</td>
-                            <td colspan="3" class="text-muted"> -- Bodovi će biti prikazani nakon učitavanja cijele stranice -- </td>
-                        </tr>`;
-                        tbody.innerHTML += row;
-                    });
+          connection.on('UpdateRegisteredStudents', examId => {
+            fetch(`/Ispiti/PrikaziRezultate/${examId}`)
+              .then(r=>r.json())
+              .then(data => {
+                tbody.innerHTML = '';
+                data.forEach(s => {
+                  tbody.innerHTML += `
+                  <tr>
+                    <td>${s.ime} ${s.prezime} (${s.brojIndeksa})</td>
+                    <td><input type="number" id="bodovi-${s.studentId}" class="form-control" value="${s.bodovi??''}" disabled/></td>
+                    <td id="status-${s.studentId}">
+                      ${s.bodovi!=null
+                        ? `<span class="badge ${s.polozen?'bg-success':'bg-danger'}">${s.polozen?'Položen':'Nije položen'}</span>`
+                        : `<span class="badge bg-warning text-dark">Bez bodova</span>`
+                      }
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-secondary" onclick="omoguciUredjivanje(${s.studentId})">✏️</button>
+                      <button id="spasi-${s.studentId}" class="btn btn-sm btn-primary d-none"
+                              onclick="unesiBodove(${examId},${s.studentId})">💾</button>
+                    </td>
+                  </tr>`;
                 });
-        });
+              });
+          });
 
-        connection.start().catch(err => console.error(err.toString()));
-
-        // Bodovi na ispitu (AJAX, Bootstrap 5)
-        function unesiBodove(ispitId, studentId) {
-            let bodoviInput = document.getElementById(`bodovi-${studentId}`);
-            let bodovi = parseFloat(bodoviInput.value);
-
-            fetch(`/Ispiti/UnesiBodove`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
-                },
-                body: JSON.stringify({
-                    IspitId: ispitId,
-                    StudentId: studentId,
-                    Bodovi: bodovi
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    let statusElement = document.getElementById(`status-${studentId}`);
-                    if (data.bodovi != null) {
-                        bodoviInput.value = data.bodovi;
-                        bodoviInput.disabled = true;
-                        statusElement.innerHTML = `<span class="badge ${data.polozen ? 'bg-success' : 'bg-danger'}">
-                                                      ${data.polozen ? 'Položen' : 'Nije položen'}
-                                                   </span>`;
-                    }
-                } else {
-                    alert("Greška prilikom unosa bodova: " + (data.message || ''));
-                }
-            })
-            .catch(error => console.error("Greška:", error));
+          connection.start().catch(_=>{/* ignore if hub missing */});
         }
 
-        function omoguciUredjivanje(studentId) {
-            let bodoviInput = document.getElementById(`bodovi-${studentId}`);
-            let spasiButton = document.getElementById(`spasi-${studentId}`);
+        // 3) Omogući edit
+        window.omoguciUredjivanje = function(studentId) {
+          const inp = document.getElementById(`bodovi-${studentId}`);
+          const btn = document.getElementById(`spasi-${studentId}`);
+          if (!inp||!btn) return;
+          inp.disabled = false;
+          btn.classList.remove('d-none');
+        };
 
-            bodoviInput.disabled = false;
-            spasiButton.classList.remove("d-none");
-        }
-
-        // Komentari: Pretraga
-        function filtrirajKomentare() {
-            var input = document.getElementById("komentarSearch");
-            var filter = input.value.toLowerCase();
-            var komentari = document.getElementsByClassName("komentar");
-            Array.from(komentari).forEach(function (k) {
-                var tekst = k.textContent || k.innerText;
-                k.style.display = tekst.toLowerCase().includes(filter) ? "block" : "none";
-            });
-        }
-
-        // Dinamički load korisnika za privatne komentare
-        $(document).ready(function () {
-            const ispitId = '@Model.IspitId';
-
-            function ucitajVidljiveKorisnike(oznaceniKorisnici = []) {
-                $.get('/Ispiti/GetVidljiviKorisnici/' + ispitId, function (data) {
-                    var korisniciSelect = $('#korisniciSelect');
-                    korisniciSelect.empty();
-                    data.forEach(function (k) {
-                        var option = new Option(k.ime + ' (' + k.uloga + ')', k.id);
-                        if (oznaceniKorisnici.includes(k.id)) {
-                            option.selected = true;
-                        }
-                        korisniciSelect.append(option);
-                    });
-                });
-            }
-
-            $('#vidljivostSelect').change(function () {
-                $('#odabirKorisnika').toggle($(this).val() === 'Privatno');
-                if ($(this).val() === 'Privatno') {
-                    ucitajVidljiveKorisnike();
-                }
-            });
-
-            if ($('#vidljivostSelect').val() === 'Privatno') {
-                $('#odabirKorisnika').show();
-
-                var oznaceniKorisnici = [];
-                $('#korisniciSelect option:selected').each(function () {
-                    oznaceniKorisnici.push(parseInt($(this).val()));
-                });
-
-                ucitajVidljiveKorisnike(oznaceniKorisnici);
-            }
-        });
-
-        // Prijava/Odjavljivanje ispita (ajax, Bootstrap 5)
-        function toggleExam(ispitId, prijavljen) {
-            let url = prijavljen ? "/Odjavi/" + ispitId : "/Prijavi/" + ispitId;
-            let method = "POST";
-
-            fetch(url, {
-                method: method,
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    let button = document.getElementById("examButton");
-                    button.textContent = prijavljen ? "✅ Prijavi ispit" : "❌ Odjavi ispit";
-                    button.classList.toggle("btn-success");
-                    button.classList.toggle("btn-danger");
-                    button.setAttribute("onclick", `toggleExam(${ispitId}, ${!prijavljen})`);
-
-                    let messageBox = document.getElementById("successMessage");
-                    if (!messageBox) {
-                        messageBox = document.createElement("div");
-                        messageBox.classList.add("alert", "alert-success", "alert-dismissible", "fade", "show");
-                        messageBox.setAttribute("role", "alert");
-                        messageBox.setAttribute("id", "successMessage");
-                        document.querySelector(".container").prepend(messageBox);
-                    }
-                    messageBox.innerHTML = `${data.message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-                } else {
-                    alert("Došlo je do greške.");
-                }
-            })
-            .catch(error => console.error("Greška:", error));
-        }
-    </script>
-    <script>
-        var deleteModal = document.getElementById('deleteKomentarModal');
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var komentarId = button.getAttribute('data-id');
-            var komentarSadrzaj = button.getAttribute('data-sadrzaj');
-            var komentarPrilog = button.getAttribute('data-prilog');
-            var ispitId = button.getAttribute('data-ispit');
-
-            // Postavi vrijednosti u modal
-            document.getElementById('modalKomentarId').value = komentarId;
-            document.getElementById('modalKomentarSadrzaj').textContent = komentarSadrzaj;
-            document.getElementById('modalKomentarIspitId').value = ispitId;
-
-            var prilogDiv = document.getElementById('modalKomentarPrilog');
-            if (komentarPrilog && komentarPrilog.length > 0) {
-                prilogDiv.innerHTML = `<span class="fw-bold">Prilog:</span> <a href="${komentarPrilog}" target="_blank">📎 Preuzmi</a>`;
+            // 4) AJAX unesi bodove
+        window.unesiBodove = function(ispitId, studentId) {
+          const inp = document.getElementById(`bodovi-${studentId}`);
+          const statusEl = document.getElementById(`status-${studentId}`);
+          const btn = document.getElementById(`spasi-${studentId}`);
+          if (!inp||!statusEl) return;
+          const bod = parseFloat(inp.value);
+          const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+          fetch('/Ispiti/UnesiBodove', {
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json',
+              'RequestVerificationToken':token
+            },
+            body: JSON.stringify({ IspitId:ispitId, StudentId:studentId, Bodovi:bod })
+          })
+          .then(r=>r.json())
+          .then(data=>{
+            if (data.success) {
+              inp.value = data.bodovi ?? '';
+              inp.disabled = true;
+              btn.classList.add('d-none');
+              statusEl.innerHTML = data.bodovi!=null
+                ? `<span class="badge ${data.polozen?'bg-success':'bg-danger'}">${data.polozen?'Položen':'Nije položen'}</span>`
+                : `<span class="badge bg-warning text-dark">Bez bodova</span>`;
+              if (connection) connection.invoke('UpdateRegisteredStudents', ispitId);
             } else {
-                prilogDiv.innerHTML = '';
+              alert('Greška: '+(data.message||''));
             }
-        });
+          })
+          .catch(e=>{ console.error(e); alert('Greška prilikom unosa bodova.'); });
+        };
 
-        // AJAX submit forme (da ne reloada cijelu stranicu, nego samo ukloni komentar iz DOM-a)
-        document.getElementById('deleteKomentarForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            var form = this;
-            var komentarId = document.getElementById('modalKomentarId').value;
-            var ispitId = document.getElementById('modalKomentarIspitId').value;
-            var token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+          // --- 5) pretraga komentara ---
+          document.getElementById('komentarSearch')?.addEventListener('keyup', function(){
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('.komentar-item').forEach(el =>
+              el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none'
+            );
+          });
 
-            fetch(`/Ispiti/DeleteKomentar/${komentarId}`, {
-                method: 'POST',
-                headers: {
-                    'RequestVerificationToken': token
-                }
-            })
-            .then(resp => {
-                if (resp.ok) {
-                    // Sakrij modal i ukloni komentar iz DOM-a
-                    var modal = bootstrap.Modal.getInstance(deleteModal);
-                    modal.hide();
-
-                    // Pronađi i ukloni komentar element (pretpostavljamo da ima id ili neki data-attribut)
-                    var komentarDiv = document.querySelector(`[data-komentar-id="${komentarId}"]`);
-                    if (komentarDiv) komentarDiv.remove();
-
-                    // Prikaži toast ili alert po želji
-                } else {
-                    alert("Došlo je do greške prilikom brisanja komentara.");
-                }
+          // --- 6) privatni komentari: load korisnika ---
+          const ispitId = '@Model.IspitId';
+          if (document.getElementById('vidljivostSelect')) {
+            function ucitajVidljiveKorisnike(sel=[]) {
+              $.get(`/Ispiti/GetVidljiviKorisnici/${ispitId}`, data=>{
+                const selEl = $('#korisniciSelect').empty();
+                data.forEach(u=>{
+                  selEl.append(new Option(`${u.ime} (${u.uloga})`, u.id, sel.includes(u.id), sel.includes(u.id)));
+                });
+              });
+            }
+            $('#vidljivostSelect').on('change',function(){
+              const ok = this.value==='Privatno';
+              $('#odabirKorisnika').toggle(ok);
+              if (ok) ucitajVidljiveKorisnike();
             });
+            if ($('#vidljivostSelect').val()==='Privatno') {
+              $('#odabirKorisnika').show();
+              const sel = $('#korisniciSelect option:selected').map((i,e)=>+e.value).get();
+              ucitajVidljiveKorisnike(sel);
+            }
+          }
+
+          // --- 7) AJAX delete komentara ---
+          const deleteModalEl = document.getElementById('deleteKomentarModal');
+          if (deleteModalEl) {
+            deleteModalEl.addEventListener('show.bs.modal', e => {
+              const btn = e.relatedTarget;
+              document.getElementById('modalKomentarId').value      = btn.dataset.id;
+              document.getElementById('modalKomentarSadrzaj').textContent = btn.dataset.sadrzaj;
+              document.getElementById('modalKomentarPrilog').innerHTML   = btn.dataset.prilog
+                ? `<span class="fw-bold">Prilog:</span> <a href="${btn.dataset.prilog}" target="_blank">📎</a>`
+                : '';
+            });
+            document.getElementById('deleteKomentarForm')?.addEventListener('submit', function(e){
+              e.preventDefault();
+              const id    = this.querySelector('#modalKomentarId').value;
+              const token = this.querySelector('input[name="__RequestVerificationToken"]').value;
+              fetch(`/Ispiti/DeleteKomentar/${id}`, {
+                method:'POST',
+                headers:{
+                  'X-Requested-With':'XMLHttpRequest',
+                  'RequestVerificationToken':token
+                }
+              })
+              .then(r=>{
+                if (!r.ok) throw 'Greška pri brisanju';
+                bootstrap.Modal.getInstance(deleteModalEl).hide();
+                document.querySelector(`[data-sadrzaj="${this.querySelector('#modalKomentarSadrzaj').textContent}"]`)?.remove();
+                if (!document.querySelector('.komentar-item')) {
+                  document.getElementById('komentariLista').innerHTML =
+                    '<div class="alert alert-info">Nema komentara.</div>';
+                }
+              })
+              .catch(err=>alert(err));
+            });
+          }
+
         });
     </script>
 }

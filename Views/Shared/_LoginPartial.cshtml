@@ -10,6 +10,9 @@
 
         <li class="nav-item d-flex align-items-center">
             <a class="nav-link fw-semibold" asp-area="Identity" asp-page="/Account/Manage/Index" title="Upravljanje nalogom">
+                <span class="avatar avatar-sm bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                    @User.Identity?.Name?.Substring(0, 1)
+                </span>
                 <i class="fas fa-user-circle me-1"></i>
                 Zdravo, @User.Identity?.Name!
             </a>

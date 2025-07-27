@@ -1,83 +1,111 @@
 ﻿@model IEnumerable<StudentHub.Models.NastavnaAktivnost>
 @using StudentHub.Models
 
-<div class="container">
+<div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Nastavne aktivnosti za @ViewBag.PredmetNaziv</h2>
-        <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@ViewBag.PredmetId" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Nazad na predmet
+        <h2 class="mb-0">
+            <i class="fas fa-calendar-alt text-primary me-2"></i>
+            Nastavne aktivnosti za <span class="text-primary">@ViewBag.PredmetNaziv</span>
+        </h2>
+        <a asp-controller="Predmeti"
+           asp-action="Details"
+           asp-route-id="@ViewBag.PredmetId"
+           class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Nazad na predmet
         </a>
     </div>
 
     @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
     {
         <div class="mb-4">
-            <a asp-action="Create" asp-route-predmetId="@ViewBag.PredmetId" class="btn btn-primary">
-                <i class="fas fa-plus-circle"></i> Dodaj novu aktivnost
+            <a asp-action="Create"
+               asp-route-predmetId="@ViewBag.PredmetId"
+               class="btn btn-primary">
+                <i class="fas fa-plus-circle me-1"></i> Dodaj aktivnost
             </a>
         </div>
     }
 
-    <div class="row">
-        <!-- Predavanja -->
-        <div class="col-md-6 mb-4">
+    <div class="row gy-4">
+        @* Predavanja *@
+        <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-chalkboard-teacher"></i> Predavanja</h5>
+                    <i class="fas fa-chalkboard-teacher me-2"></i> Predavanja
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     @{
-                        var predavanja = Model.Where(a => a.Tip == TipNastavneAktivnosti.Predavanje).OrderBy(a => a.DatumVrijemeOdrzavanja);
+                        var predavanja = Model
+                        .Where(a => a.Tip == TipNastavneAktivnosti.Predavanje)
+                        .OrderBy(a => a.DatumVrijemeOdrzavanja);
                     }
                     @if (predavanja.Any())
                     {
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
+                            <table class="table table-hover mb-0 align-middle">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Naziv</th>
                                         <th>Datum</th>
                                         <th>Status</th>
-                                        <th></th>
+                                        <th class="text-center">Akcije</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var aktivnost in predavanja)
+                                    @foreach (var a in predavanja)
                                     {
-                                        <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
-                                            <td>@aktivnost.Naziv</td>
-                                            <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <tr class="@(a.JeDostupno ? "" : "table-secondary")">
+                                            <td>@a.Naziv</td>
+                                            <td>@a.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
                                             <td>
-                                                <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
-                                                    @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
+                                                <span class="badge @(a.JeDostupno ? "bg-success" : "bg-secondary")">
+                                                    @(a.JeDostupno ? "Dostupno" : "Zaključano")
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <div class="btn-group btn-group-sm" role="group">
-                                                    @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
+                                                    @if (a.JeDostupno || !User.IsInRole("Student"))
                                                     {
-                                                        <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-info me-1" title="Detalji">
+                                                        <a asp-action="Details"
+                                                           asp-route-id="@a.Id"
+                                                           class="btn btn-outline-info"
+                                                           title="Detalji"
+                                                           data-bs-toggle="tooltip">
                                                             <i class="fas fa-info-circle"></i>
                                                         </a>
                                                     }
                                                     else
                                                     {
-                                                        <button class="btn btn-outline-secondary disabled" data-toggle="tooltip"
-                                                                title="Aktivnost će biti dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
+                                                        <button class="btn btn-outline-secondary" disabled
+                                                                data-bs-toggle="tooltip"
+                                                                title="Bit će dostupno @a.DatumVrijemeOdrzavanja:dd.MM.yyyy HH:mm">
                                                             <i class="fas fa-info-circle"></i>
                                                         </button>
                                                     }
 
-                                                    <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-secondary" title="Komentari">
+                                                    <a asp-controller="Komentari"
+                                                       asp-action="Index"
+                                                       asp-route-nastavnaAktivnostId="@a.Id"
+                                                       class="btn btn-outline-secondary"
+                                                       title="Komentari"
+                                                       data-bs-toggle="tooltip">
                                                         <i class="fas fa-comments"></i>
                                                     </a>
 
                                                     @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                                     {
-                                                        <a asp-action="Edit" asp-route-id="@aktivnost.Id" class="btn btn-outline-warning" title="Uredi">
+                                                        <a asp-action="Edit"
+                                                           asp-route-id="@a.Id"
+                                                           class="btn btn-outline-warning"
+                                                           title="Uredi"
+                                                           data-bs-toggle="tooltip">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a asp-action="Delete" asp-route-id="@aktivnost.Id" class="btn btn-outline-danger" title="Obriši">
+                                                        <a asp-action="Delete"
+                                                           asp-route-id="@a.Id"
+                                                           class="btn btn-outline-danger"
+                                                           title="Obriši"
+                                                           data-bs-toggle="tooltip">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a>
                                                     }
@@ -91,71 +119,91 @@
                     }
                     else
                     {
-                        <div class="alert alert-info">Nema planiranih predavanja</div>
+                        <div class="alert alert-info mb-0">Nema planiranih predavanja</div>
                     }
                 </div>
             </div>
         </div>
 
-        <!-- Vježbe -->
-        <div class="col-md-6 mb-4">
+        @* Vježbe *@
+        <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="fas fa-dumbbell"></i> Vježbe</h5>
+                    <i class="fas fa-dumbbell me-2"></i> Vježbe
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     @{
-                        var vjezbe = Model.Where(a => a.Tip == TipNastavneAktivnosti.Vjezba).OrderBy(a => a.DatumVrijemeOdrzavanja);
+                        var vjezbe = Model
+                        .Where(a => a.Tip == TipNastavneAktivnosti.Vjezba)
+                        .OrderBy(a => a.DatumVrijemeOdrzavanja);
                     }
                     @if (vjezbe.Any())
                     {
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
+                            <table class="table table-hover mb-0 align-middle">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Naziv</th>
                                         <th>Datum</th>
                                         <th>Status</th>
-                                        <th></th>
+                                        <th class="text-center">Akcije</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var aktivnost in vjezbe)
+                                    @foreach (var a in vjezbe)
                                     {
-                                        <tr class="@(!aktivnost.JeDostupno ? "table-secondary" : "")">
-                                            <td>@aktivnost.Naziv</td>
-                                            <td>@aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <tr class="@(a.JeDostupno ? "" : "table-secondary")">
+                                            <td>@a.Naziv</td>
+                                            <td>@a.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")</td>
                                             <td>
-                                                <span class="badge @(aktivnost.JeDostupno ? "badge-success" : "badge-secondary")">
-                                                    @(aktivnost.JeDostupno ? "Dostupno" : "Zaključano")
+                                                <span class="badge @(a.JeDostupno ? "bg-success" : "bg-secondary")">
+                                                    @(a.JeDostupno ? "Dostupno" : "Zaključano")
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <div class="btn-group btn-group-sm" role="group">
-                                                    @if (aktivnost.JeDostupno || !User.IsInRole("Student"))
+                                                    @if (a.JeDostupno || !User.IsInRole("Student"))
                                                     {
-                                                        <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-info me-1" title="Detalji">
+                                                        <a asp-action="Details"
+                                                           asp-route-id="@a.Id"
+                                                           class="btn btn-outline-info"
+                                                           title="Detalji"
+                                                           data-bs-toggle="tooltip">
                                                             <i class="fas fa-info-circle"></i>
                                                         </a>
                                                     }
                                                     else
                                                     {
-                                                        <button class="btn btn-outline-secondary disabled" data-toggle="tooltip"
-                                                                title="Aktivnost će biti dostupna @aktivnost.DatumVrijemeOdrzavanja.ToString("dd.MM.yyyy HH:mm")">
+                                                        <button class="btn btn-outline-secondary" disabled
+                                                                data-bs-toggle="tooltip"
+                                                                title="Bit će dostupno @a.DatumVrijemeOdrzavanja:dd.MM.yyyy HH:mm">
                                                             <i class="fas fa-info-circle"></i>
                                                         </button>
                                                     }
 
-                                                    <a asp-action="Details" asp-route-id="@aktivnost.Id" class="btn btn-outline-secondary" title="Komentari">
+                                                    <a asp-controller="Komentari"
+                                                       asp-action="Index"
+                                                       asp-route-nastavnaAktivnostId="@a.Id"
+                                                       class="btn btn-outline-secondary"
+                                                       title="Komentari"
+                                                       data-bs-toggle="tooltip">
                                                         <i class="fas fa-comments"></i>
                                                     </a>
 
                                                     @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                                                     {
-                                                        <a asp-action="Edit" asp-route-id="@aktivnost.Id" class="btn btn-outline-warning" title="Uredi">
+                                                        <a asp-action="Edit"
+                                                           asp-route-id="@a.Id"
+                                                           class="btn btn-outline-warning"
+                                                           title="Uredi"
+                                                           data-bs-toggle="tooltip">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a asp-action="Delete" asp-route-id="@aktivnost.Id" class="btn btn-outline-danger" title="Obriši">
+                                                        <a asp-action="Delete"
+                                                           asp-route-id="@a.Id"
+                                                           class="btn btn-outline-danger"
+                                                           title="Obriši"
+                                                           data-bs-toggle="tooltip">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a>
                                                     }
@@ -169,10 +217,20 @@
                     }
                     else
                     {
-                        <div class="alert alert-info">Nema planiranih vježbi</div>
+                        <div class="alert alert-info mb-0">Nema planiranih vježbi</div>
                     }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // inicijaliziraj Bootstrap tooltipove
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (el) {
+            new bootstrap.Tooltip(el);
+        });
+    </script>
+}

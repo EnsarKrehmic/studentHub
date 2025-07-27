@@ -1,37 +1,89 @@
-﻿@model StudentHub.Models.NastavniPlan
+﻿@model StudentHub.ViewModels.FaqPitanjeViewModel
 
 @{
-    ViewData["Title"] = "Izmjena podataka nastavnog plana";
+    ViewData["Title"] = "Izmjena FAQ pitanja";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-5">
+    <div class="card shadow-sm mx-auto" style="max-width:600px;">
+        <div class="card-header bg-warning text-dark">
+            <h3 class="mb-0"><i class="fas fa-edit me-2"></i>@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Id" />
 
-<h4>Nastavni plan</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="StudijskiProgramId" class="control-label"></label>
-                <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgramId"></select>
-                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GodinaStudija" class="control-label"></label>
-                <input asp-for="GodinaStudija" class="form-control" />
-                <span asp-validation-for="GodinaStudija" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Sačuvaj promjene" class="btn btn-primary mt-3" />
-                <a asp-action="Index" class="btn btn-secondary mt-3">Odustani</a>
-            </div>
-        </form>
+                <div class="mb-3">
+                    <label asp-for="Kategorija" class="form-label fw-bold"></label>
+                    <select asp-for="Kategorija" class="form-select" id="KategorijaDropdown" required>
+                        <option value="">-- Odaberite kategoriju --</option>
+                        @foreach (var kat in Model.SveKategorije ?? Enumerable.Empty<string>())
+                        {
+                            <option value="@kat" selected="@(Model.Kategorija == kat ? "selected" : null)">@kat</option>
+                        }
+                        <option value="__nova__">+ Nova kategorija...</option>
+                    </select>
+                    <input type="text"
+                           id="NovaKategorija"
+                           name="NovaKategorija"
+                           class="form-control mt-2"
+                           style="display:none;"
+                           placeholder="Unesite novu kategoriju..." />
+                    <span asp-validation-for="Kategorija" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Pitanje" class="form-label fw-bold"></label>
+                    <input asp-for="Pitanje" class="form-control" maxlength="300" />
+                    <span asp-validation-for="Pitanje" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Odgovor" class="form-label fw-bold"></label>
+                    <textarea asp-for="Odgovor" class="form-control" rows="5" maxlength="2000"></textarea>
+                    <span asp-validation-for="Odgovor" class="text-danger small"></span>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input asp-for="Preporuceno" class="form-check-input" id="preporucenoFaq" />
+                    <label asp-for="Preporuceno" class="form-check-label">Prikaži kao preporučeno</label>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-1"></i> Sačuvaj izmjene
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Odustani
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const dropdown = document.getElementById('KategorijaDropdown');
+        const novaInput = document.getElementById('NovaKategorija');
+
+        dropdown.addEventListener('change', () => {
+            if (dropdown.value === '__nova__') {
+                novaInput.style.display = 'block';
+                novaInput.required = true;
+            } else {
+                novaInput.style.display = 'none';
+                novaInput.required = false;
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', () => {
+            if (dropdown.value === '__nova__' && novaInput.value.trim()) {
+                dropdown.value = novaInput.value.trim();
+            }
+        });
+    </script>
 }

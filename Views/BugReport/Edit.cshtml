@@ -1,55 +1,102 @@
 ﻿@model StudentHub.Models.BugReport
 @{
     bool isEdit = Model.Id != 0;
-    ViewData["Title"] = isEdit ? "Uredi prijavu" : "Nova prijava greške ili prijedloga";
+    ViewData["Title"] = isEdit
+        ? "Uredi prijavu"
+        : "Nova prijava greške ili prijedloga";
 }
-<div class="card shadow-sm mx-auto" style="max-width: 530px;">
+
+<div class="card shadow-sm mx-auto my-5" style="max-width: 530px;">
     <div class="card-body">
-        <h2 class="card-title">@ViewData["Title"]</h2>
+        <h2 class="card-title text-center">@ViewData["Title"]</h2>
         <hr />
-        <form asp-action="@(isEdit ? "Edit" : "Create")" method="post" enctype="multipart/form-data" novalidate>
-            <div asp-validation-summary="All" class="text-danger"></div>
+        <form asp-action="@(isEdit ? "Edit" : "Create")"
+              method="post"
+              enctype="multipart/form-data"
+              novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
             <div class="mb-3">
-                <label asp-for="Tip" class="form-label fw-bold">Tip prijave <span class="text-danger">*</span></label>
+                <label asp-for="Tip" class="form-label fw-bold">
+                    Tip prijave <span class="text-danger">*</span>
+                </label>
                 <select asp-for="Tip" class="form-select">
                     <option value="">-- Odaberite tip --</option>
-                    <option value="1" selected="@(Model.Tip == BugTip.Bug)">Greška u radu sistema</option>
-                    <option value="2" selected="@(Model.Tip == BugTip.Suggestion)">Prijedlog za poboljšanje</option>
+                    <option value="1" selected="@(Model.Tip == BugTip.Bug)">
+                        Greška u radu sistema
+                    </option>
+                    <option value="2" selected="@(Model.Tip == BugTip.Suggestion)">
+                        Prijedlog za poboljšanje
+                    </option>
                 </select>
                 <span asp-validation-for="Tip" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
-                <label asp-for="Naslov" class="form-label">Naslov (opcionalno)</label>
-                <input asp-for="Naslov" class="form-control" maxlength="60" placeholder="Npr. 'Problem sa prijavom', 'Ideja za funkcionalnost'" />
+                <label asp-for="Naslov" class="form-label">
+                    Naslov (opcionalno)
+                </label>
+                <input asp-for="Naslov"
+                       class="form-control"
+                       maxlength="60"
+                       placeholder="Npr. 'Problem sa prijavom', 'Ideja za funkcionalnost'" />
                 <span asp-validation-for="Naslov" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
-                <label asp-for="Opis" class="form-label fw-bold">Opis <span class="text-danger">*</span></label>
-                <textarea asp-for="Opis" class="form-control" rows="5" maxlength="2000" placeholder="Detaljno opišite problem ili prijedlog..."></textarea>
+                <label asp-for="Opis" class="form-label fw-bold">
+                    Opis <span class="text-danger">*</span>
+                </label>
+                <textarea asp-for="Opis"
+                          class="form-control"
+                          rows="5"
+                          maxlength="2000"
+                          placeholder="Detaljno opišite problem ili prijedlog..."></textarea>
                 <span asp-validation-for="Opis" class="text-danger"></span>
             </div>
+
             @if (!string.IsNullOrEmpty(Model.Slika))
             {
                 <div class="mb-3">
-                    <label class="form-label">Trenutna slika:</label><br />
-                    <img src="~/uploads/bugreport/@Model.Slika" style="max-width:220px;max-height:120px;" class="mb-2 border rounded shadow-sm" />
+                    <label class="form-label">Trenutna slika:</label>
+                    <div class="text-center">
+                        <img src="~/uploads/bugreport/@Model.Slika"
+                             class="img-fluid mb-2 border rounded shadow-sm"
+                             style="max-width:100%; height:auto;"
+                             alt="Screenshot" />
+                    </div>
                 </div>
             }
-            <div class="mb-3">
-                <label for="slika" class="form-label">@(isEdit ? "Zamijeni ili dodaj novu sliku (opcionalno)" : "Dodaj sliku/screenshot (opcionalno)")</label>
-                <input type="file" name="slika" id="slika" class="form-control" accept="image/*" />
+
+            <div class="mb-4">
+                <label for="slika" class="form-label">
+                    @(isEdit
+                                        ? "Zamijeni ili dodaj novu sliku (opcionalno)"
+                                        : "Dodaj sliku/screenshot (opcionalno)")
+                </label>
+                <input type="file"
+                       name="slika"
+                       id="slika"
+                       class="form-control"
+                       accept="image/*" />
             </div>
-            <button type="submit" class="btn btn-success me-2">
-                <i class="fas fa-paper-plane"></i> @(isEdit ? "Sačuvaj" : "Pošalji prijavu")
-            </button>
-            <a asp-action="@(isEdit ? "Details" : "Index")" asp-route-id="@(Model.Id)" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Nazad
-            </a>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-paper-plane me-1"></i>
+                    @(isEdit ? "Sačuvaj" : "Pošalji prijavu")
+                </button>
+                <a asp-action="@(isEdit ? "Details" : "Index")"
+                   asp-route-id="@(Model.Id)"
+                   class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Nazad
+                </a>
+            </div>
         </form>
     </div>
 </div>
+
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

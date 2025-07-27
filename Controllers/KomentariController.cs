@@ -31,7 +31,9 @@ namespace StudentHub.Controllers
             if (nastavnaAktivnost == null) return NotFound();
 
             // Provjera dostupnosti za studente
-            if (!nastavnaAktivnost.JeDostupno && !User.IsInRole("Profesor") && !User.IsInRole("Asistent"))
+            if (!nastavnaAktivnost.JeDostupno
+                && !User.IsInRole("Profesor")
+                && !User.IsInRole("Asistent"))
             {
                 TempData["Error"] = "Nastavna aktivnost nije dostupna.";
                 return RedirectToAction("Index", "NastavneAktivnosti", new { predmetId = nastavnaAktivnost.PredmetId });
@@ -40,6 +42,7 @@ namespace StudentHub.Controllers
             var komentari = _context.Komentari
                 .Where(k => k.NastavnaAktivnostId == nastavnaAktivnostId)
                 .Include(k => k.Student)
+                .Include(k => k.Korisnik)
                 .Include(k => k.NastavnaAktivnost);
 
             ViewBag.NastavnaAktivnostId = nastavnaAktivnostId;
@@ -54,15 +57,20 @@ namespace StudentHub.Controllers
 
             var komentar = await _context.Komentari
                 .Include(k => k.NastavnaAktivnost).ThenInclude(n => n.Predmet)
+                .Include(k => k.Ispit).ThenInclude(i => i.Predmet)
                 .Include(k => k.Student)
+                .Include(k => k.Korisnik)
                 .FirstOrDefaultAsync(k => k.Id == id);
             if (komentar == null) return NotFound();
 
-            // Provjera dostupnosti za studente
-            if (!komentar.NastavnaAktivnost.JeDostupno && !User.IsInRole("Profesor") && !User.IsInRole("Asistent"))
+            if (!komentar.NastavnaAktivnost.JeDostupno
+                && !User.IsInRole("Profesor")
+                && !User.IsInRole("Asistent"))
             {
                 TempData["Error"] = "Nastavna aktivnost nije dostupna.";
-                return RedirectToAction("Index", "NastavneAktivnosti", new { predmetId = komentar.NastavnaAktivnost.PredmetId });
+                return RedirectToAction("Index",
+                    "NastavneAktivnosti",
+                    new { predmetId = komentar.NastavnaAktivnost.PredmetId });
             }
 
             return View(komentar);

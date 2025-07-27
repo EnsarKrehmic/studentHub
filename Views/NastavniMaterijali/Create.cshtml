@@ -1,84 +1,98 @@
 ﻿@model StudentHub.Models.NastavniMaterijal
-
 @{
-    var nastavnaAktivnost = ViewBag.NastavnaAktivnostNaziv as string;
-    ViewData["Title"] = "Dodaj novi materijal";
+    var nastName = ViewBag.NastavnaAktivnostNaziv as string ?? "aktivnost";
+    ViewData["Title"] = $"Dodaj materijal za {nastName}";
 }
 
-<h2>Dodaj novi materijal za @nastavnaAktivnost</h2>
+<div class="container py-5">
+    <div class="card shadow-sm mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-upload me-2"></i>@ViewData["Title"]
+            </h3>
+        </div>
+        <div class="card-body">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+                </div>
+            }
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">
-        <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
-    </div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        <i class="fas fa-exclamation-triangle me-2"></i> @TempData["Error"]
-    </div>
-}
+            <form asp-action="Create" method="post" enctype="multipart/form-data" id="uploadForm" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger mb-4"></div>
+                <input type="hidden" asp-for="NastavnaAktivnostId" />
 
-<form asp-action="Create" method="post" enctype="multipart/form-data" id="uploadForm">
-    <input type="hidden" asp-for="NastavnaAktivnostId" />
+                <div class="mb-3">
+                    <label asp-for="Naziv" class="form-label fw-bold"></label>
+                    <input asp-for="Naziv" class="form-control" placeholder="Unesite naziv materijala…" />
+                    <span asp-validation-for="Naziv" class="text-danger small"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Naziv"></label>
-        <input asp-for="Naziv" class="form-control" />
-        <span asp-validation-for="Naziv" class="text-danger"></span>
-    </div>
+                <div class="mb-3">
+                    <label asp-for="Opis" class="form-label fw-bold"></label>
+                    <textarea asp-for="Opis" class="form-control" rows="4" placeholder="Kratki opis…"></textarea>
+                    <span asp-validation-for="Opis" class="text-danger small"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Opis"></label>
-        <textarea asp-for="Opis" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Opis" class="text-danger"></span>
-    </div>
+                <div class="mb-3">
+                    <label for="fileInput" class="form-label fw-bold">Izaberite fajlove</label>
+                    <input type="file"
+                           name="fajlovi"
+                           id="fileInput"
+                           class="form-control"
+                           multiple
+                           required />
+                    <span class="text-danger">@Html.ValidationMessage("fajlovi")</span>
+                    <small class="form-text text-muted">
+                        Podržani: PDF, DOC/DOCX, XLS/XLSX, PPTX, JPG, PNG. Max 100 MB po fajlu.
+                    </small>
+                </div>
 
-    <div class="form-group">
-        <label for="fileInput">Izaberite fajlove</label>
-        <input type="file" name="fajlovi" id="fileInput" class="form-control" multiple required />
-        <span class="text-danger">@Html.ValidationMessage("fajlovi")</span>
-        <small class="form-text text-muted">
-            Podržani formati: PDF, DOC/DOCX, XLS/XLSX, PPTX, JPG, PNG (max 100MB po fajlu). Možete izabrati više fajlova.
-        </small>
+                <div id="filePreview" class="mb-4" style="display:none;">
+                    <h5>Pogled fajlova:</h5>
+                    <ul class="list-group" id="fileList"></ul>
+                </div>
 
-        <div id="filePreview" class="mt-3" style="display:none;">
-            <h5>Pregled odabranih fajlova:</h5>
-            <ul class="list-group" id="fileList"></ul>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-upload me-1"></i> Uploaduj
+                    </button>
+                    <a asp-controller="NastavneAktivnosti"
+                       asp-action="Details"
+                       asp-route-id="@Model.NastavnaAktivnostId"
+                       class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Nazad
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
-
-    <div class="form-group mt-4">
-        <button type="submit" class="btn btn-success">
-            <i class="fas fa-upload me-1"></i> Uploaduj materijal
-        </button>
-        <a asp-controller="NastavneAktivnosti"
-           asp-action="Details"
-           asp-route-id="@Model.NastavnaAktivnostId"
-           class="btn btn-outline-secondary ms-2">
-            <i class="fas fa-arrow-left me-1"></i> Nazad
-        </a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
         const input = document.getElementById('fileInput');
         const preview = document.getElementById('filePreview');
-        const list = document.getElementById('fileList');
+        const list    = document.getElementById('fileList');
 
-        input.addEventListener('change', function () {
+        input.addEventListener('change', () => {
             list.innerHTML = '';
-            if (input.files.length > 0) {
+            if (input.files.length) {
                 preview.style.display = 'block';
-
                 Array.from(input.files).forEach(file => {
                     const li = document.createElement('li');
                     li.className = 'list-group-item d-flex justify-content-between align-items-center';
 
-                    const iconClass = {
+                    const icons = {
                         'application/pdf': 'far fa-file-pdf text-danger',
                         'application/msword': 'far fa-file-word text-primary',
                         'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'far fa-file-word text-primary',
@@ -88,13 +102,12 @@
                         'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'far fa-file-powerpoint text-warning',
                         'image/jpeg': 'far fa-file-image text-info',
                         'image/png': 'far fa-file-image text-info'
-                    }[file.type] || 'far fa-file';
+                    };
+                    const icon = icons[file.type] || 'far fa-file';
 
                     li.innerHTML = `
-                        <div>
-                            <i class="${iconClass} me-2"></i> <strong>${file.name}</strong>
-                        </div>
-                        <span class="badge bg-light text-dark">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                        <div><i class="${icon} me-2"></i><strong>${file.name}</strong></div>
+                        <span class="badge bg-light text-dark">${(file.size/1024/1024).toFixed(2)} MB</span>
                     `;
                     list.appendChild(li);
                 });

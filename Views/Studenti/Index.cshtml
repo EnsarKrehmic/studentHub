@@ -1,90 +1,104 @@
 ﻿@model IEnumerable<StudentHub.Models.Student>
 @{
     ViewData["Title"] = "Lista svih studenata na fakultetu";
+    Layout = "_Layout";
 }
 
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
-    <h2 class="mb-0">@ViewData["Title"]</h2>
-    @if (User.IsInRole("Studentska služba"))
-    {
-        <a class="btn btn-success shadow-sm" asp-controller="Studenti" asp-action="Create" title="Dodaj novog studenta">
-            <i class="fas fa-user-plus me-2"></i> Dodaj studenta
-        </a>
-    }
-</div>
-
-<form method="get" class="card card-body shadow-sm mb-3">
-    <div class="row g-2">
-        <div class="col-md-4">
-            <input type="text" name="searchString" class="form-control" placeholder="Pretraga po imenu/prezimenu..." value="@Context.Request.Query["searchString"]">
-        </div>
-        <div class="col-md-4">
-            <select name="studijskiProgramId" class="form-select">
-                <option value="">Svi studijski programi</option>
-                @foreach (var program in (SelectList)ViewBag.StudijskiProgrami)
-                {
-                    <option value="@program.Value" selected="@(Context.Request.Query["studijskiProgramId"] == program.Value ? "selected" : null)">@program.Text</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-4 d-flex align-items-center gap-2">
-            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Filtriraj</button>
-            <a asp-action="Index" class="btn btn-secondary"><i class="fas fa-times"></i> Reset</a>
-        </div>
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-4">
+        <h2 class="mb-0">@ViewData["Title"]</h2>
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Create" asp-controller="Studenti" class="btn btn-success shadow-sm">
+                <i class="fas fa-user-plus me-2"></i> Dodaj studenta
+            </a>
+        }
     </div>
-</form>
 
-<div class="card shadow-sm">
-    <div class="card-body p-0">
+    <form method="get" class="card card-body shadow-sm mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text"
+                       name="searchString"
+                       class="form-control"
+                       placeholder="Pretraga po imenu/prezimenu..."
+                       value="@Context.Request.Query["searchString"]" />
+            </div>
+            <div class="col-md-4">
+                <select name="studijskiProgramId"
+                        class="form-select"
+                        onchange="this.form.submit()">
+                    <option value="">Svi studijski programi</option>
+                    @foreach (var program in (SelectList)ViewBag.StudijskiProgrami)
+                    {
+                        <option value="@program.Value"
+                                selected="@(Context.Request.Query["studijskiProgramId"] == program.Value ? "selected" : null)">
+                            @program.Text
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-center gap-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search"></i> Filtriraj
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-undo"></i> Reset
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <div class="card shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-dark">
                     <tr>
-                        <th>
+                        <th class="no-wrap">
                             <a asp-action="Index"
                                asp-route-sortOrder="@ViewData["NameSortParm"]"
                                asp-route-searchString="@Context.Request.Query["searchString"]"
                                asp-route-studijskiProgramId="@Context.Request.Query["studijskiProgramId"]"
-                               class="text-decoration-none text-body">
+                               class="text-decoration-none text-light">
                                 Ime <i class="fas fa-sort"></i>
                             </a>
                         </th>
-                        <th>
+                        <th class="no-wrap">
                             <a asp-action="Index"
                                asp-route-sortOrder="@ViewData["SurnameSortParm"]"
                                asp-route-searchString="@Context.Request.Query["searchString"]"
                                asp-route-studijskiProgramId="@Context.Request.Query["studijskiProgramId"]"
-                               class="text-decoration-none text-body">
+                               class="text-decoration-none text-light">
                                 Prezime <i class="fas fa-sort"></i>
                             </a>
                         </th>
                         @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
                         {
-                            <th>
+                            <th class="no-wrap">
                                 <a asp-action="Index"
                                    asp-route-sortOrder="@ViewData["JMBGSortParm"]"
                                    asp-route-searchString="@Context.Request.Query["searchString"]"
                                    asp-route-studijskiProgramId="@Context.Request.Query["studijskiProgramId"]"
-                                   class="text-decoration-none text-body">
+                                   class="text-decoration-none text-light">
                                     JMBG <i class="fas fa-sort"></i>
                                 </a>
                             </th>
                         }
-                        <th>
+                        <th class="no-wrap">
                             <a asp-action="Index"
                                asp-route-sortOrder="@ViewData["EmailSortParm"]"
                                asp-route-searchString="@Context.Request.Query["searchString"]"
                                asp-route-studijskiProgramId="@Context.Request.Query["studijskiProgramId"]"
-                               class="text-decoration-none text-body">
+                               class="text-decoration-none text-light">
                                 Email <i class="fas fa-sort"></i>
                             </a>
                         </th>
-                        <th>
+                        <th class="no-wrap">
                             <a asp-action="Index"
                                asp-route-sortOrder="@ViewData["IndexSortParm"]"
                                asp-route-searchString="@Context.Request.Query["searchString"]"
                                asp-route-studijskiProgramId="@Context.Request.Query["studijskiProgramId"]"
-                               class="text-decoration-none text-body">
+                               class="text-decoration-none text-light">
                                 Broj indeksa <i class="fas fa-sort"></i>
                             </a>
                         </th>
@@ -94,46 +108,55 @@
                         {
                             <th>Prethodno obrazovanje</th>
                         }
-                        <th class="text-center">Akcije</th>
+                        <th class="text-center no-wrap">Akcije</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var s in Model)
                     {
                         <tr>
-                            <td>@s.Ime</td>
-                            <td>@s.Prezime</td>
+                            <td class="no-wrap">@s.Ime</td>
+                            <td class="no-wrap">@s.Prezime</td>
                             @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
                             {
-                                <td>@s.JMBG</td>
+                                <td class="no-wrap">@s.JMBG</td>
                             }
-                            <td>@s.Email</td>
-                            <td>@s.BrojIndeksa</td>
+                            <td class="no-wrap">@s.Email</td>
+                            <td class="no-wrap">@s.BrojIndeksa</td>
                             <td>
-                                <span class="badge bg-info text-dark" title="Semestar">@s.Semestar</span>
+                                <span class="badge bg-info text-dark">@s.Semestar</span>
                             </td>
                             <td>
-                                <span class="badge bg-primary" title="Godina studija">@s.GodinaStudija</span>
+                                <span class="badge bg-primary">@s.GodinaStudija</span>
                             </td>
                             @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
                             {
-                                <td>
-                                    <span title="Prethodno obrazovanje">@s.PrethodnoObrazovanje</span>
-                                </td>
+                                <td>@s.PrethodnoObrazovanje</td>
                             }
-                            <td class="text-center">
-                                <a asp-action="Details" asp-route-id="@s.Id" class="btn btn-sm btn-outline-primary me-1" title="Detalji">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                @if (User.IsInRole("Studentska služba"))
-                                {
-                                    <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-sm btn-outline-warning me-1" title="Uredi">
-                                        <i class="fas fa-edit"></i>
+                            <td class="text-center no-wrap">
+                                <div class="d-inline-flex align-items-center gap-1">
+                                    <a asp-action="Details"
+                                       asp-route-id="@s.Id"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="Detalji">
+                                        <i class="fas fa-eye"></i>
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@s.Id" class="btn btn-sm btn-outline-danger" title="Obriši">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                }
+                                    @if (User.IsInRole("Studentska služba"))
+                                    {
+                                        <a asp-action="Edit"
+                                           asp-route-id="@s.Id"
+                                           class="btn btn-sm btn-outline-warning"
+                                           title="Uredi">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete"
+                                           asp-route-id="@s.Id"
+                                           class="btn btn-sm btn-outline-danger"
+                                           title="Obriši">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    }
+                                </div>
                             </td>
                         </tr>
                     }
@@ -141,8 +164,12 @@
             </table>
         </div>
     </div>
-</div>
 
-<a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary mt-3">
-    <i class="fas fa-arrow-left"></i> Povratak na početnu
-</a>
+    <div class="text-center mt-4">
+        <a asp-action="Index"
+           asp-controller="Home"
+           class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Povratak na početnu
+        </a>
+    </div>
+</div>

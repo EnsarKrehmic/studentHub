@@ -2,57 +2,78 @@
 
 @{
     ViewData["Title"] = "Limiti izbornih predmeta";
+    Layout = "_Layout";
 }
 
-<h2 class="mb-4">
-    <i class="fas fa-sliders-h"></i> @ViewData["Title"]
-</h2>
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <!-- Naslov + dugme -->
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="fas fa-sliders-h me-2"></i>@ViewData["Title"]
+            </h4>
+            @if (User.IsInRole("Studentska služba"))
+            {
+                <a asp-action="Create" class="btn btn-light btn-sm text-primary fw-bold">
+                    <i class="fas fa-plus-circle me-1"></i> Dodaj novi limit
+                </a>
+            }
+        </div>
 
-<a class="btn btn-success mb-4" asp-action="Create">
-    <i class="fas fa-plus-circle"></i> Dodaj novi limit
-</a>
-
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        Trenutno nema definisanih limita za izborne predmete.
-    </div>
-}
-else
-{
-    <div class="row">
-        @foreach (var item in Model.OrderBy(x => x.StudijskiProgram.Naziv).ThenBy(x => x.GodinaStudija))
-        {
-            <div class="col-md-6">
-                <div class="card mb-4 shadow-sm border-0">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-graduation-cap"></i> @item.StudijskiProgram?.Naziv
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Godina studija:</strong> @item.GodinaStudija</p>
-                        <p><strong>Minimalno izbornih predmeta:</strong> @item.MinIzborniPredmeti</p>
-                        <p><strong>Maksimalno izbornih predmeta:</strong> @item.MaxIzborniPredmeti</p>
-
-                        <div class="mt-3">
-                            <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id">
-                                <i class="fas fa-eye"></i> Detalji
-                            </a>
-                            <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id">
-                                <i class="fas fa-edit"></i> Izmijeni
-                            </a>
-                            <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">
-                                <i class="fas fa-trash-alt"></i> Obriši
-                            </a>
-                        </div>
-                    </div>
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info shadow-sm">
+                    Trenutno nema definisanih limita za izborne predmete.
                 </div>
-            </div>
-        }
-    </div>
-}
+            }
+            else
+            {
+                <div class="row g-3">
+                    @foreach (var item in Model.OrderBy(x => x.StudijskiProgram.Naziv).ThenBy(x => x.GodinaStudija))
+                    {
+                        <div class="col-md-6">
+                            <div class="card h-100 border rounded shadow-sm">
+                                <div class="card-header bg-secondary text-white">
+                                    <i class="fas fa-graduation-cap me-2"></i>@item.StudijskiProgram?.Naziv
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row mb-0 small">
+                                        <dt class="col-6">Godina studija:</dt>
+                                        <dd class="col-6">@item.GodinaStudija</dd>
 
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">
-    <i class="fas fa-arrow-left"></i> Nazad na početnu
-</a>
+                                        <dt class="col-6">Minimalno izbornih:</dt>
+                                        <dd class="col-6">@item.MinIzborniPredmeti</dd>
+
+                                        <dt class="col-6">Maksimalno izbornih:</dt>
+                                        <dd class="col-6">@item.MaxIzborniPredmeti</dd>
+                                    </dl>
+                                </div>
+                                <div class="card-footer d-flex flex-wrap gap-2 justify-content-start">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye me-1"></i> Detalji
+                                    </a>
+                                    @if (User.IsInRole("Studentska služba"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit me-1"></i> Izmijeni
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash-alt me-1"></i> Obriši
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="card-footer text-center">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light text-white">
+                <i class="fas fa-arrow-left me-1"></i> Nazad na početnu
+            </a>
+        </div>
+    </div>
+</div>

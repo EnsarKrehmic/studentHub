@@ -2,100 +2,43 @@
 
 @{
     ViewData["Title"] = "Brisanje ocjene";
+    ViewData["WarningMessage"] = "Da li ste sigurni da želite obrisati ovu ocjenu?";
+    ViewData["WarningDetails"] = Html.Raw(
+        Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any()
+        ? "<strong class='text-danger'>Ova ocjena ima i parcijalne ocjene koje će također biti obrisane.</strong>"
+        : ""
+    );
+    ViewData["DeleteFields"] = new Dictionary<string, object>
+    {
+        ["Student"] = $"{Model.Student?.Ime} {Model.Student?.Prezime} ({Model.Student?.BrojIndeksa})",
+        ["Predmet"] = Model.Predmet?.Naziv,
+        ["Nastavna aktivnost"] = Model.NastavnaAktivnost?.Naziv ?? "–",
+        ["Profesor"] = $"{Model.Profesor?.ProfesorTitula} {Model.Profesor?.Ime} {Model.Profesor?.Prezime}",
+        ["Vrijednost ocjene"] = (object)Html.Raw(
+                                        $"<span class='badge {(Model.Vrijednost >= 8 ? "bg-success" : Model.Vrijednost >= 6 ? "bg-warning text-dark" : "bg-danger")} fs-5'>{Model.Vrijednost}</span>"
+                                    ),
+        ["Težina (%)"] = Model.TezinaProcentualno.HasValue
+                                        ? $"{Model.TezinaProcentualno}%"
+                                        : (object)Html.Raw("<span class='text-muted'>–</span>"),
+        ["Komentar"] = !string.IsNullOrWhiteSpace(Model.Komentar)
+                                        ? Model.Komentar
+                                        : (object)Html.Raw("<span class='text-muted'>–</span>"),
+        ["Datum unosa"] = Model.DatumUnosa != default
+                                        ? Model.DatumUnosa.ToString("dd.MM.yyyy")
+                                        : (object)Html.Raw("<span class='text-muted'>–</span>"),
+        ["Parcijalne ocjene"] = (object)Html.Raw(
+                                        (Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any())
+                                        ? "<ul>" + string.Join("", Model.DjelimicneOcjene.Select(dj =>
+                                             $"<li><strong>{dj.Vrijednost}</strong>" +
+                                             (string.IsNullOrWhiteSpace(dj.Komentar) ? "" : $" <em>({dj.Komentar})</em>") +
+                                             (dj.TezinaProcentualno.HasValue
+                                                ? $" <span class='badge bg-secondary'>{dj.TezinaProcentualno}%</span>"
+                                                : "")
+                                             + "</li>"
+                                          )) + "</ul>"
+                                        : "<span class='text-muted'>Nema parcijalnih ocjena</span>"
+                                    )
+    };
 }
 
-<div class="card shadow-sm mx-auto my-4" style="max-width: 550px;">
-    <div class="card-body">
-        <h2 class="card-title mb-3 text-danger">
-            <i class="fas fa-trash-alt me-2"></i> @ViewData["Title"]
-        </h2>
-        <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
-            <i class="fas fa-exclamation-triangle fa-lg"></i>
-            <div>
-                <strong>Da li ste sigurni da želite obrisati ovu ocjenu?</strong>
-                <div class="small">
-                    Ova akcija je <span class="fw-bold text-danger">nepovratna</span> i trajno će ukloniti sve podatke o ocjeni.
-                    @if (Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any())
-                    {
-                        <br />
-                        <strong class="text-danger">Ova ocjena ima i parcijalne ocjene koje će također biti obrisane.</strong>
-                    }
-                </div>
-            </div>
-        </div>
-
-        <dl class="row">
-            <dt class="col-sm-5">Student:</dt>
-            <dd class="col-sm-7">@Model.Student?.Ime @Model.Student?.Prezime (@Model.Student?.BrojIndeksa)</dd>
-
-            <dt class="col-sm-5">Predmet:</dt>
-            <dd class="col-sm-7">@Model.Predmet?.Naziv</dd>
-
-            @if (Model.NastavnaAktivnost != null)
-            {
-                <dt class="col-sm-5">Nastavna aktivnost:</dt>
-                <dd class="col-sm-7">@Model.NastavnaAktivnost.Naziv</dd>
-            }
-
-            <dt class="col-sm-5">Profesor:</dt>
-            <dd class="col-sm-7">@Model.Profesor?.ProfesorTitula @Model.Profesor?.Ime @Model.Profesor?.Prezime</dd>
-
-            <dt class="col-sm-5">Vrijednost ocjene:</dt>
-            <dd class="col-sm-7">
-                <span class="badge @(Model.Vrijednost >= 8 ? "bg-success" : Model.Vrijednost >= 6 ? "bg-warning text-dark" : "bg-danger") fs-5">@Model.Vrijednost</span>
-            </dd>
-
-            @if (Model.TezinaProcentualno.HasValue)
-            {
-                <dt class="col-sm-5">Težina (%):</dt>
-                <dd class="col-sm-7">@Model.TezinaProcentualno%</dd>
-            }
-
-            @if (!string.IsNullOrWhiteSpace(Model.Komentar))
-            {
-                <dt class="col-sm-5">Komentar:</dt>
-                <dd class="col-sm-7">@Model.Komentar</dd>
-            }
-
-            @if (Model.DatumUnosa != default)
-            {
-                <dt class="col-sm-5">Datum unosa:</dt>
-                <dd class="col-sm-7">@Model.DatumUnosa.ToString("dd.MM.yyyy")</dd>
-            }
-        </dl>
-
-        @if (Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any())
-        {
-            <hr />
-            <h5 class="text-danger"><i class="fas fa-layer-group me-1"></i> Parcijalne ocjene koje će biti obrisane</h5>
-            <ul class="list-group mb-3">
-                @foreach (var dj in Model.DjelimicneOcjene)
-                {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>@dj.Vrijednost</strong>
-                            @if (!string.IsNullOrWhiteSpace(dj.Komentar))
-                            {
-                                <span class="text-muted ms-2">(@dj.Komentar)</span>
-                            }
-                        </div>
-                        @if (dj.TezinaProcentualno.HasValue)
-                        {
-                            <span class="badge bg-secondary">@dj.TezinaProcentualno %</span>
-                        }
-                    </li>
-                }
-            </ul>
-        }
-
-        <form asp-action="Delete" method="post" class="d-flex gap-2 mt-3">
-            <input type="hidden" asp-for="Id" />
-            <button type="submit" class="btn btn-danger">
-                <i class="fas fa-trash-alt"></i> Obriši
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Odustani
-            </a>
-        </form>
-    </div>
-</div>
+@await Html.PartialAsync("_DeleteCard", Model)

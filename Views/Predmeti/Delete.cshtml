@@ -2,151 +2,32 @@
 
 @{
     ViewData["Title"] = "Brisanje predmeta";
+
+    ViewData["WarningMessage"] = "Da li ste sigurni da želite obrisati ovaj predmet?";
+    ViewData["WarningDetails"] = "Ova akcija je nepovratna i trajno će ukloniti sve podatke o predmetu, uključujući ocjene, ispite, prijave i nastavne aktivnosti.";
+
+    ViewData["DeleteFields"] = new Dictionary<string, object>
+    {
+        ["Naziv predmeta"] = Model.Predmet.Naziv,
+        ["Opis"] = Model.Predmet.Opis,
+        ["ECTS bodovi"] = Model.Predmet.ECTS,
+        ["Ukupni broj bodova"] = Model.Predmet.UkupnoBodova,
+        ["Tip predmeta"] = Model.Predmet.TipPredmeta == StudentHub.Models.TipPredmeta.Osnovni
+                                    ? "Osnovni"
+                                    : "Izborni",
+        ["Studijski program"] = Model.Predmet.StudijskiProgram?.Naziv ?? (object)Html.Raw("<span class='text-warning'>Nema programa</span>"),
+        ["Godina studija"] = $"{Model.Predmet.GodinaStudija}. godina",
+        ["Semestar"] = Model.Predmet.Semestar == 1
+                                    ? "1 (Zimski)"
+                                    : Model.Predmet.Semestar == 2
+                                        ? "2 (Ljetni)"
+                                        : Model.Predmet.Semestar.ToString(),
+        ["Sati predavanja"] = Model.Predmet.SatiPredavanja,
+        ["Sati vježbi"] = Model.Predmet.SatiVjezbi,
+        ["Nastavni plan"] = Model.Predmet.NastavniPlan != null
+                                    ? $"{Model.Predmet.NastavniPlan.GodinaStudija}. godina, {Model.Predmet.NastavniPlan.StudijskiProgram?.Naziv}"
+                                    : (object)Html.Raw("<span class='text-warning'>Nema dodijeljen nastavni plan.</span>")
+    };
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<div class="alert alert-warning" role="alert">
-    <h4 class="alert-heading">Da li ste sigurni da želite obrisati ovaj predmet?</h4>
-    <p>
-        Ova akcija je <b>nepovratna</b> i trajno će ukloniti <b>sve podatke o predmetu</b>, uključujući ocjene, ispite, prijave i nastavne aktivnosti.
-    </p>
-</div>
-
-<div class="container mt-4">
-    <!-- Opšti podaci o predmetu -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h3>Podaci o predmetu</h3>
-        </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-4">Naziv predmeta:</dt>
-                <dd class="col-sm-8">@Model.Predmet.Naziv</dd>
-
-                <dt class="col-sm-4">Opis:</dt>
-                <dd class="col-sm-8">@Model.Predmet.Opis</dd>
-
-                <dt class="col-sm-4">ECTS bodovi:</dt>
-                <dd class="col-sm-8">@Model.Predmet.ECTS</dd>
-
-                <dt class="col-sm-4">Ukupni broj bodova:</dt>
-                <dd class="col-sm-8">@Model.Predmet.UkupnoBodova</dd>
-
-                <dt class="col-sm-4">Tip predmeta:</dt>
-                <dd class="col-sm-8">
-                    @(Model.Predmet.TipPredmeta == StudentHub.Models.TipPredmeta.Osnovni ? "Osnovni" : "Izborni")
-                </dd>
-
-                <dt class="col-sm-4">Studijski program:</dt>
-                <dd class="col-sm-8">
-                    @if (Model.Predmet.StudijskiProgram != null)
-                    {
-                        @Model.Predmet.StudijskiProgram.Naziv
-                    }
-                    else
-                    {
-                        @Html.Raw("<span class='text-warning'>Nema programa</span>")
-                    }
-                </dd>
-
-                <dt class="col-sm-4">Godina studija:</dt>
-                <dd class="col-sm-8">@Model.Predmet.GodinaStudija. godina</dd>
-
-                <dt class="col-sm-4">Semestar:</dt>
-                <dd class="col-sm-8">
-                    @(Model.Predmet.Semestar == 1 ? "1 (Zimski)" : Model.Predmet.Semestar == 2 ? "2 (Ljetni)" : Model.Predmet.Semestar.ToString())
-                </dd>
-
-                <dt class="col-sm-4">Sati predavanja:</dt>
-                <dd class="col-sm-8">@Model.Predmet.SatiPredavanja</dd>
-
-                <dt class="col-sm-4">Sati vježbi:</dt>
-                <dd class="col-sm-8">@Model.Predmet.SatiVjezbi</dd>
-
-                <dt class="col-sm-4">Nastavni plan:</dt>
-                <dd class="col-sm-8">
-                    @if (Model.Predmet.NastavniPlan != null)
-                    {
-                        <span>
-                            @Model.Predmet.NastavniPlan.GodinaStudija. godina,
-                            @Model.Predmet.NastavniPlan.StudijskiProgram?.Naziv
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="text-warning">Nema dodijeljen nastavni plan.</span>
-                    }
-                </dd>
-            </dl>
-        </div>
-    </div>
-
-    <!-- Nastavno osoblje -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h4>Nastavno osoblje</h4>
-        </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Uloga</th>
-                        <th>Ime i prezime</th>
-                        <th>Titula</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Profesor -->
-                    @if (Model.Profesori.Any())
-                    {
-                        @foreach (var profesor in Model.Profesori)
-                        {
-                            <tr>
-                                <td>Profesor</td>
-                                <td>@profesor.Profesor?.Ime @profesor.Profesor?.Prezime</td>
-                                <td>@profesor.Profesor?.ProfesorTitula</td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td>Profesor</td>
-                            <td colspan="2" class="text-warning">Nema dodijeljen profesor.</td>
-                        </tr>
-                    }
-
-                    <!-- Asistent -->
-                    @if (Model.Asistenti.Any())
-                    {
-                        @foreach (var asistent in Model.Asistenti)
-                        {
-                            <tr>
-                                <td>Asistent</td>
-                                <td>@asistent.Asistent?.Ime @asistent.Asistent?.Prezime</td>
-                                <td>@asistent.Asistent?.AsistentTitula</td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td>Asistent</td>
-                            <td colspan="2" class="text-warning">Nema dodijeljen asistent.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Akcije -->
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Predmet.Id" />
-    <div class="form-group">
-        <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Obriši</button>
-        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-    </div>
-</form>
+@await Html.PartialAsync("_DeleteCard", Model.Predmet)

@@ -1,42 +1,59 @@
 ﻿@model IEnumerable<StudentHub.Models.Prijava>
 
 @{
-    ViewData["Title"] = "Lista prijava";
+    ViewData["Title"] = "Prijave na ispite";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="fas fa-clipboard-list text-primary me-2"></i>@ViewData["Title"]</h2>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fas fa-plus me-1"></i> Nova prijava
+    </a>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Datum prijave</th>
-            <th>Ispit</th>
-            <th>Student</th>
-            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-            {
-                <th>Akcije</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var prijava in Model)
-        {
-            <tr>
-                <td>@prijava.DatumPrijave.ToShortDateString()</td>
-                <td>@prijava.Ispit?.Predmet</td>
-                <td>@prijava.Student?.BrojIndeksa</td>
-                @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
-                {
-                    <td>
-                        <a asp-action="Details" asp-route-id="@prijava.Id">Detalji</a>
-                        <a asp-action="Delete" asp-route-id="@prijava.Id">Brisanje</a>
-                    </td>
-                }
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Datum prijave</th>
+                        <th>Ispit</th>
+                        <th>Student</th>
+                        @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                        {
+                            <th class="text-center">Akcije</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var prijava in Model)
+                    {
+                        <tr>
+                            <td>@prijava.DatumPrijave.ToString("dd.MM.yyyy")</td>
+                            <td>@prijava.Ispit?.Predmet</td>
+                            <td>@prijava.Student?.BrojIndeksa</td>
+                            @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
+                            {
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-id="@prijava.Id" class="btn btn-sm btn-outline-info me-1" title="Detalji">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@prijava.Id" class="btn btn-sm btn-outline-danger" title="Obriši">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-<div>
-    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Povratak na početnu stranicu</a>
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Povratak na početnu
+    </a>
 </div>

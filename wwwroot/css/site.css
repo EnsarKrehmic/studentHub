@@ -1,145 +1,392 @@
-﻿:root {
-    --primary-color: #4361ee;
-    --secondary-color: #3f37c9;
-    --success-color: #4cc9f0;
-    --light-bg: #f8f9fa;
-    --dark-bg: #212529;
-    --sidebar-width: 250px;
+﻿/* ====== GLOBALNI DARK MODE OVERRIDE ZA NASLOVE I TEKST ====== */
+[data-bs-theme="dark"] h1,
+[data-bs-theme="dark"] h2,
+[data-bs-theme="dark"] h3,
+[data-bs-theme="dark"] h4,
+[data-bs-theme="dark"] h5,
+[data-bs-theme="dark"] h6 {
+    color: #1e1e1e; /* svijetle glave */
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* sprječava prelamanje teksta unutar ćelija */
+.no-wrap {
+    white-space: nowrap;
+}
+
+[data-bs-theme="dark"] p,
+[data-bs-theme="dark"] .lead,
+[data-bs-theme="dark"] .text-muted {
+    color: #4a53ae !important; /* svijetli paragrafi */
+}
+
+/* ====== CARDS ====== */
+[data-bs-theme="dark"] .card {
+    background-color: #1e1e1e;
+    border-color: #333;
+    color: #e9ecef;
+}
+
+    [data-bs-theme="dark"] .card .card-body,
+    [data-bs-theme="dark"] .card .card-footer,
+    [data-bs-theme="dark"] .card .card-header {
+        background-color: transparent; /* dozvoli .card-header/.footer override iz drugih dark pravila */
+    }
+
+/* Naslovi i tekst unutar kartica */
+[data-bs-theme="dark"] .card-title,
+[data-bs-theme="dark"] .card-text {
+    color: #e9ecef;
+}
+
+/* “Pregled” dugme */
+[data-bs-theme="dark"] .btn-info {
+    background-color: #3a7bd5;
+    border-color: #3a7bd5;
+    color: #fff;
+}
+
+    [data-bs-theme="dark"] .btn-info:hover {
+        background-color: #336bc1;
+        border-color: #336bc1;
+    }
+
+/* forme i kontrola */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    color: #e9ecef;
+}
+
+    [data-bs-theme="dark"] .form-control::placeholder {
+        color: #888;
+    }
+
+[data-bs-theme="dark"] .form-floating > .form-control,
+[data-bs-theme="dark"] .form-floating > .form-control:focus {
+    background-color: #1e1e1e;
+    color: #e9ecef;
+    border: 1px solid #555;
+}
+
+[data-bs-theme="dark"] .form-floating > label {
+    color: #ccc;
+    background-color: transparent;
+}
+
+/* alert box */
+[data-bs-theme="dark"] .alert {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #e9ecef;
+}
+
+/* Accordion unutar */
+[data-bs-theme="dark"] .accordion-button {
+    background-color: #2b2b2b;
+    color: #e9ecef;
+}
+
+    [data-bs-theme="dark"] .accordion-button:not(.collapsed) {
+        background-color: #383838;
+    }
+
+[data-bs-theme="dark"] .accordion-body {
+    background-color: #1f1f1f;
+    color: #e9ecef;
+}
+
+[data-bs-theme="dark"] .accordion-header .btn-link {
+    color: #e9ecef;
+}
+
+/* Dugmad */
+[data-bs-theme="dark"] .btn-warning {
+    background-color: #e09e59;
+    border-color: #e09e59;
+    color: #212529;
+}
+
+[data-bs-theme="dark"] .btn-danger {
+    background-color: #c0392b;
+    border-color: #c0392b;
+    color: #fff;
+}
+
+[data-bs-theme="dark"] .btn-secondary {
+    background-color: #555;
+    border-color: #555;
+    color: #e9ecef;
+}
+
+[data-bs-theme="dark"] table.dataTable {
+    background-color: #1e1e1e;
+    color: #e9ecef;
+}
+
+    [data-bs-theme="dark"] table.dataTable th,
+    [data-bs-theme="dark"] table.dataTable td {
+        border-color: #444;
+    }
+
+    [data-bs-theme="dark"] table.dataTable thead {
+        background-color: #2a2a2a;
+        color: #e9ecef;
+    }
+
+[data-bs-theme="dark"] .dataTables_wrapper {
+    color: #e9ecef;
+}
+
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_filter label,
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_length label,
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_info {
+        color: #e9ecef !important;
+    }
+
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_filter input,
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_length select {
+        background-color: #1e1e1e;
+        border: 1px solid #555;
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_paginate a {
+        background-color: #1e1e1e;
+        border: 1px solid #555;
+        color: #e9ecef;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.25rem;
+        margin: 0 2px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+        [data-bs-theme="dark"] .dataTables_wrapper .dataTables_paginate a:hover {
+            background-color: #1e1e1e;
+            color: #fff;
+            border-color: #666;
+        }
+
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_paginate .current {
+        background-color: #e9ecef;
+        color: #fff !important;
+        border-color: #ccc;
+        font-weight: bold;
+    }
+
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_filter input:focus,
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_length select:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(233, 236, 239, 0.25);
+    }
+
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_paginate a.current {
+        background-color: #3a7bd5;
+        border-color: #3a7bd5;
+        color: #fff !important;
+    }
+
+/* Povratak na početak (outline-secondary) */
+[data-bs-theme="dark"] .btn-outline-secondary {
+    border-color: #e9ecef;
+    color: #fff !important;
+}
+
+    [data-bs-theme="dark"] .btn-outline-secondary:hover {
+        background-color: #e9ecef;
+        color: #1e1e1e !important;
+    }
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    /* naslov i kartice su fluidni, samo eventualno smanji padding */
+    [data-bs-theme="dark"] .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+:root {
+    --primary: #667eea;
+    --primary-light: #e6ecfe;
+    --secondary: #764ba2;
+    --success: #28a745;
+    --success-light: #e6f7eb;
+    --info: #17a2b8;
+    --info-light: #e6f7fa;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --danger-light: #fce8e8;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --purple: #6f42c1;
+    --sidebar-width: 280px;
     --transition-speed: 0.3s;
 }
 
-[data-bs-theme="dark"] {
-    --light-bg: #212529;
-    --dark-bg: #f8f9fa;
-    --text-color: #e9ecef;
-    --border-color: #495057;
-}
-
-html, body {
+html {
     height: 100%;
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: var(--light-bg);
-    color: var(--text-color, #212529);
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fb;
+    color: var(--dark);
     transition: background-color var(--transition-speed);
     margin: 0;
     padding: 0;
     min-height: 100vh;
 }
 
-.wrapper {
-    min-height: 100vh;
-    display: flex;
+[data-bs-theme="dark"] .navbar {
+    background-color: #222b3a !important;
 }
 
-#sidebar {
-    min-width: var(--sidebar-width);
-    max-width: var(--sidebar-width);
-    background: var(--light-bg);
-    color: var(--text-color, #212529);
-    transition: all var(--transition-speed);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-
-    #sidebar .sidebar-header {
-        background: var(--primary-color);
-        color: white;
-    }
-
-    #sidebar ul.components {
-        padding: 20px 0;
-    }
-
-    #sidebar ul li a {
-        padding: 12px 20px;
-        font-size: 1.1em;
-        display: block;
-        color: var(--text-color, #495057);
-        transition: all 0.2s;
-        border-left: 3px solid transparent;
-    }
-
-        #sidebar ul li a:hover {
-            color: var(--primary-color);
-            background: rgba(67, 97, 238, 0.1);
-            border-left: 3px solid var(--primary-color);
-        }
-
-    #sidebar ul li.active > a {
-        color: var(--primary-color);
-        font-weight: 600;
-        border-left: 3px solid var(--primary-color);
-    }
-
-    #sidebar ul ul a {
-        font-size: 0.9em !important;
-        padding-left: 40px !important;
-    }
-
-#content {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    transition: all var(--transition-speed);
-}
-
-main {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.main-content {
-    flex: 1;
-}
-
-/* Top Navigation */
+/* Navbar */
 .navbar {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 0.75rem 1rem;
+}
+
+/* Sakrij toggle dugme na desktopu */
+@media (min-width: 993px) {
+    #sidebarToggle {
+        display: none !important;
+    }
+}
+
+/* Avatar */
+.avatar {
+    width: 32px;
+    height: 32px;
+    font-weight: 600;
+    font-size: 1.12rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Cards */
 .card {
     border: none;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s;
     margin-bottom: 1.5rem;
 }
 
     .card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.10);
     }
 
 .card-header {
-    background-color: var(--primary-color);
+    background-color: var(--primary);
     color: white;
-    border-radius: 10px 10px 0 0 !important;
+    border-radius: 12px 12px 0 0 !important;
     padding: 1rem 1.25rem;
+}
+
+.rounded-4 {
+    border-radius: 16px;
 }
 
 /* Buttons */
 .btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: var(--primary);
+    border-color: var(--primary);
 }
 
     .btn-primary:hover {
-        background-color: var(--secondary-color);
-        border-color: var(--secondary-color);
+        background-color: #5a6fd1;
+        border-color: #5a6fd1;
     }
 
 .btn-outline-primary {
-    color: var(--primary-color);
-    border-color: var(--primary-color);
+    color: var(--primary);
+    border-color: var(--primary);
 }
 
     .btn-outline-primary:hover {
-        background-color: var(--primary-color);
+        background-color: var(--primary);
         color: white;
+    }
+
+.btn-success {
+    background-color: var(--success);
+    border-color: var(--success);
+}
+
+    .btn-success:hover {
+        background-color: #20913b;
+        border-color: #20913b;
+    }
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+.bg-primary-light {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+.bg-success-light {
+    background-color: var(--success-light);
+    color: var(--success);
+}
+
+.bg-info-light {
+    background-color: var(--info-light);
+    color: var(--info);
+}
+
+.bg-danger-light {
+    background-color: var(--danger-light);
+    color: var(--danger);
+}
+
+/* Utility classes */
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0,0,0,0.175);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
     }
 
 /* Tables */
@@ -149,27 +396,16 @@ main {
 }
 
     .table thead th {
-        background-color: var(--primary-color);
+        background-color: var(--primary);
         color: white;
         border: none;
     }
-
-    .table th a, .table-dark th a {
-        color: inherit !important;
-        text-decoration: none !important;
-        font-weight: 500;
-    }
-
-        .table th a:hover, .table-dark th a:hover {
-            color: #19a974 !important;
-            text-decoration: underline;
-        }
 
 .table-hover tbody tr:hover {
     background-color: rgba(67, 97, 238, 0.05);
 }
 
-/* Form elements */
+/* Forms */
 .form-control, .form-select {
     border-radius: 8px;
     padding: 0.75rem 1rem;
@@ -178,49 +414,327 @@ main {
 }
 
     .form-control:focus, .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(67,97,238,0.18);
     }
 
 /* Footer */
-footer {
-    background: var(--light-bg);
-    color: var(--text-color, #495057);
-    padding: 2rem 0;
-    margin-top: auto;
+[data-bs-theme="dark"] footer {
+    background: #2a2a2a;
+    color: #adb5bd;
+    border-top-color: #333 !important; /* umjesto svijetlog border-topa */
 }
 
+    [data-bs-theme="dark"] footer h5 {
+        color: #f1f1f1; /* “naslovi” u footeru budu svijetliji */
+    }
+
+    [data-bs-theme="dark"] footer p,
+    [data-bs-theme="dark"] footer span {
+        color: #adb5bd; /* tekst ostaje neutralno-svijetao */
+    }
+
+    [data-bs-theme="dark"] footer .fas {
+        color: var(--primary-light); /* ikonice mail/phone */
+    }
+
+    /* Karte (Leaflet) – malo priguši pozadinu da se uklopi */
+    [data-bs-theme="dark"] footer #map {
+        filter: brightness(0.7) contrast(1.2);
+    }
+
+    /* Linkovi u footeru, ukoliko ih budeš imao */
+    [data-bs-theme="dark"] footer a {
+        color: #667eea;
+    }
+
+        [data-bs-theme="dark"] footer a:hover {
+            color: #e6ecfe;
+        }
+
+/* Map container */
 #map {
+    height: 10vh !important;
+    max-height: 500px;
     width: 100%;
-    min-height: 220px;
-    height: 220px;
 }
 
-/* Responsive adjustments */
+footer {
+    overflow: hidden;
+}
+
+/* ============ DARK MODE ============ */
+[data-bs-theme="dark"] body {
+    background-color: #2a2a2a;
+    color: #e9ecef;
+}
+
+/* Hero Section */
+[data-bs-theme="dark"] .hero-section {
+    background: linear-gradient(135deg, #4a53ae 0%, #5e3a8f 100%);
+}
+
+    [data-bs-theme="dark"] .hero-section .text-white,
+    [data-bs-theme="dark"] .hero-section .display-4,
+    [data-bs-theme="dark"] .hero-section .lead {
+        color: #e9ecef !important;
+    }
+
+    [data-bs-theme="dark"] .hero-section .text-warning {
+        color: #ffb74d !important;
+    }
+
+    [data-bs-theme="dark"] .hero-section .btn-light {
+        background-color: rgba(255,255,255,0.1);
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .hero-section .btn-outline-light {
+        border-color: #e9ecef;
+        color: #e9ecef;
+    }
+
+/* Quick Stats */
+[data-bs-theme="dark"] .icon-circle {
+    background-color: rgba(255,255,255,0.1) !important;
+}
+
+[data-bs-theme="dark"] .text-muted {
+    color: #adb5bd !important;
+}
+
+/* Sections background/text */
+[data-bs-theme="dark"] section.container,
+[data-bs-theme="dark"] .container.mb-5 {
+    background: transparent;
+    color: #e9ecef;
+}
+
+/* Section title underline */
+[data-bs-theme="dark"] .section-title {
+    color: #121212;
+}
+
+    [data-bs-theme="dark"] .section-title:after {
+        background: linear-gradient(to right, #4a53ae, #5e3a8f);
+    }
+
+/* Card overrides */
+[data-bs-theme="dark"] .card {
+    background-color: #2a2a2a;
+    color: #e9ecef;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+    [data-bs-theme="dark"] .card .card-header,
+    [data-bs-theme="dark"] .card .card-footer {
+        background-color: #1f1f1f;
+    }
+
+/* Program cards */
+[data-bs-theme="dark"] .program-card .card-img-top {
+    background: linear-gradient(135deg, #4a53ae 0%, #5e3a8f 100%);
+}
+
+/* News section */
+[data-bs-theme="dark"] #news {
+    background-color: #2a2a2a;
+    padding: 3rem 1rem;
+}
+
+[data-bs-theme="dark"] .news-card {
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+    [data-bs-theme="dark"] .news-card .card-header,
+    [data-bs-theme="dark"] .news-card .card-body,
+    [data-bs-theme="dark"] .news-card .card-footer {
+        background-color: #2a2a2a;
+    }
+
+    [data-bs-theme="dark"] .news-card small.text-muted {
+        color: #888 !important;
+    }
+
+    [data-bs-theme="dark"] .news-card h3,
+    [data-bs-theme="dark"] .news-card p {
+        color: #e9ecef;
+        margin: 3px;
+    }
+
+    [data-bs-theme="dark"] .news-card .card-body {
+        background-color: #2a2a2a;
+        margin: 3px;
+    }
+
+    /* Datum i autor */
+    [data-bs-theme="dark"] .news-card small.text-muted {
+        color: #6c757d !important;
+        margin: inherit;
+    }
+
+    /* “Pročitaj više” button */
+    [data-bs-theme="dark"] .news-card .btn-outline-primary {
+        border-color: #e9ecef;
+        color: #e9ecef;
+        margin-top: 5px;
+    }
+
+        [data-bs-theme="dark"] .news-card .btn-outline-primary:hover {
+            background-color: #2a2a2a;
+            color: #1e1e1e;
+        }
+
+/* Glavno “Sve obavijesti” */
+[data-bs-theme="dark"] #news + .text-center .btn-primary {
+    background-color: #2a2a2a;
+    border-color: #4a53ae;
+}
+
+    [data-bs-theme="dark"] #news + .text-center .btn-primary:hover {
+        background-color: #2a2a2a;
+        border-color: #545dc1;
+    }
+
+/* News heading/link colors */
+[data-bs-theme="dark"] #news + .text-center .btn-primary {
+    background-color: #4a53ae;
+    border-color: #4a53ae;
+}
+
+    [data-bs-theme="dark"] #news + .text-center .btn-primary:hover {
+        background-color: #545dc1;
+    }
+
+/* Video section */
+[data-bs-theme="dark"] #video {
+    background-color: #2a2a2a;
+    padding: 3rem 1rem;
+    margin-bottom: 20px;
+}
+
+    [data-bs-theme="dark"] #video h2,
+    [data-bs-theme="dark"] #video p,
+    [data-bs-theme="dark"] #video .list-unstyled li {
+        color: #e9ecef;
+    }
+
+        [data-bs-theme="dark"] #video .list-unstyled li i {
+            color: var(--primary-light);
+        }
+
+    [data-bs-theme="dark"] #video .ratio {
+        background-color: #000;
+    }
+
+    [data-bs-theme="dark"] #video iframe {
+        filter: brightness(0.7) contrast(1.2);
+    }
+
+/* Newsletter */
+[data-bs-theme="dark"] .bg-primary {
+    background-color: #4a53ae !important;
+}
+
+    [data-bs-theme="dark"] .bg-primary .btn-light {
+        background-color: #e9ecef;
+        color: #4a53ae;
+    }
+
+/* ============ Responsive Dark Mode ============ */
 @media (max-width: 768px) {
-    #sidebar {
-        margin-left: calc(-1 * var(--sidebar-width));
+    /* Hero padding */
+    [data-bs-theme="dark"] .hero-section {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
     }
 
-        #sidebar.active {
-            margin-left: 0;
-        }
-
-    #content {
-        width: 100%;
+    /* Quick Stats center icons */
+    [data-bs-theme="dark"] .icon-circle {
+        margin-bottom: 1rem;
     }
 
-        #content.active {
-            margin-left: var(--sidebar-width);
-        }
+    /* Sections padding */
+    [data-bs-theme="dark"] section.container,
+    [data-bs-theme="dark"] .container.mb-5 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 
-    #sidebarCollapse span {
-        display: none;
+    [data-bs-theme="dark"] #news {
+        padding: 2rem 1rem;
+    }
+
+    /* Video section breath */
+    [data-bs-theme="dark"] .video-section {
+        padding: 2rem 1rem;
     }
 }
 
-@media (min-width: 993px) {
-    #sidebarToggle {
-        display: none;
+/* ============ RESPONSIVE ============ */
+@media (max-width: 992px) {
+    /* Hero section: smanji padding i fontove */
+    .hero-section {
+        padding: 3rem 1rem;
+    }
+
+        .hero-section .display-4 {
+            font-size: 2rem;
+        }
+
+        .hero-section p.lead {
+            font-size: 1rem;
+        }
+
+    /* Quick stats: 2 kolone ili 1 */
+    .container.mb-5 .row > .col-md-3 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Hero: centriraj SVG shape */
+    .hero-section svg {
+        width: 100%;
+        height: auto;
+        bottom: -20px;
+        right: -20px;
+    }
+
+    /* Stat cards: jedna kolona */
+    .container.mb-5 .row > .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    /* Programs & news cards: 1 kolona */
+    #programs .col-md-6,
+    #programs .col-lg-4,
+    #news .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    #news .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .ratio,
+    .ratio + .col-lg-6 {
+        margin-bottom: 1.5rem;
+    }
+
+    section.container.py-5 .row.align-items-center {
+        flex-direction: column;
+    }
+
+    /* Newsletter form: field+button full width */
+    .bg-primary .form-control-lg,
+    .bg-primary .btn-lg {
+        width: 100%;
     }
 }

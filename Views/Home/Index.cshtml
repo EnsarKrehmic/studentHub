@@ -4,83 +4,188 @@
     ViewData["Title"] = "Dobrodošli u StudentHub";
 }
 
-<div class="container py-4">
-    <!-- Jumbotron hero sekcija -->
-    <div class="jumbotron text-center bg-primary text-white rounded shadow-sm mb-5 p-5">
-        <h1 class="display-4 mb-2">Dobrodošli u <span class="fw-bold">StudentHub</span>!</h1>
-        <p class="lead mb-3">Vaš centralizovani sistem za upravljanje fakultetom.</p>
-        <hr class="my-4 border-light" />
-        <p class="mb-0">Pratite najnovije objave, podatke o korisnicima i još mnogo toga.</p>
+<!-- Hero section -->
+<section class="hero-section bg-gradient-primary text-white py-5 mb-5 rounded-4 shadow position-relative overflow-hidden">
+    <div class="container py-4 position-relative z-2">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-9 mx-auto">
+                <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown">
+                    Dobrodošli u <span class="text-warning">StudentHub</span>
+                </h1>
+                <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">
+                    Vaš centralizovani sistem za upravljanje fakultetom i akademskim procesima.
+                </p>
+                <div class="d-flex justify-content-center gap-3 mb-4 animate__animated animate__fadeIn animate__delay-2s">
+                    <a href="#programs" class="btn btn-light btn-lg px-4">Studijski programi</a>
+                    <a href="#news" class="btn btn-outline-light btn-lg px-4">Obavijesti</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <!-- Dekorativni apstraktni SVG shape -->
+    <svg class="position-absolute bottom-0 end-0 opacity-25 z-1" width="500" height="180" fill="none" viewBox="0 0 500 180" style="pointer-events:none;">
+        <ellipse cx="400" cy="150" rx="180" ry="60" fill="#fff" fill-opacity="0.2" />
+        <ellipse cx="340" cy="100" rx="120" ry="35" fill="#fff" fill-opacity="0.15" />
+    </svg>
+</section>
 
-    <!-- Studijski programi - Card Grid -->
-    <div class="row text-center mb-5 g-4">
+<!-- Quick Stats -->
+<div class="container mb-5">
+    <div class="row g-4 text-center">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="icon-circle bg-primary-light text-primary mb-3 mx-auto">
+                        <i class="fas fa-user-graduate fs-3"></i>
+                    </div>
+                    <h3 class="h2 mb-1">@Model.BrojStudenata</h3>
+                    <p class="text-muted mb-0">Studenata</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="icon-circle bg-success-light text-success mb-3 mx-auto">
+                        <i class="fas fa-chalkboard-teacher fs-3"></i>
+                    </div>
+                    <h3 class="h2 mb-1">@Model.BrojProfesora</h3>
+                    <p class="text-muted mb-0">Profesora</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="icon-circle bg-info-light text-info mb-3 mx-auto">
+                        <i class="fas fa-user-tie fs-3"></i>
+                    </div>
+                    <h3 class="h2 mb-1">@Model.BrojAsistenata</h3>
+                    <p class="text-muted mb-0">Asistenata</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="icon-circle bg-warning text-white mb-3 mx-auto">
+                        <i class="fas fa-file-alt fs-3"></i>
+                    </div>
+                    <h3 class="h2 mb-1">@Model.AktivniIspiti</h3>
+                    <p class="text-muted mb-0">Aktivnih ispita</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Studijski programi -->
+<section id="programs" class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="section-title">Studijski programi</h2>
+        <p class="lead text-muted">Odaberite program koji vas zanima i saznajte više</p>
+    </div>
+    <div class="row g-4">
         @foreach (var program in Model.StudijskiProgrami)
         {
-            <div class="col-sm-6 col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title mb-2">@program.Naziv</h5>
-                        <p class="text-muted mb-3 small">Više informacija o studijskom programu.</p>
-                        <a href="@Url.Action("Details", "StudijskiProgrami", new { id = program.Id })"
-                           class="btn btn-outline-primary mt-auto">Pogledaj detalje</a>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden program-card">
+                    <div class="card-img-top bg-dark" style="height: 120px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                    <div class="card-body position-relative">
+                        <div class="program-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="h5 mb-3">@program.Naziv</h3>
+                        <p class="text-muted small mb-4">@((program.Opis ?? "").Length > 100 ? program.Opis.Substring(0, 100) + "..." : program.Opis)</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-primary-light text-primary">@program.TrajanjeUGodinama</span>
+                            <a href="@Url.Action("Details", "StudijskiProgrami", new { id = program.Id })"
+                               class="btn btn-sm btn-outline-primary stretched-link">Detalji</a>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+</section>
 
-    <!-- Obavijesti - Card + Table + Badge + Ikona dugme -->
-    <div class="card shadow-sm mb-5">
-        <div class="card-header bg-white d-flex align-items-center">
-            <h2 class="h5 mb-0">Najnovije obavijesti</h2>
+<!-- Najnovije obavijesti -->
+<section id="news" class="container py-5 bg-light rounded-4 my-5">
+    <div class="text-center mb-5">
+        <h2 class="section-title">Najnovije obavijesti</h2>
+        <p class="lead text-muted">Pratite najnovija dešavanja na fakultetu</p>
+    </div>
+    <div class="row g-4">
+        @foreach (var obavijest in Model.NajnovijeObavijesti.Take(3))
+        {
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm news-card">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @* <span class="badge bg-primary">@obavijest.Kategorija</span> *@
+                            <small class="text-muted">@obavijest.DatumObjave.ToString("dd.MM.yyyy")</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">@obavijest.Naslov</h3>
+                        <p class="text-muted small">@((obavijest.Sadrzaj ?? "").Length > 120 ? obavijest.Sadrzaj.Substring(0, 120) + "..." : obavijest.Sadrzaj)</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pt-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">@obavijest.AutorIme</small>
+                            <a href="@Url.Action("Details", "Obavjestenja", new { id = obavijest.Id })"
+                               class="btn btn-sm btn-outline-primary">Pročitaj više</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Obavjestenja")" class="btn btn-primary px-4">Sve obavijesti</a>
+    </div>
+</section>
+
+<!-- Video sekcija -->
+<section id="video" class="video-section container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h2 class="mb-4">Upoznajte naš fakultet</h2>
+            <p class="lead mb-4">Pogledajte video i saznajte više o našim programima, nastavnicima i studentskom životu.</p>
+            <ul class="list-unstyled">
+                <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Moderna nastavna sredstva</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Iskusni profesori</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Praktična orijentacija</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Studentski projekti</li>
+            </ul>
         </div>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Naslov</th>
-                        <th>Autor</th>
-                        <th>Studijski program</th>
-                        <th style="min-width: 110px; white-space: nowrap;">Datum</th>
-                        <th class="text-center" style="width: 70px;">Detalji</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var obavijest in Model.NajnovijeObavijesti)
-                    {
-                        <tr>
-                            <td class="fw-semibold">@obavijest.Naslov</td>
-                            <td>@obavijest.AutorIme</td>
-                            <td>
-                                @foreach (var program in obavijest.StudijskiProgramNazivi)
-                                {
-                                    <span class="badge bg-secondary me-1 mb-1">@program</span>
-                                }
-                            </td>
-                            <td style="white-space: nowrap;">@obavijest.DatumObjave.ToShortDateString()</td>
-                            <td class="text-center">
-                                <a href="@Url.Action("Details", "Obavjestenja", new { id = obavijest.Id })"
-                                   class="btn btn-link btn-sm px-2" title="Pogledaj detalje" data-bs-toggle="tooltip">
-                                    <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="col-lg-6">
+            <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-lg">
+                <iframe src="https://www.youtube.com/embed/fJhbTdVyZBI" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
+</section>
 
-    <!-- YouTube video - Responsive Bootstrap 5 -->
-    <div class="mt-5 text-center">
-        <h2>Da li želite saznati više o nama?</h2>
-        <p class="mb-4">U ovom videu možete doći do osnovnih informacija o ovom fakultetu.</p>
-        <div class="ratio ratio-16x9 mx-auto" style="max-width: 600px;">
-            <iframe src="https://www.youtube.com/embed/fJhbTdVyZBI" allowfullscreen></iframe>
+<!-- Newsletter -->
+<section class="bg-primary text-white py-5">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="mb-4">Prijavite se na naš newsletter</h2>
+                <p class="lead mb-4">Budite u toku sa najnovijim obavijestima, predavanjima i događajima.</p>
+                <form class="row g-2 justify-content-center">
+                    <div class="col-md-8">
+                        <input type="email" class="form-control form-control-lg" placeholder="Vaša email adresa">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-light btn-lg w-100">Prijavi se</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 @await Html.PartialAsync("_FooterPartial")
 
@@ -91,5 +196,102 @@
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
+
+        // Smooth scroll za linkove
+        document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    event.preventDefault();
+                    window.scrollTo({ top: target.offsetTop - 80, behavior: "smooth" });
+                }
+            });
+        });
     </script>
+
+    <script>
+        // Smooth scroll samo za hash linkove koji vode na sekcije na ovoj stranici
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+            .section-title:after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 3px;
+                background: linear-gradient(to right, #667eea, #764ba2);
+            }
+
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .program-card {
+            transition: transform 0.3s;
+        }
+
+            .program-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .program-icon {
+            position: absolute;
+            top: -25px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .news-card {
+            transition: all 0.3s;
+        }
+
+            .news-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+        .rounded-4 {
+            border-radius: 16px;
+        }
+    </style>
 }

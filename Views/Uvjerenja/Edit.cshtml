@@ -1,42 +1,51 @@
 ﻿@model StudentHub.Models.Uvjerenje
 
 @{
-    ViewData["Title"] = "Izmjena uvjerenja";
+    ViewData["Title"] = "Uredi uvjerenje";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0"><i class="fas fa-edit me-2"></i>@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Id" />
 
-<h4>Uvjerenje</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="StudentId" class="control-label"></label>
-                <select asp-for="StudentId" class="form-control" asp-items="ViewBag.Studenti" required></select>
-                <span asp-validation-for="StudentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VrstaUvjerenja" class="control-label">Vrsta uvjerenja</label>
-                <select asp-for="VrstaUvjerenja" class="form-control" asp-items="Html.GetEnumSelectList<VrstaUvjerenja>()"></select>
-                <span asp-validation-for="VrstaUvjerenja" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Namjena" class="control-label">Namjena uvjerenja</label>
-                <input asp-for="Namjena" class="form-control" placeholder="Unesite namjenu uvjerenja" />
-                <span asp-validation-for="Namjena" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Sačuvaj" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-            </div>
-        </form>
+                <div class="mb-3">
+                    <label asp-for="StudentId" class="form-label">Student</label>
+                    <select asp-for="StudentId" class="form-select" asp-items="ViewBag.Studenti" required></select>
+                    <span asp-validation-for="StudentId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="VrstaUvjerenja" class="form-label">Vrsta uvjerenja</label>
+                    <select asp-for="VrstaUvjerenja" class="form-select" asp-items="Html.GetEnumSelectList<VrstaUvjerenja>()"></select>
+                    <span asp-validation-for="VrstaUvjerenja" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Namjena" class="form-label">Namjena</label>
+                    <input asp-for="Namjena" class="form-control" placeholder="Unesite namjenu uvjerenja" />
+                    <span asp-validation-for="Namjena" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-1"></i> Sačuvaj promjene
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Nazad
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

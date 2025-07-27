@@ -1,68 +1,90 @@
 ﻿@model IEnumerable<StudentHub.Models.Raspored>
-
 @{
     ViewData["Title"] = "Rasporedi";
-    var jeSlužba = User.IsInRole("Studentska služba");
+    Layout = "_Layout";
+    bool jeSluzba = User.IsInRole("Studentska služba");
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4"><i class="fas fa-calendar-alt text-primary"></i> Rasporedi po studijskim programima</h2>
-
-    @if (jeSlužba)
-    {
-        <a asp-action="Create" class="btn btn-success mb-3">
-            <i class="fas fa-plus-circle"></i> Dodaj novi raspored
-        </a>
-    }
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-calendar-alt text-primary me-2"></i>@ViewData["Title"]
+        </h2>
+        @if (jeSluzba)
+        {
+            <a asp-action="Create" class="btn btn-success shadow-sm">
+                <i class="fas fa-plus-circle me-1"></i> Dodaj novi raspored
+            </a>
+        }
+    </div>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> Trenutno nema definisanih rasporeda.
+        <div class="alert alert-info shadow-sm">
+            <i class="fas fa-info-circle me-2"></i> Trenutno nema definisanih rasporeda.
         </div>
     }
     else
     {
-        <div class="table-responsive shadow-sm">
-            <table class="table table-hover table-bordered align-middle">
-                <thead class="table-light text-center">
-                    <tr>
-                        <th>📘 Studijski program</th>
-                        <th>🎓 Godina studija</th>
-                        <th>📆 Semestar</th>
-                        <th>📅 Akademska godina</th>
-                        <th>⚙️ Akcije</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var raspored in Model)
-                    {
-                        <tr>
-                            <td>@raspored.StudijskiProgram?.Naziv</td>
-                            <td class="text-center">@raspored.GodinaStudija</td>
-                            <td class="text-center">
-                                @(raspored.Semestar == 1 ? "Zimski" :
-                                                        raspored.Semestar == 2 ? "Ljetni" : $"Semestar {raspored.Semestar}")
-                    </td>
-                    <td class="text-center">@raspored.AkademskaGodina</td>
-                    <td class="text-nowrap text-center">
-                        <a asp-action="Details" asp-route-id="@raspored.Id" class="btn btn-sm btn-outline-primary me-1">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        @if (jeSlužba)
-                                {
-                                    <a asp-action="Edit" asp-route-id="@raspored.Id" class="btn btn-sm btn-outline-warning me-1">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a asp-action="Delete" asp-route-id="@raspored.Id" class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                }
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-table me-2"></i> Tabela rasporeda
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered mb-0 align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th class="no-wrap">📘 Studijski program</th>
+                                <th class="no-wrap">🎓 Godina</th>
+                                <th class="no-wrap">📆 Semestar</th>
+                                <th class="no-wrap">📅 Akademska godina</th>
+                                <th class="no-wrap">⚙️ Akcije</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model)
+                            {
+                                <tr>
+                                    <td>@r.StudijskiProgram?.Naziv</td>
+                                    <td class="text-center no-wrap">@r.GodinaStudija</td>
+                                    <td class="text-center no-wrap">
+                                        @(r.Semestar == 1 ? "Zimski" :
+                                                                        r.Semestar == 2 ? "Ljetni" :
+                                                                        $"Semestar {r.Semestar}")
                             </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                            <td class="text-center no-wrap">@r.AkademskaGodina</td>
+                            <td class="text-center no-wrap">
+                                <div class="d-inline-flex align-items-center gap-1">
+                                    <a asp-action="Details" asp-route-id="@r.Id"
+                                       class="btn btn-sm btn-outline-primary" title="Detalji">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    @if (jeSluzba)
+                                            {
+                                                <a asp-action="Edit" asp-route-id="@r.Id"
+                                                   class="btn btn-sm btn-outline-warning" title="Izmijeni">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@r.Id"
+                                                   class="btn btn-sm btn-outline-danger" title="Obriši">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     }
+
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Povratak na početnu
+        </a>
+    </div>
 </div>

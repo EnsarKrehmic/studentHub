@@ -2,93 +2,84 @@
 @using StudentHub.Models
 @{
     ViewData["Title"] = "Nastavni planovi po studijskim programima";
+    Layout = "_Layout";
     var predmeti = ViewBag.Predmeti as List<Predmet>;
+    bool jeSluzba = User.IsInRole("Studentska služba");
 }
 
-<h2 class="mb-4">@ViewData["Title"]</h2>
-
-@if (User.IsInRole("Studentska služba"))
-{
-    <a asp-action="Create" class="btn btn-success mb-3">
-        <i class="fas fa-plus-circle"></i> Kreiraj novi nastavni plan
-    </a>
-}
-
-<div class="container">
-    @if (Model != null && Model.Any())
-    {
-        var studijskiProgrami = Model.GroupBy(np => np.StudijskiProgram).OrderBy(grupa => grupa.Key.Naziv);
-
-        foreach (var grupa in studijskiProgrami)
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-book-open text-primary me-2"></i>@ViewData["Title"]
+        </h2>
+        @if (jeSluzba)
         {
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <div>
-                        <h3 class="mb-0">@grupa.Key.Naziv</h3>
-                        <span class="badge bg-light text-dark ms-2">@grupa.Key.TrajanjeUGodinama godina studija</span>
+            <a asp-action="Create" class="btn btn-success shadow-sm">
+                <i class="fas fa-plus-circle me-1"></i> Kreiraj novi nastavni plan
+            </a>
+        }
+    </div>
+
+    @if (Model?.Any() != true)
+    {
+        <div class="alert alert-warning text-center">
+            <strong>Nema dostupnih nastavnih planova!</strong>
+        </div>
+    }
+    else
+    {
+        var poProgramu = Model
+        .GroupBy(np => np.StudijskiProgram)
+        .OrderBy(g => g.Key.Naziv);
+
+        @foreach (var grupa in poProgramu)
+        {
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                        <div>
+                            <h3 class="mb-0">@grupa.Key.Naziv</h3>
+                            <span class="badge bg-light text-dark ms-2">@grupa.Key.TrajanjeUGodinama godina</span>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <p><strong>Opis programa:</strong> @grupa.Key.Opis</p>
 
-                    <h5 class="mt-3">Nastavni planovi:</h5>
+                    <h5 class="mt-4 mb-3">Nastavni planovi:</h5>
                     <ul class="list-group">
-                        @foreach (var nastavniPlan in grupa.OrderBy(np => np.GodinaStudija))
+                        @foreach (var np in grupa.OrderBy(x => x.GodinaStudija))
                         {
-                            var povezaniPredmeti = predmeti?.Where(p => p.NastavniPlanId == nastavniPlan.Id).ToList() ?? new List<Predmet>();
-                            var brojPredmeta = povezaniPredmeti.Count;
-                            var brojIzbornih = povezaniPredmeti.Count(p => p.TipPredmeta == TipPredmeta.Izborni);
-                            var brojObaveznih = brojPredmeta - brojIzbornih;
-                            var ukupnoEcts = povezaniPredmeti.Sum(p => p.ECTS);
+                            var povezani = predmeti?.Where(p => p.NastavniPlanId == np.Id).ToList() ?? new List<Predmet>();
+                            var ukupno = povezani.Count;
+                            var izborni = povezani.Count(p => p.TipPredmeta == TipPredmeta.Izborni);
+                            var obavezni = ukupno - izborni;
+                            var ectsUk = povezani.Sum(p => p.ECTS);
 
                             <li class="list-group-item">
-                                <h6>
-                                    <i class="fas fa-calendar-alt"></i> @nastavniPlan.GodinaStudija. godina
-                                    <span class="badge bg-info text-dark ms-2">Predmeta: @brojPredmeta</span>
-                                    <span class="badge bg-success ms-1">ECTS: @ukupnoEcts</span>
-                                    <span class="badge bg-warning text-dark ms-1">Izbornih: @brojIzbornih</span>
-                                    <span class="badge bg-primary ms-1">Obaveznih: @brojObaveznih</span>
-                                </h6>
-
-                                <div class="d-flex flex-wrap align-items-center mt-2">
-                                    @if (povezaniPredmeti.Any())
-                                    {
-                                        @foreach (var predmet in povezaniPredmeti)
+                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                                    <h6 class="mb-2 mb-md-0">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        @np.GodinaStudija. godina
+                                        <span class="badge bg-info text-dark ms-2">Predmeta: @ukupno</span>
+                                        <span class="badge bg-success ms-1">ECTS: @ectsUk</span>
+                                        <span class="badge bg-warning text-dark ms-1">Izbornih: @izborni</span>
+                                        <span class="badge bg-primary ms-1">Obaveznih: @obavezni</span>
+                                    </h6>
+                                    <div class="mt-3 mt-md-0">
+                                        <a asp-action="Details" asp-route-id="@np.Id" class="btn btn-sm btn-info me-1">
+                                            <i class="fas fa-eye"></i> Detalji
+                                        </a>
+                                        @if (jeSluzba)
                                         {
-                                            var tooltip = predmet.Opis != null && predmet.Opis.Length > 0
-                                            ? predmet.Opis
-                                            : "Nema opisa";
-                                            var klasa = predmet.TipPredmeta == TipPredmeta.Izborni ? "bg-warning text-dark" : "bg-secondary";
-                                            <span class="badge @klasa me-2 mb-2"
-                                                  style="font-size:1em;min-width:120px"
-                                                  title="@tooltip">
-                                                @predmet.Naziv
-                                                @if (predmet.TipPredmeta == TipPredmeta.Izborni)
-                                                {
-                                                    <i class="fas fa-star ms-1"></i>
-                                                }
-                                            </span>
+                                            <a asp-action="Edit" asp-route-id="@np.Id" class="btn btn-sm btn-warning me-1">
+                                                <i class="fas fa-edit"></i> Izmjena
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@np.Id" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash-alt"></i> Brisanje
+                                            </a>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <span class="text-danger">Nema definisanih predmeta.</span>
-                                    }
-                                </div>
-
-                                <div class="mt-3">
-                                    <a asp-action="Details" asp-route-id="@nastavniPlan.Id" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i> Detalji
-                                    </a>
-                                    @if (User.IsInRole("Studentska služba"))
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@nastavniPlan.Id" class="btn btn-sm btn-warning">
-                                            <i class="fas fa-edit"></i> Izmjena
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@nastavniPlan.Id" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash-alt"></i> Brisanje
-                                        </a>
-                                    }
+                                    </div>
                                 </div>
                             </li>
                         }
@@ -97,14 +88,10 @@
             </div>
         }
     }
-    else
-    {
-        <div class="alert alert-warning text-center">
-            <strong>Nema dostupnih nastavnih planova!</strong>
-        </div>
-    }
-</div>
 
-<a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
-    <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
-</a>
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Povratak na početnu stranicu
+        </a>
+    </div>
+</div>

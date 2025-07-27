@@ -3,14 +3,15 @@
     ViewData["Title"] = "Detalji profesora";
 }
 
-<h2 class="mb-4">@ViewData["Title"]</h2>
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-chalkboard-teacher me-2"></i>@ViewData["Title"]</h2>
 
-<div class="container">
     <div class="row">
+        <!-- Podaci o profesoru -->
         <div class="col-md-6">
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h3>Podaci o profesoru</h3>
+                    <i class="fas fa-user me-2"></i>Podaci o profesoru
                 </div>
                 <div class="card-body">
                     <dl class="row">
@@ -38,20 +39,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- Studijski programi -->
         <div class="col-md-6">
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-secondary text-white">
-                    <h4>Studijski programi</h4>
+                    <i class="fas fa-graduation-cap me-2"></i>Studijski programi
                 </div>
                 <div class="card-body">
                     @if (Model.StudijskiProgrami.Any())
                     {
-                        <ul class="list-group">
-                            @foreach (var studijskiProgram in Model.StudijskiProgrami)
+                        <ul class="list-group list-group-flush">
+                            @foreach (var sp in Model.StudijskiProgrami)
                             {
                                 <li class="list-group-item">
-                                    <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@studijskiProgram.Id" class="text-decoration-none">
-                                        @studijskiProgram.Naziv
+                                    <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@sp.Id" class="text-decoration-none">
+                                        @sp.Naziv
                                     </a>
                                 </li>
                             }
@@ -66,9 +69,10 @@
         </div>
     </div>
 
+    <!-- Predmeti -->
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h4>Predmeti</h4>
+        <div class="card-header bg-dark text-white">
+            <i class="fas fa-book me-2"></i>Predmeti
         </div>
         <div class="card-body">
             @if (Model.Predmeti.Any())
@@ -77,16 +81,16 @@
                     @foreach (var predmet in Model.Predmeti)
                     {
                         <div class="col-md-4">
-                            <div class="card shadow-sm mb-3">
+                            <div class="card h-100 shadow-sm mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">
                                         <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id" class="text-decoration-none">
                                             @predmet.Naziv
                                         </a>
                                     </h5>
-                                    <p class="card-text"><strong>ECTS:</strong> @predmet.ECTS</p>
-                                    <p class="card-text"><strong>Semestar:</strong> @(predmet.Semestar)</p>
-                                    <p class="card-text"><strong>Opis:</strong> @(string.IsNullOrEmpty(predmet.Opis) ? "Nema opisa." : predmet.Opis)</p>
+                                    <p class="mb-1"><strong>ECTS:</strong> @predmet.ECTS</p>
+                                    <p class="mb-1"><strong>Semestar:</strong> @predmet.Semestar</p>
+                                    <p class="mb-0"><strong>Opis:</strong> @(string.IsNullOrEmpty(predmet.Opis) ? "Nema opisa." : predmet.Opis)</p>
                                 </div>
                             </div>
                         </div>
@@ -99,12 +103,17 @@
             }
         </div>
     </div>
-</div>
 
-<div class="mt-3">
-    @if (User.IsInRole("Studentska služba"))
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Profesor.Id" class="btn btn-warning">Izmjena</a>
-    }
-    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
+    <!-- Akcije -->
+    <div class="d-flex gap-2 mt-3">
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Profesor.Id" class="btn btn-warning">
+                <i class="fas fa-edit me-1"></i> Izmjena
+            </a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Nazad na listu
+        </a>
+    </div>
 </div>

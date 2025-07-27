@@ -1,68 +1,69 @@
 ﻿@model StudentHub.Models.Raspored
-
 @{
     ViewData["Title"] = "Uredi raspored";
-    var programi = ViewBag.StudijskiProgrami as List<StudentHub.Models.StudijskiProgram>;
+    Layout = "_Layout";
+    var programi = ViewBag.StudijskiProgrami as List<StudentHub.Models.StudijskiProgram> 
+                   ?? new List<StudentHub.Models.StudijskiProgram>();
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4"><i class="fas fa-edit text-primary"></i> Uređivanje rasporeda</h2>
-
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger">
-            @Html.ValidationSummary(false, "", new { @class = "mb-0" })
+<div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-edit me-2"></i>@ViewData["Title"]</h4>
         </div>
-    }
+        <div class="card-body">
+            <form asp-action="Edit" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Id" />
 
-    <form asp-action="Edit" method="post" class="needs-validation" novalidate>
-        <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label asp-for="StudijskiProgramId" class="form-label">🎓 Studijski program</label>
+                    <select asp-for="StudijskiProgramId" class="form-select" required>
+                        <option value="">-- Odaberi program --</option>
+                        @foreach (var p in programi)
+                        {
+                            <option value="@p.Id" selected="@(Model.StudijskiProgramId == p.Id ? "selected" : null)">
+                                @p.Naziv
+                            </option>
+                        }
+                    </select>
+                    <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3">
-            <label asp-for="StudijskiProgramId" class="form-label">🎓 Studijski program</label>
-            <select asp-for="StudijskiProgramId" class="form-select" required>
-                <option value="">-- Odaberi program --</option>
-                @foreach (var p in programi)
-                {
-                    <option value="@p.Id" selected="@(Model.StudijskiProgramId == p.Id ? "selected" : null)">
-                        @p.Naziv
-                    </option>
-                }
-            </select>
-            <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+                <div class="mb-3">
+                    <label asp-for="GodinaStudija" class="form-label">📘 Godina studija</label>
+                    <input asp-for="GodinaStudija" class="form-control" required />
+                    <span asp-validation-for="GodinaStudija" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Semestar" class="form-label">📅 Semestar</label>
+                    <select asp-for="Semestar" class="form-select" required>
+                        <option value="">-- Odaberi semestar --</option>
+                        <option value="1" selected="@(Model.Semestar == 1 ? "selected" : null)">Zimski</option>
+                        <option value="2" selected="@(Model.Semestar == 2 ? "selected" : null)">Ljetni</option>
+                    </select>
+                    <span asp-validation-for="Semestar" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="AkademskaGodina" class="form-label">🗓️ Akademska godina</label>
+                    <input asp-for="AkademskaGodina" class="form-control" placeholder="npr. 2024/2025" required />
+                    <span asp-validation-for="AkademskaGodina" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Sačuvaj promjene
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Nazad
+                    </a>
+                </div>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label asp-for="GodinaStudija" class="form-label">📘 Godina studija</label>
-            <input asp-for="GodinaStudija" class="form-control" required />
-            <span asp-validation-for="GodinaStudija" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Semestar" class="form-label">📅 Semestar</label>
-            <select asp-for="Semestar" class="form-select" required>
-                <option value="">-- Odaberi semestar --</option>
-                <option value="1" selected="@(Model.Semestar == 1 ? "selected" : null)">Zimski</option>
-                <option value="2" selected="@(Model.Semestar == 2 ? "selected" : null)">Ljetni</option>
-            </select>
-            <span asp-validation-for="Semestar" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="AkademskaGodina" class="form-label">🗓️ Akademska godina</label>
-            <input asp-for="AkademskaGodina" class="form-control" placeholder="npr. 2024/2025" required />
-            <span asp-validation-for="AkademskaGodina" class="text-danger"></span>
-        </div>
-
-        <div class="mt-4 d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Sačuvaj promjene
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Nazad
-            </a>
-        </div>
-    </form>
+    </div>
 </div>
 
 @section Scripts {

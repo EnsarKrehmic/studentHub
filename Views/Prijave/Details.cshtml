@@ -1,22 +1,30 @@
 ﻿@model StudentHub.Models.Prijava
-
 @{
     ViewData["Title"] = "Detalji prijave";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-file-alt me-2"></i>@ViewData["Title"]
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">Ispit:</dt>
+                <dd class="col-sm-8">@Model.Ispit?.Predmet</dd>
 
-<dl>
-    <dt>Ispit:</dt>
-    <dd>@Model.Ispit?.Predmet</dd>
+                <dt class="col-sm-4">Broj indeksa:</dt>
+                <dd class="col-sm-8">@Model.Student?.BrojIndeksa</dd>
 
-    <dt>Broj indeksa:</dt>
-    <dd>@Model.Student?.BrojIndeksa</dd>
+                <dt class="col-sm-4">Datum prijave:</dt>
+                <dd class="col-sm-8">@Model.DatumPrijave.ToString("dd.MM.yyyy")</dd>
+            </dl>
+        </div>
+    </div>
 
-    <dt>Datum prijave:</dt>
-    <dd>@Model.DatumPrijave.ToShortDateString()</dd>
-</dl>
-
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Nazad na listu
+        </a>
+    </div>
 </div>

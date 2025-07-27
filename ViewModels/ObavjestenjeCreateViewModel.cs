@@ -4,6 +4,9 @@ namespace StudentHub.ViewModels
 {
     public class ObavjestenjeCreateViewModel
     {
+        [Key]
+        public long Id { get; set; }
+
         [Required(ErrorMessage = "Naslov je obavezan.")]
         [MaxLength(200, ErrorMessage = "Naslov ne sme biti duži od 200 karaktera.")]
         public string Naslov { get; set; }

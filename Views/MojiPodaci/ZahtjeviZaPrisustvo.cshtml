@@ -8,128 +8,142 @@
     var brojIsteklih = Model.Count(z => z.NastavnaAktivnost?.KodAktivanDo <= DateTime.Now);
 }
 
-<h2 class="mb-4">📋 Zahtjevi za prisustvo</h2>
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="fas fa-user-check text-primary me-2"></i> @ViewData["Title"]
+    </h2>
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">Trenutno nema zahtjeva za obradu.</div>
-}
-else
-{
-    <div class="mb-3">
-        <span class="badge bg-primary">Ukupno: @ukupno</span>
-        <span class="badge bg-success">Važećih kodova: @brojVazecih</span>
-        <span class="badge bg-danger">Isteklih kodova: @brojIsteklih</span>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <input type="text" class="form-control" id="pretragaStudenta" placeholder="🔍 Pretraži po imenu ili indeksu..." />
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info shadow-sm">
+            <i class="fas fa-info-circle me-2"></i> Trenutno nema zahtjeva za obradu.
         </div>
-        <div class="col-md-4">
-            <select class="form-select" id="filterPredmeta">
-                <option value="">🎓 Filter po predmetu</option>
-                @foreach (var predmet in predmeti)
-                {
-                    <option value="@predmet">@predmet</option>
-                }
-            </select>
+    }
+    else
+    {
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <span class="badge bg-primary w-100 py-2">Ukupno: @ukupno</span>
+            </div>
+            <div class="col-md-3">
+                <span class="badge bg-success w-100 py-2">Važećih: @brojVazecih</span>
+            </div>
+            <div class="col-md-3">
+                <span class="badge bg-danger w-100 py-2">Isteklih: @brojIsteklih</span>
+            </div>
         </div>
-    </div>
 
-    <form method="post" asp-controller="ZahtjeviZaPrisustvo" asp-action="ObradiOznaceneZahtjeve" id="obradaForma">
-        <table class="table table-hover table-bordered" id="tabelaZahtjeva">
-            <thead class="table-light">
-                <tr>
-                    <th><input type="checkbox" id="selectAll" /></th>
-                    <th>Student</th>
-                    <th>Indeks</th>
-                    <th>Predmet</th>
-                    <th>Aktivnost</th>
-                    <th>Kod</th>
-                    <th>Status</th>
-                    <th>Vrijeme</th>
-                    <th>
-                        Napomena
-                        <i class="fas fa-info-circle text-muted" data-bs-toggle="tooltip" title="Opcionalna napomena prilikom odbijanja."></i>
-                    </th>
-                    <th>Akcije</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var zahtjev in Model)
-                {
-                    var kodValidan = zahtjev.NastavnaAktivnost?.KodAktivanDo > DateTime.Now;
-                    var novo = (DateTime.Now - zahtjev.VrijemePodnosenja).TotalMinutes <= 60;
+        <div class="card card-body shadow-sm mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="pretragaStudenta" placeholder="🔍 Pretraga po imenu ili indeksu..." />
+                </div>
+                <div class="col-md-6">
+                    <select class="form-select" id="filterPredmeta">
+                        <option value="">🎓 Filter po predmetu</option>
+                        @foreach (var predmet in predmeti)
+                        {
+                            <option value="@predmet">@predmet</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
 
-                    <tr>
-                        <td><input type="checkbox" name="oznaceniZahtjevi" value="@zahtjev.Id" /></td>
-                        <td>@zahtjev.Student.Ime @zahtjev.Student.Prezime</td>
-                        <td>@zahtjev.Student.BrojIndeksa</td>
-                        <td>@zahtjev.NastavnaAktivnost?.Predmet?.Naziv</td>
-                        <td>@zahtjev.NastavnaAktivnost?.Naziv</td>
-                        <td><code>@zahtjev.KodUnesen</code></td>
-                        <td>
-                            <span class="badge @(kodValidan ? "bg-success" : "bg-danger")">
-                                @(kodValidan ? "Važeći" : "Istekao")
-                            </span>
-                            @if (novo)
-                            {
-                                <span class="badge bg-info text-dark ms-1">Novo</span>
-                            }
-                        </td>
-                        <td>@zahtjev.VrijemePodnosenja.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>
-                            <input type="text" class="form-control" name="napomena_@zahtjev.Id" placeholder="Npr. kasni unos" />
-                        </td>
-                        <td class="text-nowrap">
-                            <form asp-controller="NastavneAktivnosti" asp-action="PotvrdiPrisustvoStudentu"
-                                  asp-route-zahtjevId="@zahtjev.Id" method="post" class="d-inline">
-                                @Html.AntiForgeryToken()
-                                <button class="btn btn-sm btn-success" title="Potvrdi">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                            </form>
-                            <form asp-controller="NastavneAktivnosti" asp-action="OdbijPrisustvoStudentu"
-                                  asp-route-zahtjevId="@zahtjev.Id" method="post" class="d-inline">
-                                @Html.AntiForgeryToken()
-                                <button class="btn btn-sm btn-outline-danger" title="Odbij">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <form method="post" asp-controller="ZahtjeviZaPrisustvo" asp-action="ObradiOznaceneZahtjeve" id="obradaForma">
+            <div class="table-responsive shadow-sm">
+                <table class="table table-bordered table-hover align-middle" id="tabelaZahtjeva">
+                    <thead class="table-light">
+                        <tr class="text-center">
+                            <th><input type="checkbox" id="selectAll" /></th>
+                            <th>Student</th>
+                            <th>Indeks</th>
+                            <th>Predmet</th>
+                            <th>Aktivnost</th>
+                            <th>Kod</th>
+                            <th>Status</th>
+                            <th>Vrijeme</th>
+                            <th>Napomena</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var zahtjev in Model)
+                        {
+                            var kodValidan = zahtjev.NastavnaAktivnost?.KodAktivanDo > DateTime.Now;
+                            var novo = (DateTime.Now - zahtjev.VrijemePodnosenja).TotalMinutes <= 60;
 
-        <button type="submit" class="btn btn-outline-primary mt-2">
-            <i class="fas fa-check-double"></i> Obradi označene zahtjeve
-        </button>
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" name="oznaceniZahtjevi" value="@zahtjev.Id" />
+                                </td>
+                                <td>@zahtjev.Student.Ime @zahtjev.Student.Prezime</td>
+                                <td>@zahtjev.Student.BrojIndeksa</td>
+                                <td>@zahtjev.NastavnaAktivnost?.Predmet?.Naziv</td>
+                                <td>@zahtjev.NastavnaAktivnost?.Naziv</td>
+                                <td><code>@zahtjev.KodUnesen</code></td>
+                                <td class="text-center">
+                                    <span class="badge @(kodValidan ? "bg-success" : "bg-danger")">
+                                        @(kodValidan ? "Važeći" : "Istekao")
+                                    </span>
+                                    @if (novo)
+                                    {
+                                        <span class="badge bg-info text-dark ms-1">Novo</span>
+                                    }
+                                </td>
+                                <td class="text-nowrap">@zahtjev.VrijemePodnosenja.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" name="napomena_@zahtjev.Id" placeholder="Npr. kasni unos" />
+                                </td>
+                                <td class="text-center">
+                                    <form asp-controller="NastavneAktivnosti" asp-action="PotvrdiPrisustvoStudentu"
+                                          asp-route-zahtjevId="@zahtjev.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-sm btn-success" title="Potvrdi">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                    <form asp-controller="NastavneAktivnosti" asp-action="OdbijPrisustvoStudentu"
+                                          asp-route-zahtjevId="@zahtjev.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-sm btn-outline-danger" title="Odbij">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
 
-        <a asp-controller="MojiPodaci" asp-action="Index" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Nazad na Moje podatke
-        </a>
-    </form>
-}
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-check-double me-1"></i> Obradi označene
+                </button>
+                <a asp-controller="MojiPodaci" asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Nazad na Moje podatke
+                </a>
+            </div>
+        </form>
+    }
+</div>
 
 @section Scripts {
     <script>
-        // Checkbox select/deselect all
         document.getElementById('selectAll').addEventListener('click', function () {
             document.querySelectorAll('input[name="oznaceniZahtjevi"]').forEach(cb => cb.checked = this.checked);
         });
 
-        // Filter tabela po studentu i predmetu
         document.getElementById('pretragaStudenta').addEventListener('input', filterTabela);
         document.getElementById('filterPredmeta').addEventListener('change', filterTabela);
 
@@ -143,27 +157,17 @@ else
             });
         }
 
-        // Popravka za slanje liste checkboxova pri submitu i validacija
         document.getElementById('obradaForma').addEventListener('submit', function (e) {
-            const checkboxes = document.querySelectorAll('input[name="oznaceniZahtjevi"]');
-            let checkedValues = [];
-
-            checkboxes.forEach(cb => {
-                if (cb.checked) {
-                    checkedValues.push(cb.value);
-                }
-            });
-
-            if (checkedValues.length === 0) {
+            const checked = Array.from(document.querySelectorAll('input[name="oznaceniZahtjevi"]:checked'));
+            if (checked.length === 0) {
                 e.preventDefault();
                 alert("Niste označili nijedan zahtjev za obradu.");
             }
         });
 
-        // Bootstrap tooltip inicijalizacija
         document.addEventListener("DOMContentLoaded", () => {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+            [...document.querySelectorAll('[data-bs-toggle="tooltip"]')]
+                .forEach(el => new bootstrap.Tooltip(el));
         });
     </script>
 }

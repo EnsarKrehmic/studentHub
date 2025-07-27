@@ -1,23 +1,41 @@
 ﻿@model StudentHub.Models.NastavniPlan
+@using StudentHub.Models
+@using System.Linq
 
 @{
     ViewData["Title"] = "Detalji nastavnog plana";
-    var predmeti = ViewBag.Predmeti as List<StudentHub.Models.Predmet>;
+    var predmeti = ViewBag.Predmeti as List<Predmet>;
 }
 
-<h2 class="mb-4">@ViewData["Title"]</h2>
-
 <div class="container mt-4">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">
-                Nastavni plan - @Model.StudijskiProgram.Naziv, @Model.GodinaStudija. godina
-            </h3>
+    <!-- Header & navigacija -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0"><i class="fas fa-book me-2"></i>@ViewData["Title"]</h2>
+        <div class="btn-group">
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Nazad na planove
+            </a>
+            @if (User.IsInRole("Studentska služba"))
+            {
+                <a asp-action="Edit"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-outline-warning btn-sm">
+                    <i class="fas fa-edit me-1"></i> Uredi plan
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Info kartica -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Osnovne informacije</h5>
         </div>
         <div class="card-body">
             <dl class="row mb-0">
                 <dt class="col-sm-4">Studijski program:</dt>
-                <dd class="col-sm-8">@Model.StudijskiProgram.Naziv</dd>
+                <dd class="col-sm-8 fw-bold">@Model.StudijskiProgram.Naziv</dd>
+
                 <dt class="col-sm-4">Godina studija:</dt>
                 <dd class="col-sm-8">@Model.GodinaStudija</dd>
             </dl>
@@ -26,129 +44,117 @@
 
     @if (predmeti != null && predmeti.Any())
     {
-        // Grupiši predmete po semestru
-        var predmetiPoSemestrima = predmeti.GroupBy(p => p.Semestar).OrderBy(g => g.Key);
+        var predmetiPoSemestrima = predmeti
+        .GroupBy(p => p.Semestar)
+        .OrderBy(g => g.Key);
 
-        @foreach (var semestarGroup in predmetiPoSemestrima)
+        @foreach (var sem in predmetiPoSemestrima)
         {
-            var semestar = semestarGroup.Key;
-            var semestarPredmeti = semestarGroup.ToList();
+            var lista = sem.ToList();
+            var ukupno = lista.Count;
+            var izborni = lista.Count(p => p.TipPredmeta == TipPredmeta.Izborni);
+            var ects = lista.Sum(p => p.ECTS);
 
-            // Sumarni podaci
-            var brojPredmeta = semestarPredmeti.Count;
-            var brojIzbornih = semestarPredmeti.Count(p => p.TipPredmeta == TipPredmeta.Izborni);
-            var ukupnoEcts = semestarPredmeti.Sum(p => p.ECTS);
-
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-secondary text-white">
-                    <h4 class="mb-0">
-                        @(semestar == 1 ? "1. (Zimski) semestar" :
-                                        semestar == 2 ? "2. (Ljetni) semestar" :
-                                        $"{semestar}. semestar")
-            </h4>
+                    <h5 class="mb-0">
+                        @(sem.Key == 1 ? "1. (Zimski) semestar" :
+                                        sem.Key == 2 ? "2. (Ljetni) semestar" :
+                                        $"{sem.Key}. semestar")
+            </h5>
         </div>
         <div class="card-body">
             <div class="mb-3">
-                <span class="badge bg-primary me-2">Ukupno predmeta: @brojPredmeta</span>
-                <span class="badge bg-success me-2">ECTS: @ukupnoEcts</span>
-                <span class="badge bg-warning text-dark">Izbornih: @brojIzbornih</span>
+                <span class="badge bg-primary me-2">Predmeta: @ukupno</span>
+                <span class="badge bg-success me-2">ECTS: @ects</span>
+                <span class="badge bg-warning text-dark">Izbornih: @izborni</span>
             </div>
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Naziv predmeta</th>
-                            <th>Tip</th>
-                            <th>ECTS</th>
-                            <th>Sati predavanja</th>
-                            <th>Sati vježbi</th>
-                            <th>Termina sedmično</th>
-                            <th>Profesori</th>
-                            <th>Asistenti</th>
-                            <th>Prag prisustva (P/V/U)</th>
-                            <th>Opis</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var predmet in semestarPredmeti)
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Naziv</th>
+                                    <th>Tip</th>
+                                    <th>ECTS</th>
+                                    <th>Predavanja</th>
+                                    <th>Vježbe</th>
+                                    <th>Termina</th>
+                                    <th>Profesori</th>
+                                    <th>Asistenti</th>
+                                    <th>Prag (%)</th>
+                                    <th>Opis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        @foreach (var p in lista)
                                 {
-                                    // Oznaci izborne vizualno (boja ili badge)
-                                    var redKlasa = predmet.TipPredmeta == TipPredmeta.Izborni ? "table-warning" : "";
-                                    <tr class="@redKlasa">
+                                    var kl = p.TipPredmeta == TipPredmeta.Izborni ? "table-warning" : "";
+                                    var predTerm = p.SatiPredavanja > 0 ? Math.Ceiling((decimal)p.SatiPredavanja / 1.5M) : 0;
+                                    var vjezTerm = p.SatiVjezbi > 0 ? Math.Ceiling((decimal)p.SatiVjezbi / 1.5M) : 0;
+                                    <tr class="@kl">
                                         <td>
-                                            <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@predmet.Id">
-                                                @predmet.Naziv
+                                            <a asp-controller="Predmeti"
+                                               asp-action="Details"
+                                               asp-route-id="@p.Id">
+                                                @p.Naziv
                                             </a>
                                         </td>
                                         <td>
-                                            @if (predmet.TipPredmeta == TipPredmeta.Osnovni)
-                                            {
-                                                <span class="badge bg-primary">Osnovni</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-warning text-dark">Izborni</span>
-                                            }
+                                            <span class="badge @(p.TipPredmeta == TipPredmeta.Osnovni ? "bg-primary" : "bg-warning text-dark")">
+                                                @(p.TipPredmeta == TipPredmeta.Osnovni ? "Osnovni" : "Izborni")
+                                            </span>
                                         </td>
-                                        <td>@predmet.ECTS</td>
-                                        <td>@predmet.SatiPredavanja</td>
-                                        <td>@predmet.SatiVjezbi</td>
+                                        <td>@p.ECTS</td>
+                                        <td>@p.SatiPredavanja</td>
+                                        <td>@p.SatiVjezbi</td>
+                                        <td>@predTerm pred. / @vjezTerm vjež.</td>
                                         <td>
-                                            @* Prikaži koliko termina sedmično (zaokruženo na 45min = 1 termin) *@
-                                            @{
-                                                var predavanjaTermina = predmet.SatiPredavanja > 0 ? Math.Ceiling((decimal)predmet.SatiPredavanja / 1.5M) : 0;
-                                                var vjezbiTermina = predmet.SatiVjezbi > 0 ? Math.Ceiling((decimal)predmet.SatiVjezbi / 1.5M) : 0;
-                                            }
-                                            <span>@predavanjaTermina predavanja / @vjezbiTermina vježbi</span>
-                                        </td>
-                                        <td>
-                                            @if (predmet.PredmetProfesori != null && predmet.PredmetProfesori.Any())
+                                            @if (p.PredmetProfesori?.Any() == true)
                                             {
                                                 <ul class="list-unstyled mb-0">
-                                                    @foreach (var pp in predmet.PredmetProfesori)
+                                                    @foreach (var pp in p.PredmetProfesori)
                                                     {
-                                                        <li>
-                                                            @(pp.Profesor != null ? $"{pp.Profesor.Ime} {pp.Profesor.Prezime} ({pp.Profesor.ProfesorTitula})" : "N/A")
-                                                        </li>
+                                                        <li>@pp.Profesor.Ime @pp.Profesor.Prezime</li>
                                                     }
                                                 </ul>
                                             }
                                             else
                                             {
 
-                                                <span class="text-danger">Nema profesora</span>
+                                                <span class="text-muted">–</span>
                                             }
                                         </td>
                                         <td>
-                                            @if (predmet.PredmetAsistenti != null && predmet.PredmetAsistenti.Any())
+                                            @if (p.PredmetAsistenti?.Any() == true)
                                             {
                                                 <ul class="list-unstyled mb-0">
-                                                    @foreach (var pa in predmet.PredmetAsistenti)
+                                                    @foreach (var pa in p.PredmetAsistenti)
                                                     {
-                                                        <li>
-                                                            @(pa.Asistent != null ? $"{pa.Asistent.Ime} {pa.Asistent.Prezime} ({pa.Asistent.AsistentTitula})" : "N/A")
-                                                        </li>
+                                                        <li>@pa.Asistent.Ime @pa.Asistent.Prezime</li>
                                                     }
                                                 </ul>
                                             }
                                             else
                                             {
 
-                                                <span class="text-danger">Nema asistenta</span>
+                                                <span class="text-muted">–</span>
                                             }
-                                        </td>
-                                        <td>
-                                            @($"{predmet.PragPrisustvaPredavanja ?? 70}% / {predmet.PragPrisustvaVjezbe ?? 70}% / {predmet.PragPrisustvaUkupno ?? 70}%")
-                                        </td>
-                                        <td>
-                                            @if (!string.IsNullOrWhiteSpace(predmet.Opis))
+                            </td>
+                            <td>
+                                @($"{p.PragPrisustvaPredavanja ?? 70}%/" +
+                                                                $"{p.PragPrisustvaVjezbe ?? 70}%/" +
+                                                                $"{p.PragPrisustvaUkupno ?? 70}%")
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(p.Opis))
                                             {
-                                                @(predmet.Opis.Length > 50 ? predmet.Opis.Substring(0, 50) + "..." : predmet.Opis)
+                                                @(p.Opis.Length > 60 ? p.Opis[..60] + "…" : p.Opis)
                                             }
                                             else
                                             {
 
-                                                <span class="text-muted">Nema opisa</span>
+                                                <span class="text-muted">– nema opisa –</span>
                                             }
                                         </td>
                                     </tr>
@@ -163,15 +169,23 @@
     else
     {
         <div class="alert alert-warning text-center">
-            <strong>Nema definisanih predmeta za ovaj nastavni plan!</strong>
+            <i class="fas fa-exclamation-circle me-1"></i>
+            Nema predmeta za ovaj nastavni plan.
         </div>
     }
-</div>
 
-<div class="mt-3">
-    @if (User.IsInRole("Studentska služba"))
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Izmjena</a>
-    }
-    <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
+    <!-- Footer dugmad -->
+    <div class="d-flex justify-content-end mt-3">
+        <a asp-action="Index" class="btn btn-secondary btn-sm me-2">
+            <i class="fas fa-arrow-left me-1"></i> Nazad na planove
+        </a>
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning btn-sm">
+                <i class="fas fa-edit me-1"></i> Uredi plan
+            </a>
+        }
+    </div>
 </div>

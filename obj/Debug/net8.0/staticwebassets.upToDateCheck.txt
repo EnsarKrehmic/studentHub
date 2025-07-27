@@ -3,6 +3,7 @@ wwwroot\css\sidebar.css
 wwwroot\css\site.css
 wwwroot\css\support.css
 wwwroot\favicon.ico
+wwwroot\images\hero-image.jpg
 wwwroot\images\profili\6.jpg
 wwwroot\js\accessibility.js
 wwwroot\js\sidebar.js

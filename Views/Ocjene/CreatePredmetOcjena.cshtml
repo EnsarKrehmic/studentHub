@@ -1,57 +1,60 @@
 ﻿@model StudentHub.Models.Ocjena
-
 @{
-    ViewData["Title"] = "Unos ocjene za predmet";
+    ViewData["Title"] = ViewBag.ParentOcjenaId != null ? "Unos parcijalne ocjene" : "Unos ocjene za predmet";
     bool jeParcijalna = ViewBag.ParentOcjenaId != null;
     var noveParcijalne = ViewBag.NoveParcijalne as List<StudentHub.Models.Ocjena>;
 }
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
-
-<div class="container py-4">
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-9">
+        <div class="col-lg-8 col-md-10">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0">
-                        @(jeParcijalna ? "Unos parcijalne ocjene" : "Unos ocjene za predmet")
+                        <i class="fas fa-pencil-alt me-2"></i>@ViewData["Title"]
                     </h3>
                 </div>
                 <div class="card-body">
+
+                    @* Top-level success/error *@
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["Error"]</div>
+                    }
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["Success"]</div>
+                    }
+
+                    @* Parcijalna info *@
                     @if (jeParcijalna)
                     {
                         <div class="alert alert-info">
-                            <strong>Napomena:</strong> Ova ocjena će biti zabilježena kao <em>parcijalna komponenta</em> zaključne ocjene.
+                            <strong>Napomena:</strong> Ova ocjena će biti zabilježena kao <em>parcijalna komponenta</em>.
                         </div>
                     }
-                    @if (!jeParcijalna && noveParcijalne != null && noveParcijalne.Any())
+                    @* Nepovezane parcijalne *@
+                    @if (!jeParcijalna && noveParcijalne?.Any() == true)
                     {
-                        <div class="alert alert-warning mb-3">
-                            <strong>Postoje nepovezane parcijalne ocjene za ovog studenta na ovom predmetu:</strong>
+                        <div class="alert alert-warning">
+                            <strong>Nevezane parcijalne ocjene:</strong>
                             <ul class="mb-0">
                                 @foreach (var parc in noveParcijalne)
                                 {
                                     <li>
                                         <span class="badge bg-info text-dark me-2">@parc.Vrijednost</span>
-                                        <span class="text-muted">(@parc.Komentar)</span>
+                                        <span class="text-muted">@parc.Komentar</span>
                                         @if (parc.DatumUnosa != DateTime.MinValue)
                                         {
-                                            <span class="ms-2">[@parc.DatumUnosa.ToString("dd.MM.yyyy")]</span>
+                                            <span class="ms-2">[@parc.DatumUnosa:dd.MM.yyyy]</span>
                                         }
                                     </li>
                                 }
                             </ul>
-                            <div class="small mt-1 text-muted">Nakon unosa zaključne ocjene, sve ove parcijalne će biti automatski povezane.</div>
+                            <div class="small text-muted">Nakon unosa zaključne ocjene, bit će povezane.</div>
                         </div>
                     }
+
                     <form asp-action="CreatePredmetOcjena" method="post" novalidate>
                         @Html.AntiForgeryToken()
 
@@ -61,50 +64,50 @@
                         <input type="hidden" asp-for="ProfesorId" />
                         @if (jeParcijalna)
                         {
-                            <input type="hidden" asp-for="ParentOcjenaId" value="@ViewBag.ParentOcjenaId" />
+                            <input type="hidden" name="ParentOcjenaId" value="@ViewBag.ParentOcjenaId" />
                         }
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Predmet:</label>
-                            <span class="form-control-plaintext">@ViewBag.PredmetNaziv</span>
+                            <p class="form-control-plaintext">@ViewBag.PredmetNaziv</p>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Student:</label>
-                            <span class="form-control-plaintext">@ViewBag.StudentImePrezime</span>
+                            <p class="form-control-plaintext">@ViewBag.StudentImePrezime</p>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Vrijednost" class="form-label">Ocjena (5–10)</label>
                             <input asp-for="Vrijednost" class="form-control" type="number" min="5" max="10" step="1" />
-                            <span asp-validation-for="Vrijednost" class="text-danger"></span>
+                            <span asp-validation-for="Vrijednost" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="TezinaProcentualno" class="form-label">Težina (%)</label>
                             <input asp-for="TezinaProcentualno" class="form-control" type="number" min="0" max="100" />
-                            <span asp-validation-for="TezinaProcentualno" class="text-danger"></span>
-                            <div class="form-text">Koristi se samo ako se ocjena računa kao dio zaključne ocjene.</div>
+                            <span asp-validation-for="TezinaProcentualno" class="text-danger small"></span>
+                            <div class="form-text">Koristi se samo ako je parcijalni dio zaključne ocjene.</div>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Komentar" class="form-label">Komentar ili opis</label>
-                            <textarea asp-for="Komentar" class="form-control" maxlength="200" placeholder="Opis ocjene..."></textarea>
-                            <span asp-validation-for="Komentar" class="text-danger"></span>
+                            <textarea asp-for="Komentar" class="form-control" rows="3" maxlength="200" placeholder="Opis ocjene..."></textarea>
+                            <span asp-validation-for="Komentar" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="DatumUnosa" class="form-label">Datum unosa</label>
                             <input asp-for="DatumUnosa" class="form-control" type="date" />
-                            <span asp-validation-for="DatumUnosa" class="text-danger"></span>
+                            <span asp-validation-for="DatumUnosa" class="text-danger small"></span>
                         </div>
 
-                        <div class="d-flex gap-2 mt-3">
+                        <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save"></i> Spremi ocjenu
+                                <i class="fas fa-save me-1"></i> Spremi ocjenu
                             </button>
                             <a asp-action="Index" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Nazad
+                                <i class="fas fa-arrow-left me-1"></i> Nazad
                             </a>
                         </div>
                     </form>
@@ -115,7 +118,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

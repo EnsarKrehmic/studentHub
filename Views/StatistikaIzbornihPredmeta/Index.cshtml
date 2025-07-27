@@ -1,64 +1,75 @@
 ﻿@model List<StudentHub.ViewModels.IzborniPredmetStatistikaGroupedViewModel>
-
 @{
     ViewData["Title"] = "Statistika izbornih predmeta";
+    Layout = "_Layout";
 }
 
-<h2 class="mb-4">
-    <i class="fas fa-chart-bar"></i> @ViewData["Title"]
-</h2>
-
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        Trenutno nema podataka o izboru izbornih predmeta.
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-chart-bar me-2"></i>@ViewData["Title"]
+        </h2>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Nazad na akademske podatke
+        </a>
     </div>
-}
-else
-{
-    @foreach (var programGroup in Model)
-    {
-        <div class="card mb-4 shadow-sm border-0">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="fas fa-graduation-cap"></i> @programGroup.StudijskiProgramNaziv</h4>
-            </div>
-            <div class="card-body">
-                @foreach (var godinaGroup in programGroup.GodineStudija)
-                {
-                    <h5 class="mt-3 text-secondary">
-                        <i class="fas fa-calendar-alt"></i> Godina: @godinaGroup.GodinaStudija
-                        <span class="badge badge-info ml-2">
-                            @godinaGroup.Statistika.Count predmet(a)
-                        </span>
-                    </h5>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover table-sm align-middle">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Predmet</th>
-                                    <th>Broj studenata</th>
-                                    <th>Procenat (%)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in godinaGroup.Statistika)
-                                {
-                                    <tr class="@(item.Procenat >= 50 ? "table-success" : item.Procenat >= 30 ? "table-warning" : "")">
-                                        <td>@item.NazivPredmeta</td>
-                                        <td>@item.BrojStudenata</td>
-                                        <td>@item.Procenat.ToString("F2")%</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
-            </div>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Trenutno nema podataka o izboru izbornih predmeta.
         </div>
     }
-}
-
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">
-    <i class="fas fa-arrow-left"></i> Nazad na akademske podatke
-</a>
+    else
+    {
+        @foreach (var programGroup in Model)
+        {
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0 no-wrap">
+                        <i class="fas fa-graduation-cap me-2"></i>@programGroup.StudijskiProgramNaziv
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @foreach (var godinaGroup in programGroup.GodineStudija)
+                    {
+                        <div class="mb-3">
+                            <h5 class="text-secondary no-wrap">
+                                <i class="fas fa-calendar-alt me-1"></i>Godina: @godinaGroup.GodinaStudija
+                                <span class="badge bg-info text-dark ms-2">
+                                    @godinaGroup.Statistika.Count predmet(a)
+                                </span>
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="no-wrap">Predmet</th>
+                                            <th class="text-center no-wrap">Broj studenata</th>
+                                            <th class="text-center no-wrap">Procenat (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in godinaGroup.Statistika)
+                                        {
+                                            var rowClass = item.Procenat >= 50
+                                            ? "table-success"
+                                            : item.Procenat >= 30
+                                            ? "table-warning"
+                                            : "";
+                                            <tr class="@rowClass">
+                                                <td class="no-wrap">@item.NazivPredmeta</td>
+                                                <td class="text-center no-wrap">@item.BrojStudenata</td>
+                                                <td class="text-center no-wrap">@item.Procenat.ToString("F2")%</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudentHub.Data;
 using StudentHub.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace StudentHub.Controllers
 {
@@ -20,36 +21,44 @@ namespace StudentHub.Controllers
             _context = context;
         }
 
-        // Lista upita - student vidi svoje, služba sve
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string status)
         {
-            var aspNetUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var aspNetUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var korisnik = await _context.Korisnici.FirstOrDefaultAsync(k => k.AspNetUserId == aspNetUserId);
 
             bool isSluzba = korisnik.Uloga == Uloga.StudentskaSluzba;
-            var upiti = isSluzba
-                ? await _context.PodrskaUpiti.Include(u => u.Korisnik).OrderByDescending(u => u.DatumKreiranja).ToListAsync()
-                : await _context.PodrskaUpiti.Include(u => u.Korisnik)
-                    .Where(u => u.KorisnikId == korisnik.Id)
-                    .OrderByDescending(u => u.DatumKreiranja)
-                    .ToListAsync();
+            IQueryable<PodrskaUpit> query = _context.PodrskaUpiti.Include(u => u.Korisnik);
 
+            if (!isSluzba)
+                query = query.Where(u => u.KorisnikId == korisnik.Id);
+
+            if (!string.IsNullOrEmpty(status) && Enum.TryParse<UpitStatus>(status, out var parsedStatus))
+                query = query.Where(u => u.Status == parsedStatus);
+
+            var upiti = await query.OrderByDescending(u => u.DatumKreiranja).ToListAsync();
             return View(upiti);
         }
 
         // Prikaz detalja jednog upita
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> Details(int id)
         {
-            var upit = await _context.PodrskaUpiti.Include(u => u.Korisnik).FirstOrDefaultAsync(u => u.Id == id);
-            if (upit == null)
-                return NotFound();
+            var upit = await _context.PodrskaUpiti
+                             .Include(u => u.Korisnik)
+                             .FirstOrDefaultAsync(u => u.Id == id);
+            if (upit == null) return NotFound();
 
-            var aspNetUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            var korisnik = await _context.Korisnici.FirstOrDefaultAsync(k => k.AspNetUserId == aspNetUserId);
+            var aspNetUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var korisnik = await _context.Korisnici
+                                      .FirstOrDefaultAsync(k => k.AspNetUserId == aspNetUserId);
+            if (korisnik == null) return Forbid();
 
-            if (upit.KorisnikId != korisnik.Id && korisnik.Uloga != Uloga.StudentskaSluzba)
+            var isAutor = upit.KorisnikId == korisnik.Id;
+            var isSluzba = korisnik.Uloga == Uloga.StudentskaSluzba;
+            // ako niste autor i niste služba, zabranjujemo
+            if (!isAutor && !isSluzba)
                 return Forbid();
 
             return View(upit);
@@ -66,21 +75,22 @@ namespace StudentHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PodrskaUpit upit)
         {
-            ModelState.Remove("Korisnik");
-            if (ModelState.IsValid)
-            {
-                var aspNetUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-                var korisnik = await _context.Korisnici.FirstOrDefaultAsync(k => k.AspNetUserId == aspNetUserId);
+            ModelState.Remove(nameof(upit.Korisnik));
+            if (!ModelState.IsValid)
+                return View(upit);
 
-                upit.KorisnikId = korisnik.Id;
-                upit.DatumKreiranja = DateTime.Now;
-                upit.Status = UpitStatus.Podnesen;
+            var aspNetUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var korisnik = await _context.Korisnici
+                .FirstOrDefaultAsync(k => k.AspNetUserId == aspNetUserId);
 
-                _context.Add(upit);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(upit);
+            upit.KorisnikId = korisnik!.Id;
+            upit.DatumKreiranja = DateTime.Now;
+            upit.Status = UpitStatus.Podnesen;
+
+            _context.Add(upit);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // Uređivanje upita (student dok je status Podnesen)
@@ -206,7 +216,6 @@ namespace StudentHub.Controllers
         }
 
         // DELETE akcija
-        [Authorize(Roles = "Studentska služba")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -216,7 +225,6 @@ namespace StudentHub.Controllers
             return View(upit);
         }
 
-        [Authorize(Roles = "Studentska služba")]
         [HttpPost("{id}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

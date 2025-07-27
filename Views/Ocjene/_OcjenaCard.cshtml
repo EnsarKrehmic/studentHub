@@ -2,75 +2,110 @@
 
 <div class="col-md-4 mb-4">
     <div class="card shadow-sm h-100">
-        <div class="card-header bg-dark text-white">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
-                <a asp-controller="Predmeti" asp-action="Details" asp-route-id="@Model.PredmetId" class="text-white text-decoration-none">
-                    @Model.PredmetNaziv
+                <a asp-controller="Predmeti"
+                   asp-action="Details"
+                   asp-route-id="@Model.PredmetId"
+                   class="text-white text-decoration-none">
+                    <i class="fas fa-book-open me-1"></i>@Model.PredmetNaziv
                 </a>
             </h5>
+            @if (User.IsInRole("Profesor"))
+            {
+                <div class="btn-group btn-sm">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-light">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-light">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            }
         </div>
-        <div class="card-body">
+
+        <div class="card-body d-flex flex-column">
+
+            @* Parcijalna ocjena info *@
             @if (Model.ParentOcjenaId.HasValue)
             {
-                <div class="alert alert-info mb-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="fas fa-stream"></i>
-                        <div>
-                            <h6 class="mb-1">Parcijalna ocjena</h6>
-                            <small>
-                                <strong>Glavna ocjena:</strong>
-                                <a asp-action="Details" asp-route-id="@Model.ParentOcjenaId" class="text-decoration-underline">
-                                    @Model.ParentNaziv
-                                </a>
-                            </small>
-                        </div>
+                <div class="alert alert-info mb-3 d-flex align-items-center">
+                    <i class="fas fa-stream fa-fw me-2"></i>
+                    <div>
+                        <small class="d-block mb-1">Parcijalna ocjena</small>
+                        <small>
+                            Glavna ocjena:
+                            <a asp-action="Details"
+                               asp-route-id="@Model.ParentOcjenaId"
+                               class="text-decoration-underline">
+                                @Model.ParentNaziv
+                            </a>
+                        </small>
                     </div>
                 </div>
             }
 
-            <ul class="list-group mb-3">
-                <li class="list-group-item">
+            @* Ključni podaci *@
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item py-2">
+                    <i class="fas fa-user-graduate me-2"></i>
                     <strong>Student:</strong> @Model.StudentIme @Model.StudentPrezime
                 </li>
-                <li class="list-group-item">
+                <li class="list-group-item py-2">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>
                     <strong>Profesor:</strong> @Model.ProfesorTitula @Model.ProfesorIme @Model.ProfesorPrezime
                 </li>
-                <li class="list-group-item">
+                <li class="list-group-item py-2">
+                    <i class="fas fa-star me-2"></i>
                     <strong>Ocjena:</strong>
-                    <span class="badge @(Model.Vrijednost >= 8 ? "bg-success" : Model.Vrijednost >= 6 ? "bg-warning text-dark" : "bg-danger") fs-6">
+                    <span class="badge
+            @(Model.Vrijednost >= 8
+                                          ? "bg-success"
+                                          : Model.Vrijednost >= 6
+                                            ? "bg-warning text-dark"
+                                            : "bg-danger")
+            ms-1">
                         @Model.Vrijednost
                     </span>
                 </li>
                 @if (Model.PonderisanaVrijednost.HasValue)
                 {
-                    <li class="list-group-item">
-                        <strong>Ponderisana vrijednost:</strong>
+                    <li class="list-group-item py-2">
+                        <i class="fas fa-balance-scale me-2"></i>
+                        <strong>Ponderisana:</strong>
                         <span class="badge bg-info">@Model.PonderisanaVrijednost.Value.ToString("0.00")</span>
                     </li>
                 }
                 @if (!string.IsNullOrWhiteSpace(Model.Komentar))
                 {
-                    <li class="list-group-item">
+                    <li class="list-group-item py-2">
+                        <i class="fas fa-comment-alt me-2"></i>
                         <strong>Komentar:</strong> @Model.Komentar
                     </li>
                 }
                 @if (Model.TezinaProcentualno.HasValue)
                 {
-                    <li class="list-group-item">
+                    <li class="list-group-item py-2">
+                        <i class="fas fa-weight-hanging me-2"></i>
                         <strong>Težina:</strong> @Model.TezinaProcentualno %
                     </li>
                 }
                 @if (Model.DatumDodjele.HasValue)
                 {
-                    <li class="list-group-item">
+                    <li class="list-group-item py-2">
+                        <i class="fas fa-calendar-alt me-2"></i>
                         <strong>Datum unosa:</strong> @Model.DatumDodjele.Value.ToString("dd.MM.yyyy")
                     </li>
                 }
-                <li class="list-group-item">
+                <li class="list-group-item py-2">
+                    <i class="fas fa-graduation-cap me-2"></i>
                     <strong>Studijski program:</strong>
                     @if (Model.StudijskiProgramId > 0)
                     {
-                        <a asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@Model.StudijskiProgramId" class="text-decoration-none">
+                        <a asp-controller="StudijskiProgrami"
+                           asp-action="Details"
+                           asp-route-id="@Model.StudijskiProgramId"
+                           class="text-decoration-none">
                             @Model.StudentStudijskiProgramNaziv
                         </a>
                     }
@@ -81,78 +116,72 @@
                 </li>
             </ul>
 
-            @if (User.IsInRole("Student") && Model.Vrijednost < 6)
-            {
-                <div class="alert alert-danger py-2 px-3">
-                    <i class="fas fa-exclamation-circle"></i> Ova ocjena je ispod prolaznog praga!
-                </div>
-            }
-
-            @if (Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any())
-            {
-                <div class="mb-2">
-                    <hr class="my-2" />
-                    <h6 class="text-muted">Parcijalne ocjene</h6>
-                    <ul class="list-group">
-                        @foreach (var dj in Model.DjelimicneOcjene)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>
-                                    <strong>@dj.Vrijednost</strong>
-                                    @if (!string.IsNullOrWhiteSpace(dj.Komentar))
-                                    {
-                                        <small class="text-muted ms-2">(@dj.Komentar)</small>
-                                    }
-                                </span>
-                                @if (dj.TezinaProcentualno.HasValue)
-                                {
-                                    <span class="badge bg-secondary">@dj.TezinaProcentualno %</span>
-                                }
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }
-
+            @* Rezultati ispita *@
             @if (Model.BodoviSaIspita.Any())
             {
-                <div class="mb-2">
-                    <hr class="my-2" />
-                    <h6 class="text-muted">Rezultati ispita</h6>
-                    <ul class="list-group">
-                        @foreach (var ispit in Model.BodoviSaIspita.OrderBy(i => i.Datum))
-                        {
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>@ispit.IspitNaziv (@ispit.Datum.ToString("dd.MM.yyyy"))</span>
-                                <span class="badge bg-primary">@ispit.Bodovi</span>
-                            </li>
-                        }
-                    </ul>
-                </div>
+                <hr class="my-2" />
+                <h6 class="text-muted mb-2"><i class="fas fa-file-alt me-1"></i> Rezultati ispita</h6>
+                <ul class="list-group list-group-flush mb-3">
+                    @foreach (var ispit in Model.BodoviSaIspita.OrderBy(i => i.Datum))
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                            <span>@ispit.IspitNaziv (@ispit.Datum.ToString("dd.MM.yyyy"))</span>
+                            <span class="badge bg-primary">@ispit.Bodovi</span>
+                        </li>
+                    }
+                </ul>
             }
 
-            <hr />
-            <h6 class="mb-2">Prisustvo</h6>
-            <ul class="list-group mb-3">
-                <li class="list-group-item">Ukupno: <strong>@Model.ProcenatPrisustvaUkupno.ToString("0.0")%</strong></li>
-                <li class="list-group-item">Predavanja: <strong>@Model.ProcenatPrisustvaPredavanja.ToString("0.0")%</strong></li>
-                <li class="list-group-item">Vježbe: <strong>@Model.ProcenatPrisustvaVjezbi.ToString("0.0")%</strong></li>
+            @* Parcijalne ocjene ako ih ima *@
+            @if (Model.DjelimicneOcjene != null && Model.DjelimicneOcjene.Any())
+            {
+                <hr class="my-2" />
+                <h6 class="text-muted mb-2"><i class="fas fa-layer-group me-1"></i> Parcijalne ocjene</h6>
+                <ul class="list-group list-group-flush mb-3">
+                    @foreach (var dj in Model.DjelimicneOcjene)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                            <span>
+                                <strong>@dj.Vrijednost</strong>
+                                @if (!string.IsNullOrWhiteSpace(dj.Komentar))
+                                {
+                                    <small class="text-muted ms-2">(@dj.Komentar)</small>
+                                }
+                            </span>
+                            @if (dj.TezinaProcentualno.HasValue)
+                            {
+                                <span class="badge bg-secondary">@dj.TezinaProcentualno %</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+
+            @* Prisustvo *@
+            <hr class="my-2" />
+            <h6 class="text-muted mb-2"><i class="fas fa-user-check me-1"></i> Prisustvo</h6>
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item py-2">Ukupno: <strong>@Model.ProcenatPrisustvaUkupno:0.0%</strong></li>
+                <li class="list-group-item py-2">Predavanja: <strong>@Model.ProcenatPrisustvaPredavanja:0.0%</strong></li>
+                <li class="list-group-item py-2">Vježbe: <strong>@Model.ProcenatPrisustvaVjezbi:0.0%</strong></li>
             </ul>
 
-            <div class="d-flex gap-2 justify-content-end mt-2 flex-wrap">
+            @* Gumbi na dnu karte *@
+            <div class="mt-auto d-flex justify-content-end gap-2 flex-wrap">
                 <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info btn-sm">
-                    <i class="fas fa-eye"></i> Detalji
+                    <i class="fas fa-eye me-1"></i> Detalji
                 </a>
                 @if (User.IsInRole("Profesor") || User.IsInRole("Studentska služba"))
                 {
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning btn-sm">
-                        <i class="fas fa-edit"></i> Izmjena
+                        <i class="fas fa-edit me-1"></i> Izmjena
                     </a>
                     <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger btn-sm">
-                        <i class="fas fa-trash-alt"></i> Brisanje
+                        <i class="fas fa-trash-alt me-1"></i> Brisanje
                     </a>
                 }
             </div>
+
         </div>
     </div>
 </div>

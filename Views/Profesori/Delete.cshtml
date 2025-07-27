@@ -2,48 +2,19 @@
 
 @{
     ViewData["Title"] = "Brisanje profesora";
+
+    ViewData["WarningMessage"] = "Da li ste sigurni da želite obrisati ovog profesora?";
+    ViewData["WarningDetails"] = "Ova akcija je nepovratna i trajno će ukloniti sve podatke o profesoru.";
+
+    ViewData["DeleteFields"] = new Dictionary<string, object>
+    {
+        ["Ime"] = Model.Ime,
+        ["Prezime"] = Model.Prezime,
+        ["JMBG"] = Model.JMBG,
+        ["Email"] = Model.Email,
+        ["Titula"] = Model.ProfesorTitula,
+        ["Uloga"] = Model.Uloga
+    };
 }
 
-<div class="card shadow-sm mx-auto" style="max-width: 520px;">
-    <div class="card-body">
-        <h2 class="card-title mb-3">@ViewData["Title"]</h2>
-        <hr />
-        <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
-            <i class="fas fa-exclamation-triangle fa-lg"></i>
-            <div>
-                <strong>Da li ste sigurni da želite obrisati ovog profesora?</strong><br />
-                <span class="small">
-                    Ova akcija je <span class="fw-bold text-danger">nepovratna</span> i trajno će ukloniti sve podatke o profesoru.
-                </span>
-            </div>
-        </div>
-        <dl class="row">
-            <dt class="col-sm-4">Ime:</dt>
-            <dd class="col-sm-8">@Model.Ime</dd>
-
-            <dt class="col-sm-4">Prezime:</dt>
-            <dd class="col-sm-8">@Model.Prezime</dd>
-
-            <dt class="col-sm-4">JMBG:</dt>
-            <dd class="col-sm-8">@Model.JMBG</dd>
-
-            <dt class="col-sm-4">Email:</dt>
-            <dd class="col-sm-8">@Model.Email</dd>
-
-            <dt class="col-sm-4">Titula:</dt>
-            <dd class="col-sm-8">@Model.ProfesorTitula</dd>
-
-            <dt class="col-sm-4">Uloga:</dt>
-            <dd class="col-sm-8">@Model.Uloga</dd>
-        </dl>
-        <form asp-action="Delete" method="post" class="d-flex gap-2">
-            <input type="hidden" asp-for="Id" />
-            <button type="submit" class="btn btn-danger">
-                <i class="fas fa-trash-alt"></i> Obriši
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Odustani
-            </a>
-        </form>
-    </div>
-</div>
+@await Html.PartialAsync("_DeleteCard", Model)

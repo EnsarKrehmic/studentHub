@@ -1,28 +1,14 @@
 ﻿@model StudentHub.Models.BugReport
 @{
     ViewData["Title"] = "Brisanje prijave";
+    ViewData["WarningMessage"] = "Da li ste sigurni da želite obrisati ovu prijavu?";
+    ViewData["WarningDetails"] = null;
+    ViewData["DeleteFields"] = new Dictionary<string, object>
+    {
+        ["Tip prijave"] = Model.Tip == BugTip.Bug ? "Bug" : "Suggestion",
+        ["Naslov"] = Model.Naslov,
+        ["Opis"] = Model.Opis
+    };
 }
-<div class="card shadow-sm mx-auto" style="max-width: 520px;">
-    <div class="card-body">
-        <h2 class="card-title">@ViewData["Title"]</h2>
-        <hr />
-        <p>Da li ste sigurni da želite obrisati ovu prijavu?</p>
-        <dl class="row">
-            <dt class="col-sm-4">Tip prijave:</dt>
-            <dd class="col-sm-8">@((Model.Tip == BugTip.Bug) ? "Greška" : "Prijedlog")</dd>
-            <dt class="col-sm-4">Naslov:</dt>
-            <dd class="col-sm-8">@Model.Naslov</dd>
-            <dt class="col-sm-4">Opis:</dt>
-            <dd class="col-sm-8">@Model.Opis</dd>
-        </dl>
-        <form asp-action="Delete" method="post" class="d-flex gap-2">
-            <input type="hidden" asp-for="Id" />
-            <button type="submit" class="btn btn-danger">
-                <i class="fas fa-trash-alt"></i> Obriši
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Nazad
-            </a>
-        </form>
-    </div>
-</div>
+
+@await Html.PartialAsync("_DeleteCard", Model)

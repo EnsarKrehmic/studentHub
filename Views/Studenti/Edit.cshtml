@@ -1,109 +1,104 @@
 ﻿@model StudentHub.ViewModels.StudentEditViewModel
-
 @{
     ViewData["Title"] = "Uredi podatke studenta";
+    Layout = "_Layout";
 }
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-7">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">@ViewData["Title"]</h3>
-                </div>
-                <div class="card-body">
-                    <form asp-action="Edit" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" asp-for="Id" />
+<div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 700px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-user-edit me-2"></i>@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Id" />
 
-                        <h5 class="mb-3 mt-2">Osnovni podaci</h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label asp-for="JMBG" class="form-label"></label>
-                                <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" maxlength="13" />
-                                <small class="form-text text-muted">Unesite tačno 13 cifara.</small>
-                                <span asp-validation-for="JMBG" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="Ime" class="form-label"></label>
-                                <input asp-for="Ime" class="form-control" placeholder="Unesite ime" maxlength="50" />
-                                <span asp-validation-for="Ime" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="Prezime" class="form-label"></label>
-                                <input asp-for="Prezime" class="form-control" placeholder="Unesite prezime" maxlength="50" />
-                                <span asp-validation-for="Prezime" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="Email" class="form-label"></label>
-                                <input asp-for="Email" class="form-control" placeholder="E-mail" />
-                                <span asp-validation-for="Email" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="BrojIndeksa" class="form-label"></label>
-                                <input asp-for="BrojIndeksa" class="form-control" placeholder="Unesite broj indeksa" maxlength="20" />
-                                <small class="form-text text-muted">Primjer: 2023/001</small>
-                                <span asp-validation-for="BrojIndeksa" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-12">
-                                <label asp-for="PrethodnoObrazovanje" class="form-label"></label>
-                                <input asp-for="PrethodnoObrazovanje" class="form-control" placeholder="Unesite prethodno obrazovanje" maxlength="200" />
-                                <small class="form-text text-muted">Npr. Srednja tehnička škola, gimnazija, itd.</small>
-                                <span asp-validation-for="PrethodnoObrazovanje" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="GodinaStudija" class="form-label"></label>
-                                <input asp-for="GodinaStudija" class="form-control" placeholder="Godina studija (1-6)" />
-                                <span asp-validation-for="GodinaStudija" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="Semestar" class="form-label"></label>
-                                <input asp-for="Semestar" class="form-control" placeholder="Semestar (1-12)" />
-                                <span asp-validation-for="Semestar" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="StudijskiProgramId" class="form-label"></label>
-                                <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgrami"></select>
-                                <small class="form-text text-muted">Odaberite studijski program.</small>
-                                <span asp-validation-for="StudijskiProgramId" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="NastavniPlanId" class="form-label"></label>
-                                <select asp-for="NastavniPlanId" class="form-control" asp-items="ViewBag.NastavniPlanovi"></select>
-                                <small class="form-text text-muted">Odaberite nastavni plan.</small>
-                                <span asp-validation-for="NastavniPlanId" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-12">
-                                <label asp-for="PredmetIds" class="form-label"></label>
-                                <select asp-for="PredmetIds" class="form-control" asp-items="ViewBag.Predmeti" id="PredmetIds" multiple="multiple"></select>
-                                <small class="form-text text-muted">Držite <kbd>Ctrl</kbd> ili <kbd>Cmd</kbd> za višestruki odabir.</small>
-                                <span asp-validation-for="PredmetIds" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="Uloga" class="form-label"></label>
-                                <select asp-for="Uloga" asp-items="ViewBag.Uloge" class="form-control"></select>
-                                <span asp-validation-for="Uloga" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6 d-flex align-items-center mt-2">
-                                <div class="form-check form-switch">
-                                    <input asp-for="IzborIzbornihPredmetaZakljucan" class="form-check-input" type="checkbox" id="IzborIzbornihPredmetaZakljucan" />
-                                    <label class="form-check-label ms-2" asp-for="IzborIzbornihPredmetaZakljucan">
-                                        Zaključaj izbor izbornih predmeta
-                                    </label>
-                                </div>
-                                <span asp-validation-for="IzborIzbornihPredmetaZakljucan" class="text-danger small ms-2"></span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-3 mt-4">
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="fas fa-save"></i> Sačuvaj promjene
-                            </button>
-                            <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-                        </div>
-                    </form>
+                <h5 class="mt-2">Osnovni podaci</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="JMBG" class="form-label"></label>
+                        <input asp-for="JMBG" class="form-control" maxlength="13" />
+                        <span asp-validation-for="JMBG" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="BrojIndeksa" class="form-label"></label>
+                        <input asp-for="BrojIndeksa" class="form-control" maxlength="20" />
+                        <span asp-validation-for="BrojIndeksa" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Ime" class="form-label"></label>
+                        <input asp-for="Ime" class="form-control" maxlength="50" />
+                        <span asp-validation-for="Ime" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Prezime" class="form-label"></label>
+                        <input asp-for="Prezime" class="form-control" maxlength="50" />
+                        <span asp-validation-for="Prezime" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="PrethodnoObrazovanje" class="form-label"></label>
+                        <input asp-for="PrethodnoObrazovanje" class="form-control" maxlength="200" />
+                        <span asp-validation-for="PrethodnoObrazovanje" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
+
+                <h5>Studijski podaci</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label asp-for="GodinaStudija" class="form-label"></label>
+                        <input asp-for="GodinaStudija" class="form-control" />
+                        <span asp-validation-for="GodinaStudija" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Semestar" class="form-label"></label>
+                        <input asp-for="Semestar" class="form-control" />
+                        <span asp-validation-for="Semestar" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="StudijskiProgramId" class="form-label"></label>
+                        <select asp-for="StudijskiProgramId" class="form-select" asp-items="ViewBag.StudijskiProgrami"></select>
+                        <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="NastavniPlanId" class="form-label"></label>
+                        <select asp-for="NastavniPlanId" class="form-select" asp-items="ViewBag.NastavniPlanovi"></select>
+                        <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="PredmetIds" class="form-label"></label>
+                        <select asp-for="PredmetIds" class="form-select" asp-items="ViewBag.Predmeti" multiple></select>
+                        <span asp-validation-for="PredmetIds" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Uloga" class="form-label"></label>
+                        <select asp-for="Uloga" class="form-select" asp-items="ViewBag.Uloge"></select>
+                        <span asp-validation-for="Uloga" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="form-check form-switch">
+                            <input asp-for="IzborIzbornihPredmetaZakljucan" class="form-check-input" />
+                            <label class="form-check-label ms-2" asp-for="IzborIzbornihPredmetaZakljucan"></label>
+                        </div>
+                        <span asp-validation-for="IzborIzbornihPredmetaZakljucan" class="text-danger ms-2"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-save me-1"></i> Sačuvaj promjene
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Nazad
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -111,33 +106,18 @@
 @section Scripts {
     <script>
         document.getElementById('StudijskiProgramId').addEventListener('change', function () {
-            var selectedProgramId = this.value;
-            // Dohvatanje nastavnih planova
-            fetch('/Studenti/GetNastavniPlanovi/' + selectedProgramId)
-                .then(response => response.json())
-                .then(data => {
-                    var nastavniPlanSelect = document.getElementById('NastavniPlanId');
-                    nastavniPlanSelect.innerHTML = '<option value="">-- Odaberite nastavni plan --</option>';
-                    data.forEach(plan => {
-                        var option = document.createElement('option');
-                        option.value = plan.id;
-                        option.text = plan.naziv;
-                        nastavniPlanSelect.appendChild(option);
-                    });
+            var pid = this.value;
+            fetch(`/Studenti/GetNastavniPlanovi/${pid}`)
+                .then(r => r.json()).then(plans => {
+                    var sp = document.getElementById('NastavniPlanId');
+                    sp.innerHTML = '<option value="">-- Odaberite --</option>';
+                    plans.forEach(p => sp.add(new Option(p.naziv, p.id)));
                 });
-
-            // Dohvatanje predmeta na osnovu studijskog programa
-            fetch('/Studenti/GetPredmetiByStudijskiProgram/' + selectedProgramId)
-                .then(response => response.json())
-                .then(data => {
-                    var predmetSelect = document.getElementById('PredmetIds');
-                    predmetSelect.innerHTML = '';
-                    data.forEach(predmet => {
-                        var option = document.createElement('option');
-                        option.value = predmet.id;
-                        option.text = predmet.naziv;
-                        predmetSelect.appendChild(option);
-                    });
+            fetch(`/Studenti/GetPredmetiByStudijskiProgram/${pid}`)
+                .then(r => r.json()).then(preds => {
+                    var pm = document.getElementById('PredmetIds');
+                    pm.innerHTML = '';
+                    preds.forEach(p => pm.add(new Option(p.naziv, p.id)));
                 });
         });
     </script>

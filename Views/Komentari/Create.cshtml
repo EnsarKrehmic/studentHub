@@ -1,16 +1,42 @@
 ﻿@model StudentHub.Models.Komentar
 
-<h2>Dodaj komentar za @ViewBag.NastavnaAktivnostNaziv</h2>
-<form asp-action="Create" method="post">
-    <input type="hidden" asp-for="NastavnaAktivnostId" />
-    <div class="form-group">
-        <label asp-for="Sadrzaj"></label>
-        <textarea asp-for="Sadrzaj" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Sadrzaj" class="text-danger"></span>
+@{
+    ViewData["Title"] = "Dodaj komentar";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@ViewData["Title"] za <em>@ViewBag.NastavnaAktivnostNaziv</em></h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="NastavnaAktivnostId" />
+
+                        <div class="mb-3">
+                            <label asp-for="Sadrzaj" class="form-label"></label>
+                            <textarea asp-for="Sadrzaj" class="form-control" rows="4" placeholder="Unesite komentar..."></textarea>
+                            <span asp-validation-for="Sadrzaj" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-primary px-4">Dodaj komentar</button>
+                            <a asp-controller="NastavneAktivnosti"
+                               asp-action="Details"
+                               asp-route-id="@Model.NastavnaAktivnostId"
+                               class="btn btn-secondary">
+                                Odustani
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Dodaj</button>
-    <a asp-controller="NastavneAktivnosti" asp-action="Details" asp-route-id="@Model.NastavnaAktivnostId" class="btn btn-secondary">Nazad</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

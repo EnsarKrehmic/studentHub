@@ -1,0 +1,45 @@
+﻿@model dynamic
+@{
+    var title = ViewData["Title"] as string;
+    var warning = ViewData["WarningMessage"] as string;
+    var details = ViewData["WarningDetails"] as string;
+    var fields = ViewData["DeleteFields"] as IDictionary<string, object>;
+}
+
+<div class="card shadow-sm mx-auto" style="max-width: 520px;">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0">
+            <i class="fas fa-trash-alt me-2"></i>@title
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-warning d-flex align-items-start gap-2" role="alert">
+            <i class="fas fa-exclamation-triangle fa-lg mt-1"></i>
+            <div>
+                <strong>@warning</strong>
+                @if (!string.IsNullOrEmpty(details))
+                {
+                    <div class="small mt-1">@Html.Raw(details)</div>
+                }
+            </div>
+        </div>
+
+        <dl class="row">
+            @foreach (var kv in fields)
+            {
+                <dt class="col-sm-4">@kv.Key</dt>
+                <dd class="col-sm-8">@Html.Raw(kv.Value)</dd>
+            }
+        </dl>
+
+        <form asp-action="Delete" method="post" class="d-flex gap-2">
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt me-1"></i> Obriši
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Odustani
+            </a>
+        </form>
+    </div>
+</div>

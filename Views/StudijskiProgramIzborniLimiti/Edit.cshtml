@@ -1,56 +1,59 @@
 ﻿@model StudentHub.Models.StudijskiProgramIzborniLimit
-
 @{
-    ViewData["Title"] = "Izmijeni limit";
+    ViewData["Title"] = "Uredi limit izbornih predmeta";
+    Layout = "_Layout";
 }
 
-<h2 class="mb-4">
-    <i class="fas fa-edit"></i> @ViewData["Title"]
-</h2>
+<div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0"><i class="fas fa-edit me-2"></i>@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Id" />
 
-<div class="card shadow-sm border-0">
-    <div class="card-body">
-        <form asp-action="Edit">
-            <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="StudijskiProgramId" class="form-label">Studijski program</label>
+                    <select asp-for="StudijskiProgramId" class="form-select" asp-items="ViewBag.StudijskiProgramId">
+                        <option value="">-- Odaberite program --</option>
+                    </select>
+                    <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
+                </div>
 
-            <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label asp-for="GodinaStudija" class="form-label">Godina studija</label>
+                    <input asp-for="GodinaStudija" type="number" min="1" class="form-control" />
+                    <span asp-validation-for="GodinaStudija" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="StudijskiProgramId" class="control-label"></label>
-                <select asp-for="StudijskiProgramId" class="form-control" asp-items="ViewBag.StudijskiProgramId"></select>
-                <span asp-validation-for="StudijskiProgramId" class="text-danger"></span>
-            </div>
+                <div class="mb-3">
+                    <label asp-for="MinIzborniPredmeti" class="form-label">Min. izbornih predmeta</label>
+                    <input asp-for="MinIzborniPredmeti" type="number" min="0" class="form-control" />
+                    <span asp-validation-for="MinIzborniPredmeti" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="GodinaStudija" class="control-label"></label>
-                <input asp-for="GodinaStudija" class="form-control" />
-                <span asp-validation-for="GodinaStudija" class="text-danger"></span>
-            </div>
+                <div class="mb-3">
+                    <label asp-for="MaxIzborniPredmeti" class="form-label">Max. izbornih predmeta</label>
+                    <input asp-for="MaxIzborniPredmeti" type="number" min="0" class="form-control" />
+                    <span asp-validation-for="MaxIzborniPredmeti" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="MinIzborniPredmeti" class="control-label"></label>
-                <input asp-for="MinIzborniPredmeti" class="form-control" />
-                <span asp-validation-for="MinIzborniPredmeti" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="MaxIzborniPredmeti" class="control-label"></label>
-                <input asp-for="MaxIzborniPredmeti" class="form-control" />
-                <span asp-validation-for="MaxIzborniPredmeti" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary mt-3">
-                <i class="fas fa-save"></i> Sačuvaj promjene
-            </button>
-            <a asp-action="Index" class="btn btn-secondary mt-3">
-                <i class="fas fa-arrow-left"></i> Nazad na listu
-            </a>
-        </form>
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-1"></i> Sačuvaj promjene
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Nazad na listu
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

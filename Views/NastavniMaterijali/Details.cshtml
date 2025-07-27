@@ -2,8 +2,7 @@
 @using System.IO
 
 @{
-    ViewBag.Title = "Detalji materijala";
-
+    ViewData["Title"] = "Detalji materijala";
     string GetIconClass(string ekstenzija) => ekstenzija?.ToLower() switch
     {
         ".pdf" => "far fa-file-pdf text-danger",
@@ -11,70 +10,93 @@
         ".xls" or ".xlsx" => "far fa-file-excel text-success",
         ".ppt" or ".pptx" => "far fa-file-powerpoint text-warning",
         ".jpg" or ".jpeg" or ".png" => "far fa-file-image text-info",
-        _ => "far fa-file"
+        _ => "far fa-file text-muted"
     };
 }
 
-<div class="card shadow-sm">
-    <div class="card-header bg-info text-white">
-        <h4 class="mb-0"><i class="fas fa-file-alt me-2"></i> Detalji nastavnog materijala</h4>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0"><i class="fas fa-file-alt me-2"></i>@ViewData["Title"]</h2>
+        <div>
+            <a asp-controller="NastavneAktivnosti"
+               asp-action="Details"
+               asp-route-id="@Model.NastavnaAktivnostId"
+               class="btn btn-outline-secondary btn-sm me-2">
+                <i class="fas fa-arrow-left me-1"></i> Nazad na aktivnost
+            </a>
+            @if (User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+            {
+                <a asp-action="Edit"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-outline-warning btn-sm">
+                    <i class="fas fa-edit me-1"></i> Uredi
+                </a>
+            }
+        </div>
     </div>
 
-    <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-3">Naziv</dt>
-            <dd class="col-sm-9 fw-bold">@Model.Naziv</dd>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Osnovne informacije</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Naziv</dt>
+                <dd class="col-sm-9 fw-bold">@Model.Naziv</dd>
 
-            <dt class="col-sm-3">Opis</dt>
-            <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.Opis) ? Model.Opis : "-")</dd>
+                <dt class="col-sm-3">Opis</dt>
+                <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.Opis) ? Model.Opis : "<em class=\"text-muted\">– nema opisa –</em>")</dd>
 
-            <dt class="col-sm-3">Fajlovi</dt>
-            <dd class="col-sm-9">
-                @if (Model.Fajlovi != null && Model.Fajlovi.Any())
-                {
-                    <ul class="list-group">
-                        @foreach (var fajl in Model.Fajlovi)
-                        {
-                            var fileName = @System.IO.Path.GetFileName(fajl.PutanjaDoFajla);
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <i class="@GetIconClass(fajl.TipFajla) me-2"></i>
-                                    <span class="text-truncate" style="max-width: 300px;">@fileName</span>
-                                </div>
-                                <a href="@Url.Action("Download", "NastavniMaterijali", new { id = fajl.Id })"
-                                   class="btn btn-outline-primary btn-sm"
-                                   data-bs-toggle="tooltip"
-                                   data-bs-placement="top"
-                                   title="Preuzmi fajl">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <span class="text-muted fst-italic">Nema dodanih fajlova.</span>
-                }
-            </dd>
-        </dl>
-    </div>
-
-    <div class="card-footer text-end">
-        <a asp-action="Index"
-           asp-route-nastavnaAktivnostId="@Model.NastavnaAktivnostId"
-           class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i> Nazad
-        </a>
+                <dt class="col-sm-3 align-self-start">Fajlovi</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Fajlovi?.Any() == true)
+                    {
+                        <ul class="list-group">
+                            @foreach (var fajl in Model.Fajlovi)
+                            {
+                                var fileName = @System.IO.Path.GetFileName(fajl.PutanjaDoFajla);
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <i class="@GetIconClass(fajl.TipFajla) me-2"></i>
+                                        <span class="text-truncate" style="max-width:280px;">@fileName</span>
+                                    </div>
+                                    <a asp-controller="NastavniMaterijali"
+                                       asp-action="Download"
+                                       asp-route-id="@fajl.Id"
+                                       class="btn btn-outline-light btn-sm"
+                                       data-bs-toggle="tooltip"
+                                       title="Preuzmi fajl">
+                                        <i class="fas fa-download text-primary"></i>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle me-1"></i> Nema dodanih fajlova.
+                        </div>
+                    }
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Index"
+               asp-route-nastavnaAktivnostId="@Model.NastavnaAktivnostId"
+               class="btn btn-secondary">
+                <i class="fas fa-list me-1"></i> Sve materijale
+            </a>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // Bootstrap tooltip init
-        document.addEventListener('DOMContentLoaded', function () {
-            const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            tooltips.forEach(t => new bootstrap.Tooltip(t));
+        document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el =>
+            new bootstrap.Tooltip(el)
+          );
         });
     </script>
 }

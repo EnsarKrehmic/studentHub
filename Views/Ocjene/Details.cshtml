@@ -5,114 +5,111 @@
     var jeGlavna = Model.ParentOcjenaId == null && Model.Tip == "Predmet";
 }
 
-<div class="container my-4">
-    <div class="card shadow-lg mb-4">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0"><i class="fas fa-award me-2"></i> @Model.PredmetNaziv</h3>
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fas fa-award me-2"></i> Detalji ocjene</h4>
+            <div class="btn-group">
+                @if (User.IsInRole("Profesor"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id"
+                       class="btn btn-danger btn-sm">
+                        <i class="fas fa-edit me-1"></i> Uredi
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id"
+                       class="btn btn-warning btn-sm">
+                        <i class="fas fa-trash-alt me-1"></i> Obriši
+                    </a>
+                }
+                <a asp-action="Index" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Nazad na listu
+                </a>
+            </div>
         </div>
         <div class="card-body">
-            @* Ako je parcijalna ocjena *@
+
+            @* Ako je parcijalna ocjena, pokaži info o glavnoj ocjeni *@
             @if (!jeGlavna && Model.ParentOcjena != null)
             {
-                <div class="alert alert-info d-flex justify-content-between align-items-center mb-4">
+                <div class="alert alert-info mb-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="mb-2">
-                            <i class="fas fa-link me-1"></i> Ova ocjena je dio zaključne ocjene
-                        </h5>
-                        <p class="mb-0">
-                            <strong>Glavna ocjena:</strong>
-                            <span class="badge bg-primary fs-6">@Model.ParentOcjena.Vrijednost</span>
+                        <h5 class="mb-1"><i class="fas fa-link me-1"></i> Dio zaključne ocjene</h5>
+                        <small>
+                            <strong>Zaključna ocjena:</strong>
+                            <span class="badge bg-primary">@Model.ParentOcjena.Vrijednost</span>
                             <span class="ms-2 text-secondary">@Model.ParentOcjena.Komentar</span>
-                        </p>
+                        </small>
                     </div>
-                    @if (User.IsInRole("Profesor"))
-                    {
-                        <div class="d-flex gap-2">
-                            <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@Model.ParentOcjena.Id" class="btn btn-outline-secondary btn-sm" title="Detalji">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a asp-controller="Ocjene" asp-action="Edit" asp-route-id="@Model.ParentOcjena.Id" class="btn btn-outline-warning btn-sm" title="Izmijeni">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@Model.ParentOcjena.Id" class="btn btn-outline-danger btn-sm" title="Obriši">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                        </div>
-                    }
+                    <div class="btn-group">
+                        <a asp-action="Details" asp-route-id="@Model.ParentOcjena.Id"
+                           class="btn btn-sm btn-outline-secondary" title="Detalji">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
                 </div>
             }
 
-            <div class="row gy-4">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <h5 class="text-primary fw-bold mb-2"><i class="fas fa-user-graduate me-1"></i> Student</h5>
-                        <p class="mb-1"><strong>Ime i prezime:</strong> @Model.StudentIme @Model.StudentPrezime</p>
-                        <p class="mb-1"><strong>Broj indeksa:</strong> @Model.StudentBrojIndeksa</p>
-                        <p class="mb-1"><strong>Studijski program:</strong> @Model.StudentStudijskiProgramNaziv</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <h5 class="text-primary fw-bold mb-2"><i class="fas fa-chalkboard-teacher me-1"></i> Profesor</h5>
-                        <p class="mb-1"><strong>Titula:</strong> @Model.ProfesorTitula</p>
-                        <p class="mb-1"><strong>Ime i prezime:</strong> @Model.ProfesorIme @Model.ProfesorPrezime</p>
-                    </div>
-                </div>
-            </div>
+            @* Podaci o studentu i profesoru *@
+            <dl class="row mb-4">
+                <dt class="col-sm-3"><i class="fas fa-user-graduate me-1"></i> Student</dt>
+                <dd class="col-sm-9">
+                    @Model.StudentIme @Model.StudentPrezime (@Model.StudentBrojIndeksa)<br />
+                    <small class="text-muted">@Model.StudentStudijskiProgramNaziv</small>
+                </dd>
+
+                <dt class="col-sm-3"><i class="fas fa-chalkboard-teacher me-1"></i> Profesor</dt>
+                <dd class="col-sm-9">
+                    @Model.ProfesorTitula @Model.ProfesorIme @Model.ProfesorPrezime
+                </dd>
+            </dl>
+
             <hr />
 
-            <div class="row gy-4">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <h5 class="text-primary fw-bold mb-2"><i class="fas fa-star me-1"></i> Ocjena</h5>
-                        <p>
-                            <strong>Vrijednost:</strong>
-                            <span class="badge @(Model.Vrijednost >= 8 ? "bg-success" : Model.Vrijednost >= 6 ? "bg-warning text-dark" : "bg-danger") fs-5">
-                                @Model.Vrijednost
-                            </span>
-                            @if (jeGlavna)
-                            {
-                                <span class="badge bg-primary ms-1">Zaključna</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-info ms-1">Parcijalna</span>
-                            }
-                        </p>
-                        @if (!string.IsNullOrWhiteSpace(Model.Komentar))
-                        {
-                            <p><strong>Komentar:</strong> @Model.Komentar</p>
-                        }
-                        @if (Model.TezinaProcentualno.HasValue)
-                        {
-                            <p>
-                                <strong>Težina:</strong>
-                                <span class="badge bg-info">@Model.TezinaProcentualno %</span>
-                            </p>
-                        }
-                        @if (Model.DatumDodjele.HasValue)
-                        {
-                            <p><strong>Datum unosa:</strong> @Model.DatumDodjele.Value.ToString("dd.MM.yyyy")</p>
-                        }
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <h5 class="text-primary fw-bold mb-2"><i class="fas fa-book-open me-1"></i> Predmet</h5>
-                        <p><strong>Naziv predmeta:</strong> @Model.PredmetNaziv</p>
-                        @if (!string.IsNullOrEmpty(Model.NastavnaAktivnostNaziv))
-                        {
-                            <p><strong>Aktivnost:</strong> @Model.NastavnaAktivnostNaziv</p>
-                        }
-                    </div>
-                </div>
-            </div>
+            @* Glavni podaci o ocjeni *@
+            <dl class="row mb-4">
+                <dt class="col-sm-3"><i class="fas fa-star me-1"></i> Vrijednost</dt>
+                <dd class="col-sm-9">
+                    <span class="badge
+            @(Model.Vrijednost >= 8
+                                          ? "bg-success"
+                                          : Model.Vrijednost >= 6
+                                            ? "bg-warning text-dark"
+                                            : "bg-danger")
+            fs-5">
+                        @Model.Vrijednost
+                    </span>
+                    <span class="badge @(jeGlavna ? "bg-primary" : "bg-info") ms-2">
+                        @(jeGlavna ? "Zaključna" : "Parcijalna")
+                    </span>
+                </dd>
 
+                @if (!string.IsNullOrWhiteSpace(Model.Komentar))
+                {
+                    <dt class="col-sm-3">Komentar</dt>
+                    <dd class="col-sm-9">@Model.Komentar</dd>
+                }
+
+                @if (Model.TezinaProcentualno.HasValue)
+                {
+                    <dt class="col-sm-3">Težina</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-info">@Model.TezinaProcentualno %</span>
+                    </dd>
+                }
+
+                @if (Model.DatumDodjele.HasValue)
+                {
+                    <dt class="col-sm-3">Datum unosa</dt>
+                    <dd class="col-sm-9">@Model.DatumDodjele.Value.ToString("dd.MM.yyyy")</dd>
+                }
+            </dl>
+
+            @* Parcijalne ocjene ako ih ima *@
             @if (jeGlavna && Model.DjelimicneOcjene?.Any() == true)
             {
                 <hr />
                 <h5 class="fw-bold text-success mb-3"><i class="fas fa-layer-group me-1"></i> Parcijalne ocjene</h5>
-                <ul class="list-group mb-3">
+                <ul class="list-group mb-4">
                     @foreach (var d in Model.DjelimicneOcjene)
                     {
                         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -130,83 +127,52 @@
                                 }
                                 @if (User.IsInRole("Profesor"))
                                 {
-                                    <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@d.Id" class="btn btn-sm btn-outline-secondary" title="Detalji">
+                                    <a asp-action="Details" asp-route-id="@d.Id"
+                                       class="btn btn-sm btn-outline-secondary" title="Detalji">
                                         <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a asp-controller="Ocjene" asp-action="Edit" asp-route-id="@d.Id" class="btn btn-sm btn-outline-warning" title="Izmjena">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a asp-controller="Ocjene" asp-action="Delete" asp-route-id="@d.Id" class="btn btn-sm btn-outline-danger" title="Brisanje">
-                                        <i class="fas fa-trash-alt"></i>
                                     </a>
                                 }
                             </div>
                         </li>
                     }
                 </ul>
-                @if (User.IsInRole("Profesor"))
-                {
-                    <a asp-controller="Ocjene"
-                       asp-action="Create"
-                       asp-route-tip="Predmet"
-                       asp-route-predmetId="@Model.PredmetId"
-                       asp-route-studentId="@Model.StudentId"
-                       asp-route-parentOcjenaId="@Model.Id"
-                       class="btn btn-outline-primary">
-                        <i class="fas fa-plus-circle me-1"></i> Dodaj parcijalnu ocjenu
-                    </a>
-                }
             }
 
+            @* Bodovi sa ispita *@
             @if (jeGlavna && Model.BodoviSaIspita.Any())
             {
                 <hr />
                 <h5 class="fw-bold text-info mb-3"><i class="fas fa-file-alt me-1"></i> Bodovi sa ispita</h5>
-                <ul class="list-group mb-3">
+                <ul class="list-group mb-4">
                     @foreach (var ispit in Model.BodoviSaIspita.OrderBy(i => i.Datum))
                     {
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
-                                <a asp-controller="Ispiti" asp-action="Details" asp-route-id="@ispit.IspitId" class="text-decoration-none">
-                                    @ispit.IspitNaziv
-                                </a>
-                            </span>
+                            <a asp-controller="Ispiti" asp-action="Details" asp-route-id="@ispit.IspitId" class="text-decoration-none">
+                                @ispit.IspitNaziv
+                            </a>
                             <span class="badge bg-primary">@ispit.Bodovi</span>
                         </li>
                     }
                 </ul>
             }
 
+            @* Prisustvo na aktivnostima *@
             @if (jeGlavna)
             {
                 <hr />
                 <h5 class="fw-bold text-primary mb-3"><i class="fas fa-user-check me-1"></i> Prisustvo na aktivnostima</h5>
-                <ul class="list-group mb-3">
-                    <li class="list-group-item">Ukupno: <strong>@Model.ProcenatPrisustvaUkupno.ToString("0.0")%</strong></li>
-                    <li class="list-group-item">Predavanja: <strong>@Model.ProcenatPrisustvaPredavanja.ToString("0.0")%</strong></li>
-                    <li class="list-group-item">Vježbe: <strong>@Model.ProcenatPrisustvaVjezbi.ToString("0.0")%</strong></li>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item">Ukupno: <strong>@Model.ProcenatPrisustvaUkupno</strong></li>
+                    <li class="list-group-item">Predavanja: <strong>@Model.ProcenatPrisustvaPredavanja</strong></li>
+                    <li class="list-group-item">Vježbe: <strong>@Model.ProcenatPrisustvaVjezbi</strong></li>
                 </ul>
-
-                <a asp-controller="Predmeti"
-                   asp-action="StudentDetails"
-                   asp-route-predmetId="@Model.PredmetId"
-                   asp-route-studentId="@Model.StudentId"
-                   class="btn btn-outline-secondary">
-                    <i class="fas fa-user-check me-1"></i> Detaljna evidencija prisustva
-                </a>
             }
         </div>
     </div>
 
-    <div class="mt-3 text-center">
+    <div class="text-center">
         <a asp-action="Index" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Nazad na listu
+            <i class="fas fa-arrow-left me-1"></i> Nazad na listu
         </a>
     </div>
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

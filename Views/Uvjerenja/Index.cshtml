@@ -1,86 +1,123 @@
 ﻿@model IEnumerable<StudentHub.Models.Uvjerenje>
-
+@using StudentHub.Models
 @{
-    ViewData["Title"] = "Lista uvjerenja";
+    ViewData["Title"] = "Uvjerenja";
+    Layout = "_Layout";
 }
 
-<h2 class="mb-4">@ViewData["Title"]</h2>
+<div class="container py-4">
 
-@if (User.IsInRole("Studentska služba"))
-{
-    <form method="get" class="mb-4">
-        <div class="row g-2">
-            <div class="col-md-4">
-                <input type="text" name="searchString" class="form-control" placeholder="Pretraga po imenu/prezimenu studenta..." value="@Context.Request.Query["searchString"]">
+    <!-- Naslov i dugme za dodavanje -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-file-certificate text-primary me-2"></i>@ViewData["Title"]
+        </h2>
+        @if (User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Create" class="btn btn-success shadow-sm">
+                <i class="fas fa-plus-circle me-1"></i> Novo uvjerenje
+            </a>
+        }
+    </div>
+
+    <!-- Filtriranje (samo za službu) -->
+    @if (User.IsInRole("Studentska služba"))
+    {
+        <form method="get" class="card card-body shadow-sm mb-4">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <input type="text"
+                           name="searchString"
+                           class="form-control"
+                           placeholder="Pretraga po imenu/prezimenu..."
+                           value="@Context.Request.Query["searchString"]" />
+                </div>
+                <div class="col-md-4">
+                    <select name="studijskiProgramId" class="form-select">
+                        <option value="">Svi studijski programi</option>
+                        @foreach (var p in (SelectList)ViewBag.StudijskiProgrami)
+                        {
+                            <option value="@p.Value"
+                                    selected="@(Context.Request.Query["studijskiProgramId"] == p.Value ? "selected" : null)">
+                                @p.Text
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-center gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i> Filtriraj
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-undo me-1"></i> Reset
+                    </a>
+                </div>
             </div>
-            <div class="col-md-4">
-                <select name="studijskiProgramId" class="form-control">
-                    <option value="">Svi studijski programi</option>
-                    @foreach (var program in (SelectList)ViewBag.StudijskiProgrami)
-                    {
-                        <option value="@program.Value" selected="@(Context.Request.Query["studijskiProgramId"] == program.Value ? "selected" : null)">@program.Text</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-4 d-flex align-items-center">
-                <button type="submit" class="btn btn-primary me-2">Filtriraj</button>
-                <a asp-action="Index" class="btn btn-secondary">Reset</a>
-            </div>
-        </div>
-    </form>
+        </form>
+    }
 
-    <p>
-        <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus"></i> Kreiraj novo uvjerenje</a>
-    </p>
-}
-
-<div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Namjena</th>
-                <th>Vrsta</th>
-                <th>Datum izdavanja</th>
-                @if (User.IsInRole("Studentska služba"))
-                {
-                    <th>Student</th>
-                    <th>Studentska služba</th>
-                }
-                <th class="text-center">Akcije</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Namjena)</td>
-                    <td>@Html.DisplayFor(modelItem => item.VrstaUvjerenja)</td>
-                    <td>@item.DatumIzdavanja.ToString("dd.MM.yyyy HH:mm")</td>
-
-                    @if (User.IsInRole("Studentska služba"))
-                    {
-                        <td>@item.Student.Ime @item.Student.Prezime [@item.Student.BrojIndeksa]</td>
-                        <td>@item.StudentskaSluzba.Ime @item.StudentskaSluzba.Prezime</td>
-                    }
-
-                    <td class="text-center">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Detalji">
-                            <i class="fas fa-eye"></i>
-                        </a>
+    <!-- Tabela uvjerenja -->
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Vrsta</th>
+                        <th>Namjena</th>
+                        <th>Datum</th>
                         @if (User.IsInRole("Studentska služba"))
                         {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Izmjena">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Brisanje">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
+                            <th>Student</th>
+                            <th>Izdato od</th>
                         }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                        <th class="text-center">Akcije</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var uv in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(_ => uv.VrstaUvjerenja)</td>
+                            <td>@(string.IsNullOrEmpty(uv.Namjena) ? "<span class='text-muted'>/</span>" : uv.Namjena)</td>
+                            <td>@uv.DatumIzdavanja.ToString("dd.MM.yyyy HH:mm")</td>
 
-<a asp-action="Index" asp-controller="Home" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Povratak na početnu stranicu</a>
+                            @if (User.IsInRole("Studentska služba"))
+                            {
+                                <td>
+                                    @uv.Student?.Ime @uv.Student?.Prezime
+                                    <br />
+                                    <small class="text-muted">(@uv.Student?.BrojIndeksa)</small>
+                                </td>
+                                <td>@uv.StudentskaSluzba?.Ime @uv.StudentskaSluzba?.Prezime</td>
+                            }
+
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-action="Details" asp-route-id="@uv.Id" class="btn btn-outline-primary" title="Detalji">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    @if (User.IsInRole("Studentska služba"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@uv.Id" class="btn btn-outline-warning" title="Izmjena">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@uv.Id" class="btn btn-outline-danger" title="Brisanje">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Navigacija -->
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Povratak na početnu
+        </a>
+    </div>
+</div>

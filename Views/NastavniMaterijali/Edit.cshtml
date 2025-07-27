@@ -1,107 +1,123 @@
 ﻿@model StudentHub.Models.NastavniMaterijal
 @using System.IO
 
-<h2>Uredi nastavni materijal za @(Model.NastavnaAktivnost?.Naziv ?? "Nepoznata aktivnost")</h2>
+@{
+    var nastName = Model.NastavnaAktivnost?.Naziv ?? "aktivnost";
+    ViewData["Title"] = $"Uredi materijal za {nastName}";
+}
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="NastavnaAktivnostId" />
+<div class="container py-5">
+    <div class="card shadow-sm mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-warning text-dark">
+            <h3 class="mb-0">
+                <i class="fas fa-edit me-2"></i>@ViewData["Title"]
+            </h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger mb-4"></div>
 
-    <div class="form-group">
-        <label asp-for="Naziv"></label>
-        <input asp-for="Naziv" class="form-control" />
-        <span asp-validation-for="Naziv" class="text-danger"></span>
-    </div>
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.NastavnaAktivnostId)
 
-    <div class="form-group">
-        <label asp-for="Opis"></label>
-        <textarea asp-for="Opis" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Opis" class="text-danger"></span>
-    </div>
+                <div class="mb-3">
+                    <label asp-for="Naziv" class="form-label fw-bold"></label>
+                    <input asp-for="Naziv" class="form-control" />
+                    <span asp-validation-for="Naziv" class="text-danger small"></span>
+                </div>
 
-    <div class="form-group">
-        <label for="noviFajlovi" class="form-label">Dodaj nove fajlove</label>
-        <input type="file" name="fajlovi" id="noviFajlovi" class="form-control" multiple />
-        <small class="form-text text-muted">
-            Dozvoljeni formati: PDF, DOCX, XLSX, PPTX, JPG, PNG (max 100MB)
-        </small>
+                <div class="mb-3">
+                    <label asp-for="Opis" class="form-label fw-bold"></label>
+                    <textarea asp-for="Opis" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Opis" class="text-danger small"></span>
+                </div>
 
-        <div id="filePreview" class="mt-3" style="display:none;">
-            <h5>Pregled fajlova za dodavanje:</h5>
-            <ul class="list-group" id="fileList"></ul>
+                <div class="mb-4">
+                    <h5>Postojeći fajlovi</h5>
+                    <ul class="list-group">
+                        @foreach (var f in Model.Fajlovi ?? Enumerable.Empty<NastavniMaterijalFajl>())
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="far fa-file me-2"></i>
+                                    <a href="@Url.Action("Download", "NastavniMaterijali", new { id = f.Id })" target="_blank">
+                                        @System.IO.Path.GetFileName(f.PutanjaDoFajla)
+                                    </a>
+                                </div>
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="obrisiFajl(@f.Id)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <label for="noviFajlovi" class="form-label fw-bold">Dodaj nove fajlove</label>
+                    <input type="file"
+                           name="fajlovi"
+                           id="noviFajlovi"
+                           class="form-control"
+                           multiple />
+                    <small class="form-text text-muted">
+                        PDF, DOCX, XLSX, PPTX, JPG, PNG. Max 100 MB po fajlu.
+                    </small>
+                </div>
+
+                <div id="filePreview" class="mb-4" style="display:none;">
+                    <h5>Pogled novih fajlova:</h5>
+                    <ul class="list-group" id="fileList"></ul>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Spremi izmjene
+                    </button>
+                    <a asp-controller="NastavniMaterijali"
+                       asp-action="Index"
+                       asp-route-nastavnaAktivnostId="@Model.NastavnaAktivnostId"
+                       class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Nazad
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
-
-    @if (Model.Fajlovi != null && Model.Fajlovi.Any())
-    {
-        <div class="mt-4">
-            <h5>Postojeći fajlovi</h5>
-            <ul class="list-group">
-                @foreach (var fajl in Model.Fajlovi)
-                {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="far fa-file me-2"></i>
-                            <a href="@Url.Action("Download", "NastavniMaterijali", new { id = fajl.Id })" target="_blank">
-                                @System.IO.Path.GetFileName(fajl.PutanjaDoFajla)
-                            </a>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="obrisiFajl(@fajl.Id)">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </li>
-                }
-            </ul>
-        </div>
-    }
-
-    <div class="form-group mt-4">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save me-1"></i> Spremi promjene
-        </button>
-        <a asp-controller="NastavniMaterijali"
-           asp-action="Index"
-           asp-route-nastavnaAktivnostId="@Model.NastavnaAktivnostId"
-           class="btn btn-secondary ms-2">
-            <i class="fas fa-times me-1"></i> Odustani
-        </a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        // preview new files
         const input = document.getElementById('noviFajlovi');
         const preview = document.getElementById('filePreview');
-        const list = document.getElementById('fileList');
+        const list    = document.getElementById('fileList');
 
-        input.addEventListener('change', function () {
+        input.addEventListener('change', () => {
             list.innerHTML = '';
-            if (input.files.length > 0) {
+            if (input.files.length) {
                 preview.style.display = 'block';
-
                 Array.from(input.files).forEach(file => {
                     const li = document.createElement('li');
                     li.className = 'list-group-item d-flex justify-content-between align-items-center';
-
-                    const iconClass = {
-                        'application/pdf': 'far fa-file-pdf text-danger',
-                        'application/msword': 'far fa-file-word text-primary',
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'far fa-file-word text-primary',
-                        'application/vnd.ms-excel': 'far fa-file-excel text-success',
-                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'far fa-file-excel text-success',
-                        'application/vnd.ms-powerpoint': 'far fa-file-powerpoint text-warning',
-                        'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'far fa-file-powerpoint text-warning',
-                        'image/jpeg': 'far fa-file-image text-info',
-                        'image/png': 'far fa-file-image text-info'
-                    }[file.type] || 'far fa-file';
-
+                    const icons = {
+                        'application/pdf':'far fa-file-pdf text-danger',
+                        'application/msword':'far fa-file-word text-primary',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document':'far fa-file-word text-primary',
+                        'application/vnd.ms-excel':'far fa-file-excel text-success',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':'far fa-file-excel text-success',
+                        'application/vnd.ms-powerpoint':'far fa-file-powerpoint text-warning',
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation':'far fa-file-powerpoint text-warning',
+                        'image/jpeg':'far fa-file-image text-info',
+                        'image/png':'far fa-file-image text-info'
+                    };
+                    const icon = icons[file.type] || 'far fa-file';
                     li.innerHTML = `
-                        <div>
-                            <i class="${iconClass} me-2"></i> <strong>${file.name}</strong>
-                        </div>
-                        <span class="badge bg-light text-dark">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                        <div><i class="${icon} me-2"></i><strong>${file.name}</strong></div>
+                        <span class="badge bg-light text-dark">${(file.size/1024/1024).toFixed(2)} MB</span>
                     `;
                     list.appendChild(li);
                 });
@@ -110,23 +126,17 @@
             }
         });
 
-        function obrisiFajl(fajlId) {
-            if (!confirm("Jeste li sigurni da želite obrisati fajl?")) return;
-
+        // delete existing via POST + CSRF
+        function obrisiFajl(id) {
+            if (!confirm('Obriši ovaj fajl?')) return;
             fetch('@Url.Action("ObrisiFajl", "NastavniMaterijali")', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type':'application/x-www-form-urlencoded',
                     'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
                 },
-                body: `id=${fajlId}`
-            }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    location.reload();
-                }
-            });
+                body: 'id=' + id
+            }).then(r => r.redirected ? window.location = r.url : location.reload());
         }
     </script>
 }

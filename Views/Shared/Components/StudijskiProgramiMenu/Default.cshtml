@@ -1,11 +1,15 @@
 ﻿@model IEnumerable<StudentHub.Models.StudijskiProgram>
 
-<ul class="collapse list-unstyled" id="studijskiprogramiSubmenu">
-    @foreach (var program in Model)
+<ul class="collapse list-unstyled ps-2" id="studijskiprogramiSubmenu">
+    @foreach (var pr in Model)
     {
-        <li>
-            <a class="dropdown-item" asp-controller="StudijskiProgrami" asp-action="Details" asp-route-id="@program.Id">
-                @program.Naziv
+        <li class="mb-1">
+            <a class="nav-link d-flex align-items-center"
+               asp-controller="StudijskiProgrami"
+               asp-action="Details"
+               asp-route-id="@pr.Id">
+                <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                <span class="flex-grow-1">@pr.Naziv</span>
             </a>
         </li>
     }

@@ -1,36 +1,46 @@
 ﻿@model StudentHub.Models.Zahtjev
 
 @{
-    ViewData["Title"] = "Kreiranje novog zahtjeva";
+    ViewData["Title"] = "Novi zahtjev";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i>@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
 
-<h4>Zahtjev</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
-            <div class="form-group">
-                <label asp-for="TipZahtjeva" class="control-label"></label>
-                <select asp-for="TipZahtjeva" class="form-control" asp-items="Html.GetEnumSelectList<TipZahtjeva>()"></select>
-                <span asp-validation-for="TipZahtjeva" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Napomena" class="control-label"></label>
-                <textarea asp-for="Napomena" class="form-control"></textarea>
-                <span asp-validation-for="Napomena" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Kreiraj" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-            </div>
-        </form>
+                <div class="mb-3">
+                    <label asp-for="TipZahtjeva" class="form-label">Tip zahtjeva</label>
+                    <select asp-for="TipZahtjeva" class="form-select" asp-items="Html.GetEnumSelectList<TipZahtjeva>()" required>
+                        <option value="">-- Odaberite tip --</option>
+                    </select>
+                    <span asp-validation-for="TipZahtjeva" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Napomena" class="form-label">Napomena</label>
+                    <textarea asp-for="Napomena" class="form-control" rows="4" placeholder="Unesite detalje zahtjeva"></textarea>
+                    <span asp-validation-for="Napomena" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane me-1"></i> Pošalji zahtjev
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Odustani
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

@@ -3,20 +3,31 @@
     ViewData["Title"] = "Dodaj novi pravilnik";
     Layout = "_Layout";
 }
+
 <div class="container py-4">
-    <h2 class="mb-4 text-success fw-bold"><i class="fas fa-plus"></i> Dodaj novi pravilnik</h2>
-    <form asp-action="Create" method="post" autocomplete="off">
+    <h2 class="mb-4 text-success fw-bold">
+        <i class="fas fa-plus"></i> @ViewData["Title"]
+    </h2>
+
+    <form asp-action="Create" method="post" autocomplete="off" novalidate>
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+
         <div class="mb-3">
             <label asp-for="Naslov" class="form-label fw-bold">Naslov pravilnika</label>
             <input asp-for="Naslov" class="form-control" maxlength="200" required autofocus />
             <span asp-validation-for="Naslov" class="text-danger"></span>
         </div>
+
         <div class="mb-3">
             <label asp-for="Opis" class="form-label fw-bold">Opis</label>
             <textarea asp-for="Opis" class="form-control" maxlength="500" rows="2" required></textarea>
             <span asp-validation-for="Opis" class="text-danger"></span>
         </div>
+
         <hr />
+
         <div id="clanoviContainer">
             <label class="fw-bold mb-2"><i class="fas fa-list-ol"></i> Članovi pravilnika</label>
             <div id="clanoviList"></div>
@@ -24,61 +35,67 @@
                 <i class="fas fa-plus"></i> Dodaj član
             </button>
         </div>
+
         <div class="mt-4 d-flex gap-2">
-            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Sačuvaj</button>
-            <a asp-action="Index" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Nazad</a>
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save me-1"></i> Sačuvaj
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Nazad
+            </a>
         </div>
     </form>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
     <script>
         let clanovi = [];
+
         function renderClanovi() {
-            let html = '';
-            if (clanovi.length === 0) {
-                html = "<div class='alert alert-info'>Nema dodatih članova. Dodajte prvi član.</div>";
-            } else {
-                for (let i = 0; i < clanovi.length; i++) {
-                    html += `
-                        <div class='card mb-2 shadow-sm'>
-                            <div class='card-body'>
-                                <div class='d-flex justify-content-between align-items-center mb-2'>
-                                    <span class='fw-bold text-success'>Član ${i+1}</span>
-                                    <button type='button' class='btn btn-danger btn-sm' onclick='removeClan(${i})'>
-                                        <i class='fas fa-trash'></i>
-                                    </button>
-                                </div>
-                                <div class='mb-2'>
-                                    <input name='Clanovi[${i}].NaslovClanka' class='form-control' maxlength='300'
-                                        placeholder='Naslov člana' value='${clanovi[i].NaslovClanka ?? ""}' required />
-                                </div>
-                                <div>
-                                    <textarea name='Clanovi[${i}].Sadrzaj' class='form-control' maxlength='4000'
-                                        rows='3' placeholder='Sadržaj člana' required>${clanovi[i].Sadrzaj ?? ""}</textarea>
-                                </div>
-                                <input type='hidden' name='Clanovi[${i}].RedniBroj' value='${i+1}' />
-                            </div>
-                        </div>`;
-                }
-            }
-            $('#clanoviList').html(html);
+          let html = '';
+          if (clanovi.length === 0) {
+            html = `<div class="alert alert-info">Nema dodatih članova. Dodajte prvi član.</div>`;
+          } else {
+            clanovi.forEach((c, i) => {
+              html += `
+                <div class="card mb-2 shadow-sm">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fw-bold text-success">Član ${i + 1}</span>
+                      <button type="button" class="btn btn-danger btn-sm" onclick="removeClan(${i})">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                    <div class="mb-2">
+                      <input name="Clanovi[${i}].NaslovClanka" class="form-control" maxlength="300"
+                             placeholder="Naslov člana" value="${c.NaslovClanka ?? ''}" required />
+                    </div>
+                    <div>
+                      <textarea name="Clanovi[${i}].Sadrzaj" class="form-control" maxlength="4000"
+                                rows="3" placeholder="Sadržaj člana" required>${c.Sadrzaj ?? ''}</textarea>
+                    </div>
+                    <input type="hidden" name="Clanovi[${i}].RedniBroj" value="${i + 1}" />
+                  </div>
+                </div>`;
+            });
+          }
+          $('#clanoviList').html(html);
         }
+
         function addClan() {
-            clanovi.push({ NaslovClanka: '', Sadrzaj: '', RedniBroj: clanovi.length + 1 });
-            renderClanovi();
+          clanovi.push({ NaslovClanka: '', Sadrzaj: '' });
+          renderClanovi();
         }
+
         function removeClan(idx) {
-            clanovi.splice(idx, 1);
-            renderClanovi();
+          clanovi.splice(idx, 1);
+          renderClanovi();
         }
-        // Inicijalno prikaz
+
         $(function () {
-            $('#addClanBtn').click(addClan);
-            renderClanovi();
+          $('#addClanBtn').click(addClan);
+          renderClanovi();
         });
     </script>
 }

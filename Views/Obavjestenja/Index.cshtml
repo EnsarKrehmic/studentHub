@@ -3,86 +3,97 @@
 
 @{
     ViewData["Title"] = "Obavještenja";
+    Layout = "_Layout";
 }
 
-<h2 class="mb-4">@ViewData["Title"]</h2>
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-bell text-primary me-2"></i>
+            @ViewData["Title"]
+        </h2>
+        @if (User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
+        {
+            <a asp-action="Create" class="btn btn-success shadow-sm">
+                <i class="fas fa-plus-circle me-1"></i> Novo obavještenje
+            </a>
+        }
+    </div>
 
-<form method="get" class="mb-4">
-    <div class="row g-2">
-        <div class="col-md-4">
-            <select name="studijskiProgramId" class="form-control">
-                <option value="">Svi studijski programi</option>
-                @foreach (var program in (SelectList)ViewBag.StudijskiProgrami)
-                {
-                    <option value="@program.Value" selected="@(Context.Request.Query["studijskiProgramId"] == program.Value ? "selected" : null)">@program.Text</option>
-                }
-            </select>
+    <form method="get" class="card card-body shadow-sm mb-4">
+        <div class="row g-2">
+            <div class="col-md-6">
+                <select name="studijskiProgramId" class="form-select">
+                    <option value="">Svi studijski programi</option>
+                    @foreach (var p in (SelectList)ViewBag.StudijskiProgrami)
+                    {
+                        <option value="@p.Value"
+                                selected="@(Context.Request.Query["studijskiProgramId"] == p.Value ? "selected" : null)">
+                            @p.Text
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-6 d-flex align-items-center gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter me-1"></i> Filtriraj
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-undo me-1"></i> Reset
+                </a>
+            </div>
         </div>
-        <div class="col-md-4 d-flex align-items-center">
-            <button type="submit" class="btn btn-primary me-2">Filtriraj</button>
-            <a asp-action="Index" class="btn btn-secondary">Reset</a>
+    </form>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="no-wrap">Naslov</th>
+                        <th class="no-wrap">Datum objave</th>
+                        <th class="no-wrap">Autor</th>
+                        <th>Programi</th>
+                        <th class="text-center no-wrap">Akcije</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var o in Model)
+                    {
+                        <tr>
+                            <td class="no-wrap">@o.Naslov</td>
+                            <td>@o.DatumObjave.ToString("dd.MM.yyyy")</td>
+                            <td class="no-wrap">@o.AutorIme</td>
+                            <td>@string.Join(", ", o.StudijskiProgramNazivi)</td>
+                            <td class="text-center no-wrap">
+                                <div class="d-inline-flex gap-1">
+                                    <a asp-action="Details" asp-route-id="@o.Id"
+                                       class="btn btn-sm btn-outline-primary" title="Detalji">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    @if (o.KorisnikAspNetUserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@o.Id"
+                                           class="btn btn-sm btn-outline-warning" title="Izmjena">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@o.Id"
+                                           class="btn btn-sm btn-outline-danger" title="Brisanje">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
-</form>
 
-@if (User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
-{
-    <a asp-action="Create" class="btn btn-success mb-3">
-        <i class="fas fa-plus-circle"></i> Kreiraj novo obavještenje
-    </a>
-}
-
-<div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Naslov</th>
-                <th>Sadržaj</th>
-                <th>Datum objave</th>
-                <th>Autor</th>
-                <th>Studijski program</th>
-                <th class="text-center">Akcije</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var obavjestenje in Model)
-            {
-                <tr>
-                    <td>@obavjestenje.Naslov</td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(obavjestenje.Sadrzaj))
-                        {
-                            var preview = obavjestenje.Sadrzaj.Length > 20 ? obavjestenje.Sadrzaj.Substring(0, 20) + "..." : obavjestenje.Sadrzaj;
-                            @preview
-                        }
-                        else
-                        {
-                            <span class="text-muted">Nema sadržaja</span>
-                        }
-                    </td>
-                    <td>@obavjestenje.DatumObjave.ToString("dd.MM.yyyy")</td>
-                    <td>@obavjestenje.AutorIme</td>
-                    <td>@string.Join(", ", obavjestenje.StudijskiProgramNazivi)</td>
-                    <td class="text-center">
-                        <a asp-action="Details" asp-route-id="@obavjestenje.Id" class="btn btn-sm btn-info" title="Detalji">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        @if (obavjestenje.KorisnikAspNetUserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
-                        {
-                            <a asp-action="Edit" asp-route-id="@obavjestenje.Id" class="btn btn-sm btn-warning" title="Izmjena">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@obavjestenje.Id" class="btn btn-sm btn-danger" title="Brisanje">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="text-center mt-4">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Povratak na početnu
+        </a>
+    </div>
 </div>
-
-<a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
-    <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
-</a>

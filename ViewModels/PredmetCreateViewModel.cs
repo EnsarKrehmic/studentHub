@@ -6,6 +6,9 @@ namespace StudentHub.ViewModels
 {
     public class PredmetCreateViewModel
     {
+        [Key]
+        public long Id { get; set; }
+
         [Required(ErrorMessage = "Naziv predmeta je obavezan.")]
         [MaxLength(100, ErrorMessage = "Naziv ne može biti duži od 100 karaktera.")]
         public string Naziv { get; set; }

@@ -1,61 +1,74 @@
 ﻿@model IEnumerable<StudentHub.ViewModels.IspitDetailsViewModel>
-
 @{
     ViewData["Title"] = "Lista ispita po studijskim programima i predmetima";
+    Layout = "_Layout";
     bool showArchivedParam = ViewBag.ShowArchived ?? false;
 }
 
-<h1 class="text-center my-4">@ViewData["Title"]</h1>
+<div class="container py-4">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-<p class="text-center text-muted mb-4">
-    Rok za prijavu ispita je 3 dana prije ispitnog roka, ne računajući neradne dane i vikende.
-</p>
-
-@if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
-{
-    <div class="text-center mb-4">
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-plus-circle"></i> Kreiraj novi ispit
-        </a>
-    </div>
-}
-@if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Student"))
-{
-    <form method="get" class="text-center mb-4">
-        <div class="form-check form-switch d-inline-block me-4">
-            <input class="form-check-input" type="checkbox" id="showArchived" name="showArchived" value="true"
-                   @(showArchivedParam ? "checked" : "") onchange="this.form.submit()" />
-            <label class="form-check-label ms-2" for="showArchived">Prikaži arhivirane ispite</label>
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    }
 
-        <div class="d-inline-block me-4 align-middle">
-            <label for="sortOrder" class="me-2">Sortiraj po:</label>
-            <select name="sortOrder" id="sortOrder" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
-                <option value="">Datum rastuće</option>
-                <option value="date_desc" selected="@(Context.Request.Query["sortOrder"] == "date_desc" ? "selected" : null)">Datum opadajuće</option>
-                <option value="Location" selected="@(Context.Request.Query["sortOrder"] == "Location" ? "selected" : null)">Lokacija A-Z</option>
-                <option value="location_desc" selected="@(Context.Request.Query["sortOrder"] == "location_desc" ? "selected" : null)">Lokacija Z-A</option>
-                <option value="Points" selected="@(Context.Request.Query["sortOrder"] == "Points" ? "selected" : null)">Broj bodova rastuće</option>
-                <option value="points_desc" selected="@(Context.Request.Query["sortOrder"] == "points_desc" ? "selected" : null)">Broj bodova opadajuće</option>
-            </select>
+    <p class="text-center text-muted mb-4">
+        Rok za prijavu ispita je 3 dana prije ispitnog roka, ne računajući neradne dane i vikende.
+    </p>
+
+    @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
+    {
+        <div class="text-center mb-4">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-2"></i> Kreiraj novi ispit
+            </a>
         </div>
+    }
 
-        <div class="d-inline-block align-middle">
-            <input type="text" name="searchPredmet" value="@Context.Request.Query["searchPredmet"]"
-                   class="form-control form-control-sm d-inline-block w-auto" placeholder="Pretraži predmet..." onchange="this.form.submit()" />
-        </div>
-    </form>
-}
+    @if (User.IsInRole("Studentska služba") 
+         || User.IsInRole("Profesor") 
+         || User.IsInRole("Asistent") 
+         || User.IsInRole("Student"))
+    {
+        <form method="get" class="card card-body shadow-sm mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="showArchived" name="showArchived" value="true"
+                               @(showArchivedParam ? "checked" : "") onchange="this.form.submit()" />
+                        <label class="form-check-label ms-2" for="showArchived">
+                            Prikaži arhivirane ispite
+                        </label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <label for="sortOrder" class="col-form-label">Sortiraj po:</label>
+                    <select name="sortOrder" id="sortOrder"
+                            class="form-select form-select-sm d-inline-block w-auto"
+                            onchange="this.form.submit()">
+                        <option value="">Datum rastuće</option>
+                        <option value="date_desc" selected="@(Context.Request.Query["sortOrder"]=="date_desc")">Datum opadajuće</option>
+                        <option value="Location" selected="@(Context.Request.Query["sortOrder"]=="Location")">Lokacija A-Z</option>
+                        <option value="location_desc" selected="@(Context.Request.Query["sortOrder"]=="location_desc")">Lokacija Z-A</option>
+                        <option value="Points" selected="@(Context.Request.Query["sortOrder"]=="Points")">Bodovi rastuće</option>
+                        <option value="points_desc" selected="@(Context.Request.Query["sortOrder"]=="points_desc")">Bodovi opadajuće</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <input type="text" name="searchPredmet"
+                           value="@Context.Request.Query["searchPredmet"]"
+                           class="form-control form-control-sm d-inline-block w-auto"
+                           placeholder="Pretraži predmet..."
+                           onchange="this.form.submit()" />
+                </div>
+            </div>
+        </form>
+    }
 
-<div class="container">
     @if (Model != null && Model.Any())
     {
         @foreach (var program in Model)
@@ -67,7 +80,9 @@
                 <div class="card-body">
                     @foreach (var plan in program.NastavniPlanovi)
                     {
-                        <h5 class="text-secondary mt-3">Nastavni plan za @plan.NastavniPlan.GodinaStudija. godinu</h5>
+                        <h5 class="text-secondary mt-3">
+                            Nastavni plan za @plan.NastavniPlan.GodinaStudija. godinu
+                        </h5>
                         @if (plan.Predmeti.Any())
                         {
                             <div class="accordion mt-3" id="predmetAccordion-@plan.NastavniPlan.Id">
@@ -76,7 +91,8 @@
                                     var predmet = plan.Predmeti[i];
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="heading-@i-@plan.NastavniPlan.Id">
-                                            <button class="accordion-button collapsed" type="button"
+                                            <button class="accordion-button collapsed"
+                                                    type="button"
                                                     data-bs-toggle="collapse"
                                                     data-bs-target="#collapse-@i-@plan.NastavniPlan.Id"
                                                     aria-expanded="false"
@@ -88,113 +104,115 @@
                                              class="accordion-collapse collapse"
                                              aria-labelledby="heading-@i-@plan.NastavniPlan.Id"
                                              data-bs-parent="#predmetAccordion-@plan.NastavniPlan.Id">
-                                            <div class="accordion-body">
+                                            <div class="accordion-body p-0">
                                                 @foreach (var ispit in predmet.Ispiti)
                                                 {
-                                                    <div class="card mb-3">
+                                                    <div class="card mb-3 mx-3 my-2">
                                                         <div class="card-body">
                                                             <h6 class="card-title text-primary mb-2">
-                                                                Datum održavanja: @ispit.DatumOdrzavanja.ToString("dd.MM.yyyy")
+                                                                Datum: @ispit.DatumOdrzavanja
                                                             </h6>
                                                             <p class="mb-1"><strong>Lokacija:</strong> @ispit.Lokacija</p>
-                                                            <p class="mb-1"><strong>Broj bodova:</strong> @ispit.BrojBodova</p>
-                                                            <p class="mb-3"><strong>Uslov za polaganje:</strong> @ispit.UslovZaPolaganje</p>
-
-                                                            <div class="d-flex flex-wrap">
+                                                            <p class="mb-1"><strong>Bodovi:</strong> @ispit.BrojBodova</p>
+                                                            <p class="mb-3"><strong>Uslov:</strong> @ispit.UslovZaPolaganje</p>
+                                                            <div class="d-flex flex-wrap gap-2">
                                                                 <a asp-action="Details" asp-route-id="@ispit.Id"
-                                                                   class="btn btn-info btn-sm me-2 mb-2">
-                                                                    <i class="fas fa-info-circle"></i> Detalji
+                                                                   class="btn btn-info btn-sm">
+                                                                    <i class="fas fa-info-circle me-1"></i> Detalji
                                                                 </a>
 
-                                                                @if (User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
+                                                                @* Uređivanje i brisanje *@
+                                                                @if (User.IsInRole("Profesor") 
+                                                                     || User.IsInRole("Asistent") 
+                                                                     || User.IsInRole("Studentska služba"))
                                                                 {
                                                                     <a asp-action="Edit" asp-route-id="@ispit.Id"
-                                                                       class="btn btn-warning btn-sm me-2 mb-2">
-                                                                        <i class="fas fa-edit"></i> Izmjena
+                                                                       class="btn btn-warning btn-sm">
+                                                                        <i class="fas fa-edit me-1"></i> Izmjena
                                                                     </a>
                                                                     <a asp-action="Delete" asp-route-id="@ispit.Id"
-                                                                       class="btn btn-danger btn-sm me-2 mb-2">
-                                                                        <i class="fas fa-trash-alt"></i> Brisanje
+                                                                       class="btn btn-danger btn-sm">
+                                                                        <i class="fas fa-trash-alt me-1"></i> Brisanje
                                                                     </a>
 
-                                                                    if (ispit.DatumOdrzavanja < DateTime.Now && !ispit.Arhivirano)
+                                                                    @if (ispit.DatumOdrzavanja < DateTime.Now && !ispit.Arhivirano)
                                                                     {
-                                                                        <form asp-action="Arhiviraj" asp-route-id="@ispit.Id" method="post" class="me-2 mb-2 d-inline-block">
+                                                                        <form asp-action="Arhiviraj" asp-route-id="@ispit.Id"
+                                                                              method="post" class="d-inline-block">
                                                                             @Html.AntiForgeryToken()
                                                                             <button type="submit" class="btn btn-secondary btn-sm">
-                                                                                <i class="fas fa-archive"></i> Arhiviraj
+                                                                                <i class="fas fa-archive me-1"></i> Arhiviraj
                                                                             </button>
                                                                         </form>
                                                                     }
                                                                     else if (ispit.Arhivirano)
                                                                     {
-                                                                        <form asp-action="VratiIzArhive" asp-route-id="@ispit.Id" method="post" class="me-2 mb-2 d-inline-block">
+                                                                        <form asp-action="VratiIzArhive" asp-route-id="@ispit.Id"
+                                                                              method="post" class="d-inline-block">
                                                                             @Html.AntiForgeryToken()
                                                                             <button type="submit" class="btn btn-outline-primary btn-sm">
-                                                                                <i class="fas fa-undo"></i> Vrati iz arhive
+                                                                                <i class="fas fa-undo me-1"></i> Vrati iz arhive
                                                                             </button>
                                                                         </form>
                                                                     }
                                                                 }
 
+                                                                @* Prijava / odjava za studenta *@
                                                                 @if (User.IsInRole("Student"))
                                                                 {
                                                                     var prijavljen = program.PrijavljeniIspitiIds.Contains(ispit.Id);
                                                                     var imaOcjenu = program.Ocjene.ContainsKey(ispit.PredmetId);
-                                                                    var prijavaDozvoljena = ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now;
-
-                                                                    // DODANO: provjera da li je student upisan na ovaj predmet
+                                                                    var rokOtvoren = ispit.DatumOdrzavanja.AddDays(-3) > DateTime.Now;
                                                                     var studentNaPredmetu = program.NastavniPlanovi
-                                                                    .SelectMany(np => np.Predmeti)
-                                                                    .Any(p => p.Predmet.Id == ispit.PredmetId);
+                                                                        .SelectMany(np => np.Predmeti)
+                                                                        .Any(p => p.Predmet.Id == ispit.PredmetId);
 
                                                                     if (!studentNaPredmetu)
                                                                     {
-                                                                        <span class="text-muted small align-self-center me-2 mb-2">
-                                                                            Niste upisani na ovaj predmet.
+                                                                        <span class="text-muted small align-self-center">
+                                                                            Niste upisani na predmet.
                                                                         </span>
                                                                     }
-                                                                    else
+                                                                    else if (imaOcjenu)
                                                                     {
-                                                                        if (imaOcjenu)
+                                                                        <span class="text-muted small align-self-center">
+                                                                            Već imate ocjenu.
+                                                                        </span>
+                                                                    }
+                                                                    else if (prijavljen)
+                                                                    {
+                                                                        if (rokOtvoren)
                                                                         {
-                                                                            <span class="text-muted small align-self-center me-2 mb-2">
-                                                                                Već imate ocjenu iz ovog predmeta
-                                                                            </span>
-                                                                        }
-                                                                        else if (prijavljen)
-                                                                        {
-                                                                            if (prijavaDozvoljena)
-                                                                            {
-                                                                                <form asp-action="Odjavi" asp-route-id="@ispit.Id" method="post" class="me-2 mb-2 d-inline-block">
-                                                                                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                                                        <i class="fas fa-times"></i> Odjavi se
-                                                                                    </button>
-                                                                                </form>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <span class="text-muted small align-self-center me-2 mb-2">
-                                                                                    Rok za odjavu je istekao.
-                                                                                </span>
-                                                                            }
+                                                                            <form asp-action="Odjavi" asp-route-id="@ispit.Id"
+                                                                                  method="post" class="d-inline-block">
+                                                                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                                                    <i class="fas fa-times me-1"></i> Odjavi
+                                                                                </button>
+                                                                            </form>
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (prijavaDozvoljena)
-                                                                            {
-                                                                                <form asp-action="Prijavi" asp-route-id="@ispit.Id" method="post" class="me-2 mb-2 d-inline-block">
-                                                                                    <button type="submit" class="btn btn-success btn-sm">
-                                                                                        <i class="fas fa-check"></i> Prijavi se
-                                                                                    </button>
-                                                                                </form>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <span class="text-muted small align-self-center me-2 mb-2">
-                                                                                    Rok za prijavu je istekao.
-                                                                                </span>
-                                                                            }
+                                                                            <span class="text-muted small align-self-center">
+                                                                                Rok za odjavu istekao.
+                                                                            </span>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (rokOtvoren)
+                                                                        {
+                                                                            <form asp-action="Prijavi" asp-route-id="@ispit.Id"
+                                                                                  method="post" class="d-inline-block">
+                                                                                <button type="submit" class="btn btn-success btn-sm">
+                                                                                    <i class="fas fa-check me-1"></i> Prijavi
+                                                                                </button>
+                                                                            </form>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="text-muted small align-self-center">
+                                                                                Rok za prijavu istekao.
+                                                                            </span>
                                                                         }
                                                                     }
                                                                 }
@@ -210,7 +228,7 @@
                         }
                         else
                         {
-                            <p class="text-muted mt-2">Nema dostupnih ispita za ovaj nastavni plan.</p>
+                            <p class="text-muted mt-2">Nema ispita za ovaj nastavni plan.</p>
                         }
                     }
                 </div>
@@ -223,17 +241,17 @@
             <strong>Nema dostupnih ispita!</strong>
         </div>
     }
-</div>
 
-<div class="text-center mt-5">
-    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left"></i> Povratak na početnu stranicu
-    </a>
+    <div class="text-center mt-5">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Povratak na početnu stranicu
+        </a>
+    </div>
 </div>
 
 @section Scripts {
     <script>
-        // Bootstrap 5 tooltip
+        // inicijaliziraj BS5 tooltipove
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
             new bootstrap.Tooltip(el);
         });
@@ -245,20 +263,10 @@
         font-size: 0.85rem;
         padding: 0.35rem 0.75rem;
     }
-
-    .card-header .btn-link {
-        color: #495057;
-        text-decoration: none;
-        width: 100%;
-        text-align: left;
-        position: relative;
-    }
-
-    .accordion .accordion-item {
+    .accordion-item {
         border: 1px solid rgba(0,0,0,.125);
-        margin-bottom: 0.5rem;
+        margin-bottom: .5rem;
     }
-
     .accordion-button:not(.collapsed) {
         color: #0d6efd;
         background-color: #e7f1ff;

@@ -5,6 +5,9 @@ namespace StudentHub.ViewModels
 {
     public class IspitCreateViewModel
     {
+        [Key]
+        public long Id { get; set; }
+
         [Required(ErrorMessage = "Studijski program je obavezan.")]
         [Display(Name = "Studijski program")]
         public long StudijskiProgramId { get; set; }

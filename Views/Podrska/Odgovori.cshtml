@@ -5,33 +5,44 @@
 }
 
 <div class="card shadow-sm mx-auto" style="max-width: 560px;">
+    <div class="card-header bg-info text-white">
+        <h2 class="card-title mb-0">
+            <i class="fas fa-reply me-2"></i>@ViewData["Title"]
+        </h2>
+    </div>
     <div class="card-body">
-        <h2 class="card-title">@ViewData["Title"]</h2>
-        <hr />
         <div class="mb-4">
-            <strong>Naslov:</strong> @Model.Naslov <br />
-            <strong>Opis upita:</strong> @Model.Opis <br />
-            <strong>Postavio/la:</strong> @($"{Model.Korisnik?.Ime} {Model.Korisnik?.Prezime}") <br />
-            <strong>Datum kreiranja:</strong> @Model.DatumKreiranja.ToString("dd.MM.yyyy HH:mm")
+            <p><strong>Naslov:</strong> @Model.Naslov</p>
+            <p><strong>Opis upita:</strong> @Model.Opis</p>
+            <p><strong>Postavio/la:</strong> @($"{Model.Korisnik?.Ime} {Model.Korisnik?.Prezime}")</p>
+            <p><strong>Datum kreiranja:</strong> @Model.DatumKreiranja.ToString("dd.MM.yyyy HH:mm")</p>
         </div>
-        <form asp-action="@(isEdit ? "EditOdgovor" : "Odgovori")" method="post">
+
+        <form asp-action="@(isEdit ? "EditOdgovor" : "Odgovori")" method="post" novalidate>
+            @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Id" />
+
             <div class="mb-3">
-                <label for="odgovor" class="form-label">@((isEdit ? "Uredi odgovor" : "Odgovor na upit"))</label>
-                <textarea name="odgovor" id="odgovor" class="form-control" rows="5" required>@(isEdit? Model.Odgovor: "")</textarea>
+                <label for="odgovor" class="form-label fw-bold">
+                    @(isEdit ? "Uredi odgovor" : "Odgovor na upit")
+                </label>
+                <textarea name="odgovor" id="odgovor" class="form-control" rows="5" required>
+          @(isEdit? Model.Odgovor: "")
+        </textarea>
             </div>
-            <button type="submit" class="btn btn-success me-2">
-                <i class="fas fa-paper-plane"></i> @(isEdit ? "Sačuvaj odgovor" : "Pošalji odgovor")
-            </button>
-            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Nazad
-            </a>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-paper-plane me-1"></i>@(isEdit ? "Sačuvaj odgovor" : "Pošalji odgovor")
+                </button>
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Nazad
+                </a>
+            </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

@@ -34,12 +34,14 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Index(string sortOrder, bool? showArchived, string searchPredmet = "")
         {
+            bool showArchivedBool = showArchived ?? false;
+
+            ViewBag.ShowArchived = showArchivedBool;
+
             var studijskiProgrami = await _context.StudijskiProgrami.ToListAsync();
             var nastavniPlanovi = await _context.NastavniPlanovi.ToListAsync();
             var predmeti = await _context.Predmeti.ToListAsync();
             var ispiti = await _context.Ispiti.ToListAsync();
-            bool showArchivedBool = showArchived ?? false;
-
             var userId = _userManager.GetUserId(User);
 
             // Filtriranje po ulozi
@@ -50,8 +52,8 @@ namespace StudentHub.Controllers
                 {
                     ispiti = ispiti.Where(i => !i.Arhivirano).ToList();
                 }
-                // ako je showArchived == true → prikazuje sve ispite (ne filtrira dodatno)
 
+                // ako je showArchived == true → prikazuje sve ispite (ne filtrira dodatno)
                 if (!string.IsNullOrEmpty(searchPredmet))
                 {
                     predmeti = predmeti.Where(p => p.Naziv.Contains(searchPredmet, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -135,21 +137,20 @@ namespace StudentHub.Controllers
                 if (!string.IsNullOrEmpty(searchPredmet))
                     predmeti = predmeti.Where(p => p.Naziv.Contains(searchPredmet, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-            ViewBag.ShowArchived = showArchivedBool;
             return View(await CreateViewModel(studijskiProgrami, nastavniPlanovi, predmeti, ispiti, sortOrder));
         }
 
         private async Task<List<IspitDetailsViewModel>> CreateViewModel(
-            List<StudijskiProgram> studijskiProgrami,
-            List<NastavniPlan> nastavniPlanovi,
-            List<Predmet> predmeti,
-            List<Ispit> ispiti,
-            string sortOrder)
+    List<StudijskiProgram> studijskiProgrami,
+    List<NastavniPlan> nastavniPlanovi,
+    List<Predmet> predmeti,
+    List<Ispit> ispiti,
+    string sortOrder)
         {
             var userId = _userManager.GetUserId(User);
             var student = await _context.Studenti.FirstOrDefaultAsync(s => s.AspNetUserId == userId);
 
-            var ocjene = new Dictionary<long?, List<Ocjena>>();
+            var ocjene = new Dictionary<long, List<Ocjena>>();
             var prijavljeniIspitiIds = new List<long>();
 
             // Id-jevi ispita koje prikazujemo
@@ -164,8 +165,8 @@ namespace StudentHub.Controllers
             {
                 // OCJENE studenta
                 ocjene = await _context.Ocjene
-                    .Where(o => o.StudentId == student.Id)
-                    .GroupBy(o => o.PredmetId)
+                    .Where(o => o.StudentId == student.Id && o.PredmetId != null)
+                    .GroupBy(o => o.PredmetId.Value)
                     .ToDictionaryAsync(g => g.Key, g => g.ToList());
 
                 // PRIJAVLJENI ISPITI za studenta
@@ -622,7 +623,6 @@ namespace StudentHub.Controllers
             var prijava = await _context.Prijave
                 .Include(p => p.Ispit)
                 .FirstOrDefaultAsync(p => p.IspitId == model.IspitId && p.StudentId == model.StudentId);
-
             if (prijava == null)
                 return NotFound(new { success = false, message = "Prijava nije pronađena." });
 
@@ -631,11 +631,10 @@ namespace StudentHub.Controllers
 
             var bodovi = prijava.Bodovi;
             var ispit = prijava.Ispit;
-            var uslovZaPolaganje = ispit.UslovZaPolaganje;
+            bool polozen = bodovi.HasValue && bodovi >= ispit.UslovZaPolaganje;
 
-            bool polozen = bodovi.HasValue && bodovi >= uslovZaPolaganje;
-
-            _logger.LogInformation($"Uneseno {bodovi} bodova za studenta {prijava.StudentId} na ispitu {model.IspitId}. Položen: {polozen}");
+            // SignalR notifikacija
+            await _hubContext.Clients.All.SendAsync("UpdateRegisteredStudents", model.IspitId);
 
             return Ok(new
             {
@@ -833,7 +832,7 @@ namespace StudentHub.Controllers
                 .Where(s => studentiIds.Contains(s.Id))
                 .Select(s => new StudentHub.Models.Korisnik
                 {
-                    Id = s.Id, // Student.Id jer Student *nasljeđuje* Korisnik
+                    Id = s.Id,
                     Ime = s.Ime,
                     Prezime = s.Prezime,
                     Uloga = Uloga.Student
@@ -934,29 +933,26 @@ namespace StudentHub.Controllers
                 .Include(k => k.VidljivostKorisnici)
                 .FirstOrDefaultAsync(k => k.Id == id);
 
-            if (komentar == null)
-            {
-                return NotFound();
-            }
+            if (komentar == null) return NotFound();
 
             var korisnikId = GetTrenutniKorisnikId();
 
             if (_context.Ispiti.Any(i => i.Id == komentar.IspitId && i.Arhivirano))
-            {
-                TempData["Error"] = "Ispit je arhiviran. Nije moguće uređivati komentar.";
-                return RedirectToAction("Details", new { id = komentar.IspitId });
-            }
+                return BadRequest("Ispit je arhiviran.");
 
             if (komentar.KorisnikId != korisnikId && !User.IsInRole("Studentska služba"))
-            {
                 return Forbid();
-            }
 
             _context.Komentari.Remove(komentar);
             await _context.SaveChangesAsync();
 
-            TempData["Message"] = "Komentar uspješno obrisan.";
+            // Ako je AJAX (X-Requested-With: XMLHttpRequest), vratiamo JSON
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Ok(new { success = true });
+            }
 
+            TempData["Message"] = "Komentar uspješno obrisan.";
             return RedirectToAction("Details", new { id = komentar.IspitId });
         }
 

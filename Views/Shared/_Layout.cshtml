@@ -1,181 +1,199 @@
-﻿<!DOCTYPE html>
+﻿@* _Layout.cshtml *@
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - StudentHub</title>
-
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Bootstrap 5 CSS (local) -->
+    <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/accessibility.css" />
     <link rel="stylesheet" href="~/css/support.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Leaflet CSS -->
+    <!-- Leaflet CSS (ako treba za mape) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100" style="background-color: #f5f7fb;">
     <div class="wrapper">
         <!-- Sidebar -->
-        <nav id="sidebar" class="bg-light border-end">
-            <div class="sidebar-header p-3 bg-primary text-white">
-                <h3 class="fw-bold mb-0 d-flex align-items-center">
+        <nav id="sidebar" class="bg-white border-end shadow-sm">
+            <div class="sidebar-header p-3 bg-primary text-white rounded-4 text-center">
+                <h2 class="fw-bold mb-0" style="letter-spacing:1px;">
                     <i class="fas fa-graduation-cap me-2"></i> StudentHub
-                </h3>
-                <hr class="my-2 bg-light">
+                </h2>
+                <hr class="my-2 opacity-25">
+                <small class="d-block text-white-50">Fakultetski informacioni sistem</small>
             </div>
-
-            <ul class="list-unstyled components px-2">
-                <li class="nav-item">
-                    <a asp-controller="Home" asp-action="Index" class="nav-link d-flex align-items-center">
-                        <i class="fas fa-home me-2"></i> Početna
+            <ul class="list-unstyled components px-2 pt-3">
+                <li class="nav-item mb-1">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link d-flex align-items-center rounded-3">
+                        <i class="fas fa-home me-3 text-primary"></i>
+                        <span>Početna</span>
                     </a>
                 </li>
-
-                <!-- Osoblje Dropdown -->
-                <li class="nav-item">
+                <!-- Osoblje -->
+                <li class="nav-item mb-1">
                     <a href="#osobljeSubmenu" data-bs-toggle="collapse" aria-expanded="false"
-                       class="nav-link dropdown-toggle d-flex align-items-center">
-                        <i class="fas fa-users me-2"></i> Osoblje
+                       class="nav-link dropdown-toggle d-flex align-items-center rounded-3">
+                        <i class="fas fa-users me-3 text-success"></i>
+                        <span>Osoblje</span>
                     </a>
                     <ul class="collapse list-unstyled ps-4" id="osobljeSubmenu">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Studenti" asp-action="Index"><i class="fas fa-user-graduate me-2"></i>Studenti</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Profesori" asp-action="Index"><i class="fas fa-chalkboard-teacher me-2"></i>Profesori</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Asistenti" asp-action="Index"><i class="fas fa-user-tie me-2"></i>Asistenti</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="StudentskaSluzba" asp-action="Index"><i class="fas fa-headset me-2"></i>Studentska Služba</a></li>
+                        <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="Studenti" asp-action="Index"><i class="fas fa-user-graduate me-2 text-muted"></i>Studenti</a></li>
+                        <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="Profesori" asp-action="Index"><i class="fas fa-chalkboard-teacher me-2 text-muted"></i>Profesori</a></li>
+                        <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="Asistenti" asp-action="Index"><i class="fas fa-user-tie me-2 text-muted"></i>Asistenti</a></li>
+                        <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="StudentskaSluzba" asp-action="Index"><i class="fas fa-headset me-2 text-muted"></i>Studentska Služba</a></li>
                     </ul>
                 </li>
-
-                <!-- Akademski podaci Dropdown -->
-                <li class="nav-item">
+                <!-- Akademski podaci -->
+                <li class="nav-item mb-1">
                     <a href="#akademskipodaciSubmenu" data-bs-toggle="collapse" aria-expanded="false"
-                       class="nav-link dropdown-toggle d-flex align-items-center">
-                        <i class="fas fa-book me-2"></i> Akademski podaci
+                       class="nav-link dropdown-toggle d-flex align-items-center rounded-3">
+                        <i class="fas fa-book me-3 text-info"></i>
+                        <span>Akademski podaci</span>
                     </a>
                     <ul class="collapse list-unstyled ps-4" id="akademskipodaciSubmenu">
                         @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Ispiti" asp-action="Index">Ispiti</a></li>
+                            <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="Ispiti" asp-action="Index"><i class="fas fa-file-alt me-2 text-muted"></i>Ispiti</a></li>
                         }
                         @if (User.IsInRole("Student") || User.IsInRole("Studentska služba") || User.IsInRole("Profesor"))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Ocjene" asp-action="Index">Ocjene</a></li>
+                            <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="Ocjene" asp-action="Index"><i class="fas fa-star-half-alt me-2 text-muted"></i>Ocjene</a></li>
                         }
-                        <li class="nav-item"><a class="nav-link" asp-controller="Predmeti" asp-action="Index">Predmeti</a></li>
+                        <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="Predmeti" asp-action="Index"><i class="fas fa-book-open me-2 text-muted"></i>Predmeti</a></li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="StatistikaIzbornihPredmeta" asp-action="Index">Statistika izbornih predmeta</a></li>
+                            <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="StatistikaIzbornihPredmeta" asp-action="Index"><i class="fas fa-chart-pie me-2 text-muted"></i>Statistika</a></li>
                         }
                         @if (User.IsInRole("Studentska služba"))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="StudijskiProgramIzborniLimiti" asp-action="Index">Limiti izbornih predmeta</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Rasporedi" asp-action="Index">Rasporedi</a></li>
+                            <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="StudijskiProgramIzborniLimiti" asp-action="Index"><i class="fas fa-sliders-h me-2 text-muted"></i>Limiti predmeta</a></li>
+                            <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="Rasporedi" asp-action="Index"><i class="fas fa-calendar-alt me-2 text-muted"></i>Rasporedi</a></li>
                         }
-                        <li class="nav-item"><a class="nav-link" asp-controller="NastavniPlanovi" asp-action="Index">Nastavni planovi</a></li>
+                        <li class="nav-item"><a class="nav-link d-flex align-items-center" asp-controller="NastavniPlanovi" asp-action="Index"><i class="fas fa-tasks me-2 text-muted"></i>Nastavni planovi</a></li>
                     </ul>
                 </li>
-
-                <!-- Studijski Podaci Dropdown -->
-                <li class="nav-item">
+                <!-- Studijski programi -->
+                <li class="nav-item mb-1">
                     <a href="#studijskiprogramiSubmenu" data-bs-toggle="collapse" aria-expanded="false"
-                       class="nav-link dropdown-toggle d-flex align-items-center">
-                        <i class="fas fa-graduation-cap me-2"></i> Studijski programi
+                       class="nav-link dropdown-toggle d-flex align-items-center rounded-3">
+                        <i class="fas fa-graduation-cap me-3 text-warning"></i>
+                        <span>Studijski programi</span>
                     </a>
                     <ul class="collapse list-unstyled ps-4" id="studijskiprogramiSubmenu">
                         @await Component.InvokeAsync("StudijskiProgramiMenu")
                     </ul>
                 </li>
-
-                <!-- Ostalo Dropdown -->
+                <!-- Ostalo -->
                 @if (User.IsInRole("Student") || User.IsInRole("Studentska služba"))
                 {
-                    <li class="nav-item">
+                    <li class="nav-item mb-1">
                         <a href="#ostaloSubmenu" data-bs-toggle="collapse" aria-expanded="false"
-                           class="nav-link dropdown-toggle d-flex align-items-center">
-                            <i class="fas fa-ellipsis-h me-2"></i> Ostalo
+                           class="nav-link dropdown-toggle d-flex align-items-center rounded-3">
+                            <i class="fas fa-ellipsis-h me-3 text-secondary"></i>
+                            <span>Ostalo</span>
                         </a>
                         <ul class="collapse list-unstyled ps-4" id="ostaloSubmenu">
-                            <li class="nav-item"><a class="nav-link" asp-controller="Zahtjevi" asp-action="Index" asp-route-id="1">Zahtjevi</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Uvjerenja" asp-action="Index" asp-route-id="1">Uvjerenja</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Dokumenti" asp-action="Index" asp-route-id="1">Dokumenti</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center"
+                                   asp-controller="Zahtjevi" asp-action="Index">
+                                    <i class="fas fa-paper-plane me-2 text-muted"></i>
+                                    Zahtjevi
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center"
+                                   asp-controller="Uvjerenja" asp-action="Index">
+                                    <i class="fas fa-file-certificate me-2 text-muted"></i>
+                                    Uvjerenja
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center"
+                                   asp-controller="Dokumenti" asp-action="Index">
+                                    <i class="fas fa-file-archive me-2 text-muted"></i>
+                                    Dokumenti
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 }
-
                 <!-- Obavještenja -->
                 @if (User.IsInRole("Studentska služba") || User.IsInRole("Profesor") || User.IsInRole("Asistent"))
                 {
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" asp-controller="Obavjestenja" asp-action="Index">
-                            <i class="fas fa-bullhorn me-2"></i> Obavještenja
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center rounded-3" asp-controller="Obavjestenja" asp-action="Index">
+                            <i class="fas fa-bullhorn me-3 text-danger"></i>
+                            <span>Obavještenja</span>
                         </a>
                     </li>
                 }
-
-                <!-- Moji Podaci -->
+                <!-- Moji podaci -->
                 @if (User.IsInRole("Student") || User.IsInRole("Profesor") || User.IsInRole("Asistent") || User.IsInRole("Studentska služba"))
                 {
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" asp-controller="MojiPodaci" asp-action="Index">
-                            <i class="fas fa-user-circle me-2"></i> Moji podaci
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center rounded-3" asp-controller="MojiPodaci" asp-action="Index">
+                            <i class="fas fa-user-circle me-3 text-purple"></i>
+                            <span>Moji podaci</span>
                         </a>
                     </li>
                 }
-
                 <!-- Pravilnici -->
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center" asp-controller="Pravilnici" asp-action="Index">
-                        <i class="fas fa-file-alt me-2"></i> Pravilnici
+                <li class="nav-item mb-1">
+                    <a class="nav-link d-flex align-items-center rounded-3" asp-controller="Pravilnici" asp-action="Index">
+                        <i class="fas fa-file-alt me-3 text-dark"></i>
+                        <span>Pravilnici</span>
                     </a>
                 </li>
             </ul>
-
             <div class="sidebar-footer p-3 mt-auto bg-light">
                 <div class="theme-switcher d-flex align-items-center justify-content-between">
                     <span class="d-flex align-items-center">
-                        <i class="fas fa-sun me-2"></i>Tema:
+                        <i class="fas fa-sun me-2 text-warning"></i>Tema:
                     </span>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="darkModeSwitch">
                         <label class="form-check-label" for="darkModeSwitch">
-                            <i class="fas fa-moon"></i>
+                            <i class="fas fa-moon text-primary"></i>
                         </label>
                     </div>
+                </div>
+                <div class="mt-2 text-center small text-muted">
+                    Verzija 1.0.0
                 </div>
             </div>
         </nav>
         <div id="sidebar-overlay"></div>
 
         <!-- Main Content -->
-        <div id="content">
+        <div id="content" class="bg-light">
             <!-- Top Navigation -->
-            <nav class="navbar navbar-expand-lg shadow-sm">
-                <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+                <div class="container-fluid px-4">
                     <button id="sidebarToggle" class="btn btn-sm btn-outline-primary me-2">
                         <i class="fas fa-bars"></i>
                     </button>
-
-                    <div class="d-flex align-items-center ms-auto">
-                        <div class="me-3">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-user-circle me-2 text-primary"></i>
-                                <span class="fw-medium">@User.Identity?.Name</span>
-                            </div>
-                        </div>
-                        <partial name="_LoginPartial" />
+                    <!-- Ovo automatski pozicionira sve desno -->
+                    <div class="ms-auto d-flex align-items-center">
+                        @await Html.PartialAsync("_LoginPartial")
                     </div>
                 </div>
             </nav>
-
             <!-- Main Content Area -->
             <main role="main" class="flex-grow-1">
                 <div class="container-fluid p-4">
@@ -186,7 +204,6 @@
             </main>
         </div>
     </div>
-
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -195,7 +212,6 @@
     <script src="~/js/theme.js" asp-append-version="true"></script>
     <script src="~/js/accessibility.js"></script>
     <script src="~/js/support.js"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

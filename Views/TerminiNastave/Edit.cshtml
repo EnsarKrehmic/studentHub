@@ -1,9 +1,7 @@
 ﻿@model StudentHub.Models.TerminNastave
-
 @{
-    ViewData["Title"] = "Uredi termin";
-    var predmeti = ViewBag.Predmeti as List<StudentHub.Models.Predmet>;
-
+    ViewData["Title"] = "Uredi termin nastave";
+    var predmeti = ViewBag.Predmeti as List<StudentHub.Models.Predmet> ?? new();
     var dani = new List<(DayOfWeek EnumValue, string Ime)>()
     {
         (DayOfWeek.Monday, "Ponedjeljak"),
@@ -16,80 +14,92 @@
     };
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4"><i class="fas fa-edit"></i> Uređivanje termina nastave</h2>
-
-    <form asp-action="Edit" method="post" class="needs-validation" novalidate>
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="RasporedId" />
-
-        <div class="mb-3">
-            <label asp-for="PredmetId" class="form-label">Predmet</label>
-            <select asp-for="PredmetId" class="form-select" required>
-                <option value="">-- Odaberi predmet --</option>
-                @foreach (var p in predmeti)
-                {
-                    <option value="@p.Id" selected="@(Model.PredmetId == p.Id ? "selected" : null)">@p.Naziv</option>
-                }
-            </select>
-            <span asp-validation-for="PredmetId" class="text-danger"></span>
+<div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0"><i class="fas fa-edit me-2"></i>@ViewData["Title"]</h4>
         </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="RasporedId" />
 
-        <div class="mb-3">
-            <label asp-for="Vrsta" class="form-label">Vrsta nastave</label>
-            <select asp-for="Vrsta" class="form-select" required>
-                <option value="">-- Odaberi vrstu --</option>
-                <option value="1" selected="@(Model.Vrsta == StudentHub.Models.VrstaNastave.Predavanje ? "selected" : null)">Predavanje</option>
-                <option value="2" selected="@(Model.Vrsta == StudentHub.Models.VrstaNastave.Vjezbe ? "selected" : null)">Vježbe</option>
-            </select>
-            <span asp-validation-for="Vrsta" class="text-danger"></span>
-        </div>
+                <div class="mb-3">
+                    <label asp-for="PredmetId" class="form-label">Predmet</label>
+                    <select asp-for="PredmetId" class="form-select" required>
+                        <option value="">-- Odaberi predmet --</option>
+                        @foreach (var p in predmeti)
+                        {
+                            <option value="@p.Id" selected="@(Model.PredmetId == p.Id)">
+                                @p.Naziv
+                            </option>
+                        }
+                    </select>
+                    <span asp-validation-for="PredmetId" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3">
-            <label asp-for="Dan" class="form-label">Dan u sedmici</label>
-            <select asp-for="Dan" class="form-select" required>
-                <option value="">-- Odaberi dan --</option>
-                @foreach (var dan in dani)
-                {
-                    <option value="@dan.EnumValue" selected="@(Model.Dan == dan.EnumValue ? "selected" : null)">
-                        @dan.Ime
-                    </option>
-                }
-            </select>
-            <span asp-validation-for="Dan" class="text-danger"></span>
-        </div>
+                <div class="mb-3">
+                    <label asp-for="Vrsta" class="form-label">Vrsta nastave</label>
+                    <select asp-for="Vrsta" class="form-select" required>
+                        <option value="">-- Odaberi vrstu --</option>
+                        <option value="Predavanje" selected="@(Model.Vrsta == StudentHub.Models.VrstaNastave.Predavanje)">
+                            Predavanje
+                        </option>
+                        <option value="Vjezbe" selected="@(Model.Vrsta == StudentHub.Models.VrstaNastave.Vjezbe)">
+                            Vježbe
+                        </option>
+                    </select>
+                    <span asp-validation-for="Vrsta" class="text-danger"></span>
+                </div>
 
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label asp-for="VrijemeOd" class="form-label">Vrijeme početka</label>
-                <input asp-for="VrijemeOd" type="time" class="form-control" required />
-                <span asp-validation-for="VrijemeOd" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label asp-for="VrijemeDo" class="form-label">Vrijeme završetka</label>
-                <input asp-for="VrijemeDo" type="time" class="form-control" required />
-                <span asp-validation-for="VrijemeDo" class="text-danger"></span>
-            </div>
-        </div>
+                <div class="mb-3">
+                    <label asp-for="Dan" class="form-label">Dan u sedmici</label>
+                    <select asp-for="Dan" class="form-select" required>
+                        <option value="">-- Odaberi dan --</option>
+                        @foreach (var dan in dani)
+                        {
+                            <option value="@dan.EnumValue" selected="@(Model.Dan == dan.EnumValue)">
+                                @dan.Ime
+                            </option>
+                        }
+                    </select>
+                    <span asp-validation-for="Dan" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3">
-            <label asp-for="Lokacija" class="form-label">Lokacija</label>
-            <input asp-for="Lokacija" class="form-control" required />
-            <span asp-validation-for="Lokacija" class="text-danger"></span>
-        </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="VrijemeOd" class="form-label">Vrijeme početka</label>
+                        <input asp-for="VrijemeOd" type="time" class="form-control" required />
+                        <span asp-validation-for="VrijemeOd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="VrijemeDo" class="form-label">Vrijeme završetka</label>
+                        <input asp-for="VrijemeDo" type="time" class="form-control" required />
+                        <span asp-validation-for="VrijemeDo" class="text-danger"></span>
+                    </div>
+                </div>
 
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Sačuvaj promjene
-            </button>
-            <a asp-controller="Rasporedi" asp-action="Details" asp-route-id="@Model.RasporedId" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left"></i> Nazad
-            </a>
+                <div class="mb-3">
+                    <label asp-for="Lokacija" class="form-label">Lokacija</label>
+                    <input asp-for="Lokacija" class="form-control" required />
+                    <span asp-validation-for="Lokacija" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-1"></i> Sačuvaj promjene
+                    </button>
+                    <a asp-controller="Rasporedi" asp-action="Details" asp-route-id="@Model.RasporedId" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Nazad
+                    </a>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

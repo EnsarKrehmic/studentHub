@@ -54,7 +54,10 @@ builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new() { Title = "StudentHub API", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -109,6 +112,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+app.MapControllers();
 app.MapHub<NotificationHub>("/notificationHub");
 
 app.Use(async (context, next) =>

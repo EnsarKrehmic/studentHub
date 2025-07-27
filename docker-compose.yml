@@ -1,0 +1,25 @@
+﻿version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-server-2022
+    ports:
+      - "1400:1433"
+    environment:
+      SA_PASSWORD: "A&VeryComplex123Password"
+      ACCEPT_EULA: "Y"
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: studenthub-container
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - db
+    restart: unless-stopped

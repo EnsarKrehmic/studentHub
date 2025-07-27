@@ -31,6 +31,7 @@ namespace StudentHub.Controllers
             _hubContext = hubContext;
         }
 
+        [HttpGet("")]
         [Authorize(Roles = "Student, Studentska služba, Profesor, Asistent")]
         public async Task<IActionResult> Index(string sortOrder, bool? showArchived, string searchPredmet = "")
         {

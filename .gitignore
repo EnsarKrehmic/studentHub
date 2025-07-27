@@ -1,2 +1,42 @@
-﻿.vs/
+﻿# IDEs and editors
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+bin/
 obj/
+artifacts/
+out/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# User-specific files
+*.swp
+*.bak
+*.tmp
+
+# Docker
+*.tar
+docker-compose.override.yml
+
+# Runtime artifacts
+*.db
+*.pid
+*.coverage
+
+# Frontend artifacts
+wwwroot/dist/
+wwwroot/node_modules/
+
+# Publish artifacts
+*.Publish.xml
+publish/

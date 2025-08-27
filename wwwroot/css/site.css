@@ -17,6 +17,20 @@ html {
     white-space: nowrap;
 }
 
+.validation-summary-valid,
+.field-validation-valid {
+    display: none;
+}
+
+.validation-summary-errors {
+    display: block;
+}
+
+/* Ako zadržiš .alert klasu, osiguraj da se i tad sakrije */
+.validation-summary-valid.alert {
+    display: none !important;
+}
+
 [data-bs-theme="dark"] p,
 [data-bs-theme="dark"] .lead,
 [data-bs-theme="dark"] .text-muted {

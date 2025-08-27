@@ -22,37 +22,43 @@ namespace StudentHub.Controllers
         }
 
         // GET: Predmeti
+        // GET: Predmeti
         [HttpGet("")]
         public IActionResult Index(long? studijskiProgramId, int? godinaStudija)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Učitavanje predmeta sa svim vezama
             var predmetiQuery = _context.Predmeti
                 .Include(p => p.Profesor)
+                .Include(p => p.PredmetProfesori)
+                    .ThenInclude(pp => pp.Profesor)
                 .Include(p => p.Asistent)
+                .Include(p => p.PredmetAsistenti)
+                    .ThenInclude(pa => pa.Asistent)
                 .Include(p => p.StudijskiProgram)
                 .AsQueryable();
 
+            // Filtriranje prema korisničkoj ulozi
             if (User.IsInRole("Student"))
             {
                 predmetiQuery = predmetiQuery.Where(p => p.StudentNaPredmetima.Any(snp => snp.Student.AspNetUserId == userId));
             }
             else if (User.IsInRole("Profesor"))
             {
-                predmetiQuery = predmetiQuery.Where(p => p.Profesor.AspNetUserId == userId || p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId));
+                predmetiQuery = predmetiQuery.Where(p => p.PredmetProfesori.Any(pp => pp.Profesor.AspNetUserId == userId));
             }
             else if (User.IsInRole("Asistent"))
             {
-                predmetiQuery = predmetiQuery.Where(p => p.Asistent.AspNetUserId == userId || p.PredmetAsistenti.Any(pa => pa.Asistent.AspNetUserId == userId));
+                predmetiQuery = predmetiQuery.Where(p => p.PredmetAsistenti.Any(pa => pa.Asistent.AspNetUserId == userId));
             }
 
+            // Filtriranje po studijskom programu i godini
             if (studijskiProgramId.HasValue)
-            {
                 predmetiQuery = predmetiQuery.Where(p => p.StudijskiProgramId == studijskiProgramId.Value);
-            }
+
             if (godinaStudija.HasValue)
-            {
                 predmetiQuery = predmetiQuery.Where(p => p.GodinaStudija == godinaStudija.Value);
-            }
 
             var predmeti = predmetiQuery
                 .OrderBy(p => p.StudijskiProgram.Naziv)
@@ -61,8 +67,14 @@ namespace StudentHub.Controllers
                 .ThenBy(p => p.Naziv)
                 .ToList();
 
+            // ViewBag za filtere
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami.OrderBy(x => x.Naziv), "Id", "Naziv", studijskiProgramId);
-            ViewBag.GodineStudija = Enumerable.Range(1, 6).Select(x => new SelectListItem { Value = x.ToString(), Text = $"{x}. godina", Selected = godinaStudija == x }).ToList();
+            ViewBag.GodineStudija = Enumerable.Range(1, 6).Select(x => new SelectListItem
+            {
+                Value = x.ToString(),
+                Text = $"{x}. godina",
+                Selected = godinaStudija == x
+            }).ToList();
 
             return View(predmeti);
         }

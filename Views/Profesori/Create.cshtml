@@ -3,7 +3,6 @@
     ViewData["Title"] = "Dodaj novog profesora";
     Layout = "_Layout";
 }
-
 <div class="container py-5">
     <div class="card shadow-sm mx-auto" style="max-width: 800px;">
         <div class="card-header bg-primary text-white">
@@ -24,13 +23,13 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" type="password" class="form-control" placeholder="Unesite lozinku" />
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Unesite lozinku" autocomplete="new-password" />
                         <small class="form-text text-muted">Min. 6 karaktera.</small>
                         <span asp-validation-for="Password" class="text-danger small"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="ConfirmPassword" class="form-label"></label>
-                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Ponovite lozinku" />
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Ponovite lozinku" autocomplete="new-password" />
                         <small class="form-text text-muted">Potvrdite lozinku.</small>
                         <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                     </div>
@@ -42,7 +41,7 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label asp-for="JMBG" class="form-label"></label>
-                        <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" />
+                        <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" maxlength="13" />
                         <small class="form-text text-muted">Tačno 13 cifara.</small>
                         <span asp-validation-for="JMBG" class="text-danger small"></span>
                     </div>
@@ -64,15 +63,13 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="StudijskiProgramIds" class="form-label"></label>
-                        <select asp-for="StudijskiProgramIds" id="StudijskiProgramIds" multiple class="form-select" asp-items="ViewBag.StudijskiProgrami">
-                        </select>
+                        <select asp-for="StudijskiProgramIds" id="StudijskiProgramIds" multiple class="form-select" asp-items="ViewBag.StudijskiProgrami"></select>
                         <small class="form-text text-muted">Držite Ctrl/Cmd za više odabira.</small>
                         <span asp-validation-for="StudijskiProgramIds" class="text-danger small"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="PredmetIds" class="form-label"></label>
-                        <select asp-for="PredmetIds" id="PredmetIds" multiple class="form-select">
-                        </select>
+                        <select asp-for="PredmetIds" id="PredmetIds" multiple class="form-select"></select>
                         <small class="form-text text-muted">Predmeti koje predaje.</small>
                         <span asp-validation-for="PredmetIds" class="text-danger small"></span>
                     </div>
@@ -93,24 +90,28 @@
 
 @section Scripts {
     <script>
-        document.getElementById('StudijskiProgramIds').addEventListener('change', function () {
-            var selected = Array.from(this.selectedOptions).map(o => o.value);
-            fetch('/Profesori/GetPredmetiByStudijskiProgram', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(selected)
-            })
-            .then(r => r.json())
-            .then(data => {
-                var pred = document.getElementById('PredmetIds');
-                pred.innerHTML = '';
-                data.forEach(p => {
-                    var opt = document.createElement('option');
-                    opt.value = p.id;  opt.text = p.naziv;
-                    pred.appendChild(opt);
+        (function() {
+            const ddlProg = document.getElementById('StudijskiProgramIds');
+            const ddlPred = document.getElementById('PredmetIds');
+
+            function loadPredmeti() {
+                const selected = Array.from(ddlProg.selectedOptions).map(o => o.value);
+                fetch('/Profesori/GetPredmetiByStudijskiProgram', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(selected)
+                })
+                .then(r => r.json())
+                .then(data => {
+                    ddlPred.innerHTML = '';
+                    data.forEach(p => ddlPred.add(new Option(p.naziv, p.id)));
                 });
-            });
-        });
+            }
+
+            ddlProg?.addEventListener('change', loadPredmeti);
+            // ako je nešto preselektovano serverom (ModelState error), napuni odmah:
+            if (ddlProg && ddlProg.selectedOptions.length) loadPredmeti();
+        })();
     </script>
     <partial name="_ValidationScriptsPartial" />
 }

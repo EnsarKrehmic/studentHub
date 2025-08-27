@@ -67,12 +67,12 @@
                     </div>
                     <div class="col-md-4">
                         <label asp-for="GodinaStudija" class="form-label"></label>
-                        <input asp-for="GodinaStudija" class="form-control" placeholder="Godina (1–6)" />
+                        <input asp-for="GodinaStudija" class="form-control" type="number" min="1" max="6" placeholder="Godina (1–6)" />
                         <span asp-validation-for="GodinaStudija" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
                         <label asp-for="Semestar" class="form-label"></label>
-                        <input asp-for="Semestar" class="form-control" placeholder="Semestar (1–12)" />
+                        <input asp-for="Semestar" class="form-control" type="number" min="1" max="2" placeholder="Semestar (1–2)" />
                         <span asp-validation-for="Semestar" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
@@ -82,7 +82,9 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="NastavniPlanId" class="form-label"></label>
-                        <select asp-for="NastavniPlanId" class="form-select" asp-items="ViewBag.NastavniPlanovi"></select>
+                        <select asp-for="NastavniPlanId" class="form-select" asp-items="ViewBag.NastavniPlanovi">
+                            <option value="">-- Odaberite --</option>
+                        </select>
                         <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
@@ -107,28 +109,78 @@
 </div>
 
 @section Scripts {
-    <script>
-        document.getElementById('StudijskiProgramId').addEventListener('change', function () {
-            var pid = this.value;
-            // update NastavniPlanId
-            fetch(`/Studenti/GetNastavniPlanovi/${pid}`)
-                .then(r => r.json()).then(plans => {
-                    var sp = document.getElementById('NastavniPlanId');
-                    sp.innerHTML = '<option value="">-- Odaberite --</option>';
-                    plans.forEach(p => {
-                        sp.add(new Option(p.naziv, p.id));
-                    });
-                });
-            // update PredmetIds
-            fetch(`/Studenti/GetPredmetiByStudijskiProgram/${pid}`)
-                .then(r => r.json()).then(preds => {
-                    var pm = document.getElementById('PredmetIds');
-                    pm.innerHTML = '';
-                    preds.forEach(p => {
-                        pm.add(new Option(p.naziv, p.id));
-                    });
-                });
-        });
-    </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        (function () {
+            const ddlProgram = document.getElementById('StudijskiProgramId');
+            const ddlPlan = document.getElementById('NastavniPlanId');
+            const ddlPredmeti = document.getElementById('PredmetIds');
+            const txtGodina = document.getElementById('GodinaStudija');
+            const txtSemestar = document.getElementById('Semestar');
+
+            function fillSelect(select, items, includeEmptyOption) {
+                select.innerHTML = includeEmptyOption ? '<option value="">-- Odaberite --</option>' : '';
+                items.forEach(p => select.add(new Option(p.naziv, p.id)));
+            }
+
+            async function loadPlans(programId) {
+                if (!programId) {
+                    fillSelect(ddlPlan, [], true);
+                    return [];
+                }
+                const res = await fetch(`/Studenti/GetNastavniPlanovi/${programId}`);
+                const plans = await res.json();
+                fillSelect(ddlPlan, plans, true);
+                return plans; // sadrži i { godinaStudija }
+            }
+
+            async function loadSubjects(programId, godina, semestar) {
+                if (!programId) { ddlPredmeti.innerHTML = ''; return; }
+                const params = new URLSearchParams();
+                if (godina) params.set('godinaStudija', godina);
+                if (semestar) params.set('semestar', semestar);
+                const res = await fetch(`/Studenti/GetPredmetiByStudijskiProgram/${programId}?` + params.toString());
+                const preds = await res.json();
+                ddlPredmeti.innerHTML = '';
+                preds.forEach(p => ddlPredmeti.add(new Option(p.naziv, p.id)));
+            }
+
+            async function onProgramChange() {
+                const pid = ddlProgram.value;
+                const plans = await loadPlans(pid);
+
+                // ako je popunjena godina → auto-odaberi plan s tom godinom
+                const godina = txtGodina.value;
+                if (godina && plans && plans.length) {
+                    const match = plans.find(p => (p.godinaStudija + '') === (godina + ''));
+                    if (match) ddlPlan.value = match.id;
+                }
+
+                await loadSubjects(pid, godina, txtSemestar.value);
+            }
+
+            async function onGodinaChange() {
+                const pid = ddlProgram.value;
+                if (!pid) return;
+
+                // planovi pa auto-match po godini
+                const plans = await loadPlans(pid);
+                const godina = txtGodina.value;
+                const match = plans.find(p => (p.godinaStudija + '') === (godina + ''));
+                if (match) ddlPlan.value = match.id;
+
+                await loadSubjects(pid, godina, txtSemestar.value);
+            }
+
+            async function onSemestarChange() {
+                const pid = ddlProgram.value;
+                if (!pid) return;
+                await loadSubjects(pid, txtGodina.value, txtSemestar.value);
+            }
+
+            ddlProgram?.addEventListener('change', onProgramChange);
+            txtGodina?.addEventListener('input', onGodinaChange);
+            txtSemestar?.addEventListener('input', onSemestarChange);
+        })();
+    </script>
 }

@@ -126,23 +126,29 @@
                                     </td>
                                     <td class="no-wrap">
                                         <span class="badge @(ocjena.Vrijednost >= 8
-                                                                                                                  ? "bg-success"
-                                                                                                                  : ocjena.Vrijednost >= 6
-                                                                                                                      ? "bg-warning text-dark"
-                                                                                                                      : "bg-danger") fs-6">
+                                                                                      ? "bg-success"
+                                                                                      : ocjena.Vrijednost >= 6
+                                                                                          ? "bg-warning text-dark"
+                                                                                          : "bg-danger") fs-6">
                                     @ocjena.Vrijednost
                                 </span>
                             </td>
                             @if (prikaziTezinu)
                                     {
                                         <td class="no-wrap">
-                                            @(ocjena.TezinaProcentualno.HasValue
+                                            @(
+                                                                            ocjena.TezinaProcentualno.HasValue
                                                                             ? $"{ocjena.TezinaProcentualno}%"
-                                                                            : "<span class=\"text-muted\">–</span>")
+                                                                            : Html.Raw("<span class=\"text-muted\">–</span>")
+                                                                            )
                             </td>
                                                         }
-                                    <td class="no-wrap">@ocjena.DatumDodjele:dd.MM.yyyy</td>
-                                    <td class="text-center no-wrap">
+                                <td class="no-wrap">
+                                    @(ocjena.DatumDodjele.HasValue
+                                                                    ? ocjena.DatumDodjele.Value.ToString("dd.MM.yyyy")
+                                                                    : "<span class=\"text-muted\">–</span>")
+                            </td>
+                            <td class="text-center no-wrap">
                                         <div class="d-inline-flex gap-1">
                                             <a asp-controller="Ocjene" asp-action="Details" asp-route-id="@ocjena.Id"
                                                class="btn btn-sm btn-outline-secondary" title="Detalji">

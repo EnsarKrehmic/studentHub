@@ -1,9 +1,7 @@
 ﻿@model StudentHub.ViewModels.AsistentCreateViewModel
-
 @{
     ViewData["Title"] = "Dodaj novog asistenta";
 }
-
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-7">
@@ -12,8 +10,9 @@
                     <h3 class="mb-0">@ViewData["Title"]</h3>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Create" method="post" novalidate>
                         @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="alert alert-danger"></div>
 
                         <h5 class="mb-3 mt-2">Prijava</h5>
                         <div class="row g-3">
@@ -25,13 +24,13 @@
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="Password" class="form-label"></label>
-                                <input asp-for="Password" class="form-control" placeholder="Unesite lozinku" />
+                                <input asp-for="Password" type="password" class="form-control" placeholder="Unesite lozinku" autocomplete="new-password" />
                                 <small class="form-text text-muted">Lozinka mora imati najmanje 6 karaktera.</small>
                                 <span asp-validation-for="Password" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="ConfirmPassword" class="form-label"></label>
-                                <input asp-for="ConfirmPassword" class="form-control" placeholder="Ponovite lozinku" />
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Ponovite lozinku" autocomplete="new-password" />
                                 <small class="form-text text-muted">Ponovite istu lozinku radi potvrde.</small>
                                 <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                             </div>
@@ -43,7 +42,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label asp-for="JMBG" class="form-label"></label>
-                                <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" />
+                                <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" maxlength="13" />
                                 <small class="form-text text-muted">Unesite tačno 13 cifara.</small>
                                 <span asp-validation-for="JMBG" class="text-danger small"></span>
                             </div>
@@ -65,13 +64,13 @@
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="StudijskiProgramIds" class="form-label"></label>
-                                <select asp-for="StudijskiProgramIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" id="StudijskiProgramIds" multiple="multiple"></select>
+                                <select asp-for="StudijskiProgramIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" id="StudijskiProgramIds" multiple></select>
                                 <small class="form-text text-muted">Držite <kbd>Ctrl</kbd> ili <kbd>Cmd</kbd> za višestruki odabir.</small>
                                 <span asp-validation-for="StudijskiProgramIds" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="PredmetIds" class="form-label"></label>
-                                <select asp-for="PredmetIds" class="form-control" asp-items="ViewBag.Predmeti" id="PredmetIds" multiple="multiple"></select>
+                                <select asp-for="PredmetIds" class="form-control" asp-items="ViewBag.Predmeti" id="PredmetIds" multiple></select>
                                 <small class="form-text text-muted">Predmeti na kojima asistent učestvuje.</small>
                                 <span asp-validation-for="PredmetIds" class="text-danger small"></span>
                             </div>
@@ -90,27 +89,27 @@
 
 @section Scripts {
     <script>
-        document.getElementById('StudijskiProgramIds').addEventListener('change', function () {
-            var selectedProgramIds = Array.from(this.selectedOptions).map(option => option.value);
-            fetch('/Asistenti/GetPredmetiByStudijskiProgram', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(selectedProgramIds)
-            })
-            .then(response => response.json())
-            .then(data => {
-                var predmetSelect = document.getElementById('PredmetIds');
-                predmetSelect.innerHTML = '';
-                data.forEach(predmet => {
-                    var option = document.createElement('option');
-                    option.value = predmet.id;
-                    option.text = predmet.naziv;
-                    predmetSelect.appendChild(option);
+        (function () {
+            const ddlProg = document.getElementById('StudijskiProgramIds');
+            const ddlPred = document.getElementById('PredmetIds');
+
+            function loadPredmeti() {
+                const selectedProgramIds = Array.from(ddlProg.selectedOptions).map(o => o.value);
+                fetch('/Asistenti/GetPredmetiByStudijskiProgram', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(selectedProgramIds)
+                })
+                .then(r => r.json())
+                .then(data => {
+                    ddlPred.innerHTML = '';
+                    data.forEach(p => ddlPred.add(new Option(p.naziv, p.id)));
                 });
-            });
-        });
+            }
+
+            ddlProg?.addEventListener('change', loadPredmeti);
+            if (ddlProg && ddlProg.selectedOptions.length) loadPredmeti();
+        })();
     </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

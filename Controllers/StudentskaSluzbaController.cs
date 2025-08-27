@@ -147,22 +147,20 @@ namespace StudentHub.Controllers
             };
 
             var result = await _userManager.CreateAsync(identityUser, model.Password);
-
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
-                {
                     ModelState.AddModelError(string.Empty, error.Description);
-                }
 
                 ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
                 return View(model);
             }
 
             // 2. Dodavanje u rolu "Studentska služba"
-            await _userManager.AddToRoleAsync(identityUser, "Studentska služba");
+            try { await _userManager.AddToRoleAsync(identityUser, "Studentska služba"); }
+            catch { /* log opcionalno */ }
 
-            // 3. Kreiranje Studentska služba u bazi
+            // 3. Kreiranje SS entiteta
             var studentskaSluzba = new StudentskaSluzba
             {
                 AspNetUserId = identityUser.Id,
@@ -176,10 +174,10 @@ namespace StudentHub.Controllers
             _context.StudentskeSluzbe.Add(studentskaSluzba);
             await _context.SaveChangesAsync();
 
-            // 4. Pomoćne tabele — Studijski programi
+            // 4. Veze sa studijskim programima
             if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
             {
-                foreach (var studijskiProgramId in model.StudijskiProgramIds)
+                foreach (var studijskiProgramId in model.StudijskiProgramIds.Distinct())
                 {
                     _context.StudentskaSluzbaStudijskiProgrami.Add(new StudentskaSluzbaStudijskiProgram
                     {
@@ -190,8 +188,6 @@ namespace StudentHub.Controllers
             }
 
             await _context.SaveChangesAsync();
-
-            // Gotovo → redirect na Index
             return RedirectToAction(nameof(Index));
         }
 
@@ -200,33 +196,39 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
-            var studentskaSluzba = await _context.StudentskeSluzbe
-                .Include(ss => ss.StudentskaSluzbaStudijskiProgrami)
-                .FirstOrDefaultAsync(ss => ss.Id == id);
+            var ss = await _context.StudentskeSluzbe
+                .Include(x => x.StudentskaSluzbaStudijskiProgrami)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (studentskaSluzba == null)
-            {
-                return NotFound();
-            }
+            if (ss == null) return NotFound();
 
-            var povezaniProgramiIds = studentskaSluzba.StudentskaSluzbaStudijskiProgrami
+            // Identity e-mail kao izvor istine
+            IdentityUser? identityUser = null;
+            if (!string.IsNullOrWhiteSpace(ss.AspNetUserId))
+                identityUser = await _userManager.FindByIdAsync(ss.AspNetUserId);
+
+            var povezaniProgramiIds = ss.StudentskaSluzbaStudijskiProgrami
                 .Select(sp => sp.StudijskiProgramId)
                 .ToList();
 
             var model = new StudentskaSluzbaEditViewModel
             {
-                Id = studentskaSluzba.Id,
-                JMBG = studentskaSluzba.JMBG,
-                Ime = studentskaSluzba.Ime,
-                Prezime = studentskaSluzba.Prezime,
-                Email = studentskaSluzba.Email,
-                Uloga = studentskaSluzba.Uloga,
-                StudijskiProgramiIds = povezaniProgramiIds
+                Id = ss.Id,
+                JMBG = ss.JMBG,
+                Ime = ss.Ime,
+                Prezime = ss.Prezime,
+                Email = identityUser?.Email ?? ss.Email,
+                Uloga = ss.Uloga,
+                StudijskiProgramiIds = povezaniProgramiIds,
+
+                // Sentinel i toggle
+                NewPassword = StudentskaSluzbaEditViewModel.PasswordSentinel,
+                ConfirmNewPassword = StudentskaSluzbaEditViewModel.PasswordSentinel,
+                ChangePassword = false
             };
 
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-
+            // Preselektuj više programa
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramiIds);
             return View(model);
         }
 
@@ -236,49 +238,92 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, StudentskaSluzbaEditViewModel model)
         {
-            if (id != model.Id)
+            if (id != model.Id) return NotFound();
+
+            // helper za repop
+            void PopulatePrograms()
             {
-                return NotFound();
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramiIds);
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var studentskaSluzba = await _context.StudentskeSluzbe
-                    .Include(ss => ss.StudentskaSluzbaStudijskiProgrami)
-                    .FirstOrDefaultAsync(ss => ss.Id == id);
+                PopulatePrograms();
+                return View(model);
+            }
 
-                if (studentskaSluzba == null)
+            var ss = await _context.StudentskeSluzbe
+                .Include(x => x.StudentskaSluzbaStudijskiProgrami)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (ss == null) return NotFound();
+
+            // Ažuriranje osnovnih podataka
+            ss.JMBG = model.JMBG;
+            ss.Ime = model.Ime;
+            ss.Prezime = model.Prezime;
+            ss.Email = model.Email;
+            ss.Uloga = model.Uloga;
+
+            // Identity e-mail i lozinka
+            if (!string.IsNullOrWhiteSpace(ss.AspNetUserId))
+            {
+                var identityUser = await _userManager.FindByIdAsync(ss.AspNetUserId);
+                if (identityUser != null)
                 {
-                    return NotFound();
+                    // E-mail/username promjena
+                    if (!string.Equals(identityUser.Email, model.Email, StringComparison.OrdinalIgnoreCase))
+                    {
+                        identityUser.Email = model.Email;
+                        identityUser.UserName = model.Email; // ako koristite e-mail kao username
+                        var updateRes = await _userManager.UpdateAsync(identityUser);
+                        if (!updateRes.Succeeded)
+                        {
+                            foreach (var e in updateRes.Errors)
+                                ModelState.AddModelError(nameof(model.Email), e.Description);
+                            PopulatePrograms();
+                            return View(model);
+                        }
+                    }
+
+                    // Promjena lozinke po checkboxu + sentinel
+                    var wantsPasswordChange = model.ChangePassword
+                                                   && !string.IsNullOrWhiteSpace(model.NewPassword)
+                                                   && model.NewPassword != StudentskaSluzbaEditViewModel.PasswordSentinel;
+
+                    if (wantsPasswordChange)
+                    {
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(identityUser);
+                        var passRes = await _userManager.ResetPasswordAsync(identityUser, token, model.NewPassword!);
+                        if (!passRes.Succeeded)
+                        {
+                            foreach (var e in passRes.Errors)
+                                ModelState.AddModelError(nameof(model.NewPassword), e.Description);
+                            PopulatePrograms();
+                            return View(model);
+                        }
+                    }
                 }
+            }
 
-                // Ažuriranje osnovnih podataka
-                studentskaSluzba.JMBG = model.JMBG;
-                studentskaSluzba.Ime = model.Ime;
-                studentskaSluzba.Prezime = model.Prezime;
-                studentskaSluzba.Email = model.Email;
-                studentskaSluzba.Uloga = model.Uloga;
+            // Veze sa studijskim programima: zamijeni set
+            var stareVeze = ss.StudentskaSluzbaStudijskiProgrami.ToList();
+            _context.StudentskaSluzbaStudijskiProgrami.RemoveRange(stareVeze);
 
-                // Brišemo postojeće veze sa studijskim programima
-                _context.StudentskaSluzbaStudijskiProgrami.RemoveRange(studentskaSluzba.StudentskaSluzbaStudijskiProgrami);
-
-                // Dodajemo nove veze iz ViewModel-a
-                foreach (var programId in model.StudijskiProgramiIds)
+            if (model.StudijskiProgramiIds != null && model.StudijskiProgramiIds.Any())
+            {
+                foreach (var programId in model.StudijskiProgramiIds.Distinct())
                 {
                     _context.StudentskaSluzbaStudijskiProgrami.Add(new StudentskaSluzbaStudijskiProgram
                     {
-                        StudentskaSluzbaId = studentskaSluzba.Id,
-                        StudijskiProgramId = programId,
+                        StudentskaSluzbaId = ss.Id,
+                        StudijskiProgramId = programId
                     });
                 }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View(model);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: StudentskaSluzba/Delete/{id}

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentHub.Data;
 using StudentHub.Models;
 using StudentHub.ViewModels;
@@ -207,11 +208,11 @@ namespace StudentHub.Controllers
         public IActionResult Create()
         {
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.NastavniPlanovi = new SelectList(new List<SelectListItem>(), "Value", "Text");
-            ViewBag.Predmeti = new SelectList(new List<SelectListItem>(), "Value", "Text");
-
+            ViewBag.NastavniPlanovi = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
+            ViewBag.Predmeti = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
             return View();
         }
+
 
         // POST: Studenti/Create
         [HttpPost("Create")]
@@ -221,155 +222,155 @@ namespace StudentHub.Controllers
         {
             if (!ModelState.IsValid)
             {
-                foreach (var entry in ModelState)
-                {
-                    foreach (var error in entry.Value.Errors)
-                    {
-                        Console.WriteLine($"Field: {entry.Key}, Error: {error.ErrorMessage}");
-                    }
-                }
-
+                // repopulate dropdowns (koristi Program + Godina + Semestar ako su uneseni)
                 ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
 
+                // filtriraj planove po programu
                 ViewBag.NastavniPlanovi = model.StudijskiProgramId != 0
                     ? new SelectList(
-                        _context.NastavniPlanovi
+                        await _context.NastavniPlanovi
                             .Where(np => np.StudijskiProgramId == model.StudijskiProgramId)
                             .Select(np => new
                             {
                                 Id = np.Id,
                                 Naziv = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godinu"
-                            }).ToList(),
+                            }).ToListAsync(),
                         "Id", "Naziv", model.NastavniPlanId)
-                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+                    : new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
 
-                ViewBag.Predmeti = model.StudijskiProgramId != 0
-                    ? new SelectList(
-                        _context.Predmeti
-                            .Where(p => p.NastavniPlan.StudijskiProgramId == model.StudijskiProgramId)
-                            .Select(p => new
-                            {
-                                Id = p.Id,
-                                Naziv = p.Naziv
-                            }).ToList(),
-                        "Id", "Naziv", model.PredmetIds)
-                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
+                // ako znamo i godinu → pronađi konkretan plan i filtriraj predmete po njemu (+ semestar ako je postavljen)
+                if (model.StudijskiProgramId != 0 && model.GodinaStudija.HasValue)
+                {
+                    var np = await _context.NastavniPlanovi.FirstOrDefaultAsync(x =>
+                        x.StudijskiProgramId == model.StudijskiProgramId &&
+                        x.GodinaStudija == model.GodinaStudija.Value.ToString());
+
+                    if (np != null)
+                    {
+                        var predmeti = await _context.Predmeti
+                            .Where(p => p.NastavniPlanId == np.Id)
+                            .Where(p => model.Semestar == null || p.Semestar == model.Semestar)
+                            .Select(p => new { p.Id, p.Naziv })
+                            .ToListAsync();
+
+                        ViewBag.Predmeti = new SelectList(predmeti, "Id", "Naziv", model.PredmetIds);
+                    }
+                    else
+                    {
+                        ViewBag.Predmeti = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
+                    }
+                }
+                else
+                {
+                    ViewBag.Predmeti = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
+                }
 
                 return View(model);
             }
 
-            // 1. Kreiranje Identity User-a
+            // 0) Pronađi Nastavni plan po (StudijskiProgramId + GodinaStudija)
+            var nastavniPlan = await _context.NastavniPlanovi
+                .FirstOrDefaultAsync(np =>
+                    np.StudijskiProgramId == model.StudijskiProgramId &&
+                    np.GodinaStudija == model.GodinaStudija!.Value.ToString());
+
+            if (nastavniPlan == null)
+            {
+                ModelState.AddModelError(nameof(model.NastavniPlanId),
+                    "Nastavni plan za odabrani program i godinu studija nije pronađen.");
+
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
+                ViewBag.NastavniPlanovi = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
+                ViewBag.Predmeti = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
+                return View(model);
+            }
+
+            // 1) Kreiranje Identity User-a
             var identityUser = new IdentityUser
             {
                 UserName = model.Email,
                 Email = model.Email,
-                EmailConfirmed = true // ili false, po želji
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(identityUser, model.Password);
-
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
-                {
                     ModelState.AddModelError(string.Empty, error.Description);
-                }
 
                 ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramId);
-
-                ViewBag.NastavniPlanovi = model.StudijskiProgramId != 0
-                    ? new SelectList(
-                        _context.NastavniPlanovi
-                            .Where(np => np.StudijskiProgramId == model.StudijskiProgramId)
-                            .Select(np => new
-                            {
-                                Id = np.Id,
-                                Naziv = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godinu"
-                            }).ToList(),
-                        "Id", "Naziv", model.NastavniPlanId)
-                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
-
-                ViewBag.Predmeti = model.StudijskiProgramId != 0
-                    ? new SelectList(
-                        _context.Predmeti
-                            .Where(p => p.NastavniPlan.StudijskiProgramId == model.StudijskiProgramId)
-                            .Select(p => new
-                            {
-                                Id = p.Id,
-                                Naziv = p.Naziv
-                            }).ToList(),
-                        "Id", "Naziv", model.PredmetIds)
-                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
-
+                ViewBag.NastavniPlanovi = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
+                ViewBag.Predmeti = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
                 return View(model);
             }
 
-            // 2. Dodavanje u rolu "Student"
-            try
-            {
-                await _userManager.AddToRoleAsync(identityUser, "Student");
-                Console.WriteLine(">>> AddToRoleAsync prošao OK");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($">>> ERROR u AddToRoleAsync: {ex.Message}");
-            }
+            // 2) Rola
+            try { await _userManager.AddToRoleAsync(identityUser, "Student"); } catch { }
 
-            // 3. Kreiranje Studenta u bazi
-            try
+            // 3) Student entitet
+            var student = new Student
             {
-                var student = new Student
+                AspNetUserId = identityUser.Id,
+                JMBG = model.JMBG,
+                Ime = model.Ime,
+                Prezime = model.Prezime,
+                Email = model.Email,
+                BrojIndeksa = model.BrojIndeksa,
+                PrethodnoObrazovanje = model.PrethodnoObrazovanje,
+                GodinaStudija = model.GodinaStudija,
+                Semestar = model.Semestar,
+                Uloga = Uloga.Student,
+                NastavniPlanId = nastavniPlan.Id
+            };
+
+            _context.Studenti.Add(student);
+            await _context.SaveChangesAsync();
+
+            // 4) StudentStudijskiProgram
+            if (model.StudijskiProgramId != 0)
+            {
+                _context.StudentStudijskiProgrami.Add(new StudentStudijskiProgram
                 {
-                    AspNetUserId = identityUser.Id,
-                    JMBG = model.JMBG,
-                    Ime = model.Ime,
-                    Prezime = model.Prezime,
-                    Email = model.Email,
-                    BrojIndeksa = model.BrojIndeksa,
-                    PrethodnoObrazovanje = model.PrethodnoObrazovanje,
-                    GodinaStudija = model.GodinaStudija,
-                    Semestar = model.Semestar,
-                    Uloga = Uloga.Student,
-                    NastavniPlanId = model.NastavniPlanId
-                };
+                    StudentId = student.Id,
+                    StudijskiProgramId = model.StudijskiProgramId
+                });
+            }
 
-                _context.Studenti.Add(student);
-                await _context.SaveChangesAsync();
-                Console.WriteLine(">>> SaveChangesAsync za Student prošao OK");
+            // 5) Predmeti: program + godina → plan; semestar (1/2) opcionalno
+            var predmetiUPrihvacenomPlanu = await _context.Predmeti
+                .Where(p => p.NastavniPlanId == nastavniPlan.Id)
+                .Where(p => model.Semestar == null || p.Semestar == model.Semestar)
+                .Select(p => new { p.Id })
+                .ToListAsync();
 
-                // Upisivanje u pomoćne tabele
-                if (model.StudijskiProgramId != 0)
+            IEnumerable<long> predmetIdsZaUpis;
+
+            if (model.PredmetIds != null && model.PredmetIds.Any())
+            {
+                var validIds = new HashSet<long>(predmetiUPrihvacenomPlanu.Select(x => x.Id));
+                predmetIdsZaUpis = model.PredmetIds.Where(id => validIds.Contains(id));
+            }
+            else
+            {
+                predmetIdsZaUpis = predmetiUPrihvacenomPlanu.Select(x => x.Id);
+            }
+
+            if (predmetIdsZaUpis.Any())
+            {
+                foreach (var predmetId in predmetIdsZaUpis)
                 {
-                    _context.StudentStudijskiProgrami.Add(new StudentStudijskiProgram
+                    _context.StudentiNaPredmetima.Add(new StudentNaPredmetu
                     {
                         StudentId = student.Id,
-                        StudijskiProgramId = model.StudijskiProgramId
+                        PredmetId = predmetId,
+                        AkademskaGodina = DateTime.Now.Year.ToString(),
+                        AspNetUserId = identityUser.Id
                     });
                 }
-
-                if (model.PredmetIds != null && model.PredmetIds.Any())
-                {
-                    foreach (var predmetId in model.PredmetIds)
-                    {
-                        _context.StudentiNaPredmetima.Add(new StudentNaPredmetu
-                        {
-                            StudentId = student.Id,
-                            PredmetId = predmetId,
-                            AkademskaGodina = DateTime.Now.Year.ToString(),
-                            AspNetUserId = identityUser.Id
-                        });
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                Console.WriteLine(">>> SaveChangesAsync za pomoćne tabele prošao OK");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($">>> ERROR u SaveChangesAsync: {ex.Message}");
             }
 
-            // Gotovo → redirect na Index
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -378,13 +379,25 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id)
         {
-            var student = await _context.Studenti.FindAsync(id);
+            var student = await _context.Studenti
+                .Include(s => s.StudentStudijskiProgrami)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
             if (student == null)
-            {
                 return NotFound();
-            }
 
             var studijskiProgramId = student.StudentStudijskiProgrami.FirstOrDefault()?.StudijskiProgramId ?? 0;
+
+            // Identity e-mail kao izvor istine
+            IdentityUser? identityUser = null;
+            if (!string.IsNullOrWhiteSpace(student.AspNetUserId))
+                identityUser = await _userManager.FindByIdAsync(student.AspNetUserId);
+
+            // Već upisani predmetId-ovi
+            var upisaniPredmetIds = await _context.StudentiNaPredmetima
+                .Where(snp => snp.StudentId == student.Id)
+                .Select(snp => snp.PredmetId)
+                .ToListAsync();
 
             var model = new StudentEditViewModel
             {
@@ -392,7 +405,7 @@ namespace StudentHub.Controllers
                 Ime = student.Ime,
                 Prezime = student.Prezime,
                 JMBG = student.JMBG,
-                Email = student.Email,
+                Email = identityUser?.Email ?? student.Email,
                 BrojIndeksa = student.BrojIndeksa,
                 StudijskiProgramId = studijskiProgramId,
                 GodinaStudija = student.GodinaStudija,
@@ -400,29 +413,49 @@ namespace StudentHub.Controllers
                 PrethodnoObrazovanje = student.PrethodnoObrazovanje,
                 Uloga = student.Uloga,
                 IzborIzbornihPredmetaZakljucan = student.IzborIzbornihPredmetaZakljucan,
-                PredmetIds = await _context.StudentiNaPredmetima
-                    .Where(snp => snp.StudentId == student.Id)
-                    .Select(snp => snp.PredmetId)
-                    .ToListAsync()
+                PredmetIds = upisaniPredmetIds,
+
+                // Sentinel popuna
+                NewPassword = StudentEditViewModel.PasswordSentinel,
+                ConfirmNewPassword = StudentEditViewModel.PasswordSentinel,
+                ChangePassword = false
             };
 
-            ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
-                .Cast<Uloga>()
-                .Select(u => new SelectListItem
-                {
-                    Value = ((int)u).ToString(),
-                    Text = u.ToString(),
-                    Selected = u == student.Uloga
-                });
-
+            // Dropdown-i (programi i planovi po programu)
             ViewBag.StudijskiProgrami = new SelectList(
-                _context.StudijskiProgrami, "Id", "Naziv", studijskiProgramId);
+                await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv", studijskiProgramId);
+
             ViewBag.NastavniPlanovi = new SelectList(
-                _context.NastavniPlanovi, "Id", "GodinaStudija", student.NastavniPlanId);
-            ViewBag.Predmeti = new SelectList(
-                _context.Predmeti.Where(p => _context.StudentiNaPredmetima
-                    .Any(snp => snp.StudentId == student.Id && snp.PredmetId == p.Id)),
-                "Id", "Naziv");
+                await _context.NastavniPlanovi
+                    .Where(np => np.StudijskiProgramId == studijskiProgramId)
+                    .Select(np => new
+                    {
+                        Id = np.Id,
+                        Naziv = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godinu"
+                    })
+                    .ToListAsync(),
+                "Id", "Naziv", student.NastavniPlanId);
+
+            // PREDMETI: unija (predmeti iz AKTUELNOG plana (+ semestar) ∪ već upisani)
+            var planPredmeti = await _context.Predmeti
+                .Where(p => p.NastavniPlanId == student.NastavniPlanId)
+                .Where(p => student.Semestar == null || p.Semestar == student.Semestar) // ako postoji kolona p.Semestar
+                .Select(p => new { p.Id, p.Naziv })
+                .ToListAsync();
+
+            var upisaniPredmeti = await _context.Predmeti
+                .Where(p => upisaniPredmetIds.Contains(p.Id))
+                .Select(p => new { p.Id, p.Naziv })
+                .ToListAsync();
+
+            var predmetiUnion = planPredmeti
+                .Concat(upisaniPredmeti)
+                .GroupBy(x => x.Id)
+                .Select(g => g.First())
+                .OrderBy(x => x.Naziv)
+                .ToList();
+
+            ViewBag.Predmeti = new SelectList(predmetiUnion, "Id", "Naziv", model.PredmetIds);
 
             return View(model);
         }
@@ -434,57 +467,182 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> Edit(long id, StudentEditViewModel model)
         {
             if (id != model.Id)
-            {
                 return NotFound();
+
+            // Helper za repop ViewBag.Predmeti sa UNIJOM (plan + selektovani) kada treba vratiti View
+            async Task PopulateDropdownsAsync()
+            {
+                ViewBag.StudijskiProgrami = new SelectList(
+                    await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv", model.StudijskiProgramId);
+
+                ViewBag.NastavniPlanovi = new SelectList(
+                    await _context.NastavniPlanovi
+                        .Where(np => np.StudijskiProgramId == model.StudijskiProgramId)
+                        .Select(np => new
+                        {
+                            Id = np.Id,
+                            Naziv = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godinu"
+                        })
+                        .ToListAsync(),
+                    "Id", "Naziv", model.NastavniPlanId);
+
+                // plan predmeti (ako možemo odrediti plan po programu + godini)
+                List<dynamic> planPredmeti;
+                if (model.GodinaStudija.HasValue)
+                {
+                    var planId = await _context.NastavniPlanovi
+                        .Where(np => np.StudijskiProgramId == model.StudijskiProgramId
+                                  && np.GodinaStudija == model.GodinaStudija.Value.ToString())
+                        .Select(np => np.Id)
+                        .FirstOrDefaultAsync();
+
+                    planPredmeti = planId == 0
+                        ? new List<dynamic>()
+                        : await _context.Predmeti
+                            .Where(p => p.NastavniPlanId == planId)
+                            .Where(p => model.Semestar == null || p.Semestar == model.Semestar) // ako postoji p.Semestar
+                            .Select(p => new { Id = p.Id, Naziv = p.Naziv })
+                            .ToListAsync<dynamic>();
+                }
+                else
+                {
+                    // fallback po programu
+                    planPredmeti = await _context.Predmeti
+                        .Where(p => p.NastavniPlan.StudijskiProgramId == model.StudijskiProgramId)
+                        .Select(p => new { Id = p.Id, Naziv = p.Naziv })
+                        .ToListAsync<dynamic>();
+                }
+
+                // već selektovani (da ostanu vidljivi)
+                var selektovaniIds = model.PredmetIds ?? new List<long>();
+                var selektovaniPredmeti = await _context.Predmeti
+                    .Where(p => selektovaniIds.Contains(p.Id))
+                    .Select(p => new { Id = p.Id, Naziv = p.Naziv })
+                    .ToListAsync();
+
+                // Unija po Id
+                var predmetiUnion = planPredmeti
+                    .Concat(selektovaniPredmeti)
+                    .GroupBy(x => (long)x.Id)
+                    .Select(g => new { Id = g.Key, Naziv = g.First().Naziv })
+                    .OrderBy(x => x.Naziv)
+                    .ToList();
+
+                ViewBag.Predmeti = new SelectList(predmetiUnion, "Id", "Naziv", model.PredmetIds);
             }
 
             if (!ModelState.IsValid)
             {
-                ViewBag.StudijskiProgrami = new SelectList(await _context.StudijskiProgrami.ToListAsync(), "Id", "Naziv");
-                ViewBag.Predmeti = new SelectList(await _context.Predmeti.ToListAsync(), "Id", "Naziv");
+                await PopulateDropdownsAsync();
                 return View(model);
             }
 
-            var existingStudent = await _context.Studenti.Include(s => s.StudentStudijskiProgrami)
+            var existingStudent = await _context.Studenti
+                .Include(s => s.StudentStudijskiProgrami)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (existingStudent == null)
-            {
                 return NotFound();
+
+            // Guard prije čitanja plana
+            if (!model.GodinaStudija.HasValue)
+            {
+                ModelState.AddModelError(nameof(model.GodinaStudija), "Godina studija je obavezna.");
+                await PopulateDropdownsAsync();
+                return View(model);
             }
 
+            // Ažuriranje poslovnih podataka
             existingStudent.Ime = model.Ime;
             existingStudent.Prezime = model.Prezime;
+            existingStudent.JMBG = model.JMBG;
             existingStudent.Email = model.Email;
             existingStudent.BrojIndeksa = model.BrojIndeksa;
             existingStudent.PrethodnoObrazovanje = model.PrethodnoObrazovanje;
             existingStudent.GodinaStudija = model.GodinaStudija;
-            existingStudent.Uloga = model.Uloga;
             existingStudent.Semestar = model.Semestar;
-
+            existingStudent.Uloga = model.Uloga;
             existingStudent.IzborIzbornihPredmetaZakljucan = model.IzborIzbornihPredmetaZakljucan;
 
+            // Nastavni plan -> (program + GodinaStudija)
             var nastavniPlan = await _context.NastavniPlanovi
                 .FirstOrDefaultAsync(np => np.StudijskiProgramId == model.StudijskiProgramId
-                                           && np.GodinaStudija == model.GodinaStudija.ToString());
+                                        && np.GodinaStudija == model.GodinaStudija.Value.ToString());
 
             if (nastavniPlan == null)
             {
-                ModelState.AddModelError("NastavniPlanId", "Nastavni plan za odabranu godinu studija nije pronađen.");
+                ModelState.AddModelError(nameof(model.NastavniPlanId), "Nastavni plan za odabranu godinu studija nije pronađen.");
+                await PopulateDropdownsAsync();
                 return View(model);
             }
 
             existingStudent.NastavniPlanId = nastavniPlan.Id;
 
+            // Identity e-mail i lozinka
+            if (!string.IsNullOrWhiteSpace(existingStudent.AspNetUserId))
+            {
+                var identityUser = await _userManager.FindByIdAsync(existingStudent.AspNetUserId);
+                if (identityUser != null)
+                {
+                    // Update e-mail/username ako je promijenjen
+                    if (!string.Equals(identityUser.Email, model.Email, StringComparison.OrdinalIgnoreCase))
+                    {
+                        identityUser.Email = model.Email;
+                        identityUser.UserName = model.Email; // ako koristite e-mail kao username
+                        var updateRes = await _userManager.UpdateAsync(identityUser);
+                        if (!updateRes.Succeeded)
+                        {
+                            foreach (var e in updateRes.Errors)
+                                ModelState.AddModelError(nameof(model.Email), e.Description);
+
+                            await PopulateDropdownsAsync();
+                            return View(model);
+                        }
+                    }
+
+                    // Reset lozinke samo ako je eksplicitno traženo i vrijednost != sentinel
+                    var wantsPasswordChange = model.ChangePassword
+                                                   && !string.IsNullOrWhiteSpace(model.NewPassword)
+                                                   && model.NewPassword != StudentEditViewModel.PasswordSentinel;
+
+                    if (wantsPasswordChange)
+                    {
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(identityUser);
+                        var passRes = await _userManager.ResetPasswordAsync(identityUser, token, model.NewPassword!);
+                        if (!passRes.Succeeded)
+                        {
+                            foreach (var e in passRes.Errors)
+                                ModelState.AddModelError(nameof(model.NewPassword), e.Description);
+
+                            await PopulateDropdownsAsync();
+                            return View(model);
+                        }
+                    }
+                }
+            }
+
+            // CARRY-OVER: dozvoli predmete iz BILO KOJE godine istog studijskog programa
+            var validPredmetiIds = await _context.Predmeti
+                .Where(p => p.NastavniPlan.StudijskiProgramId == model.StudijskiProgramId)
+                .Select(p => p.Id)
+                .ToListAsync();
+
+            var validSet = new HashSet<long>(validPredmetiIds);
+            var predmetIdsZaUpis = (model.PredmetIds ?? new List<long>())
+                .Where(id => validSet.Contains(id))
+                .Distinct()
+                .ToList();
+
+            // Zamijeni set predmeta
             var stariPredmeti = await _context.StudentiNaPredmetima
                 .Where(snp => snp.StudentId == existingStudent.Id)
                 .ToListAsync();
 
             _context.StudentiNaPredmetima.RemoveRange(stariPredmeti);
 
-            if (model.PredmetIds != null && model.PredmetIds.Any())
+            if (predmetIdsZaUpis.Any())
             {
-                foreach (var predmetId in model.PredmetIds)
+                foreach (var predmetId in predmetIdsZaUpis)
                 {
                     _context.StudentiNaPredmetima.Add(new StudentNaPredmetu
                     {
@@ -496,7 +654,7 @@ namespace StudentHub.Controllers
                 }
             }
 
-            // Ažuriranje pomoćne tabele StudentStudijskiProgram
+            // StudentStudijskiProgram: zamijeni
             var existingEntries = _context.StudentStudijskiProgrami
                 .Where(ssp => ssp.StudentId == existingStudent.Id)
                 .ToList();
@@ -612,21 +770,46 @@ namespace StudentHub.Controllers
             return View(groupedStudents);
         }
 
+        // GET: /Studenti/GetPredmetiByStudijskiProgram/{studijskiProgramId}?godinaStudija=1..6&semestar=1..2
         [HttpGet("GetPredmetiByStudijskiProgram/{studijskiProgramId}")]
-        public async Task<IActionResult> GetPredmetiByStudijskiProgram(long studijskiProgramId)
+        public async Task<IActionResult> GetPredmetiByStudijskiProgram(long studijskiProgramId, [FromQuery] int? godinaStudija, [FromQuery] int? semestar)
         {
-            var predmeti = await _context.Predmeti
-                .Where(p => p.NastavniPlan.StudijskiProgramId == studijskiProgramId)
-                .Select(p => new
-                {
-                    id = p.Id,
-                    naziv = p.Naziv
-                })
+            if (studijskiProgramId == 0)
+                return Json(Array.Empty<object>());
+
+            IQueryable<Predmet> q = _context.Predmeti.AsQueryable();
+
+            if (godinaStudija.HasValue)
+            {
+                // Nađi tačan nastavni plan za (program + godina)
+                var planId = await _context.NastavniPlanovi
+                    .Where(np => np.StudijskiProgramId == studijskiProgramId && np.GodinaStudija == godinaStudija.Value.ToString())
+                    .Select(np => np.Id)
+                    .FirstOrDefaultAsync();
+
+                if (planId == 0)
+                    return Json(Array.Empty<object>());
+
+                q = q.Where(p => p.NastavniPlanId == planId);
+            }
+            else
+            {
+                // Bez godine: vrati sve predmete svih planova tog programa (kao ranije ponašanje)
+                q = q.Where(p => p.NastavniPlan.StudijskiProgramId == studijskiProgramId);
+            }
+
+            if (semestar.HasValue)
+                q = q.Where(p => p.Semestar == semestar.Value);
+
+            var predmeti = await q
+                .OrderBy(p => p.Naziv)
+                .Select(p => new { id = p.Id, naziv = p.Naziv })
                 .ToListAsync();
 
             return Json(predmeti);
         }
 
+        // GET: /Studenti/GetNastavniPlanovi/{studijskiProgramId}
         [HttpGet("GetNastavniPlanovi/{studijskiProgramId}")]
         public async Task<IActionResult> GetNastavniPlanovi(long studijskiProgramId)
         {
@@ -635,6 +818,8 @@ namespace StudentHub.Controllers
                 .Select(np => new
                 {
                     id = np.Id,
+                    // Vraćamo i numeric 'godinaStudija' kako JS ne bi parsirao string
+                    godinaStudija = np.GodinaStudija,
                     naziv = $"Nastavni plan za {np.StudijskiProgram.Naziv}: {np.GodinaStudija}. godinu"
                 })
                 .ToListAsync();

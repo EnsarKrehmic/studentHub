@@ -36,7 +36,7 @@ else
             <div class="card-body">
                 <div class="row">
                     <!-- Lijevi stupac: osnovne informacije -->
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3 mb-md-0">
                         <dl class="row">
                             <dt class="col-sm-5">Naziv predmeta:</dt>
                             <dd class="col-sm-7">@Model.NazivPredmeta</dd>
@@ -72,9 +72,26 @@ else
 
                             <dt class="col-sm-5">Sati vježbi:</dt>
                             <dd class="col-sm-7">@Model.SatiVjezbi</dd>
+                        </dl>
+                    </div>
 
-                            <dt class="col-sm-5">Ukupno bodova za predmet:</dt>
-                            <dd class="col-sm-7">
+                    <!-- Desni stupac: statistike predmeta -->
+                    <div class="col-md-6 border-start ps-md-4">
+                        <dl class="row">
+                            <dt class="col-sm-6">Nastavni plan:</dt>
+                            <dd class="col-sm-6">
+                                @if (Model.Predmet?.NastavniPlan != null && Model.Predmet.NastavniPlan.StudijskiProgram != null)
+                                {
+                                    <span>@Model.Predmet.NastavniPlan.GodinaStudija. godina (@Model.Predmet.NastavniPlan.StudijskiProgram.Naziv)</span>
+                                }
+                                else
+                                {
+                                    <span class="text-warning">Nema dodijeljen nastavni plan ili studijski program.</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-6">Ukupno bodova:</dt>
+                            <dd class="col-sm-6">
                                 @if (Model.Predmet?.UkupnoBodova != null)
                                 {
                                     <span class="badge bg-success">@Model.Predmet.UkupnoBodova bodova</span>
@@ -85,25 +102,6 @@ else
                                 }
                             </dd>
 
-                            <dt class="col-sm-5">Nastavni plan:</dt>
-                            <dd class="col-sm-7">
-                                @if (Model.Predmet?.NastavniPlan != null && Model.Predmet.NastavniPlan.StudijskiProgram != null)
-                                {
-                                    <span>
-                                        @Model.Predmet.NastavniPlan.GodinaStudija. godina (@Model.Predmet.NastavniPlan.StudijskiProgram.Naziv)
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="text-warning">Nema dodijeljen nastavni plan ili studijski program.</span>
-                                }
-                            </dd>
-                        </dl>
-                    </div>
-
-                    <!-- Desni stupac: statistike predmeta -->
-                    <div class="col-md-6 border-start">
-                        <dl class="row">
                             <dt class="col-sm-6">Prosječna ocjena:</dt>
                             <dd class="col-sm-6">
                                 @if (Model.ProsjecnaOcjena.HasValue)
@@ -129,7 +127,7 @@ else
                             </dd>
 
                             <dt class="col-sm-6">Ukupno aktivnosti:</dt>
-                            <dd class="col-sm-6">@Model.NastavneAktivnosti?.Count()</dd>
+                            <dd class="col-sm-6">@Model.NastavneAktivnosti?.Count() ?? 0</dd>
 
                             <dt class="col-sm-6">Status studenata:</dt>
                             <dd class="col-sm-6">
@@ -139,12 +137,10 @@ else
                     </div>
                 </div>
 
-                <!-- Opis (puni red) -->
+                <!-- Opis predmeta (pun red) -->
                 <div class="mt-4">
-                    <dt class="col-sm-6">Opis predmeta:</dt>
-                    <dd class="col-sm-6">
-                        @Model.OpisPredmeta
-                    </dd>
+                    <h5>Opis predmeta:</h5>
+                    <p class="mb-0">@Model.OpisPredmeta ?? "<span class='text-muted'>Nema opisa predmeta.</span>"</p>
                 </div>
             </div>
         </div>

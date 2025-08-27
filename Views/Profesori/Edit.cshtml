@@ -3,7 +3,6 @@
     ViewData["Title"] = "Izmijeni profesora";
     Layout = "_Layout";
 }
-
 <div class="container py-5">
     <div class="card shadow-sm mx-auto" style="max-width: 800px;">
         <div class="card-header bg-warning text-dark">
@@ -15,6 +14,41 @@
                 <div asp-validation-summary="All" class="alert alert-danger"></div>
                 <input type="hidden" asp-for="Id" />
 
+                <h5 class="mt-2">Prijava</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" placeholder="Unesite e-mail" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" asp-for="ChangePassword" id="chkChangePassword" />
+                            <label class="form-check-label" for="chkChangePassword">Želim promijeniti lozinku</label>
+                        </div>
+                    </div>
+                    <div id="passwordFields" class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="NewPassword" class="form-label"></label>
+                            <input asp-for="NewPassword" type="password" class="form-control" autocomplete="new-password" />
+                            <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmNewPassword" class="form-label"></label>
+                            <input asp-for="ConfirmNewPassword" type="password" class="form-control" autocomplete="new-password" />
+                            <span asp-validation-for="ConfirmNewPassword" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <small class="form-text text-muted">
+                                Ako ne želiš mijenjati lozinku, ostavi polja na vrijednosti
+                                <code>@StudentHub.ViewModels.ProfesorEditViewModel.PasswordSentinel</code>.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <h5>Podaci o profesoru</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label asp-for="Ime" class="form-label"></label>
@@ -28,14 +62,9 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="JMBG" class="form-label"></label>
-                        <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" />
+                        <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" maxlength="13" />
                         <small class="form-text text-muted">13 cifara.</small>
                         <span asp-validation-for="JMBG" class="text-danger small"></span>
-                    </div>
-                    <div class="col-md-6">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control" placeholder="Unesite e-mail" />
-                        <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="ProfesorTitula" class="form-label"></label>
@@ -45,21 +74,18 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Uloga" class="form-label"></label>
-                        <select asp-for="Uloga" class="form-select" asp-items="Html.GetEnumSelectList<Uloga>()">
-                        </select>
+                        <select asp-for="Uloga" class="form-select" asp-items="Html.GetEnumSelectList<Uloga>()"></select>
                         <span asp-validation-for="Uloga" class="text-danger small"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="StudijskiProgramIds" class="form-label"></label>
-                        <select asp-for="StudijskiProgramIds" id="StudijskiProgramIds" multiple class="form-select" asp-items="ViewBag.StudijskiProgrami">
-                        </select>
+                        <select asp-for="StudijskiProgramIds" id="StudijskiProgramIds" multiple class="form-select" asp-items="ViewBag.StudijskiProgrami"></select>
                         <small class="form-text text-muted">Ctrl/Cmd za višestruki odabir.</small>
                         <span asp-validation-for="StudijskiProgramIds" class="text-danger small"></span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label asp-for="PredmetIds" class="form-label"></label>
-                        <select asp-for="PredmetIds" id="PredmetIds" multiple class="form-select" asp-items="ViewBag.Predmeti">
-                        </select>
+                        <select asp-for="PredmetIds" id="PredmetIds" multiple class="form-select" asp-items="ViewBag.Predmeti"></select>
                         <small class="form-text text-muted">Predmeti koje predaje.</small>
                         <span asp-validation-for="PredmetIds" class="text-danger small"></span>
                     </div>
@@ -80,24 +106,44 @@
 
 @section Scripts {
     <script>
-        document.getElementById('StudijskiProgramIds').addEventListener('change', function () {
-            var selected = Array.from(this.selectedOptions).map(o => o.value);
-            fetch('/Profesori/GetPredmetiByStudijskiProgram', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(selected)
-            })
-            .then(r => r.json())
-            .then(data => {
-                var pred = document.getElementById('PredmetIds');
-                pred.innerHTML = '';
-                data.forEach(p => {
-                    var opt = document.createElement('option');
-                    opt.value = p.id;  opt.text = p.naziv;
-                    pred.appendChild(opt);
+        (function () {
+            // toggle lozinke
+            const chk = document.getElementById('chkChangePassword');
+            const fields = document.getElementById('passwordFields');
+            function toggle() {
+                const enable = chk.checked;
+                fields.querySelectorAll('input[type="password"]').forEach(i => { i.readOnly = !enable; });
+                fields.style.opacity = enable ? '1' : '0.6';
+            }
+            if (chk) { toggle(); chk.addEventListener('change', toggle); }
+
+            // predmeti po odabranim programima (i inicijalno punjenje)
+            const ddlProg = document.getElementById('StudijskiProgramIds');
+            const ddlPred = document.getElementById('PredmetIds');
+
+            function loadPredmeti(preserveSelection) {
+                const selectedProg = Array.from(ddlProg.selectedOptions).map(o => o.value);
+                fetch('/Profesori/GetPredmetiByStudijskiProgram', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(selectedProg)
+                })
+                .then(r => r.json())
+                .then(data => {
+                    const prevSel = new Set(Array.from(ddlPred.selectedOptions).map(o => o.value));
+                    ddlPred.innerHTML = '';
+                    data.forEach(p => {
+                        const opt = new Option(p.naziv, p.id);
+                        if (preserveSelection && prevSel.has(String(p.id))) opt.selected = true;
+                        ddlPred.add(opt);
+                    });
                 });
-            });
-        });
+            }
+
+            ddlProg?.addEventListener('change', () => loadPredmeti(true));
+            // inicijalni load (server već postavio ViewBag.Predmeti, ali koristimo i endpoint da osvježimo ako treba)
+            if (ddlProg) loadPredmeti(true);
+        })();
     </script>
     <partial name="_ValidationScriptsPartial" />
 }

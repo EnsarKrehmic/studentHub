@@ -132,8 +132,7 @@ namespace StudentHub.Controllers
         public IActionResult Create()
         {
             ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Predmeti = new SelectList(new List<SelectListItem>(), "Value", "Text"); // inicijalno prazno
-
+            ViewBag.Predmeti = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"); // inicijalno prazno
             return View();
         }
 
@@ -146,58 +145,48 @@ namespace StudentHub.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
-                ViewBag.Predmeti = model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any()
-                    ? new SelectList(
-                        _context.Predmeti
-                            .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
-                            .Select(p => new
-                            {
-                                Id = p.Id,
-                                Naziv = p.Naziv
-                            }).ToList(),
-                        "Id", "Naziv", model.PredmetIds)
-                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
 
+                // koristimo SelectListItem da izbjegnemo probleme sa tipovima
+                IEnumerable<SelectListItem> predmetiZaPrograme;
+                if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
+                {
+                    predmetiZaPrograme = await _context.Predmeti
+                        .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                        .OrderBy(p => p.Naziv)
+                        .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Naziv })
+                        .ToListAsync();
+                }
+                else
+                {
+                    predmetiZaPrograme = Enumerable.Empty<SelectListItem>();
+                }
+
+                ViewBag.Predmeti = new SelectList(predmetiZaPrograme, "Value", "Text", model.PredmetIds?.Select(x => x.ToString()));
                 return View(model);
             }
 
-            // 1. Kreiranje Identity User-a
+            // 1) Identity user
             var identityUser = new IdentityUser
             {
                 UserName = model.Email,
                 Email = model.Email,
                 EmailConfirmed = true
             };
-
             var result = await _userManager.CreateAsync(identityUser, model.Password);
-
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
-                {
                     ModelState.AddModelError(string.Empty, error.Description);
-                }
 
                 ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
-                ViewBag.Predmeti = model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any()
-                    ? new SelectList(
-                        _context.Predmeti
-                            .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
-                            .Select(p => new
-                            {
-                                Id = p.Id,
-                                Naziv = p.Naziv
-                            }).ToList(),
-                        "Id", "Naziv", model.PredmetIds)
-                    : new SelectList(new List<SelectListItem>(), "Value", "Text");
-
+                ViewBag.Predmeti = new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text");
                 return View(model);
             }
 
-            // 2. Dodavanje u rolu "Asistent"
-            await _userManager.AddToRoleAsync(identityUser, "Asistent");
+            // 2) Rola
+            try { await _userManager.AddToRoleAsync(identityUser, "Asistent"); } catch { }
 
-            // 3. Kreiranje Asistenta u bazi
+            // 3) Asistent entitet
             var asistent = new Asistent
             {
                 AspNetUserId = identityUser.Id,
@@ -208,40 +197,47 @@ namespace StudentHub.Controllers
                 AsistentTitula = model.AsistentTitula,
                 Uloga = Uloga.Asistent
             };
-
             _context.Asistenti.Add(asistent);
             await _context.SaveChangesAsync();
 
-            // 4. Pomoćne tabele — Studijski programi
+            // 4) Veze SP
             if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
             {
-                foreach (var studijskiProgramId in model.StudijskiProgramIds)
+                foreach (var spId in model.StudijskiProgramIds.Distinct())
                 {
                     _context.AsistentStudijskiProgrami.Add(new AsistentStudijskiProgram
                     {
                         AsistentId = asistent.Id,
-                        StudijskiProgramId = studijskiProgramId
+                        StudijskiProgramId = spId
                     });
                 }
             }
 
-            // 5. Pomoćne tabele — Predmeti
-            if (model.PredmetIds != null && model.PredmetIds.Any())
+            // 5) Predmeti (validni samo u okviru izabranih SP)
+            var validPredmetiIds = (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
+                ? await _context.Predmeti
+                    .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                    .Select(p => p.Id)
+                    .ToListAsync()
+                : new List<long>();
+
+            var validSet = new HashSet<long>(validPredmetiIds);
+            var predmetIdsZaUpis = (model.PredmetIds ?? new List<long>())
+                .Where(id => validSet.Contains(id))
+                .Distinct()
+                .ToList();
+
+            foreach (var pid in predmetIdsZaUpis)
             {
-                foreach (var predmetId in model.PredmetIds)
+                _context.PredmetAsistenti.Add(new PredmetAsistent
                 {
-                    _context.PredmetAsistenti.Add(new PredmetAsistent
-                    {
-                        AsistentId = asistent.Id,
-                        PredmetId = predmetId,
-                        AspNetUserId = identityUser.Id
-                    });
-                }
+                    AsistentId = asistent.Id,
+                    PredmetId = pid,
+                    AspNetUserId = identityUser.Id
+                });
             }
 
             await _context.SaveChangesAsync();
-
-            // Gotovo → redirect na Index
             return RedirectToAction(nameof(Index));
         }
 
@@ -251,10 +247,12 @@ namespace StudentHub.Controllers
         public async Task<IActionResult> Edit(long id)
         {
             var asistent = await _context.Asistenti.FindAsync(id);
-            if (asistent == null)
-            {
-                return NotFound();
-            }
+            if (asistent == null) return NotFound();
+
+            // Identity e-mail kao izvor istine
+            IdentityUser? identityUser = null;
+            if (!string.IsNullOrWhiteSpace(asistent.AspNetUserId))
+                identityUser = await _userManager.FindByIdAsync(asistent.AspNetUserId);
 
             var model = new AsistentEditViewModel
             {
@@ -262,30 +260,46 @@ namespace StudentHub.Controllers
                 Ime = asistent.Ime,
                 Prezime = asistent.Prezime,
                 JMBG = asistent.JMBG,
-                Email = asistent.Email,
+                Email = identityUser?.Email ?? asistent.Email,
                 AsistentTitula = asistent.AsistentTitula,
                 Uloga = asistent.Uloga,
                 StudijskiProgramIds = await _context.AsistentStudijskiProgrami
-                    .Where(psp => psp.AsistentId == asistent.Id)
-                    .Select(psp => psp.StudijskiProgramId)
+                    .Where(x => x.AsistentId == asistent.Id)
+                    .Select(x => x.StudijskiProgramId)
                     .ToListAsync(),
                 PredmetIds = await _context.PredmetAsistenti
-                    .Where(pp => pp.AsistentId == asistent.Id)
-                    .Select(pp => pp.PredmetId)
-                    .ToListAsync()
+                    .Where(x => x.AsistentId == asistent.Id)
+                    .Select(x => x.PredmetId)
+                    .ToListAsync(),
+
+                NewPassword = AsistentEditViewModel.PasswordSentinel,
+                ConfirmNewPassword = AsistentEditViewModel.PasswordSentinel,
+                ChangePassword = false
             };
 
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
+            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
 
-            ViewBag.Uloge = Enum.GetValues(typeof(Uloga))
-                            .Cast<Uloga>()
-                            .Select(u => new SelectListItem
-                            {
-                                Value = ((int)u).ToString(),
-                                Text = u.ToString(),
-                                Selected = u == asistent.Uloga
-                            }); return View(model);
+            // Predmeti = (iz odabranih SP) ∪ (već dodijeljeni)
+            var predmetiPlan = await _context.Predmeti
+                .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                .Select(p => new { p.Id, p.Naziv })
+                .ToListAsync();
+
+            var predmetiUpisani = await _context.Predmeti
+                .Where(p => model.PredmetIds.Contains(p.Id))
+                .Select(p => new { p.Id, p.Naziv })
+                .ToListAsync();
+
+            var predmetiUnion = predmetiPlan
+                .Concat(predmetiUpisani)
+                .GroupBy(x => x.Id)
+                .Select(g => g.First())
+                .OrderBy(x => x.Naziv)
+                .ToList();
+
+            ViewBag.Predmeti = new SelectList(predmetiUnion, "Id", "Naziv", model.PredmetIds);
+            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>(), model.Uloga);
+            return View(model);
         }
 
         // POST: Asistenti/Edit/{id}
@@ -294,89 +308,137 @@ namespace StudentHub.Controllers
         [Authorize(Roles = "Studentska služba")]
         public async Task<IActionResult> Edit(long id, AsistentEditViewModel model)
         {
-            if (id != model.Id)
+            if (id != model.Id) return NotFound();
+
+            async Task PopulateForReturnAsync()
             {
-                return NotFound();
+                ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv", model.StudijskiProgramIds);
+
+                var predmetiPlan = await _context.Predmeti
+                    .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                    .Select(p => new { p.Id, p.Naziv })
+                    .ToListAsync();
+                var predmetiUpisani = await _context.Predmeti
+                    .Where(p => (model.PredmetIds ?? new List<long>()).Contains(p.Id))
+                    .Select(p => new { p.Id, p.Naziv })
+                    .ToListAsync();
+
+                var predmetiUnion = predmetiPlan
+                    .Concat(predmetiUpisani)
+                    .GroupBy(x => x.Id)
+                    .Select(g => g.First())
+                    .OrderBy(x => x.Naziv)
+                    .ToList();
+
+                ViewBag.Predmeti = new SelectList(predmetiUnion, "Id", "Naziv", model.PredmetIds);
+                ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>(), model.Uloga);
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var asistent = await _context.Asistenti.FindAsync(id);
-                if (asistent == null)
+                await PopulateForReturnAsync();
+                return View(model);
+            }
+
+            var asistent = await _context.Asistenti.FindAsync(id);
+            if (asistent == null) return NotFound();
+
+            // poslovni podaci
+            asistent.Ime = model.Ime;
+            asistent.Prezime = model.Prezime;
+            asistent.JMBG = model.JMBG;
+            asistent.Email = model.Email;
+            asistent.AsistentTitula = model.AsistentTitula;
+            asistent.Uloga = model.Uloga;
+
+            // Identity e-mail + (opciono) lozinka
+            if (!string.IsNullOrWhiteSpace(asistent.AspNetUserId))
+            {
+                var identityUser = await _userManager.FindByIdAsync(asistent.AspNetUserId);
+                if (identityUser != null)
                 {
-                    return NotFound();
+                    if (!string.Equals(identityUser.Email, model.Email, StringComparison.OrdinalIgnoreCase))
+                    {
+                        identityUser.Email = model.Email;
+                        identityUser.UserName = model.Email;
+                        var updateRes = await _userManager.UpdateAsync(identityUser);
+                        if (!updateRes.Succeeded)
+                        {
+                            foreach (var e in updateRes.Errors)
+                                ModelState.AddModelError(nameof(model.Email), e.Description);
+                            await PopulateForReturnAsync();
+                            return View(model);
+                        }
+                    }
+
+                    var wantsPasswordChange = model.ChangePassword
+                                               && !string.IsNullOrWhiteSpace(model.NewPassword)
+                                               && model.NewPassword != AsistentEditViewModel.PasswordSentinel;
+
+                    if (wantsPasswordChange)
+                    {
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(identityUser);
+                        var passRes = await _userManager.ResetPasswordAsync(identityUser, token, model.NewPassword!);
+                        if (!passRes.Succeeded)
+                        {
+                            foreach (var e in passRes.Errors)
+                                ModelState.AddModelError(nameof(model.NewPassword), e.Description);
+                            await PopulateForReturnAsync();
+                            return View(model);
+                        }
+                    }
                 }
+            }
 
-                asistent.Ime = model.Ime;
-                asistent.Prezime = model.Prezime;
-                asistent.JMBG = model.JMBG;
-                asistent.Email = model.Email;
-                asistent.AsistentTitula = model.AsistentTitula;
-                asistent.Uloga = model.Uloga;
+            // Zamijeni veze SP
+            var stariSP = await _context.AsistentStudijskiProgrami
+                .Where(x => x.AsistentId == asistent.Id)
+                .ToListAsync();
+            _context.AsistentStudijskiProgrami.RemoveRange(stariSP);
 
-                _context.Update(asistent);
-
-                var existingStudijskiProgrami = await _context.AsistentStudijskiProgrami
-                    .Where(psp => psp.AsistentId == asistent.Id)
-                    .Select(psp => psp.StudijskiProgramId)
-                    .ToListAsync();
-                var newStudijskiProgrami = model.StudijskiProgramIds.Except(existingStudijskiProgrami).ToList();
-                var removedStudijskiProgrami = existingStudijskiProgrami.Except(model.StudijskiProgramIds).ToList();
-
-                foreach (var studijskiProgramId in newStudijskiProgrami)
+            if (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
+            {
+                foreach (var spId in model.StudijskiProgramIds.Distinct())
                 {
                     _context.AsistentStudijskiProgrami.Add(new AsistentStudijskiProgram
                     {
                         AsistentId = asistent.Id,
-                        StudijskiProgramId = studijskiProgramId
+                        StudijskiProgramId = spId
                     });
                 }
-
-                foreach (var studijskiProgramId in removedStudijskiProgrami)
-                {
-                    var asistentStudijskiProgram = await _context.AsistentStudijskiProgrami
-                        .FirstOrDefaultAsync(psp => psp.AsistentId == asistent.Id && psp.StudijskiProgramId == studijskiProgramId);
-                    if (asistentStudijskiProgram != null)
-                    {
-                        _context.AsistentStudijskiProgrami.Remove(asistentStudijskiProgram);
-                    }
-                }
-
-                var existingPredmeti = await _context.PredmetProfesori
-                    .Where(pp => pp.ProfesorId == asistent.Id)
-                    .Select(pp => pp.PredmetId)
-                    .ToListAsync();
-                var newPredmeti = model.PredmetIds.Except(existingPredmeti).ToList();
-                var removedPredmeti = existingPredmeti.Except(model.PredmetIds).ToList();
-
-                foreach (var predmetId in newPredmeti)
-                {
-                    _context.PredmetAsistenti.Add(new PredmetAsistent
-                    {
-                        AsistentId = asistent.Id,
-                        PredmetId = predmetId,
-                        AspNetUserId = asistent.AspNetUserId
-                    });
-                }
-
-                foreach (var predmetId in removedPredmeti)
-                {
-                    var predmetAsistent = await _context.PredmetAsistenti
-                        .FirstOrDefaultAsync(pp => pp.AsistentId == asistent.Id && pp.PredmetId == predmetId);
-                    if (predmetAsistent != null)
-                    {
-                        _context.PredmetAsistenti.Remove(predmetAsistent);
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.StudijskiProgrami = new SelectList(_context.StudijskiProgrami, "Id", "Naziv");
-            ViewBag.Predmeti = new SelectList(_context.Predmeti, "Id", "Naziv");
-            ViewBag.Uloge = new SelectList(Enum.GetValues(typeof(Uloga)).Cast<Uloga>());
-            return View(model);
+            // Validni predmeti po izabranim SP
+            var validPredmetiIds = (model.StudijskiProgramIds != null && model.StudijskiProgramIds.Any())
+                ? await _context.Predmeti
+                    .Where(p => model.StudijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                    .Select(p => p.Id)
+                    .ToListAsync()
+                : new List<long>();
+            var validSet = new HashSet<long>(validPredmetiIds);
+            var predmetIdsZaUpis = (model.PredmetIds ?? new List<long>())
+                .Where(id => validSet.Contains(id))
+                .Distinct()
+                .ToList();
+
+            // Zamijeni veze predmeta
+            var stariPA = await _context.PredmetAsistenti
+                .Where(x => x.AsistentId == asistent.Id)
+                .ToListAsync();
+            _context.PredmetAsistenti.RemoveRange(stariPA);
+
+            foreach (var pid in predmetIdsZaUpis)
+            {
+                _context.PredmetAsistenti.Add(new PredmetAsistent
+                {
+                    AsistentId = asistent.Id,
+                    PredmetId = pid,
+                    AspNetUserId = asistent.AspNetUserId
+                });
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Asistenti/Delete/{id}
@@ -434,16 +496,18 @@ namespace StudentHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: /Asistenti/GetPredmetiByStudijskiProgram
         [HttpPost("GetPredmetiByStudijskiProgram")]
+        [Authorize(Roles = "Studentska služba")]
+        // [IgnoreAntiforgeryToken] // po potrebi otkomentiraj ako fetch bez AntiForgery
         public async Task<IActionResult> GetPredmetiByStudijskiProgram([FromBody] List<long> studijskiProgramIds)
         {
             if (studijskiProgramIds == null || !studijskiProgramIds.Any())
-            {
-                return Json(new List<object>());
-            }
+                return Json(Array.Empty<object>());
 
             var predmeti = await _context.Predmeti
                 .Where(p => studijskiProgramIds.Contains(p.NastavniPlan.StudijskiProgramId))
+                .OrderBy(p => p.Naziv)
                 .Select(p => new { id = p.Id, naziv = p.Naziv })
                 .ToListAsync();
 

@@ -47,11 +47,13 @@ namespace StudentHub.ViewModels
         [Display(Name = "Prethodno obrazovanje")]
         public string? PrethodnoObrazovanje { get; set; }
 
+        [Required(ErrorMessage = "Godina studija je obavezna.")]
         [Range(1, 6, ErrorMessage = "Godina studija mora biti između 1 i 6.")]
         [Display(Name = "Godina studija")]
         public int? GodinaStudija { get; set; }
 
-        [Range(1, 12, ErrorMessage = "Semestar mora biti između 1 i 12.")]
+        [Required(ErrorMessage = "Semestar je obavezan.")]
+        [Range(1, 2, ErrorMessage = "Semestar mora biti 1 ili 2.")]
         [Display(Name = "Semestar")]
         public int? Semestar { get; set; }
 

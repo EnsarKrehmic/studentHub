@@ -3,7 +3,6 @@
     ViewData["Title"] = "Dodaj člana studentske službe";
     Layout = "_Layout";
 }
-
 <div class="container py-4">
     <div class="card shadow-sm mx-auto" style="max-width: 700px;">
         <div class="card-header bg-primary text-white">
@@ -24,13 +23,13 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" type="password" class="form-control" placeholder="Lozinka" />
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Lozinka" autocomplete="new-password" />
                         <small class="form-text text-muted">Min. 6 karaktera.</small>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="ConfirmPassword" class="form-label"></label>
-                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Ponovite lozinku" />
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Ponovite lozinku" autocomplete="new-password" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
                 </div>

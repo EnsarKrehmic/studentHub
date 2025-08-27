@@ -1,64 +1,93 @@
 ﻿@model StudentHub.ViewModels.StudentEditViewModel
 @{
-    ViewData["Title"] = "Uredi podatke studenta";
+    ViewData["Title"] = "Uredi studenta";
     Layout = "_Layout";
 }
 
 <div class="container py-4">
-    <div class="card shadow-sm mx-auto" style="max-width: 700px;">
+    <div class="card shadow-sm mx-auto" style="max-width: 800px;">
         <div class="card-header bg-primary text-white">
             <h4 class="mb-0"><i class="fas fa-user-edit me-2"></i>@ViewData["Title"]</h4>
         </div>
         <div class="card-body">
             <form asp-action="Edit" method="post" novalidate>
                 @Html.AntiForgeryToken()
-                <div asp-validation-summary="All" class="alert alert-danger"></div>
                 <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
 
-                <h5 class="mt-2">Osnovni podaci</h5>
+                <h5 class="mt-2">Prijava</h5>
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" placeholder="E-mail adresa" />
+                        <small class="form-text text-muted">Službeni e-mail.</small>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" asp-for="ChangePassword" id="chkChangePassword" />
+                            <label class="form-check-label" for="chkChangePassword">Želim promijeniti lozinku</label>
+                        </div>
+                    </div>
+                    <div id="passwordFields" class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="NewPassword" class="form-label"></label>
+                            <input asp-for="NewPassword" type="password" class="form-control" />
+                            <span asp-validation-for="NewPassword" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmNewPassword" class="form-label"></label>
+                            <input asp-for="ConfirmNewPassword" type="password" class="form-control" />
+                            <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <small class="form-text text-muted">
+                                Ako ne želiš mijenjati lozinku, ostavi polja na vrijednosti
+                                <code>@StudentHub.ViewModels.StudentEditViewModel.PasswordSentinel</code>.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <h5>Podaci o studentu</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
                         <label asp-for="JMBG" class="form-label"></label>
-                        <input asp-for="JMBG" class="form-control" maxlength="13" />
+                        <input asp-for="JMBG" class="form-control" placeholder="JMBG" maxlength="13" />
+                        <small class="form-text text-muted">13 cifara.</small>
                         <span asp-validation-for="JMBG" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="BrojIndeksa" class="form-label"></label>
-                        <input asp-for="BrojIndeksa" class="form-control" maxlength="20" />
+                        <input asp-for="BrojIndeksa" class="form-control" placeholder="Broj indeksa" />
+                        <small class="form-text text-muted">npr. 2023/001</small>
                         <span asp-validation-for="BrojIndeksa" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Ime" class="form-label"></label>
-                        <input asp-for="Ime" class="form-control" maxlength="50" />
+                        <input asp-for="Ime" class="form-control" placeholder="Ime" maxlength="50" />
                         <span asp-validation-for="Ime" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Prezime" class="form-label"></label>
-                        <input asp-for="Prezime" class="form-control" maxlength="50" />
+                        <input asp-for="Prezime" class="form-control" placeholder="Prezime" maxlength="50" />
                         <span asp-validation-for="Prezime" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label asp-for="PrethodnoObrazovanje" class="form-label"></label>
-                        <input asp-for="PrethodnoObrazovanje" class="form-control" maxlength="200" />
+                        <input asp-for="PrethodnoObrazovanje" class="form-control" placeholder="Prethodno obrazovanje" maxlength="200" />
+                        <small class="form-text text-muted">npr. gimnazija, tehnička škola</small>
                         <span asp-validation-for="PrethodnoObrazovanje" class="text-danger"></span>
                     </div>
-                </div>
-
-                <h5>Studijski podaci</h5>
-                <div class="row g-3">
                     <div class="col-md-4">
                         <label asp-for="GodinaStudija" class="form-label"></label>
-                        <input asp-for="GodinaStudija" class="form-control" />
+                        <input asp-for="GodinaStudija" class="form-control" type="number" min="1" max="6" placeholder="Godina (1–6)" />
                         <span asp-validation-for="GodinaStudija" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
                         <label asp-for="Semestar" class="form-label"></label>
-                        <input asp-for="Semestar" class="form-control" />
+                        <input asp-for="Semestar" class="form-control" type="number" min="1" max="2" placeholder="Semestar (1–2)" />
                         <span asp-validation-for="Semestar" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
@@ -68,31 +97,33 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="NastavniPlanId" class="form-label"></label>
-                        <select asp-for="NastavniPlanId" class="form-select" asp-items="ViewBag.NastavniPlanovi"></select>
+                        <select asp-for="NastavniPlanId" class="form-select" asp-items="ViewBag.NastavniPlanovi">
+                            <option value="">-- Odaberite --</option>
+                        </select>
                         <span asp-validation-for="NastavniPlanId" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="PredmetIds" class="form-label"></label>
                         <select asp-for="PredmetIds" class="form-select" asp-items="ViewBag.Predmeti" multiple></select>
+                        <small class="form-text text-muted">Više predmeta: <kbd>Ctrl</kbd> ili <kbd>Cmd</kbd></small>
                         <span asp-validation-for="PredmetIds" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Uloga" class="form-label"></label>
-                        <select asp-for="Uloga" class="form-select" asp-items="ViewBag.Uloge"></select>
+                        <select asp-for="Uloga" class="form-select" asp-items="Html.GetEnumSelectList<Uloga>()"></select>
                         <span asp-validation-for="Uloga" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 d-flex align-items-center">
-                        <div class="form-check form-switch">
-                            <input asp-for="IzborIzbornihPredmetaZakljucan" class="form-check-input" />
-                            <label class="form-check-label ms-2" asp-for="IzborIzbornihPredmetaZakljucan"></label>
+                        <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" asp-for="IzborIzbornihPredmetaZakljucan" />
+                            <label class="form-check-label" asp-for="IzborIzbornihPredmetaZakljucan"></label>
                         </div>
-                        <span asp-validation-for="IzborIzbornihPredmetaZakljucan" class="text-danger ms-2"></span>
                     </div>
                 </div>
 
                 <div class="d-flex gap-2 mt-4">
                     <button type="submit" class="btn btn-primary px-4">
-                        <i class="fas fa-save me-1"></i> Sačuvaj promjene
+                        <i class="fas fa-save me-1"></i> Sačuvaj
                     </button>
                     <a asp-action="Index" class="btn btn-secondary">
                         <i class="fas fa-arrow-left me-1"></i> Nazad
@@ -104,22 +135,83 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
-        document.getElementById('StudijskiProgramId').addEventListener('change', function () {
-            var pid = this.value;
-            fetch(`/Studenti/GetNastavniPlanovi/${pid}`)
-                .then(r => r.json()).then(plans => {
-                    var sp = document.getElementById('NastavniPlanId');
-                    sp.innerHTML = '<option value="">-- Odaberite --</option>';
-                    plans.forEach(p => sp.add(new Option(p.naziv, p.id)));
-                });
-            fetch(`/Studenti/GetPredmetiByStudijskiProgram/${pid}`)
-                .then(r => r.json()).then(preds => {
-                    var pm = document.getElementById('PredmetIds');
-                    pm.innerHTML = '';
-                    preds.forEach(p => pm.add(new Option(p.naziv, p.id)));
-                });
-        });
+        (function () {
+            const chk = document.getElementById('chkChangePassword');
+            const fields = document.getElementById('passwordFields');
+
+            function toggle() {
+                const enable = chk.checked;
+                fields.querySelectorAll('input[type="password"]').forEach(i => { i.readOnly = !enable; });
+                fields.style.opacity = enable ? '1' : '0.6';
+            }
+            if (chk) {
+                toggle();
+                chk.addEventListener('change', toggle);
+            }
+
+            // Kaskadna ažuriranja (program → planovi; program/godina/semestar → predmeti)
+            const spSel = document.getElementById('StudijskiProgramId');
+            const ddlPlan = document.getElementById('NastavniPlanId');
+            const ddlPredmeti = document.getElementById('PredmetIds');
+            const txtGodina = document.getElementById('GodinaStudija');
+            const txtSemestar = document.getElementById('Semestar');
+
+            function fillSelect(select, items, includeEmptyOption) {
+                select.innerHTML = includeEmptyOption ? '<option value="">-- Odaberite --</option>' : '';
+                items.forEach(p => select.add(new Option(p.naziv, p.id)));
+            }
+
+            async function loadPlans(programId) {
+                if (!programId) { fillSelect(ddlPlan, [], true); return []; }
+                const res = await fetch(`/Studenti/GetNastavniPlanovi/${programId}`);
+                const plans = await res.json();
+                fillSelect(ddlPlan, plans, true);
+                return plans; // očekuje { id, godinaStudija, naziv }
+            }
+
+            async function loadSubjects(programId, godina, semestar) {
+                if (!programId) { ddlPredmeti.innerHTML = ''; return; }
+                const params = new URLSearchParams();
+                if (godina) params.set('godinaStudija', godina);
+                if (semestar) params.set('semestar', semestar);
+                const res = await fetch(`/Studenti/GetPredmetiByStudijskiProgram/${programId}?` + params.toString());
+                const preds = await res.json();
+                ddlPredmeti.innerHTML = '';
+                preds.forEach(p => ddlPredmeti.add(new Option(p.naziv, p.id)));
+            }
+
+            async function onProgramChange() {
+                const pid = spSel.value;
+                const plans = await loadPlans(pid);
+                const godina = txtGodina?.value;
+                if (godina && plans && plans.length) {
+                    const match = plans.find(p => (p.godinaStudija + '') === (godina + ''));
+                    if (match) ddlPlan.value = match.id;
+                }
+                await loadSubjects(pid, godina, txtSemestar?.value);
+            }
+
+            async function onGodinaChange() {
+                const pid = spSel.value;
+                if (!pid) return;
+                const plans = await loadPlans(pid);
+                const godina = txtGodina.value;
+                const match = plans.find(p => (p.godinaStudija + '') === (godina + ''));
+                if (match) ddlPlan.value = match.id;
+                await loadSubjects(pid, godina, txtSemestar?.value);
+            }
+
+            async function onSemestarChange() {
+                const pid = spSel.value;
+                if (!pid) return;
+                await loadSubjects(pid, txtGodina?.value, txtSemestar?.value);
+            }
+
+            spSel?.addEventListener('change', onProgramChange);
+            txtGodina?.addEventListener('input', onGodinaChange);
+            txtSemestar?.addEventListener('input', onSemestarChange);
+        })();
     </script>
-    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

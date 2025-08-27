@@ -1,9 +1,7 @@
 ﻿@model StudentHub.ViewModels.AsistentEditViewModel
-
 @{
     ViewData["Title"] = "Izmijeni asistenta";
 }
-
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-7">
@@ -12,10 +10,46 @@
                     <h3 class="mb-0">@ViewData["Title"]</h3>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Edit" method="post">
+                    <form asp-action="Edit" method="post" novalidate>
                         @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="alert alert-danger"></div>
                         <input type="hidden" asp-for="Id" />
 
+                        <h5 class="mb-3">Prijava</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label"></label>
+                                <input asp-for="Email" class="form-control" placeholder="Unesite e-mail adresu" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" asp-for="ChangePassword" id="chkChangePassword" />
+                                    <label class="form-check-label" for="chkChangePassword">Želim promijeniti lozinku</label>
+                                </div>
+                            </div>
+                            <div id="passwordFields" class="row g-3">
+                                <div class="col-md-6">
+                                    <label asp-for="NewPassword" class="form-label"></label>
+                                    <input asp-for="NewPassword" type="password" class="form-control" autocomplete="new-password" />
+                                    <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="ConfirmNewPassword" class="form-label"></label>
+                                    <input asp-for="ConfirmNewPassword" type="password" class="form-control" autocomplete="new-password" />
+                                    <span asp-validation-for="ConfirmNewPassword" class="text-danger small"></span>
+                                </div>
+                                <div class="col-12">
+                                    <small class="form-text text-muted">
+                                        Ako ne želiš mijenjati lozinku, ostavi polja na
+                                        <code>@StudentHub.ViewModels.AsistentEditViewModel.PasswordSentinel</code>.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3">Podaci o asistentu</h5>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label asp-for="Ime" class="form-label"></label>
@@ -29,14 +63,9 @@
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="JMBG" class="form-label"></label>
-                                <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" />
+                                <input asp-for="JMBG" class="form-control" placeholder="Unesite JMBG" maxlength="13" />
                                 <small class="form-text text-muted">Unesite tačno 13 cifara.</small>
                                 <span asp-validation-for="JMBG" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="Email" class="form-label"></label>
-                                <input asp-for="Email" class="form-control" placeholder="Unesite e-mail adresu" />
-                                <span asp-validation-for="Email" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="AsistentTitula" class="form-label"></label>
@@ -51,13 +80,13 @@
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="StudijskiProgramIds" class="form-label"></label>
-                                <select asp-for="StudijskiProgramIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" id="StudijskiProgramIds" multiple="multiple"></select>
+                                <select asp-for="StudijskiProgramIds" class="form-control" asp-items="ViewBag.StudijskiProgrami" id="StudijskiProgramIds" multiple></select>
                                 <small class="form-text text-muted">Držite <kbd>Ctrl</kbd> ili <kbd>Cmd</kbd> za višestruki odabir.</small>
                                 <span asp-validation-for="StudijskiProgramIds" class="text-danger small"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12">
                                 <label asp-for="PredmetIds" class="form-label"></label>
-                                <select asp-for="PredmetIds" class="form-control" asp-items="ViewBag.Predmeti" id="PredmetIds" multiple="multiple"></select>
+                                <select asp-for="PredmetIds" class="form-control" asp-items="ViewBag.Predmeti" id="PredmetIds" multiple></select>
                                 <small class="form-text text-muted">Predmeti na kojima asistent učestvuje.</small>
                                 <span asp-validation-for="PredmetIds" class="text-danger small"></span>
                             </div>
@@ -76,27 +105,43 @@
 
 @section Scripts {
     <script>
-        document.getElementById('StudijskiProgramIds').addEventListener('change', function () {
-            var selectedProgramIds = Array.from(this.selectedOptions).map(option => option.value);
-            fetch('/Asistenti/GetPredmetiByStudijskiProgram', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(selectedProgramIds)
-            })
-            .then(response => response.json())
-            .then(data => {
-                var predmetSelect = document.getElementById('PredmetIds');
-                predmetSelect.innerHTML = '';
-                data.forEach(predmet => {
-                    var option = document.createElement('option');
-                    option.value = predmet.id;
-                    option.text = predmet.naziv;
-                    predmetSelect.appendChild(option);
+        (function () {
+            // toggle password
+            const chk = document.getElementById('chkChangePassword');
+            const fields = document.getElementById('passwordFields');
+            function toggle() {
+                const enable = chk.checked;
+                fields.querySelectorAll('input[type="password"]').forEach(i => i.readOnly = !enable);
+                fields.style.opacity = enable ? '1' : '0.6';
+            }
+            if (chk) { toggle(); chk.addEventListener('change', toggle); }
+
+            // predmeti po SP + očuvanje selekcije
+            const ddlProg = document.getElementById('StudijskiProgramIds');
+            const ddlPred = document.getElementById('PredmetIds');
+
+            function loadPredmeti(preserveSelection) {
+                const selectedProgramIds = Array.from(ddlProg.selectedOptions).map(o => o.value);
+                fetch('/Asistenti/GetPredmetiByStudijskiProgram', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(selectedProgramIds)
+                })
+                .then(r => r.json())
+                .then(data => {
+                    const prevSel = new Set(Array.from(ddlPred.selectedOptions).map(o => o.value));
+                    ddlPred.innerHTML = '';
+                    data.forEach(p => {
+                        const opt = new Option(p.naziv, p.id);
+                        if (preserveSelection && prevSel.has(String(p.id))) opt.selected = true;
+                        ddlPred.add(opt);
+                    });
                 });
-            });
-        });
+            }
+
+            ddlProg?.addEventListener('change', () => loadPredmeti(true));
+            if (ddlProg) loadPredmeti(true);
+        })();
     </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

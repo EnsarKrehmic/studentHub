@@ -1,19 +1,25 @@
-<a href="#"><img width="100%" height="auto" src="https://ptf.unze.ba/wp/wp-content/uploads/2018/02/Logo-PTF018.png"/></a>
+<a href="https://ptf.unze.ba/">
+  <img width="100%" height="auto" src="https://ptf.unze.ba/wp/wp-content/uploads/2018/02/Logo-PTF018.png"/>
+</a>
 
-<h1 align="center"> Razvoj informacijskih sistema (VI semestar)</h1>
+<h1 align="center">🎓 Informacioni sistem visokoškolske ustanove</h1>
+<h3 align="center">Diplomski rad — Politehnički fakultet na Univerzitetu u Zenici</h3>
 
 <p align="center">
-<a href="https://ptf.unze.ba/"><img alt="PTF UNZE" src="https://img.shields.io/badge/PTF_UNZE-www.ptf.unze.ba/-lightgrey?style=flat-square&logo=google-chrome"></a>
+  <a href="https://dotnet.microsoft.com/"><img alt=".NET" src="https://img.shields.io/badge/.NET-6+-purple?style=flat-square&logo=dotnet"></a>
+  <a href="https://www.microsoft.com/sql-server"><img alt="SQL Server" src="https://img.shields.io/badge/SQL_Server-2022-red?style=flat-square&logo=microsoftsqlserver"></a>
+  <a href="https://www.docker.com/"><img alt="Docker" src="https://img.shields.io/badge/Docker-Compose-blue?style=flat-square&logo=docker"></a>
+  <a href="https://github.com/"><img alt="Git" src="https://img.shields.io/badge/Git-Version_Control-orange?style=flat-square&logo=git"></a>
 </p>
 
 ---
 
-## Podaci o studentu
+## 👨‍🎓 Autor
 
-- Ime i prezime: **Ensar Krehmić**
+- **Ensar Krehmić, Dipl. ing. softverskog inženjerstva**  
 - 📧 [ensar.krehmic.22@size.ba](mailto:ensar.krehmic.22@size.ba)
 
-## Podaci o nastavnom osoblju
+## 👨‍🏫 Mentorstvo
 
 - Profesor: **dr. sc. Denis Čeke**  
   📧 [denis.ceke@unze.ba](mailto:denis.ceke@unze.ba)
@@ -23,71 +29,74 @@
 
 ---
 
-## Podaci o predmetu
+## 📌 Opis projekta
 
-- 🔗 Google Classroom:  
-<a href="https://classroom.google.com/u/1/c/NzE5OTI2MTg1MzA0"><img alt="Google Classroom" src="https://img.shields.io/badge/GoogleClassroom-www.classroom.google.com-darkgreen?style=flat-square&logo=google-classroom"></a>
+Ovaj projekat je izrađen u sklopu **diplomskog rada** i predstavlja informacioni sistem visokoškolske ustanove.  
+Cilj sistema je **digitalizacija i optimizacija** administrativnih i nastavnih procesa kroz centralizovanu web-platformu.  
 
----
-
-## Upute za izradu projekta
-
-- Projekat razvijen prema zadatim instrukcijama.
-- Baza mora biti **relaciona**.
-- Sistem mora biti **funkcionalan** i **estetski oblikovan**.
-- Korisnički interfejs na **službenom jeziku BiH**.
-- Razvoj i dokumentacija kroz **Azure DevOps**.
-- Na kraju, aplikacija se mora **dockerizovati**.
+Sistem pruža:  
+- ✅ Jednostavnije upravljanje korisnicima, rasporedima i ispitima  
+- ✅ Evidenciju ocjena i prisustva (QR/PIN kod)  
+- ✅ Support panel sa AI chatbotom i direktnim upitima službi  
+- ✅ Accessibility panel (kontrast, skaliranje fonta, čitač ekrana)  
+- ✅ Detaljnu statistiku i analitiku akademskih procesa  
+- ✅ Sigurnost kroz role-based autorizaciju, audit logove i arhiviranje  
 
 ---
 
-## Tehnologije
+## 🛠 Tehnologije
 
-- **Frontend & Backend**: .NET C# (uz Tailwind CSS / Bootstrap)
-- **Baza podataka**: Microsoft SQL Server
-- **Mobilna aplikacija**: .NET MAUI
-
----
-
-# Informacijski sistem fakulteta
-
-Sistem omogućava digitalizaciju i optimizaciju upravljanja akademskim procesima na fakultetu. Pruža funkcionalnosti za različite korisnike: goste, studente, profesore, asistente i studentsku službu.
+- **Frontend & Backend**: ASP.NET Core (C#), Razor Pages, Bootstrap / Tailwind CSS  
+- **ORM**: Entity Framework Core  
+- **Baza podataka**: Microsoft SQL Server  
+- **Mobilna aplikacija (prototip)**: .NET MAUI  
+- **Deploy**: Docker & Docker Compose  
 
 ---
 
-## Funkcionalnosti
+## 🚀 Funkcionalnosti
 
-### Gosti:
-...
+👤 **Studenti**  
+- Prijava i odjava ispita  
+- Pregled ocjena i prisustva putem koda  
+- Dashboard sa personalizovanim obavijestima  
 
-### Studenti:
-...
+🎓 **Profesori / Asistenti**  
+- Evidencija prisustva  
+- Kreiranje i upravljanje nastavnim aktivnostima  
+- Unos i administracija ocjena  
 
-### Profesori:
-...
+📑 **Studentska služba**  
+- Upravljanje korisnicima  
+- Organizacija ispita i dodjela predmeta  
+- Generisanje rasporeda i provjera konflikata  
+- Administracija zahtjeva i komunikacija sa studentima  
 
-### Asistenti:
-...
-
-### Studentska služba:
-...
-
----
-
-## Zahtjevi sistema
-
-- .NET 6 ili noviji
-- SQL Server 2022
-- Docker i Docker Compose
-- Git za verzionisanje
+🌐 **Gost korisnik**  
+- Pregled javnih informacija i obavijesti  
 
 ---
 
-## Upute za pokretanje
+## 📸 Pregled sistema
 
-Za jednostavno pokretanje aplikacije i baze podataka koristi se `docker-compose`.
+👉 Pogledajte sve screenshotove i funkcionalnosti sistema u posebnom fajlu:  
+[SCREENSHOTS.md](./SCREENSHOTS.md)
 
-Pokreni iz root direktorija:
+
+---
+
+## ⚙️ Zahtjevi sistema
+
+- .NET 6 ili noviji  
+- SQL Server 2022  
+- Docker i Docker Compose  
+- Git  
+
+---
+
+## ▶️ Pokretanje
+
+Pokreni iz root direktorija:  
 
 ```bash
 docker-compose up --build
@@ -102,13 +111,17 @@ docker-compose up --build
 
 ---
 
-## Napomena
+## 🧭 Dalji razvoj
 
-- Sistemi koji se razvijaju **moraju biti informacijski**.
-- Korisnički interfejs mora biti lokalizovan.
-- Docker slike moraju biti dostavljene sa završnom verzijom.
+- Logičko arhiviranje korisnika i podataka (IsActive flag)
+- Optimizacijski algoritmi za generisanje rasporeda (graph coloring / ILP)
+- Online forme za upis i smanjenje papirologije
+- Dodatne statistike (biblioteka, analitika korištenja)
+- GDPR i pravne procedure za brisanje podataka
 
 ---
+
+## 📜 Licenca
 
 © 2025 — Ensar Krehmić | Politehnički fakultet UNZE  
 Sva prava zadržana.

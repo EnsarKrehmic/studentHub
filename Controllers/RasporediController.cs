@@ -588,7 +588,7 @@ namespace StudentHub.Controllers
                 }
                 summary.Add($"🟢 {brojTerminaVjezbeSedmicno} termina vježbi sedmično × {model.BrojSedmica} = {brojTerminaVjezbeSedmicno * model.BrojSedmica} termina. ({ukupnoVjezbi} sati vježbi ukupno)");
 
-                // --- DODATNA UPOZORENJA ZA "ČUDNE" SAATE ---
+                // --- DODATNA UPOZORENJA ZA "ČUDNE" SATE ---
                 if ((ukupnoPredavanja * 60) % trajanjePredavanjaMin != 0)
                     summary.Add($"⚠️ Predmet {predmet.Naziv} ima netipičan broj sati predavanja, zadnji termin može biti kraći ({(ukupnoPredavanja * 60) % trajanjePredavanjaMin} min).");
                 if ((ukupnoVjezbi * 60) % trajanjePredavanjaMin != 0)

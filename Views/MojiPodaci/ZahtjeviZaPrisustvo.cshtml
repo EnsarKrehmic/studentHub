@@ -59,7 +59,10 @@
             </div>
         </div>
 
-        <form method="post" asp-controller="ZahtjeviZaPrisustvo" asp-action="ObradiOznaceneZahtjeve" id="obradaForma">
+        <!-- ISPRAVLJENA FORMA -->
+        <form method="post" asp-controller="MojiPodaci" asp-action="ObradiOznaceneZahtjeve" id="obradaForma">
+            @Html.AntiForgeryToken()
+
             <div class="table-responsive shadow-sm">
                 <table class="table table-bordered table-hover align-middle" id="tabelaZahtjeva">
                     <thead class="table-light">

@@ -52,14 +52,14 @@ namespace StudentHub.Controllers
                 })
                 .ToListAsync();
 
-            // Učitavanje broja asistenata, profesora, studenata, i ispita
+            // Učitavanje broja asistenata, profesora, studenata, i aktivnih ispita
             var homeViewModel = new HomeViewModel
             {
                 NajnovijeObavijesti = obavijesti,
                 BrojAsistenata = await _context.Asistenti.CountAsync(),
                 BrojProfesora = await _context.Profesori.CountAsync(),
                 BrojStudenata = await _context.Studenti.CountAsync(),
-                AktivniIspiti = await _context.Ispiti.CountAsync(),
+                AktivniIspiti = await _context.Ispiti.CountAsync(i => !i.Arhivirano),
 
                 // Učitavanje svih studijskih programa za prikaz na početnoj stranici
                 StudijskiProgrami = await _context.StudijskiProgrami
